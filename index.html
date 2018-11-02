@@ -27,12 +27,15 @@ td
 	color: #FFFFFF;
 }
 
-.g_c { background-color: #33B800; }
-.r_c { background-color: #CC2200; }
-.b_c { background-color: #222222; }
-.g_c1 { background-color: #EEEEEE; }
-.r_c1 { background-color: #EEEEEE; }
-.b_c1 { background-color: #EEEEEE; }
+.g_c1 { background-color: #33B800; }
+.r_c1 { background-color: #CC2200; }
+.b_c1 { background-color: #222222; }
+.g_c { background-color: #EEEEEE; }
+.r_c { background-color: #EEEEEE; }
+.b_c { background-color: #EEEEEE; }
+
+.title_c { background-color: #CCCCCC; font-size: 18px; padding: 10px 20px; }
+.value_c { background-color: #DDDDDD; font-size: 18px; padding: 10px 20px; width: 50px; }
 
 </style>
 
@@ -47,6 +50,9 @@ var g_astrColor =
 	"b", "r", "b", "r", "b", "r", "r", "b", "r", "b", "r", "b", 
 	"r", "b", "r", "b", "b", "r", "b", "r", "b", "r", "b", "r" 
 ];
+
+var g_anCol = [];
+var g_anRow = [];
 
 function GetColor(strNum)
 {
@@ -84,17 +90,62 @@ function RefreshQueue()
 	}
 }
 
+function CalculateCounts(num)
+{
+	if(num == 0) return;
+	
+	var nCol = Math.floor((num - 1) / 12);
+	var nRow = num % 3;
+	if(nRow == 1)
+	{
+		nRow = 2;
+	}
+	else if(nRow == 2)
+	{
+		nRow = 1;
+	}
+	
+	for(n = 0; n < 3; ++ n)
+	{
+		g_anCol[n] ++;
+		g_anRow[n] ++;
+	}
+		
+	g_anCol[nCol] = 0;
+	g_anRow[nRow] = 0;
+
+	
+	for(n = 0; n < 3; ++n)
+	{
+		var strIdTd = "tdCol" + (n + 1).toString();
+		var td = document.getElementById(strIdTd);
+		td.innerHTML = g_anCol[n];
+		
+		strIdTd = "tdRow" + (n + 1).toString();
+		td = document.getElementById(strIdTd);
+		td.innerHTML = g_anRow[n];
+	}
+}
+
 function OnPageInit()
 {
 	g_nIdx = -1;
 	for(n = 0; n < MAX_COUNT; n++)
 		g_anNum[n] = -1;
+
+	for(n = 0; n < 3; ++ n)
+	{
+		g_anCol[n] = 0;
+		g_anRow[n] = 0;
+	}
 		
 	RefreshQueue();
 }
 
 function OnClick(num)
 {
+	CalculateCounts(num);
+	
 	if(g_nIdx == (MAX_COUNT - 1))
 	{
 		for(n = 0; n <= g_nIdx - 1; ++ n)
@@ -162,7 +213,21 @@ function OnClick(num)
             <td class="r_c" onclick="OnClick(34)">34</td>
         </tr>
     </table>
-	<br>
+	<table cellpadding="0" cellspacing="0" border="0" id="tblStatistics">
+	<tr><td colspan="8" height="5px"></td></tr>
+	<tr>
+		<td class="title_c">第1组</td><td class="value_c" id="tdCol1">0</td><td>&nbsp;&nbsp;&nbsp;</td>
+		<td class="title_c">第2组</td><td class="value_c" id="tdCol2">0</td><td>&nbsp;&nbsp;&nbsp;</td>
+		<td class="title_c">第3组</td><td class="value_c" id="tdCol3">0</td>
+	</tr>
+	<tr><td colspan="8" height="1px"></td></tr>
+	<tr>
+		<td class="title_c">第1行</td><td class="value_c" id="tdRow1">0</td><td>&nbsp;&nbsp;&nbsp;</td>
+		<td class="title_c">第2行</td><td class="value_c" id="tdRow2">0</td><td>&nbsp;&nbsp;&nbsp;</td>
+		<td class="title_c">第3行</td><td class="value_c" id="tdRow3">0</td>
+	</tr>
+	<tr><td colspan="8" height="5px"></td></tr>
+	</table>
     <table cellpadding="0" cellspacing="5" border="0" id="tblQueue">
         <tr>
             <td id="td0"></td>
