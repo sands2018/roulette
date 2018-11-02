@@ -1,6 +1,6 @@
 <html>
 <head>
-
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <style>
 td 
 {
@@ -13,16 +13,16 @@ td
 {
 	width: 90px;
 	height: 90px;
-	font-size: 28px;
+	font-size: 48px;
 	border: 1px solid #FFFC88;
 	color: #FFFFFF;
 }
 
 #tblQueue td 
 {
-	width: 50px;
-	height: 50px;
-	font-size: 18px;
+	width: 55px;
+	height: 55px;
+	font-size: 32px;
 	background-color: #AAAAAA;
 	color: #FFFFFF;
 }
@@ -34,8 +34,8 @@ td
 .r_cn { background-color: #EEEEEE; }
 .b_cn { background-color: #EEEEEE; }
 
-.title_c { background-color: #CCCCCC; font-size: 18px; padding: 10px 20px; }
-.value_c { background-color: #DDDDDD; font-size: 18px; padding: 10px 20px; width: 50px; }
+.title_c { background-color: #CCC9BB; font-size: 28px; padding: 7px 13px 5px 13px; color: #403000 }
+.value_c { background-color: #E3DDC3; font-size: 28px; padding: 7px 0px 5px 0px; width: 93px; border-left: 1px solid white; }
 
 </style>
 
@@ -120,10 +120,30 @@ function CalculateCounts(num)
 		var strIdTd = "tdCol" + (n + 1).toString();
 		var td = document.getElementById(strIdTd);
 		td.innerHTML = g_anCol[n];
+        if(g_anCol[n] > 5)
+        {
+		    td.style.fontWeight = "bold";
+            td.style.color = "red";
+        }
+        else
+        {
+            td.style.fontWeight = "normal";
+            td.style.color = "black";
+        }
 		
 		strIdTd = "tdRow" + (n + 1).toString();
 		td = document.getElementById(strIdTd);
 		td.innerHTML = g_anRow[n];
+        if(g_anRow[n] > 5)
+        {
+		    td.style.fontWeight = "bold";
+            td.style.color = "red";
+        }
+        else
+        {
+            td.style.fontWeight = "normal";
+            td.style.color = "black";
+        }
 	}
 }
 
@@ -214,19 +234,16 @@ function OnClick(num)
         </tr>
     </table>
 	<table cellpadding="0" cellspacing="0" border="0" id="tblStatistics">
-	<tr><td colspan="8" height="5px"></td></tr>
+	<tr><td colspan="17" height="8px"></td></tr>
 	<tr>
 		<td class="title_c">第1组</td><td class="value_c" id="tdCol1">0</td><td>&nbsp;&nbsp;&nbsp;</td>
 		<td class="title_c">第2组</td><td class="value_c" id="tdCol2">0</td><td>&nbsp;&nbsp;&nbsp;</td>
-		<td class="title_c">第3组</td><td class="value_c" id="tdCol3">0</td>
-	</tr>
-	<tr><td colspan="8" height="1px"></td></tr>
-	<tr>
+		<td class="title_c">第3组</td><td class="value_c" id="tdCol3">0</td><td>&nbsp;&nbsp;&nbsp;</td>
 		<td class="title_c">第1行</td><td class="value_c" id="tdRow1">0</td><td>&nbsp;&nbsp;&nbsp;</td>
 		<td class="title_c">第2行</td><td class="value_c" id="tdRow2">0</td><td>&nbsp;&nbsp;&nbsp;</td>
 		<td class="title_c">第3行</td><td class="value_c" id="tdRow3">0</td>
 	</tr>
-	<tr><td colspan="8" height="5px"></td></tr>
+	<tr><td colspan="8" height="8px"></td></tr>
 	</table>
     <table cellpadding="0" cellspacing="5" border="0" id="tblQueue">
         <tr>
