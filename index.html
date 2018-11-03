@@ -134,7 +134,7 @@ function ShowQueue()
 function RefreshButtons()
 {
     var strBkClrDisabled = "#888888";
-    var strBkClrEnabled = "#007838";
+    var strBkClrEnabled = "#008838";
 
     var strBkClrDelete = strBkClrDisabled;
     var strBkClrExpand = strBkClrDisabled;
@@ -270,10 +270,17 @@ function Show3C3R()
 		td.innerHTML = g_an3C3R[g_anIdx3C3R[n]];
 		strIdTd = "tdT3C3R" + n.toString();
 		var strTitle = "第";
-		if (g_anIdx3C3R[n] < 3) {
-		    strTitle += (g_anIdx3C3R[n] + 1).toString() + "组";
-		}
-		else {
+		if (g_anIdx3C3R[n] < 3)
+		{
+		    if (g_anIdx3C3R[n] == 0)
+    		    strTitle += "一组";
+		    else if (g_anIdx3C3R[n] == 1)
+		        strTitle += "二组";
+		    else 
+		        strTitle += "三组";
+        }
+		else
+		{
 		    strTitle += (g_anIdx3C3R[n] - 2).toString() + "行";
 		}
 		var tdT = document.getElementById(strIdTd);
