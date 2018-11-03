@@ -21,7 +21,7 @@ td
 #tblBoard td 
 {
 	width: 90px;
-	height: 90px;
+	height: 70px;
 	font-size: 40px;
 	border: 1px solid #FFFC88;
 	color: #FFFFFF;
@@ -30,10 +30,21 @@ td
 #tblQueue td 
 {
 	width: 55px;
-	height: 55px;
+	height: 50px;
 	font-size: 28px;
 	background-color: #AAAAAA;
 	color: #FFFFFF;
+}
+
+.bttn 
+{
+	width: 180px;
+	height: 50px;
+    line-height: 50px;
+    text-align: center;
+    vertical-align: middle;
+	font-size: 28px;
+    color: white;
 }
 
 .title_c,.value_c { font-size: 26px; padding: 7px 0px 5px 0px; }
@@ -58,6 +69,8 @@ var g_astrNumberColor =
 var g_an3C3R = [];
 var g_anIdx3C3R = [];
 
+var g_nExpandStatus = 0;
+
 function GetNumberColor(strNum)
 {
     var strColor = g_astrNumberColor[parseInt(strNum)];
@@ -77,7 +90,7 @@ function GetNumberColor(strNum)
 
 function ShowQueue()
 {
-	for(n = 0; n <= g_nIdx; ++n)
+    for (n = 0; n <= g_nIdx; ++n)
 	{
 		var strIdTd = "td" + n.toString();
 		var td = document.getElementById(strIdTd);
@@ -92,6 +105,65 @@ function ShowQueue()
 		td.innerHTML = "&nbsp;";
 		td.style.backgroundColor = "#FFFFFF";
 	}
+
+	var nQueueRow = 0;
+
+	if (g_nIdx >= 0)
+    {
+	    nQueueRow = Math.floor(g_nIdx / 20) + 1;
+	}
+
+	var strID = "divBlank";
+	var div = document.getElementById(strID);
+	if (nQueueRow == 0)
+	    div.style.display = "none";
+	else
+	    div.style.display = "";
+
+	for (n = 1; n <= 5; ++n)
+	{
+	    strID = "trRow" + n.toString();
+	    var tr = document.getElementById(strID);
+	    if ((nQueueRow > 0) && ((n == 1) || ((n <= nQueueRow) && (g_nExpandStatus == 1))))
+	        tr.style.display = "";
+        else
+	        tr.style.display = "none";
+	}
+}
+
+function RefreshButtons()
+{
+    var strBkClrDisabled = "#787878";
+    var strBkClrEnabled = "#007820";
+
+    var strBkClrDelete = strBkClrDisabled;
+    var strBkClrExpand = strBkClrDisabled;
+
+    if(g_nIdx >= 0)
+    {
+        strBkClrDelete = strBkClrEnabled;
+    }
+    if(g_nIdx >= 20)
+    {
+        strBkClrExpand = strBkClrEnabled;
+    }
+    else
+    {
+        g_nExpandStatus = 0;
+    }
+
+    var strBttnExpand = "展开";
+    if(g_nExpandStatus == 1)
+    {
+        strBttnExpand = "收起";
+    }
+
+    var bttn = document.getElementById("tdBttnDelete");
+    bttn.style.backgroundColor = strBkClrDelete;
+
+    bttn = document.getElementById("tdBttnExpand");
+    bttn.style.backgroundColor = strBkClrExpand;
+    bttn.innerHTML = strBttnExpand;
 }
 
 function Calc3C3R_Add(num)
@@ -108,7 +180,7 @@ function Calc3C3R_Add(num)
     {
         nRow = 1;
     }
-	
+
     for (n = 0; n < 6; ++n)
     {
         g_an3C3R[n]++;
@@ -116,19 +188,54 @@ function Calc3C3R_Add(num)
 
     g_an3C3R[nCol] = 0;
     g_an3C3R[3+nRow] = 0;
-    /*
+}
+
+function Calc3C3R_Delete()
+{
+    var abOccur = [];
+
     for (n = 0; n < 6; ++n)
     {
-        if ((g_anIdx3C3R[n] == nCol) || (g_anIdx3C3R[n] == (3 + nRow)))
-        {
-            g_an3C3R[n] = 0;
-        }
-        else
-        {
-            g_an3C3R[n]++;
-        }
+        g_an3C3R[n] = 0;
+        g_anIdx3C3R[n] = n;
+        abOccur[n] = false;
     }
-    */
+
+    for(n = g_nIdx; n >= 0; --n)
+    {
+        var num = g_anNum[n];
+        if (num == 0) continue;
+
+        var nCol = Math.floor((num - 1) / 12);
+        var nRow = num % 3;
+        if (nRow == 1) {
+            nRow = 2;
+        }
+        else if (nRow == 2) {
+            nRow = 1;
+        }
+
+        var bChanged = false;
+
+        for(nn = 0; nn < 6; ++ nn)
+        {
+            if(!abOccur[nn])
+            {
+                if((nn == nCol) || (nn == (nRow + 3)))
+                {
+                    abOccur[nn] = true;
+                }
+                else
+                {
+                    g_an3C3R[nn]++;
+                    bChanged = true;
+                }
+            }
+        }
+
+        if (!bChanged)
+            break;
+    }
 }
 
 function Show3C3R()
@@ -152,6 +259,7 @@ function Show3C3R()
         }
     } while (bChanged);
 
+    // show:
 	for(n = 0; n < 6; ++n)
 	{
 		var strIdTd = "td3C3R" + n.toString();
@@ -193,7 +301,6 @@ function Show3C3R()
             td.style.color = "black";
             tdT.style.color = "black";
         }
-
     }
 }
 
@@ -208,8 +315,10 @@ function OnPageInit()
 	    g_an3C3R[n] = 0;
 	    g_anIdx3C3R[n] = n;
 	}
-		
+
+	Show3C3R();
 	ShowQueue();
+	RefreshButtons();
 }
 
 function OnClick(num)
@@ -232,8 +341,44 @@ function OnClick(num)
 	g_anNum[g_nIdx] = num;
 	
 	ShowQueue();
+	RefreshButtons();
 }
 
+function OnDelete()
+{
+    if (g_nIdx < 0)
+        return;
+
+    if(g_nIdx == 0)
+    {
+        OnPageInit();
+        return;
+    }
+
+    --g_nIdx;
+
+    Calc3C3R_Delete();
+
+    ShowQueue();
+    Show3C3R();
+    RefreshButtons();
+}
+
+function OnExpand()
+{
+    g_nExpandStatus++;
+    g_nExpandStatus = g_nExpandStatus % 2;
+
+    ShowQueue();
+    RefreshButtons();
+}
+
+function OnRestart()
+{
+    var confirmed = confirm("确定要重新开始？");
+    if(confirmed != 0)
+        OnPageInit();
+}
 
 </script>
 
@@ -284,8 +429,8 @@ function OnClick(num)
             <td class="r_c" onclick="OnClick(34)">34</td>
         </tr>
     </table>
+    <div style="height: 8px"></div>
 	<table cellpadding="0" cellspacing="0" border="0" id="tblStatistics">
-	<tr><td colspan="17" height="8px"></td></tr>
 	<tr>
 		<td class="title_c" id="tdT3C3R0">第1组</td><td class="value_c" id="td3C3R0">0</td><td>&nbsp;&nbsp;</td>
 		<td class="title_c" id="tdT3C3R1">第2组</td><td class="value_c" id="td3C3R1">0</td><td>&nbsp;&nbsp;</td>
@@ -294,10 +439,10 @@ function OnClick(num)
 		<td class="title_c" id="tdT3C3R4">第2行</td><td class="value_c" id="td3C3R4">0</td><td>&nbsp;&nbsp;</td>
 		<td class="title_c" id="tdT3C3R5">第3行</td><td class="value_c" id="td3C3R5">0</td>
 	</tr>
-	<tr><td colspan="8" height="8px"></td></tr>
 	</table>
+    <div style="height: 8px" id="divBlank"></div>
     <table cellpadding="0" cellspacing="5" border="0" id="tblQueue">
-        <tr>
+        <tr id="trRow1">
             <td id="td0"></td>
             <td id="td1"></td>
             <td id="td2"></td>
@@ -319,7 +464,7 @@ function OnClick(num)
             <td id="td18"></td>
             <td id="td19"></td>
         </tr>
-        <tr>
+        <tr id="trRow2">
             <td id="td20"></td>
             <td id="td21"></td>
             <td id="td22"></td>
@@ -341,7 +486,7 @@ function OnClick(num)
             <td id="td38"></td>
             <td id="td39"></td>
         </tr>
-        <tr>
+        <tr id="trRow3">
             <td id="td40"></td>
             <td id="td41"></td>
             <td id="td42"></td>
@@ -363,7 +508,7 @@ function OnClick(num)
             <td id="td58"></td>
             <td id="td59"></td>
         </tr>
-        <tr>
+        <tr id="trRow4">
             <td id="td60"></td>
             <td id="td61"></td>
             <td id="td62"></td>
@@ -385,7 +530,7 @@ function OnClick(num)
             <td id="td78"></td>
             <td id="td79"></td>
         </tr>
-        <tr>
+        <tr id="trRow5">
             <td id="td80"></td>
             <td id="td81"></td>
             <td id="td82"></td>
@@ -408,7 +553,14 @@ function OnClick(num)
             <td id="td99"></td>
         </tr>
     </table>
+    <div style="height: 8px"></div>
 
-
+    <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+            <td id="tdBttnDelete" class="bttn" style="background-color: #007820" onclick="OnDelete()">删除</td><td>&nbsp;&nbsp;&nbsp;</td>
+            <td id="tdBttnExpand" class="bttn" style="background-color: #007820" onclick="OnExpand()">展开</td><td>&nbsp;&nbsp;&nbsp;</td>
+            <td id="tdBttnRestart" class="bttn" style="background-color: #007820" onclick="OnRestart()">重新开始</td>
+        </tr>
+    </table>
 </body>
 </html>
