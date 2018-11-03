@@ -133,8 +133,8 @@ function ShowQueue()
 
 function RefreshButtons()
 {
-    var strBkClrDisabled = "#787878";
-    var strBkClrEnabled = "#007820";
+    var strBkClrDisabled = "#888888";
+    var strBkClrEnabled = "#007838";
 
     var strBkClrDelete = strBkClrDisabled;
     var strBkClrExpand = strBkClrDisabled;
@@ -164,6 +164,9 @@ function RefreshButtons()
     bttn = document.getElementById("tdBttnExpand");
     bttn.style.backgroundColor = strBkClrExpand;
     bttn.innerHTML = strBttnExpand;
+
+    bttn = document.getElementById("tdBttnRestart");
+    bttn.style.backgroundColor = (g_nIdx >= 0) ? strBkClrEnabled : strBkClrDisabled;
 }
 
 function Calc3C3R_Add(num)
@@ -281,12 +284,12 @@ function Show3C3R()
 		    if (g_an3C3R[g_anIdx3C3R[n]] > 5)
             {
 		        td.style.backgroundColor = "rgb(0,128,255)";
-		        tdT.style.backgroundColor = "rgb(0,88,208)";
+		        tdT.style.backgroundColor = "rgb(0,93,218)";
             }
             else
 		    {
-		        td.style.backgroundColor = "rgb(150,138,200)";
-		        tdT.style.backgroundColor = "rgb(118,108,158)";
+		        td.style.backgroundColor = "rgb(158,118,200)";
+		        tdT.style.backgroundColor = "rgb(128,88,158)";
             }
 		    td.style.fontWeight = "bold";
 		    td.style.color = "white";
