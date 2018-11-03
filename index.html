@@ -2,10 +2,18 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <style>
+
+.g_c { background-color: #33B800; }
+.r_c { background-color: #CC2200; }
+.b_c { background-color: #222222; }
+.g_cn { background-color: #EEEEEE; }
+.r_cn { background-color: #EEEEEE; }
+.b_cn { background-color: #EEEEEE; }
+
 td 
 {
 	text-align: center;
-	vertical-align: center;
+	vertical-align: middle;
 	cursor: hand;
 }
 
@@ -27,15 +35,9 @@ td
 	color: #FFFFFF;
 }
 
-.g_c { background-color: #33B800; }
-.r_c { background-color: #CC2200; }
-.b_c { background-color: #222222; }
-.g_cn { background-color: #EEEEEE; }
-.r_cn { background-color: #EEEEEE; }
-.b_cn { background-color: #EEEEEE; }
-
-.title_c { background-color: #CCC9BB; font-size: 22px; padding: 7px 13px 5px 13px; color: #403000 }
-.value_c { background-color: #E3DDC3; font-size: 22px; padding: 7px 0px 5px 0px; width: 90px; border-left: 1px solid white; }
+.title_c,.value_c { font-size: 26px; padding: 7px 0px 5px 0px; }
+.title_c { background-color: #DFD7CB; width: 110px; color: #403000 }
+.value_c { background-color: #EBE3CB; width: 70px; border-left: 1px solid white; }
 
 </style>
 
@@ -52,8 +54,8 @@ var g_astrNumberColor =
 	"r", "b", "r", "b", "b", "r", "b", "r", "b", "r", "b", "r" 
 ];
 
-var g_anCol = [];
-var g_anRow = [];
+var g_an3C3R = [];
+var g_anIdx3C3R = [];
 
 function GetNumberColor(strNum)
 {
@@ -72,7 +74,7 @@ function GetNumberColor(strNum)
 	}
 }
 
-function RefreshQueue()
+function ShowQueue()
 {
 	for(n = 0; n <= g_nIdx; ++n)
 	{
@@ -91,61 +93,91 @@ function RefreshQueue()
 	}
 }
 
-function CalculateCounts(num)
+function Calc3C3R_Add(num)
 {
-	if(num == 0) return;
+    if(num == 0) return;
 	
-	var nCol = Math.floor((num - 1) / 12);
-	var nRow = num % 3;
-	if(nRow == 1)
-	{
-		nRow = 2;
-	}
-	else if(nRow == 2)
-	{
-		nRow = 1;
-	}
+    var nCol = Math.floor((num - 1) / 12);
+    var nRow = num % 3;
+    if(nRow == 1)
+    {
+        nRow = 2;
+    }
+    else if(nRow == 2)
+    {
+        nRow = 1;
+    }
 	
-	for(n = 0; n < 3; ++ n)
-	{
-		g_anCol[n] ++;
-		g_anRow[n] ++;
-	}
-		
-	g_anCol[nCol] = 0;
-	g_anRow[nRow] = 0;
+    for(n = 0; n < 6; ++ n)
+    {
+        if ((g_anIdx3C3R[n] == nCol) || (g_anIdx3C3R[n] == (3 + nRow)))
+        {
+            g_an3C3R[n] = 0;
+        }
+        else
+        {
+            g_an3C3R[n]++;
+        }
+    }
+}
 
-	
-	for(n = 0; n < 3; ++n)
+function Show3C3R()
+{
+    // sort:
+    var bChanged = false;
+    do
+    {
+        bChanged = false;
+
+        for (n = 0; n < 5; ++n)
+        {
+            if(g_an3C3R[n] < g_an3C3R[n + 1])
+            {
+                var tmp = g_an3C3R[n];
+                g_an3C3R[n] = g_an3C3R[n + 1];
+                g_an3C3R[n + 1] = tmp;
+
+                tmp = g_anIdx3C3R[n];
+                g_anIdx3C3R[n] = g_anIdx3C3R[n + 1];
+                g_anIdx3C3R[n + 1] = tmp;
+
+                bChanged = true;
+            }
+        }
+    } while (bChanged);
+
+	for(n = 0; n < 6; ++n)
 	{
-		var strIdTd = "tdCol" + (n + 1).toString();
+		var strIdTd = "td3C3R" + n.toString();
 		var td = document.getElementById(strIdTd);
-		td.innerHTML = g_anCol[n];
-        if(g_anCol[n] > 5)
-        {
-		    td.style.fontWeight = "bold";
+		td.innerHTML = g_an3C3R[n];
+		if (g_an3C3R[n] >= 5)
+		{
+		    if (g_an3C3R[n] > 5)
+		        td.style.fontWeight = "bold";
+            else
+		        td.style.fontWeight = "normal";
             td.style.color = "red";
         }
         else
         {
             td.style.fontWeight = "normal";
             td.style.color = "black";
-        }
-		
-		strIdTd = "tdRow" + (n + 1).toString();
+		}
+
+		strIdTd = "tdT3C3R" + n.toString();
+		var strTitle = "第";
+		if (g_anIdx3C3R[n] < 3)
+		{
+		    strTitle += (g_anIdx3C3R[n] + 1).toString() + "组";
+		}
+		else
+		{
+		    strTitle += (g_anIdx3C3R[n] - 2).toString() + "行";
+		}
 		td = document.getElementById(strIdTd);
-		td.innerHTML = g_anRow[n];
-        if(g_anRow[n] > 5)
-        {
-		    td.style.fontWeight = "bold";
-            td.style.color = "red";
-        }
-        else
-        {
-            td.style.fontWeight = "normal";
-            td.style.color = "black";
-        }
-	}
+		td.innerHTML = strTitle;
+    }
 }
 
 function OnPageInit()
@@ -154,18 +186,19 @@ function OnPageInit()
 	for(n = 0; n < MAX_COUNT; n++)
 		g_anNum[n] = -1;
 
-	for(n = 0; n < 3; ++ n)
+	for(n = 0; n < 6; ++ n)
 	{
-		g_anCol[n] = 0;
-		g_anRow[n] = 0;
+	    g_an3C3R[n] = 0;
+	    g_anIdx3C3R[n] = n;
 	}
 		
-	RefreshQueue();
+	ShowQueue();
 }
 
 function OnClick(num)
 {
-	CalculateCounts(num);
+    Calc3C3R_Add(num);
+    Show3C3R();
 	
 	if(g_nIdx == (MAX_COUNT - 1))
 	{
@@ -181,7 +214,7 @@ function OnClick(num)
 	
 	g_anNum[g_nIdx] = num;
 	
-	RefreshQueue();
+	ShowQueue();
 }
 
 
@@ -189,7 +222,6 @@ function OnClick(num)
 
 </head>
 <body onload="OnPageInit()">
-    test
     <table cellpadding="0" cellspacing="0" style="border: 1px solid #FFFC88" id="tblBoard">
         <tr>
             <td class="g_c" rowspan="3" onclick="OnClick(0)">0</td>
@@ -238,12 +270,12 @@ function OnClick(num)
 	<table cellpadding="0" cellspacing="0" border="0" id="tblStatistics">
 	<tr><td colspan="17" height="8px"></td></tr>
 	<tr>
-		<td class="title_c">第1组</td><td class="value_c" id="tdCol1">0</td><td>&nbsp;&nbsp;&nbsp;</td>
-		<td class="title_c">第2组</td><td class="value_c" id="tdCol2">0</td><td>&nbsp;&nbsp;&nbsp;</td>
-		<td class="title_c">第3组</td><td class="value_c" id="tdCol3">0</td><td>&nbsp;&nbsp;&nbsp;</td>
-		<td class="title_c">第1行</td><td class="value_c" id="tdRow1">0</td><td>&nbsp;&nbsp;&nbsp;</td>
-		<td class="title_c">第2行</td><td class="value_c" id="tdRow2">0</td><td>&nbsp;&nbsp;&nbsp;</td>
-		<td class="title_c">第3行</td><td class="value_c" id="tdRow3">0</td>
+		<td class="title_c" id="tdT3C3R0">第1组</td><td class="value_c" id="td3C3R0">0</td><td>&nbsp;&nbsp;</td>
+		<td class="title_c" id="tdT3C3R1">第2组</td><td class="value_c" id="td3C3R1">0</td><td>&nbsp;&nbsp;</td>
+		<td class="title_c" id="tdT3C3R2">第3组</td><td class="value_c" id="td3C3R2">0</td><td>&nbsp;&nbsp;</td>
+		<td class="title_c" id="tdT3C3R3">第1行</td><td class="value_c" id="td3C3R3">0</td><td>&nbsp;&nbsp;</td>
+		<td class="title_c" id="tdT3C3R4">第2行</td><td class="value_c" id="td3C3R4">0</td><td>&nbsp;&nbsp;</td>
+		<td class="title_c" id="tdT3C3R5">第3行</td><td class="value_c" id="td3C3R5">0</td>
 	</tr>
 	<tr><td colspan="8" height="8px"></td></tr>
 	</table>
