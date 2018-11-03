@@ -1,4 +1,4 @@
-<html>
+﻿<html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <style>
@@ -44,9 +44,10 @@ td
 var MAX_COUNT = 100;
 var g_anNum = [];
 var g_nIdx = -1;
-var g_astrColor = 
+var g_astrNumberColor = 
 [
-	"g", "r", "b", "r", "b", "r", "b", "r", "b", "r", "b", "b", "r", 
+	"g",
+    "r", "b", "r", "b", "r", "b", "r", "b", "r", "b", "b", "r",
 	"b", "r", "b", "r", "b", "r", "r", "b", "r", "b", "r", "b", 
 	"r", "b", "r", "b", "b", "r", "b", "r", "b", "r", "b", "r" 
 ];
@@ -54,9 +55,9 @@ var g_astrColor =
 var g_anCol = [];
 var g_anRow = [];
 
-function GetColor(strNum)
+function GetNumberColor(strNum)
 {
-	var strColor = g_astrColor[parseInt(strNum)];
+    var strColor = g_astrNumberColor[parseInt(strNum)];
 	if(strColor == "r")
 	{
 		return "#CC2200";
@@ -78,7 +79,7 @@ function RefreshQueue()
 		var strIdTd = "td" + n.toString();
 		var td = document.getElementById(strIdTd);
 		td.innerHTML = g_anNum[g_nIdx - n];
-		td.style.backgroundColor = GetColor(g_anNum[g_nIdx - n]);
+		td.style.backgroundColor = GetNumberColor(g_anNum[g_nIdx - n]);
 	}
 
 	for(n = g_nIdx + 1; n < MAX_COUNT; ++ n)
