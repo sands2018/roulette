@@ -4,7 +4,7 @@
 
 <style>
 
-.g_c { background-color: #33B800; }
+.g_c { background-color: #35A300; }
 .r_c { background-color: #CC2200; }
 .b_c { background-color: #222222; }
 .g_cn { background-color: #EEEEEE; }
@@ -15,7 +15,7 @@ td
 {
 	text-align: center;
 	vertical-align: middle;
-	cursor: hand;
+	cursor: pointer;
 }
 
 #tblBoard td 
@@ -71,7 +71,7 @@ function GetNumberColor(strNum)
 	}
 	else
 	{
-		return "#33B800";
+	    return "#35A300";
 	}
 }
 
@@ -109,7 +109,15 @@ function Calc3C3R_Add(num)
         nRow = 1;
     }
 	
-    for(n = 0; n < 6; ++ n)
+    for (n = 0; n < 6; ++n)
+    {
+        g_an3C3R[n]++;
+    }
+
+    g_an3C3R[nCol] = 0;
+    g_an3C3R[3+nRow] = 0;
+    /*
+    for (n = 0; n < 6; ++n)
     {
         if ((g_anIdx3C3R[n] == nCol) || (g_anIdx3C3R[n] == (3 + nRow)))
         {
@@ -120,6 +128,7 @@ function Calc3C3R_Add(num)
             g_an3C3R[n]++;
         }
     }
+    */
 }
 
 function Show3C3R()
@@ -132,12 +141,8 @@ function Show3C3R()
 
         for (n = 0; n < 5; ++n)
         {
-            if(g_an3C3R[n] < g_an3C3R[n + 1])
+            if (g_an3C3R[g_anIdx3C3R[n]] < g_an3C3R[g_anIdx3C3R[n + 1]])
             {
-                var tmp = g_an3C3R[n];
-                g_an3C3R[n] = g_an3C3R[n + 1];
-                g_an3C3R[n + 1] = tmp;
-
                 tmp = g_anIdx3C3R[n];
                 g_anIdx3C3R[n] = g_anIdx3C3R[n + 1];
                 g_anIdx3C3R[n + 1] = tmp;
@@ -151,33 +156,44 @@ function Show3C3R()
 	{
 		var strIdTd = "td3C3R" + n.toString();
 		var td = document.getElementById(strIdTd);
-		td.innerHTML = g_an3C3R[n];
-		if (g_an3C3R[n] >= 5)
+		td.innerHTML = g_an3C3R[g_anIdx3C3R[n]];
+		strIdTd = "tdT3C3R" + n.toString();
+		var strTitle = "第";
+		if (g_anIdx3C3R[n] < 3) {
+		    strTitle += (g_anIdx3C3R[n] + 1).toString() + "组";
+		}
+		else {
+		    strTitle += (g_anIdx3C3R[n] - 2).toString() + "行";
+		}
+		var tdT = document.getElementById(strIdTd);
+		tdT.innerHTML = strTitle;
+
+		if (g_an3C3R[g_anIdx3C3R[n]] >= 5)
 		{
-		    if (g_an3C3R[n] > 5)
-		        td.style.fontWeight = "bold";
+		    if (g_an3C3R[g_anIdx3C3R[n]] > 5)
+            {
+		        td.style.backgroundColor = "rgb(0,128,255)";
+		        tdT.style.backgroundColor = "rgb(0,88,208)";
+            }
             else
-		        td.style.fontWeight = "normal";
-            td.style.color = "red";
+		    {
+		        td.style.backgroundColor = "rgb(150,138,200)";
+		        tdT.style.backgroundColor = "rgb(118,108,158)";
+            }
+		    td.style.fontWeight = "bold";
+		    td.style.color = "white";
+		    tdT.style.color = "white";
         }
         else
         {
-            td.style.fontWeight = "normal";
-            td.style.color = "black";
-		}
+		    td.style.backgroundColor = "#EBE3CB";
+		    tdT.style.backgroundColor = "#DFD7CB";
 
-		strIdTd = "tdT3C3R" + n.toString();
-		var strTitle = "第";
-		if (g_anIdx3C3R[n] < 3)
-		{
-		    strTitle += (g_anIdx3C3R[n] + 1).toString() + "组";
-		}
-		else
-		{
-		    strTitle += (g_anIdx3C3R[n] - 2).toString() + "行";
-		}
-		td = document.getElementById(strIdTd);
-		td.innerHTML = strTitle;
+		    td.style.fontWeight = "normal";
+            td.style.color = "black";
+            tdT.style.color = "black";
+        }
+
     }
 }
 
