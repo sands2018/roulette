@@ -4,13 +4,6 @@
 
 <style>
 
-.g_c { background-color: #35A300; }
-.r_c { background-color: #CC2200; }
-.b_c { background-color: #222222; }
-.g_cn { background-color: #EEEEEE; }
-.r_cn { background-color: #EEEEEE; }
-.b_cn { background-color: #EEEEEE; }
-
 td 
 {
 	text-align: center;
@@ -50,6 +43,7 @@ td
     vertical-align: middle;
 	font-size: 28px;
     color: white;
+    border: 1px solid white;
 }
 
 .title_c,.value_c { font-size: 26px; padding: 7px 0px 5px 0px; }
@@ -60,343 +54,503 @@ td
 
 <script language="javascript">
 
-var MAX_COUNT = 100;
-var g_anNum = [];
-var g_nIdx = -1;
-var g_astrNumberColor = 
-[
-	"g",
-    "r", "b", "r", "b", "r", "b", "r", "b", "r", "b", "b", "r",
-	"b", "r", "b", "r", "b", "r", "r", "b", "r", "b", "r", "b", 
-	"r", "b", "r", "b", "b", "r", "b", "r", "b", "r", "b", "r" 
-];
 
-var g_an3C3R = [];
-var g_anIdx3C3R = [];
+    // styles: >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-var g_nExpandStatus = 0;
+    var g_s_theme_id = 0;
 
-function GetNumberColor(strNum)
-{
-    var strColor = g_astrNumberColor[parseInt(strNum)];
-	if(strColor == "r")
-	{
-		return "#CC2200";
-	}
-	else if(strColor == "b")
-	{
-		return "#222222";
-	}
-	else
-	{
-	    return "#35A300";
-	}
-}
+    var g_astrNumberColor =
+    [
+	    "g",
+        "r", "b", "r", "b", "r", "b", "r", "b", "r", "b", "b", "r",
+	    "b", "r", "b", "r", "b", "r", "r", "b", "r", "b", "r", "b",
+	    "r", "b", "r", "b", "b", "r", "b", "r", "b", "r", "b", "r"
+    ];
 
-function ShowQueue()
-{
-    for (n = 0; n <= g_nIdx; ++n)
-	{
-		var strIdTd = "td" + n.toString();
-		var td = document.getElementById(strIdTd);
-		td.innerHTML = g_anNum[g_nIdx - n];
-		td.style.backgroundColor = GetNumberColor(g_anNum[g_nIdx - n]);
-	}
+    // number colors:
 
-	for(n = g_nIdx + 1; n < MAX_COUNT; ++ n)
-	{
-		var strIdTd = "td" + n.toString();
-		var td = document.getElementById(strIdTd);
-		td.innerHTML = "&nbsp;";
-		td.style.backgroundColor = "#FFFFFF";
-	}
+    var g_s_c_num = ["white", "#434343"];
 
-	var nQueueRow = 0;
+    var g_s_c_num_g = ["#35A300", "white" ]; // green
+    var g_s_c_num_r = ["#CC2200", "white" ]; // red
+    var g_s_c_num_b = ["#222222", "white"]; // black
 
-	if (g_nIdx >= 0)
+    var g_s_c_que_g = ["35A300", "#D3EED3"]; // green
+    var g_s_c_que_r = ["CC2200", "white"]; // red
+    var g_s_c_que_b = ["222222", "#DDDDDD"]; // black
+
+    var g_s_c_que_b_g = ["white", "#CCFFCC"]; // green
+    var g_s_c_que_b_r = ["white", "#FFDDAA"]; // red
+    var g_s_c_que_b_b = ["white", "#DDDDDD"]; // black
+
+    var g_s_c_btn_bk_enabled = ["#008838", "white"];
+    var g_s_c_btn_bk_disabled = ["#888888", "white"];
+
+    var g_s_c_btn_enabled = ["white", "#008838"];
+    var g_s_c_btn_disabled = ["white", "CCCCCC"];
+
+    var g_s_c_btn_b_enabled = ["white", "#008838"];
+    var g_s_c_btn_b_disabled = ["white", "CCCCCC"];
+
+    function GetNumberColor()
     {
-	    nQueueRow = Math.floor(g_nIdx / 20) + 1;
-	}
+        return g_s_c_num[g_s_theme_id];
+    }
 
-	var strID = "divBlank";
-	var div = document.getElementById(strID);
-	if (nQueueRow == 0)
-	    div.style.display = "none";
-	else
-	    div.style.display = "";
+    function GetNumberBackgroundColor(num)
+    {
+        var strColor = g_astrNumberColor[num];
 
-	for (n = 1; n <= 5; ++n)
-	{
-	    strID = "trRow" + n.toString();
-	    var tr = document.getElementById(strID);
-	    if ((nQueueRow > 0) && ((n == 1) || ((n <= nQueueRow) && (g_nExpandStatus == 1))))
-	        tr.style.display = "";
+	    if(strColor == "r")
+	    {
+	        return g_s_c_num_r[g_s_theme_id];
+	    }
+	    else if(strColor == "b")
+	    {
+	        return g_s_c_num_b[g_s_theme_id];
+	    }
+	    else
+	    {
+	        return g_s_c_num_g[g_s_theme_id];
+	    }
+    }
+
+    function GetQueueNumberBackgroundColor(num)
+    {
+        var strColor = g_astrNumberColor[num];
+
+        if (strColor == "r") {
+            return g_s_c_que_r[g_s_theme_id];
+        }
+        else if (strColor == "b") {
+            return g_s_c_que_b[g_s_theme_id];
+        }
+        else {
+            return g_s_c_que_g[g_s_theme_id];
+        }
+    }
+
+    function GetQueueNumberBorderColor(num)
+    {
+        var strColor = g_astrNumberColor[num];
+
+        if (strColor == "r") {
+            return g_s_c_que_b_r[g_s_theme_id];
+        }
+        else if (strColor == "b") {
+            return g_s_c_que_b_b[g_s_theme_id];
+        }
+        else {
+            return g_s_c_que_b_g[g_s_theme_id];
+        }
+    }
+
+
+    function InitStyles()
+    {
+        for(n = 0; n <= 36; ++n)
+        {
+            var td = document.getElementById("tdB" + n.toString());
+            td.style.backgroundColor = GetNumberBackgroundColor(n);
+            td.style.color = GetNumberColor();
+        }
+    }
+
+    function GetQueueItemBorderStyle(num)
+    {
+        return "1px solid " + GetQueueNumberBorderColor(num);
+    }
+
+    // styles: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+    var MAX_COUNT = 100;
+    var g_anNum = [];
+    var g_nIdx = -1;
+
+    var g_an3C3R = [];
+    var g_anIdx3C3R = [];
+
+    var g_nExpandStatus = 0;
+
+    function ShowQueue()
+    {
+        for (n = 0; n <= g_nIdx; ++n)
+	    {
+		    var strIdTd = "td" + n.toString();
+		    var td = document.getElementById(strIdTd);
+		    td.innerHTML = g_anNum[g_nIdx - n];
+		    td.style.backgroundColor = GetQueueNumberBackgroundColor(g_anNum[g_nIdx - n]);
+		    td.style.color = GetNumberColor();
+		    td.style.border = GetQueueItemBorderStyle(g_anNum[g_nIdx - n]);
+        }
+
+	    for(n = g_nIdx + 1; n < MAX_COUNT; ++ n)
+	    {
+		    var strIdTd = "td" + n.toString();
+		    var td = document.getElementById(strIdTd);
+		    td.innerHTML = "&nbsp;";
+		    td.style.backgroundColor = "#FFFFFF";
+	    }
+
+	    var nQueueRow = 0;
+
+	    if (g_nIdx >= 0)
+        {
+	        nQueueRow = Math.floor(g_nIdx / 20) + 1;
+	    }
+
+	    var strID = "divBlank";
+	    var div = document.getElementById(strID);
+	    if (nQueueRow == 0)
+	        div.style.display = "none";
+	    else
+	        div.style.display = "";
+
+	    for (n = 1; n <= 5; ++n)
+	    {
+	        strID = "trRow" + n.toString();
+	        var tr = document.getElementById(strID);
+	        if ((nQueueRow > 0) && ((n == 1) || ((n <= nQueueRow) && (g_nExpandStatus == 1))))
+	            tr.style.display = "";
+            else
+	            tr.style.display = "none";
+	    }
+    }
+
+    function RefreshButtons()
+    {
+        var strBkClrDisabled = g_s_c_btn_bk_disabled[g_s_theme_id];
+        var strBkClrEnabled = g_s_c_btn_bk_enabled[g_s_theme_id];
+
+        var strClrDisabled = g_s_c_btn_disabled[g_s_theme_id];
+        var strClrEnabled = g_s_c_btn_enabled[g_s_theme_id];
+
+        var strBorderClrDisabled = g_s_c_btn_b_disabled[g_s_theme_id];
+        var strBorderClrEnabled = g_s_c_btn_b_enabled[g_s_theme_id];
+
+        var strBkClrDelete = strBkClrDisabled;
+        var strClrDelete = strClrDisabled;
+        var strBorderClrDelete = strBorderClrDisabled;
+
+        var strBkClrExpand = strBkClrDisabled;
+        var strClrExpand = strClrDisabled;
+        var strBorderClrExpand = strBorderClrDisabled;
+
+        var strBkClrRestart = strBkClrDisabled;
+        var strClrRestart = strClrDisabled;
+        var strBorderClrRestart = strBorderClrDisabled;
+
+        var strBkClrTheme = strBkClrEnabled;
+        var strClrTheme = strClrEnabled;
+        var strBorderClrTheme = strBorderClrEnabled;
+
+        if(g_nIdx >= 0)
+        {
+            strBkClrDelete = strBkClrEnabled;
+            strClrDelete = strClrEnabled;
+            strBorderClrDelete = strBorderClrEnabled;
+
+            strBkClrRestart = strBkClrEnabled;
+            strClrRestart = strClrEnabled;
+            strBorderClrRestart = strBorderClrEnabled;
+        }
+        if(g_nIdx >= 20)
+        {
+            strBkClrExpand = strBkClrEnabled;
+            strClrExpand = strClrEnabled;
+            strBorderClrExpand = strBorderClrEnabled;
+        }
         else
-	        tr.style.display = "none";
-	}
-}
+        {
+            g_nExpandStatus = 0;
+        }
 
-function RefreshButtons()
-{
-    var strBkClrDisabled = "#888888";
-    var strBkClrEnabled = "#008838";
+        var strBttnExpand = "展开";
+        if(g_nExpandStatus == 1)
+        {
+            strBttnExpand = "收起";
+        }
 
-    var strBkClrDelete = strBkClrDisabled;
-    var strBkClrExpand = strBkClrDisabled;
+        var bttn = document.getElementById("tdBttnDelete");
+        bttn.style.backgroundColor = strBkClrDelete;
+        bttn.style.color = strClrDelete;
+        bttn.style.borderColor = strBorderClrDelete;
 
-    if(g_nIdx >= 0)
-    {
-        strBkClrDelete = strBkClrEnabled;
+        bttn = document.getElementById("tdBttnExpand");
+        bttn.style.backgroundColor = strBkClrExpand;
+        bttn.style.color = strClrExpand;
+        bttn.style.borderColor = strBorderClrExpand;
+        bttn.innerHTML = strBttnExpand;
+
+        bttn = document.getElementById("tdBttnRestart");
+        bttn.style.backgroundColor = strBkClrRestart;
+        bttn.style.color = strClrRestart;
+        bttn.style.borderColor = strBorderClrRestart;
+
+        bttn = document.getElementById("tdBttnTheme");
+        bttn.style.backgroundColor = strBkClrTheme;
+        bttn.style.color = strClrTheme;
+        bttn.style.borderColor = strBorderClrTheme;
     }
-    if(g_nIdx >= 20)
+
+    function Calc3C3R_Add(num)
     {
-        strBkClrExpand = strBkClrEnabled;
-    }
-    else
-    {
-        g_nExpandStatus = 0;
-    }
-
-    var strBttnExpand = "展开";
-    if(g_nExpandStatus == 1)
-    {
-        strBttnExpand = "收起";
-    }
-
-    var bttn = document.getElementById("tdBttnDelete");
-    bttn.style.backgroundColor = strBkClrDelete;
-
-    bttn = document.getElementById("tdBttnExpand");
-    bttn.style.backgroundColor = strBkClrExpand;
-    bttn.innerHTML = strBttnExpand;
-
-    bttn = document.getElementById("tdBttnRestart");
-    bttn.style.backgroundColor = (g_nIdx >= 0) ? strBkClrEnabled : strBkClrDisabled;
-}
-
-function Calc3C3R_Add(num)
-{
-    if(num == 0) return;
+        if(num == 0) return;
 	
-    var nCol = Math.floor((num - 1) / 12);
-    var nRow = num % 3;
-    if(nRow == 1)
-    {
-        nRow = 2;
-    }
-    else if(nRow == 2)
-    {
-        nRow = 1;
-    }
-
-    for (n = 0; n < 6; ++n)
-    {
-        g_an3C3R[n]++;
-    }
-
-    g_an3C3R[nCol] = 0;
-    g_an3C3R[3+nRow] = 0;
-}
-
-function Calc3C3R_Delete()
-{
-    var abOccur = [];
-
-    for (n = 0; n < 6; ++n)
-    {
-        g_an3C3R[n] = 0;
-        g_anIdx3C3R[n] = n;
-        abOccur[n] = false;
-    }
-
-    for(n = g_nIdx; n >= 0; --n)
-    {
-        var num = g_anNum[n];
-        if (num == 0) continue;
-
         var nCol = Math.floor((num - 1) / 12);
         var nRow = num % 3;
-        if (nRow == 1) {
+        if(nRow == 1)
+        {
             nRow = 2;
         }
-        else if (nRow == 2) {
+        else if(nRow == 2)
+        {
             nRow = 1;
         }
 
-        var bChanged = false;
-
-        for(nn = 0; nn < 6; ++ nn)
+        for (n = 0; n < 6; ++n)
         {
-            if(!abOccur[nn])
+            g_an3C3R[n]++;
+        }
+
+        g_an3C3R[nCol] = 0;
+        g_an3C3R[3+nRow] = 0;
+    }
+
+    function Calc3C3R_Delete()
+    {
+        var abOccur = [];
+
+        for (n = 0; n < 6; ++n)
+        {
+            g_an3C3R[n] = 0;
+            g_anIdx3C3R[n] = n;
+            abOccur[n] = false;
+        }
+
+        for(n = g_nIdx; n >= 0; --n)
+        {
+            var num = g_anNum[n];
+            if (num == 0) continue;
+
+            var nCol = Math.floor((num - 1) / 12);
+            var nRow = num % 3;
+            if (nRow == 1) {
+                nRow = 2;
+            }
+            else if (nRow == 2) {
+                nRow = 1;
+            }
+
+            var bChanged = false;
+
+            for(nn = 0; nn < 6; ++ nn)
             {
-                if((nn == nCol) || (nn == (nRow + 3)))
+                if(!abOccur[nn])
                 {
-                    abOccur[nn] = true;
+                    if((nn == nCol) || (nn == (nRow + 3)))
+                    {
+                        abOccur[nn] = true;
+                    }
+                    else
+                    {
+                        g_an3C3R[nn]++;
+                        bChanged = true;
+                    }
                 }
-                else
+            }
+
+            if (!bChanged)
+                break;
+        }
+    }
+
+    function Show3C3R()
+    {
+        // sort:
+        var bChanged = false;
+        do
+        {
+            bChanged = false;
+
+            for (n = 0; n < 5; ++n)
+            {
+                if (g_an3C3R[g_anIdx3C3R[n]] < g_an3C3R[g_anIdx3C3R[n + 1]])
                 {
-                    g_an3C3R[nn]++;
+                    tmp = g_anIdx3C3R[n];
+                    g_anIdx3C3R[n] = g_anIdx3C3R[n + 1];
+                    g_anIdx3C3R[n + 1] = tmp;
+
                     bChanged = true;
                 }
             }
-        }
+        } while (bChanged);
 
-        if (!bChanged)
-            break;
-    }
-}
-
-function Show3C3R()
-{
-    // sort:
-    var bChanged = false;
-    do
-    {
-        bChanged = false;
-
-        for (n = 0; n < 5; ++n)
-        {
-            if (g_an3C3R[g_anIdx3C3R[n]] < g_an3C3R[g_anIdx3C3R[n + 1]])
-            {
-                tmp = g_anIdx3C3R[n];
-                g_anIdx3C3R[n] = g_anIdx3C3R[n + 1];
-                g_anIdx3C3R[n + 1] = tmp;
-
-                bChanged = true;
+        // show:
+	    for(n = 0; n < 6; ++n)
+	    {
+		    var strIdTd = "td3C3R" + n.toString();
+		    var td = document.getElementById(strIdTd);
+		    td.innerHTML = g_an3C3R[g_anIdx3C3R[n]];
+		    strIdTd = "tdT3C3R" + n.toString();
+		    var strTitle = "第";
+		    if (g_anIdx3C3R[n] < 3)
+		    {
+		        if (g_anIdx3C3R[n] == 0)
+    		        strTitle += "一组";
+		        else if (g_anIdx3C3R[n] == 1)
+		            strTitle += "二组";
+		        else 
+		            strTitle += "三组";
             }
-        }
-    } while (bChanged);
+		    else
+		    {
+		        strTitle += (g_anIdx3C3R[n] - 2).toString() + "行";
+		    }
+		    var tdT = document.getElementById(strIdTd);
+		    tdT.innerHTML = strTitle;
 
-    // show:
-	for(n = 0; n < 6; ++n)
-	{
-		var strIdTd = "td3C3R" + n.toString();
-		var td = document.getElementById(strIdTd);
-		td.innerHTML = g_an3C3R[g_anIdx3C3R[n]];
-		strIdTd = "tdT3C3R" + n.toString();
-		var strTitle = "第";
-		if (g_anIdx3C3R[n] < 3)
-		{
-		    if (g_anIdx3C3R[n] == 0)
-    		    strTitle += "一组";
-		    else if (g_anIdx3C3R[n] == 1)
-		        strTitle += "二组";
-		    else 
-		        strTitle += "三组";
-        }
-		else
-		{
-		    strTitle += (g_anIdx3C3R[n] - 2).toString() + "行";
-		}
-		var tdT = document.getElementById(strIdTd);
-		tdT.innerHTML = strTitle;
-
-		if (g_an3C3R[g_anIdx3C3R[n]] >= 5)
-		{
-		    if (g_an3C3R[g_anIdx3C3R[n]] > 5)
-            {
-		        td.style.backgroundColor = "rgb(0,128,255)";
-		        tdT.style.backgroundColor = "rgb(0,93,218)";
+		    if (g_an3C3R[g_anIdx3C3R[n]] >= 5)
+		    {
+		        if (g_an3C3R[g_anIdx3C3R[n]] > 5)
+                {
+		            td.style.backgroundColor = "rgb(0,128,255)";
+		            tdT.style.backgroundColor = "rgb(0,93,218)";
+                }
+                else
+		        {
+		            td.style.backgroundColor = "rgb(158,118,200)";
+		            tdT.style.backgroundColor = "rgb(128,88,158)";
+                }
+		        td.style.fontWeight = "bold";
+		        td.style.color = "white";
+		        tdT.style.color = "white";
             }
             else
-		    {
-		        td.style.backgroundColor = "rgb(158,118,200)";
-		        tdT.style.backgroundColor = "rgb(128,88,158)";
+            {
+		        td.style.backgroundColor = "#EBE3CB";
+		        tdT.style.backgroundColor = "#DFD7CB";
+
+		        td.style.fontWeight = "normal";
+                td.style.color = "black";
+                tdT.style.color = "black";
             }
-		    td.style.fontWeight = "bold";
-		    td.style.color = "white";
-		    tdT.style.color = "white";
+        }
+    }
+
+    function OnPageInit()
+    {
+        InitStyles();
+
+	    g_nIdx = -1;
+	    for(n = 0; n < MAX_COUNT; n++)
+		    g_anNum[n] = -1;
+
+	    for(n = 0; n < 6; ++ n)
+	    {
+	        g_an3C3R[n] = 0;
+	        g_anIdx3C3R[n] = n;
+	    }
+
+	    Show3C3R();
+	    ShowQueue();
+	    RefreshButtons();
+    }
+
+    function OnClick(num)
+    {
+        Calc3C3R_Add(num);
+        Show3C3R();
+	
+	    if(g_nIdx == (MAX_COUNT - 1))
+	    {
+		    for(n = 0; n <= g_nIdx - 1; ++ n)
+		    {
+			    g_anNum[n] = g_anNum[n + 1];
+		    }
+	    }
+	    else
+	    {
+		    g_nIdx ++;
+	    }
+	
+	    g_anNum[g_nIdx] = num;
+	
+	    ShowQueue();
+	    RefreshButtons();
+    }
+
+    function OnDelete()
+    {
+        if (g_nIdx < 0)
+            return;
+
+        if(g_nIdx == 0)
+        {
+            OnPageInit();
+            return;
+        }
+
+        --g_nIdx;
+
+        Calc3C3R_Delete();
+
+        ShowQueue();
+        Show3C3R();
+        RefreshButtons();
+    }
+
+    function OnExpand()
+    {
+        g_nExpandStatus++;
+        g_nExpandStatus = g_nExpandStatus % 2;
+
+        ShowQueue();
+        RefreshButtons();
+    }
+
+    function OnRestart()
+    {
+        if (g_nIdx < 0)
+            return;
+
+        var confirmed = confirm("确定要重新开始？");
+        if(confirmed != 0)
+            OnPageInit();
+    }
+
+    function OnRestart()
+    {
+        if (g_nIdx < 0)
+            return;
+        z
+        var confirmed = confirm("确定要重新开始？");
+        if(confirmed != 0)
+            OnPageInit();
+    }
+
+    function OnChangeTheme()
+    {
+        var strTitle = "淡雅版";
+
+        if(g_s_theme_id == 0)
+        {
+            strTitle = "彩色版";
+            g_s_theme_id = 1;
         }
         else
         {
-		    td.style.backgroundColor = "#EBE3CB";
-		    tdT.style.backgroundColor = "#DFD7CB";
-
-		    td.style.fontWeight = "normal";
-            td.style.color = "black";
-            tdT.style.color = "black";
+            g_s_theme_id = 0;
         }
+
+        var bttn = document.getElementById("tdBttnTheme");
+        bttn.innerHTML = strTitle;
+
+        InitStyles();
+        ShowQueue();
+        RefreshButtons();
     }
-}
-
-function OnPageInit()
-{
-	g_nIdx = -1;
-	for(n = 0; n < MAX_COUNT; n++)
-		g_anNum[n] = -1;
-
-	for(n = 0; n < 6; ++ n)
-	{
-	    g_an3C3R[n] = 0;
-	    g_anIdx3C3R[n] = n;
-	}
-
-	Show3C3R();
-	ShowQueue();
-	RefreshButtons();
-}
-
-function OnClick(num)
-{
-    Calc3C3R_Add(num);
-    Show3C3R();
-	
-	if(g_nIdx == (MAX_COUNT - 1))
-	{
-		for(n = 0; n <= g_nIdx - 1; ++ n)
-		{
-			g_anNum[n] = g_anNum[n + 1];
-		}
-	}
-	else
-	{
-		g_nIdx ++;
-	}
-	
-	g_anNum[g_nIdx] = num;
-	
-	ShowQueue();
-	RefreshButtons();
-}
-
-function OnDelete()
-{
-    if (g_nIdx < 0)
-        return;
-
-    if(g_nIdx == 0)
-    {
-        OnPageInit();
-        return;
-    }
-
-    --g_nIdx;
-
-    Calc3C3R_Delete();
-
-    ShowQueue();
-    Show3C3R();
-    RefreshButtons();
-}
-
-function OnExpand()
-{
-    g_nExpandStatus++;
-    g_nExpandStatus = g_nExpandStatus % 2;
-
-    ShowQueue();
-    RefreshButtons();
-}
-
-function OnRestart()
-{
-    if (g_nIdx < 0)
-        return;
-    z
-    var confirmed = confirm("确定要重新开始？");
-    if(confirmed != 0)
-        OnPageInit();
-}
 
 </script>
 
@@ -404,47 +558,47 @@ function OnRestart()
 <body onload="OnPageInit()">
     <table cellpadding="0" cellspacing="0" id="tblBoard">
         <tr>
-            <td class="g_c" rowspan="3" onclick="OnClick(0)">0</td>
-            <td class="r_c" onclick="OnClick(3)">3</td>
-            <td class="b_c" onclick="OnClick(6)">6</td>
-            <td class="r_c" onclick="OnClick(9)">9</td>
-            <td class="r_c" onclick="OnClick(12)">12</td>
-            <td class="b_c" onclick="OnClick(15)">15</td>
-            <td class="r_c" onclick="OnClick(18)">18</td>
-            <td class="r_c" onclick="OnClick(21)">21</td>
-            <td class="b_c" onclick="OnClick(24)">24</td>
-            <td class="r_c" onclick="OnClick(27)">27</td>
-            <td class="r_c" onclick="OnClick(30)">30</td>
-            <td class="b_c" onclick="OnClick(33)">33</td>
-            <td class="r_c" onclick="OnClick(36)">36</td>
+            <td id="tdB0" rowspan="3" onclick="OnClick(0)">0</td>
+            <td id="tdB3" onclick="OnClick(3)">3</td>
+            <td id="tdB6" onclick="OnClick(6)">6</td>
+            <td id="tdB9" onclick="OnClick(9)">9</td>
+            <td id="tdB12" onclick="OnClick(12)">12</td>
+            <td id="tdB15" onclick="OnClick(15)">15</td>
+            <td id="tdB18" onclick="OnClick(18)">18</td>
+            <td id="tdB21" onclick="OnClick(21)">21</td>
+            <td id="tdB24" onclick="OnClick(24)">24</td>
+            <td id="tdB27" onclick="OnClick(27)">27</td>
+            <td id="tdB30" onclick="OnClick(30)">30</td>
+            <td id="tdB33" onclick="OnClick(33)">33</td>
+            <td id="tdB36" onclick="OnClick(36)">36</td>
         </tr>
         <tr>
-            <td class="b_c" onclick="OnClick(2)">2</td>
-            <td class="r_c" onclick="OnClick(5)">5</td>
-            <td class="b_c" onclick="OnClick(8)">8</td>
-            <td class="b_c" onclick="OnClick(11)">11</td>
-            <td class="r_c" onclick="OnClick(14)">14</td>
-            <td class="b_c" onclick="OnClick(17)">17</td>
-            <td class="b_c" onclick="OnClick(20)">20</td>
-            <td class="r_c" onclick="OnClick(23)">23</td>
-            <td class="b_c" onclick="OnClick(26)">26</td>
-            <td class="b_c" onclick="OnClick(29)">29</td>
-            <td class="r_c" onclick="OnClick(32)">32</td>
-            <td class="b_c" onclick="OnClick(35)">35</td>
+            <td id="tdB2" onclick="OnClick(2)">2</td>
+            <td id="tdB5" onclick="OnClick(5)">5</td>
+            <td id="tdB8" onclick="OnClick(8)">8</td>
+            <td id="tdB11" onclick="OnClick(11)">11</td>
+            <td id="tdB14" onclick="OnClick(14)">14</td>
+            <td id="tdB17" onclick="OnClick(17)">17</td>
+            <td id="tdB20" onclick="OnClick(20)">20</td>
+            <td id="tdB23" onclick="OnClick(23)">23</td>
+            <td id="tdB26" onclick="OnClick(26)">26</td>
+            <td id="tdB29" onclick="OnClick(29)">29</td>
+            <td id="tdB32" onclick="OnClick(32)">32</td>
+            <td id="tdB35" onclick="OnClick(35)">35</td>
         </tr>
         <tr>
-            <td class="r_c" onclick="OnClick(1)">1</td>
-            <td class="b_c" onclick="OnClick(4)">4</td>
-            <td class="r_c" onclick="OnClick(7)">7</td>
-            <td class="b_c" onclick="OnClick(10)">10</td>
-            <td class="b_c" onclick="OnClick(13)">13</td>
-            <td class="r_c" onclick="OnClick(16)">16</td>
-            <td class="r_c" onclick="OnClick(19)">19</td>
-            <td class="b_c" onclick="OnClick(22)">22</td>
-            <td class="r_c" onclick="OnClick(25)">25</td>
-            <td class="b_c" onclick="OnClick(28)">28</td>
-            <td class="b_c" onclick="OnClick(31)">31</td>
-            <td class="r_c" onclick="OnClick(34)">34</td>
+            <td id="tdB1" onclick="OnClick(1)">1</td>
+            <td id="tdB4" onclick="OnClick(4)">4</td>
+            <td id="tdB7" onclick="OnClick(7)">7</td>
+            <td id="tdB10" onclick="OnClick(10)">10</td>
+            <td id="tdB13" onclick="OnClick(13)">13</td>
+            <td id="tdB16" onclick="OnClick(16)">16</td>
+            <td id="tdB19" onclick="OnClick(19)">19</td>
+            <td id="tdB22" onclick="OnClick(22)">22</td>
+            <td id="tdB25" onclick="OnClick(25)">25</td>
+            <td id="tdB28" onclick="OnClick(28)">28</td>
+            <td id="tdB31" onclick="OnClick(31)">31</td>
+            <td id="tdB34" onclick="OnClick(34)">34</td>
         </tr>
     </table>
     <div style="height: 8px"></div>
@@ -577,7 +731,8 @@ function OnRestart()
         <tr>
             <td id="tdBttnDelete" class="bttn" style="background-color: #007820" onclick="OnDelete()">删除</td><td>&nbsp;&nbsp;&nbsp;</td>
             <td id="tdBttnExpand" class="bttn" style="background-color: #007820" onclick="OnExpand()">展开</td><td>&nbsp;&nbsp;&nbsp;</td>
-            <td id="tdBttnRestart" class="bttn" style="background-color: #007820" onclick="OnRestart()">重新开始</td>
+            <td id="tdBttnRestart" class="bttn" style="background-color: #007820" onclick="OnRestart()">重新开始</td><td>&nbsp;&nbsp;&nbsp;</td>
+            <td id="tdBttnTheme" class="bttn" style="background-color: #007820" onclick="OnChangeTheme()">淡雅版</td>
         </tr>
     </table>
 </body>
