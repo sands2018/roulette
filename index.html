@@ -75,10 +75,10 @@ td
     var g_s_c_num_bk_r = ["#CC2200", "white"]; // red
     var g_s_c_num_bk_b = ["#222222", "white"]; // black
 
-    // queue text color:
-    var g_s_c_que_g = ["35A300", "#D3EED3"]; // green
-    var g_s_c_que_r = ["CC2200", "white"]; // red
-    var g_s_c_que_b = ["222222", "#DDDDDD"]; // black
+    // queue background color:
+    var g_s_c_que_bk_g = ["35A300", "#D3EED3"]; // green
+    var g_s_c_que_bk_r = ["CC2200", "white"]; // red
+    var g_s_c_que_bk_b = ["222222", "#EAEAEA"]; // black
 
     // queue border color:
     var g_s_c_que_b_g = ["white", "#CCFFCC"]; 
@@ -143,13 +143,13 @@ td
         var strColor = g_astrNumberColor[num];
 
         if (strColor == "r") {
-            return g_s_c_que_r[g_s_theme_id];
+            return g_s_c_que_bk_r[g_s_theme_id];
         }
         else if (strColor == "b") {
-            return g_s_c_que_b[g_s_theme_id];
+            return g_s_c_que_bk_b[g_s_theme_id];
         }
         else {
-            return g_s_c_que_g[g_s_theme_id];
+            return g_s_c_que_bk_g[g_s_theme_id];
         }
     }
 
