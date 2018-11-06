@@ -115,6 +115,42 @@ td
     // 3c3r border color
     var g_s_c_3c3r_b = ["white", "#AA8833"];
 
+    // classes: ---------------------------------------------------------------
+    function CGameItem()
+    {
+        this.nDistance;
+        this.nBet3C3R; // 0 ~ 2: columns; 3 ~ 5: rows
+        this.nRound;
+        this.nMoney;
+        this.nStatus; 
+    }
+
+    function CGame()
+    {
+        this.nCount = 0;
+        this.aItem = [];
+    }
+
+    // global variables: ------------------------------------------------------
+
+    var MAX_COUNT = 10000;
+    var QUEUE_MAX_COUNT = 100;
+
+    var GAME_COUNT = 2;
+
+    var g_anQueueNum = [];
+    var g_nQueueIdx = -1;
+
+    var g_an3C3R = [];
+    var g_anIdx3C3R = [];
+
+    var g_nExpandStatus = 0;
+
+    var g_aGame = [];
+
+
+    // functions: -------------------------------------------------------------
+
     function GetNumberColor()
     {
         return g_s_c_num[g_s_theme_id];
@@ -187,28 +223,26 @@ td
     // styles: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
-    var MAX_COUNT = 100;
-    var g_anNum = [];
-    var g_nIdx = -1;
-
-    var g_an3C3R = [];
-    var g_anIdx3C3R = [];
-
-    var g_nExpandStatus = 0;
-
     function ShowQueue()
     {
-        for (n = 0; n <= g_nIdx; ++n)
-	    {
-		    var strIdTd = "td" + n.toString();
+        var nStart = 0;
+        if (g_nQueueIdx > QUEUE_MAX_COUNT)
+            nStart = g_nQueueIdx - QUEUE_MAX_COUNT;
+
+        for (n = nStart; n <= g_nQueueIdx; ++n)
+        {
+            var nn = (n - nStart);
+            var nIdx = g_nQueueIdx - nn;
+
+            var strIdTd = "td" + nn.toString();
 		    var td = document.getElementById(strIdTd);
-		    td.innerHTML = g_anNum[g_nIdx - n];
-		    td.style.backgroundColor = GetQueueNumberBackgroundColor(g_anNum[g_nIdx - n]);
+		    td.innerHTML = g_anQueueNum[nIdx];
+		    td.style.backgroundColor = GetQueueNumberBackgroundColor(g_anQueueNum[nIdx]);
 		    td.style.color = GetNumberColor();
-		    td.style.border = GetQueueItemBorderStyle(g_anNum[g_nIdx - n]);
+		    td.style.border = GetQueueItemBorderStyle(g_anQueueNum[nIdx]);
         }
 
-	    for(n = g_nIdx + 1; n < MAX_COUNT; ++ n)
+        for (n = g_nQueueIdx + 1; n < QUEUE_MAX_COUNT; ++n)
 	    {
 		    var strIdTd = "td" + n.toString();
 		    var td = document.getElementById(strIdTd);
@@ -218,9 +252,9 @@ td
 
 	    var nQueueRow = 0;
 
-	    if (g_nIdx >= 0)
+	    if (g_nQueueIdx >= 0)
         {
-	        nQueueRow = Math.floor(g_nIdx / 20) + 1;
+	        nQueueRow = Math.floor((g_nQueueIdx - nStart) / 20) + 1;
 	    }
 
 	    var strID = "divBlank";
@@ -268,7 +302,7 @@ td
         var strClrTheme = strClrEnabled;
         var strBorderClrTheme = strBorderClrEnabled;
 
-        if(g_nIdx >= 0)
+        if (g_nQueueIdx >= 0)
         {
             strBkClrDelete = strBkClrEnabled;
             strClrDelete = strClrEnabled;
@@ -278,7 +312,7 @@ td
             strClrRestart = strClrEnabled;
             strBorderClrRestart = strBorderClrEnabled;
         }
-        if(g_nIdx >= 20)
+        if (g_nQueueIdx >= 20)
         {
             strBkClrExpand = strBkClrEnabled;
             strClrExpand = strClrEnabled;
@@ -352,9 +386,9 @@ td
             abOccur[n] = false;
         }
 
-        for(n = g_nIdx; n >= 0; --n)
+        for (n = g_nQueueIdx; n >= 0; --n)
         {
-            var num = g_anNum[n];
+            var num = g_anQueueNum[n];
             if (num == 0) continue;
 
             var nCol = Math.floor((num - 1) / 12);
@@ -467,6 +501,14 @@ td
         }
     }
 
+    function RefreshGameLists()
+    {
+        for(n = 0; n < 2; ++ n)
+        {
+
+        }
+    }
+
     function RefreshTheme()
     {
         var strTitle = "淡雅版";
@@ -485,11 +527,11 @@ td
         RefreshButtons();
     }
 
-    function OnPageInit()
+    function Refresh(bInit)
     {
-	    g_nIdx = -1;
-	    for(n = 0; n < MAX_COUNT; n++)
-		    g_anNum[n] = -1;
+        g_nQueueIdx = -1;
+	    for (n = 0; n < QUEUE_MAX_COUNT; n++)
+	        g_anQueueNum[n] = -1;
 
 	    for(n = 0; n < 6; ++ n)
 	    {
@@ -497,7 +539,31 @@ td
 	        g_anIdx3C3R[n] = n;
 	    }
 
+	    for (n = 0; n < GAME_COUNT; ++n)
+	    {
+	        if (bInit)
+	        {
+	            var game = new CGame();
+	            game.nCount = 0;
+
+	            g_aGame[n] = game;
+	        }
+            else
+	        {
+	            for(nn = 0; nn < g_aGame[n].nCount; ++ nn)
+	            {
+	                g_aGame[n].aItem[nn] = null;
+	            }
+                g_aGame[n].nCount = 0;
+	        }
+	    }
+
 	    RefreshTheme();
+    }
+
+    function OnPageInit()
+    {
+        Refresh(true);
     }
 
     function OnClick(num)
@@ -506,19 +572,19 @@ td
         Sort3C3R();
         Show3C3R();
 	
-	    if(g_nIdx == (MAX_COUNT - 1))
+        if (g_nQueueIdx == (MAX_COUNT - 1))
 	    {
-		    for(n = 0; n <= g_nIdx - 1; ++ n)
+            for (n = 0; n <= g_nQueueIdx - 1; ++n)
 		    {
-			    g_anNum[n] = g_anNum[n + 1];
+		        g_anQueueNum[n] = g_anQueueNum[n + 1];
 		    }
 	    }
 	    else
 	    {
-		    g_nIdx ++;
+            g_nQueueIdx++;
 	    }
 	
-	    g_anNum[g_nIdx] = num;
+        g_anQueueNum[g_nQueueIdx] = num;
 	
 	    ShowQueue();
 	    RefreshButtons();
@@ -526,16 +592,16 @@ td
 
     function OnDelete()
     {
-        if (g_nIdx < 0)
+        if (g_nQueueIdx < 0)
             return;
 
-        if(g_nIdx == 0)
+        if (g_nQueueIdx == 0)
         {
-            OnPageInit();
+            Refresh(false);
             return;
         }
 
-        --g_nIdx;
+        --g_nQueueIdx;
 
         Calc3C3R_Delete();
 
@@ -556,12 +622,12 @@ td
 
     function OnRestart()
     {
-        if (g_nIdx < 0)
+        if (g_nQueueIdx < 0)
             return;
-        z
+        
         var confirmed = confirm("确定要重新开始？");
         if(confirmed != 0)
-            OnPageInit();
+            Refresh(false);
     }
 
     function OnChangeTheme()
@@ -761,5 +827,8 @@ td
             <td id="tdBttnTheme" class="bttn" style="background-color: #007820" onclick="OnChangeTheme()">NA</td>
         </tr>
     </table>
+    <div style="height: 8px"></div>
+    <div id="divGame01"></div>
+    <div id="divGame02"></div>
 </body>
 </html>
