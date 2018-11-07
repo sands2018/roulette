@@ -13,7 +13,7 @@ td
 
 #tblBoard
 {
-    border: 1px solid #DFBC33;
+    border: 1px solid;
 }
 
 #tblBoard td 
@@ -21,8 +21,7 @@ td
 	width: 90px;
 	height: 70px;
 	font-size: 40px;
-	border: 1px solid #DFBC33;
-	color: #FFFFFF;
+	border: 1px solid;
 }
 
 #tblQueue td 
@@ -30,8 +29,6 @@ td
 	width: 55px;
 	height: 50px;
 	font-size: 28px;
-	background-color: #AAAAAA;
-	color: #FFFFFF;
 }
 
 .bttn 
@@ -42,13 +39,12 @@ td
     text-align: center;
     vertical-align: middle;
 	font-size: 28px;
-    color: white;
     border: 1px solid white;
 }
 
-.title_c,.value_c { font-size: 26px; padding: 7px 0px 5px 0px; border: 1px solid white;}
-.title_c { background-color: #DFD7CB; width: 110px; color: #403000 }
-.value_c { background-color: #EBE3CB; width: 70px; border-left: 0; }
+.title_c,.value_c { font-size: 26px; padding: 7px 0px 5px 0px; border: 1px solid;}
+.title_c { width: 110px; color: #403000 }
+.value_c { width: 70px; border-left: 0; }
 
 </style>
 
@@ -67,69 +63,56 @@ td
 	    "r", "b", "r", "b", "b", "r", "b", "r", "b", "r", "b", "r"
     ];
 
+    // board border color:
+    var g_s_c_board_b = ["#DFBC33", "#DFBC33", "white"];
+
     // number text color:
-    var g_s_c_num = ["white", "#434343"];
+    var g_s_c_num = ["white", "#434343", "#f3f3f3"];
 
     // number background color:
-    var g_s_c_num_bk_g = ["#35A300", "white"]; // green
-    var g_s_c_num_bk_r = ["#CC2200", "white"]; // red
-    var g_s_c_num_bk_b = ["#222222", "white"]; // black
+    var g_s_c_num_bk_g = ["#35A300", "white", "white"]; // green
+    var g_s_c_num_bk_r = ["#CC2200", "white", "white"]; // red
+    var g_s_c_num_bk_b = ["#222222", "white", "white"]; // black
 
     // queue background color:
-    var g_s_c_que_bk_g = ["35A300", "#D3EED3"]; // green
-    var g_s_c_que_bk_r = ["CC2200", "white"]; // red
-    var g_s_c_que_bk_b = ["222222", "#EAEAEA"]; // black
+    var g_s_c_que_bk_g = ["35A300", "#D3EED3", "white"]; // green
+    var g_s_c_que_bk_r = ["CC2200", "white", "white"]; // red
+    var g_s_c_que_bk_b = ["222222", "#EAEAEA", "white"]; // black
 
     // queue border color:
-    var g_s_c_que_b_g = ["white", "#CCFFCC"]; 
-    var g_s_c_que_b_r = ["white", "#FFDDAA"]; 
-    var g_s_c_que_b_b = ["white", "#DDDDDD"]; 
+    var g_s_c_que_b_g = ["white", "#CCFFCC", "white"]; 
+    var g_s_c_que_b_r = ["white", "#FFDDAA", "white"]; 
+    var g_s_c_que_b_b = ["white", "#DDDDDD", "white"]; 
 
     // button background color:
-    var g_s_c_btn_bk_enabled = ["#008838", "white"];
-    var g_s_c_btn_bk_disabled = ["#888888", "white"];
+    var g_s_c_btn_bk_enabled = ["#008838", "white", "white"];
+    var g_s_c_btn_bk_disabled = ["#888888", "white", "white"];
 
     // button text color:
-    var g_s_c_btn_enabled = ["white", "#AA8833"];
-    var g_s_c_btn_disabled = ["white", "BBBBBB"];
+    var g_s_c_btn_enabled = ["white", "#AA8833", "#f3f3f3"];
+    var g_s_c_btn_disabled = ["white", "BBBBBB", "#f3f3f3"];
 
     // button border color:
-    var g_s_c_btn_b_enabled = ["white", "#AA8833"];
-    var g_s_c_btn_b_disabled = ["white", "BBBBBB"];
+    var g_s_c_btn_b_enabled = ["white", "#AA8833", "white"];
+    var g_s_c_btn_b_disabled = ["white", "BBBBBB", "white"];
 
     // 3c3r color
-    var g_s_c_3c3r = ["black", "black"]; // text color
-    var g_s_c_3c3r_bk = ["#EBE3CB", "white"]; // background color
-    var g_s_c_3c3r_t_bk = ["#DFD7CB", "white"]; // title background color
+    var g_s_c_3c3r = ["black", "black", "#f3f3f3"]; // text color
+    var g_s_c_3c3r_bk = ["#EBE3CB", "white", "white"]; // background color
+    var g_s_c_3c3r_t_bk = ["#DFD7CB", "white", "white"]; // title background color
 
     // 3c3r >=5 color
-    var g_s_c_3c3r_5 = ["white", "black"]; // text color
-    var g_s_c_3c3r_5_bk = ["rgb(158,118,200)", "#EEEEEE"]; // background color
-    var g_s_c_3c3r_5_t_bk = ["rgb(128,88,158)", "#DDDDDD"]; // title background color
+    var g_s_c_3c3r_5 = ["white", "black", "#f3f3f3"]; // text color
+    var g_s_c_3c3r_5_bk = ["rgb(158,118,200)", "#EEEEEE", "white"]; // background color
+    var g_s_c_3c3r_5_t_bk = ["rgb(128,88,158)", "#DDDDDD", "white"]; // title background color
 
     // 3c3r >=6 background color
-    var g_s_c_3c3r_6 = ["white", "black"]; // text color
-    var g_s_c_3c3r_6_bk = ["rgb(0,128,255)", "#EBE3CB"]; // background color
-    var g_s_c_3c3r_6_t_bk = ["rgb(0,93,218)", "#DFD7CB"]; // title background color
+    var g_s_c_3c3r_6 = ["white", "black", "#f3f3f3"]; // text color
+    var g_s_c_3c3r_6_bk = ["rgb(0,128,255)", "#EBE3CB", "white"]; // background color
+    var g_s_c_3c3r_6_t_bk = ["rgb(0,93,218)", "#DFD7CB", "white"]; // title background color
 
     // 3c3r border color
-    var g_s_c_3c3r_b = ["white", "#AA8833"];
-
-    // classes: ---------------------------------------------------------------
-    function CGameItem()
-    {
-        this.nDistance;
-        this.nBet3C3R; // 0 ~ 2: columns; 3 ~ 5: rows
-        this.nRound;
-        this.nMoney;
-        this.nStatus; 
-    }
-
-    function CGame()
-    {
-        this.nCount = 0;
-        this.aItem = [];
-    }
+    var g_s_c_3c3r_b = ["white", "#AA8833", "white"];
 
     // global variables: ------------------------------------------------------
 
@@ -137,6 +120,9 @@ td
     var QUEUE_MAX_COUNT = 100;
 
     var GAME_COUNT = 2;
+    var GAME_SKIP_COUNT = [6, 5];
+    var GAME_BET = [10, 10, 10, 20, 20, 30];
+    var GAME_WIN = [30, 30, 30, 60, 60, 90];
 
     var g_anQueueNum = [];
     var g_nQueueIdx = -1;
@@ -148,6 +134,167 @@ td
 
     var g_aGame = [];
 
+    function OnTest()
+    {
+    }
+
+    function GetNumCol(num)
+    {
+        return Math.floor((num - 1) / 12);
+    }
+
+    function GetNumRow(num)
+    {
+        var nRow = num % 3;
+        if (nRow == 1)
+        {
+            nRow = 2;
+        }
+        else if (nRow == 2)
+        {
+            nRow = 1;
+        }
+
+        return nRow;
+    }
+
+    // classes: ---------------------------------------------------------------
+
+    function CGameItem()
+    {
+        this.nBet3C3R = -1; // 0 ~ 2: columns; 3 ~ 5: rows
+        this.nDistance = 0;
+        this.nRound = 0;
+        this.nMoney = 0;
+        this.nStatus = 1; 
+    }
+
+    function CGame()
+    {
+        this.c_nSkipCount = 6;
+        this.nCount = 0;
+        this.nMoney = 0;
+        this.aItem = [];
+
+        var m_nPocketMoney = 0;
+
+        this.Add = function(item)
+        {
+            this.aItem[this.nCount] = item;
+            this.nCount++;
+        }
+
+        this.RemoveAt = function(nIdx)
+        {
+            if((this.nCount <= 0) || (nIdx >= this.nCount))
+            {
+                return;
+            }
+            for (var n = nIdx; n < (this.nCount - 1) ; ++n)
+            {
+                this.aItem[n] = this.aItem[n + 1];
+            }
+            this.aItem[this.nCount - 1] = null;
+            this.nCount--;
+        }
+
+        this.RemoveAll = function()
+        {
+            for (var n = 0; n < this.nCount; ++n)
+            {
+                this.aItem[n] = null;
+            }
+            this.nCount = 0;
+        }
+
+        this.AddNum = function(num)
+        {
+            var nNumCol = GetNumCol(num);
+            var nNumRow = GetNumRow(num);
+
+            for (var n = 0; n < this.nCount; ++n)
+            {
+                this.aItem[n].nDistance++;
+            }
+
+            if (num == 0)
+            {
+                this.nMoney = m_nPocketMoney;
+                for(var n = 0; n < this.nCount; ++n)
+                {
+                    if (this.aItem[n].nStatus == 0)
+                        continue;
+
+                    this.aItem[n].nMoney -= GAME_BET[this.aItem[n].nRound - 1];
+                    this.nMoney += this.aItem[n].nMoney;
+                }
+
+                return;
+            }
+
+            var anNum3C3R = [nNumCol, nNumRow + 3];
+
+            var abHitted = [false, false];
+
+            for (var nn = 0; nn < 2; ++nn)
+            {
+                for (var n = 0; n < this.nCount; ++n)
+                {
+                    if (this.aItem[n].nStatus == 0)
+                        continue;
+
+                    if (this.aItem[n].nBet3C3R == anNum3C3R[nn])
+                    {
+                        this.aItem[n].nMoney += GAME_WIN[this.aItem[n].nRound - 1];
+                        this.aItem[n].nStatus = 0;
+                        m_nPocketMoney += this.aItem[n].nMoney;
+                        abHitted[nn] = true;
+                    }
+                }
+            }
+
+            for (var n = 0; n < this.nCount; ++n)
+            {
+                if (this.aItem[n].nStatus == 0)
+                    continue;
+
+                if (this.aItem[n].nRound == 6)
+                {
+                    this.aItem[n].nStatus = 0;
+                    m_nPocketMoney += this.aItem[n].nMoney;
+                }
+                else
+                {
+                    this.aItem[n].nRound++;
+                    this.aItem[n].nMoney -= GAME_BET[this.aItem[n].nRound - 1];
+                }
+            }
+
+            for (var n = 0; n < 6; ++n)
+            {
+                if (g_an3C3R[n] == this.c_nSkipCount)
+                {
+                    var item = new CGameItem();
+                    item.nBet3C3R = n;
+                    item.nDistance = 0;
+                    item.nRound = 1;
+                    item.nMoney = -GAME_BET[0];
+                    item.nStatus = 1;
+
+                    this.Add(item);
+                }
+            }
+
+            this.nMoney = m_nPocketMoney;
+            for(var n = 0; n < this.nCount; ++n)
+            {
+                if (this.aItem[n].nStatus == 0)
+                    continue;
+
+                this.nMoney += this.aItem[n].nMoney;
+            }
+        }
+    }
 
     // functions: -------------------------------------------------------------
 
@@ -178,13 +325,16 @@ td
     {
         var strColor = g_astrNumberColor[num];
 
-        if (strColor == "r") {
+        if (strColor == "r")
+        {
             return g_s_c_que_bk_r[g_s_theme_id];
         }
-        else if (strColor == "b") {
+        else if (strColor == "b")
+        {
             return g_s_c_que_bk_b[g_s_theme_id];
         }
-        else {
+        else
+        {
             return g_s_c_que_bk_g[g_s_theme_id];
         }
     }
@@ -193,13 +343,16 @@ td
     {
         var strColor = g_astrNumberColor[num];
 
-        if (strColor == "r") {
+        if (strColor == "r")
+        {
             return g_s_c_que_b_r[g_s_theme_id];
         }
-        else if (strColor == "b") {
+        else if (strColor == "b")
+        {
             return g_s_c_que_b_b[g_s_theme_id];
         }
-        else {
+        else
+        {
             return g_s_c_que_b_g[g_s_theme_id];
         }
     }
@@ -207,10 +360,14 @@ td
 
     function InitStyles()
     {
-        for(n = 0; n <= 36; ++n)
+        var tbl = document.getElementById("tblBoard");
+        tbl.style.borderColor = g_s_c_board_b[g_s_theme_id];
+
+        for(var n = 0; n <= 36; ++n)
         {
             var td = document.getElementById("tdB" + n.toString());
             td.style.backgroundColor = GetNumberBackgroundColor(n);
+            td.style.borderColor = g_s_c_board_b[g_s_theme_id];
             td.style.color = GetNumberColor();
         }
     }
@@ -229,7 +386,7 @@ td
         if (g_nQueueIdx > QUEUE_MAX_COUNT)
             nStart = g_nQueueIdx - QUEUE_MAX_COUNT;
 
-        for (n = nStart; n <= g_nQueueIdx; ++n)
+        for (var n = nStart; n <= g_nQueueIdx; ++n)
         {
             var nn = (n - nStart);
             var nIdx = g_nQueueIdx - nn;
@@ -242,7 +399,7 @@ td
 		    td.style.border = GetQueueItemBorderStyle(g_anQueueNum[nIdx]);
         }
 
-        for (n = g_nQueueIdx + 1; n < QUEUE_MAX_COUNT; ++n)
+        for (var n = g_nQueueIdx + 1; n < QUEUE_MAX_COUNT; ++n)
 	    {
 		    var strIdTd = "td" + n.toString();
 		    var td = document.getElementById(strIdTd);
@@ -264,7 +421,7 @@ td
 	    else
 	        div.style.display = "";
 
-	    for (n = 1; n <= 5; ++n)
+	    for (var n = 1; n <= 5; ++n)
 	    {
 	        strID = "trRow" + n.toString();
 	        var tr = document.getElementById(strID);
@@ -355,18 +512,10 @@ td
     {
         if(num == 0) return;
 	
-        var nCol = Math.floor((num - 1) / 12);
-        var nRow = num % 3;
-        if(nRow == 1)
-        {
-            nRow = 2;
-        }
-        else if(nRow == 2)
-        {
-            nRow = 1;
-        }
+        var nCol = GetNumCol(num);
+        var nRow = GetNumRow(num);
 
-        for (n = 0; n < 6; ++n)
+        for (var n = 0; n < 6; ++n)
         {
             g_an3C3R[n]++;
         }
@@ -379,30 +528,32 @@ td
     {
         var abOccur = [];
 
-        for (n = 0; n < 6; ++n)
+        for (var n = 0; n < 6; ++n)
         {
             g_an3C3R[n] = 0;
             g_anIdx3C3R[n] = n;
             abOccur[n] = false;
         }
 
-        for (n = g_nQueueIdx; n >= 0; --n)
+        for (var n = g_nQueueIdx; n >= 0; --n)
         {
             var num = g_anQueueNum[n];
             if (num == 0) continue;
 
             var nCol = Math.floor((num - 1) / 12);
             var nRow = num % 3;
-            if (nRow == 1) {
+            if (nRow == 1)
+            {
                 nRow = 2;
             }
-            else if (nRow == 2) {
+            else if (nRow == 2)
+            {
                 nRow = 1;
             }
 
             var bChanged = false;
 
-            for(nn = 0; nn < 6; ++ nn)
+            for (var nn = 0; nn < 6; ++nn)
             {
                 if(!abOccur[nn])
                 {
@@ -427,11 +578,14 @@ td
     {
         // sort:
         var bChanged = false;
-        do {
+        do
+        {
             bChanged = false;
 
-            for (n = 0; n < 5; ++n) {
-                if (g_an3C3R[g_anIdx3C3R[n]] < g_an3C3R[g_anIdx3C3R[n + 1]]) {
+            for (var n = 0; n < 5; ++n)
+            {
+                if (g_an3C3R[g_anIdx3C3R[n]] < g_an3C3R[g_anIdx3C3R[n + 1]])
+                {
                     tmp = g_anIdx3C3R[n];
                     g_anIdx3C3R[n] = g_anIdx3C3R[n + 1];
                     g_anIdx3C3R[n + 1] = tmp;
@@ -445,7 +599,7 @@ td
     function Show3C3R()
     {
         // show:
-	    for(n = 0; n < 6; ++n)
+        for (var n = 0; n < 6; ++n)
 	    {
 		    var strIdTd = "td3C3R" + n.toString();
 		    var td = document.getElementById(strIdTd);
@@ -501,11 +655,47 @@ td
         }
     }
 
-    function RefreshGameLists()
+    function ShowGames()
     {
-        for(n = 0; n < 2; ++ n)
+        for (var nn = 0; nn < GAME_COUNT; ++nn)
         {
+            if (g_aGame[nn].nCount > 0)
+            {
+                var div = document.getElementById("divGame" + (nn + 1).toString());
+                var strHtml = "<table cellpadding='0' cellspacing='0'>";
+                var nLastIdx = 0;
+                if (g_aGame[nn].nCount > 10)
+                    nLastIdx = g_aGame[nn].nCount - 10;
 
+                for (var n = g_aGame[nn].nCount - 1; n >= nLastIdx; --n)
+                {
+                    strHtml += "<tr><td style='font-size: 24px'>Bet=";
+                    if (g_aGame[nn].aItem[n].nBet3C3R < 3)
+                    {
+                        strHtml += "第" + (g_aGame[nn].aItem[n].nBet3C3R + 1).toString() + "组";
+                    }
+                    else
+                    {
+                        strHtml += "第" + (g_aGame[nn].aItem[n].nBet3C3R - 3 + 1).toString() + "行";
+                    }
+                    strHtml += "; Round=";
+                    strHtml += g_aGame[nn].aItem[n].nRound.toString();
+                    strHtml += "; Distance=";
+                    strHtml += g_aGame[nn].aItem[n].nDistance.toString();
+                    strHtml += "; Money=";
+                    strHtml += g_aGame[nn].aItem[n].nMoney.toString();
+                    if (g_aGame[nn].aItem[n].nStatus == 0)
+                    {
+                        strHtml += "; 已结束";
+                    }
+                    strHtml += "</td></tr>";
+                }
+                strHtml += "</table>total=";
+                strHtml += g_aGame[nn].nMoney;
+                strHtml += "<br><br>";
+
+                div.innerHTML = strHtml;
+            }
         }
     }
 
@@ -531,28 +721,25 @@ td
     {
         g_nQueueIdx = -1;
 
-	    for(n = 0; n < 6; ++ n)
+        for (var n = 0; n < 6; ++n)
 	    {
 	        g_an3C3R[n] = 0;
 	        g_anIdx3C3R[n] = n;
 	    }
 
-	    for (n = 0; n < GAME_COUNT; ++n)
+        for (var n = 0; n < GAME_COUNT; ++n)
 	    {
 	        if (bInit)
 	        {
 	            var game = new CGame();
+	            game.c_nSkipCount = GAME_SKIP_COUNT[n];
 	            game.nCount = 0;
 
 	            g_aGame[n] = game;
 	        }
             else
 	        {
-	            for(nn = 0; nn < g_aGame[n].nCount; ++ nn)
-	            {
-	                g_aGame[n].aItem[nn] = null;
-	            }
-                g_aGame[n].nCount = 0;
+	            g_aGame[n].RemoveAll();
 	        }
 	    }
 
@@ -561,30 +748,48 @@ td
 
     function OnPageInit()
     {
+        OnTest();
+
         Refresh(true);
     }
 
     function OnClick(num)
     {
+        // queue: -------------------------------
+
+        if (g_nQueueIdx == (MAX_COUNT - 1))
+        {
+            for (var n = 0; n <= g_nQueueIdx - 1; ++n)
+            {
+                g_anQueueNum[n] = g_anQueueNum[n + 1];
+            }
+        }
+        else
+        {
+            g_nQueueIdx++;
+        }
+
+        g_anQueueNum[g_nQueueIdx] = num;
+
+        ShowQueue();
+
+        // 3C3R: --------------------------------
+
         Calc3C3R_Add(num);
         Sort3C3R();
         Show3C3R();
 	
-        if (g_nQueueIdx == (MAX_COUNT - 1))
-	    {
-            for (n = 0; n <= g_nQueueIdx - 1; ++n)
-		    {
-		        g_anQueueNum[n] = g_anQueueNum[n + 1];
-		    }
-	    }
-	    else
-	    {
-            g_nQueueIdx++;
-	    }
-	
-        g_anQueueNum[g_nQueueIdx] = num;
-	
-	    ShowQueue();
+        // games: -------------------------------
+
+        for (var n = 0; n < GAME_COUNT; ++n)
+        {
+            g_aGame[n].AddNum(num);
+        }
+
+        ShowGames();
+
+        // buttons: -----------------------------
+
 	    RefreshButtons();
     }
 
@@ -630,6 +835,9 @@ td
 
     function OnChangeTheme()
     {
+        if (g_s_theme_id > 1)
+            return;
+
         if(g_s_theme_id == 0)
         {
             g_s_theme_id = 1;
@@ -825,8 +1033,8 @@ td
             <td id="tdBttnTheme" class="bttn" style="background-color: #007820" onclick="OnChangeTheme()">NA</td>
         </tr>
     </table>
-    <div style="height: 8px"></div>
-    <div id="divGame01"></div>
-    <div id="divGame02"></div>
+    <div style="height: 18px"></div>
+    <div id="divGame1" style="font-size: 24px"></div>
+    <div id="divGame2" style="font-size: 24px"></div>
 </body>
 </html>
