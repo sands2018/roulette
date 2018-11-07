@@ -258,6 +258,8 @@ td
                 if (this.aItem[n].nStatus == 0)
                     continue;
 
+                this.aItem[n].nRound++;
+
                 if (this.aItem[n].nRound == 6)
                 {
                     this.aItem[n].nStatus = 0;
@@ -265,7 +267,6 @@ td
                 }
                 else
                 {
-                    this.aItem[n].nRound++;
                     this.aItem[n].nMoney -= GAME_BET[this.aItem[n].nRound - 1];
                 }
             }
