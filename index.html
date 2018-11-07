@@ -594,6 +594,25 @@ td
         } while (bChanged);
     }
 
+    function GetColRowSpec(nIdx3C3R)
+    {
+        var strSpec;
+
+        if (nIdx3C3R < 3)
+        {
+            if (nIdx3C3R == 0)
+                strSpec = "第一组";
+            else if (nIdx3C3R == 1)
+                strSpec = "第二组";
+            else
+                strSpec = "第三组";
+        }
+        else
+        {
+            strSpec = "第" + (nIdx3C3R - 3 + 1).toString() + "行";
+        }
+    }
+
     function Show3C3R()
     {
         // show:
@@ -603,20 +622,7 @@ td
 		    var td = document.getElementById(strIdTd);
 		    td.innerHTML = g_an3C3R[g_anIdx3C3R[n]];
 		    strIdTd = "tdT3C3R" + n.toString();
-		    var strTitle = "第";
-		    if (g_anIdx3C3R[n] < 3)
-		    {
-		        if (g_anIdx3C3R[n] == 0)
-    		        strTitle += "一组";
-		        else if (g_anIdx3C3R[n] == 1)
-		            strTitle += "二组";
-		        else 
-		            strTitle += "三组";
-            }
-		    else
-		    {
-		        strTitle += (g_anIdx3C3R[n] - 2).toString() + "行";
-		    }
+		    var strTitle = GetColRowSpec(g_anIdx3C3R[n]);
 		    var tdT = document.getElementById(strIdTd);
 		    tdT.innerHTML = strTitle;
 
@@ -668,14 +674,7 @@ td
                 for (var n = g_aGame[nn].nCount - 1; n >= nLastIdx; --n)
                 {
                     strHtml += "<tr><td style='font-size: 24px; text-align: left'>Bet=";
-                    if (g_aGame[nn].aItem[n].nBet3C3R < 3)
-                    {
-                        strHtml += "第" + (g_aGame[nn].aItem[n].nBet3C3R + 1).toString() + "组";
-                    }
-                    else
-                    {
-                        strHtml += "第" + (g_aGame[nn].aItem[n].nBet3C3R - 3 + 1).toString() + "行";
-                    }
+                    strHtml += GetColRowSpec(g_aGame[nn].aItem[n].nBet3C3R);
                     strHtml += "; Round=";
                     strHtml += g_aGame[nn].aItem[n].nRound.toString();
                     strHtml += "; Distance=";
