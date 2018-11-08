@@ -790,8 +790,9 @@ tr.trLost td { color: #8fc38f; }
                 strHtml += "实时:";
                 strHtml += g_aGame[nn].nMoney.toString();
                 strHtml += "</td></tr></table>";
-                strHtml += "<table cellpadding='0' cellspacing='0' class='tblGame' id='tblGame" + nn.toString();
-                strHtml += "' style='display: none'><tr class='trTitle'><td>编号</td><td>押</td><td>轮次</td><td>距离</td><td>输赢</td><td>押中</td></tr>";
+                strHtml += "<table cellpadding='0' cellspacing='0' class='tblGame' id='tblGame" + nn.toString() + "' onclick='OnGameClick(" + nn.toString() + ")' ";
+                strHtml += "style='display: " + ((g_aGame[nn].nShowStatus == 0)? "none" : "") + "'>"; 
+                strHtml += "<tr class='trTitle'><td>编号</td><td>距离</td><td>押</td><td>轮次</td><td>输赢</td><td>押中</td><td>状态</td></tr>";
                 var nLastIdx = 0;
                 if (g_aGame[nn].nCount > 10)
                     nLastIdx = g_aGame[nn].nCount - 10;
@@ -811,11 +812,12 @@ tr.trLost td { color: #8fc38f; }
                     strHtml += "<tr class='trItems ";
                     strHtml += strCls;
                     strHtml += "'><td>" + (g_aGame[nn].aItem[n].nIdx + 1).toString() + "</td>";
+                    strHtml += "<td>" + g_aGame[nn].aItem[n].nDistance.toString() + "</td>";
                     strHtml += "<td>" + GetColRowSpec(g_aGame[nn].aItem[n].nBet3C3R) + "</td>";
                     strHtml += "<td>" + g_aGame[nn].aItem[n].nRound.toString() + "</td>";
-                    strHtml += "<td>" + g_aGame[nn].aItem[n].nDistance.toString() + "</td>";
                     strHtml += "<td>" + g_aGame[nn].aItem[n].nMoney.toString() + "</td>";
                     strHtml += "<td>" + ((g_aGame[nn].aItem[n].nHit == 1)? "中" : "&nbsp;") + "</td>";
+                    strHtml += "<td>" + ((g_aGame[nn].aItem[n].nStatus == 0) ? "已结束" : "&nbsp;") + "</td>";
                     strHtml += "</tr>";
                 }
                 strHtml += "</table>";
