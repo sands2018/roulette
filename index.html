@@ -46,9 +46,11 @@ td
 .title_c { width: 110px; color: #403000 }
 .value_c { width: 70px; border-left: 0; }
 
-table.tblGameTitle td { font-size: 28px; padding-right: 20px; }
+table.tblGameSum td { font-size: 28px; padding-right: 20px; }
+.tblGame { border: #8f8f8f 1px solid; margin-bottom: 18px; }
 table.tblGame td { font-size: 28px; }
-tr.trTitle td { color: #434343; }
+tr.trTitle td { color: #434343; padding: 0px 30px; }
+tr.trItems td { text-align: center; padding: 0px 20px; border-top: #8f8f8f 1px solid; }  
 tr.trActive td { color: black; }
 tr.trWon td { color: #c38f8f; }
 tr.trDrew td { color: #a3a3a3; }
@@ -189,6 +191,8 @@ tr.trLost td { color: #8fc38f; }
 
         this.nBalance = 0;
         this.aItem = [];
+
+        this.nShowStatus = 0;
 
         this.AfterItemEnds = function(item)
         {
@@ -753,6 +757,24 @@ tr.trLost td { color: #8fc38f; }
         }
     }
 
+    function OnGameClick(nGameIdx)
+    {
+        var strDisplay = "";
+        if(g_aGame[nGameIdx].nShowStatus == 1)
+        {
+            strDisplay = "none";
+            g_aGame[nGameIdx].nShowStatus = 0;
+        }
+        else
+        {
+            g_aGame[nGameIdx].nShowStatus = 1;
+        }
+
+        var tbl = document.getElementById("tblGame" + nGameIdx.toString());
+        tbl.style.display = strDisplay;
+    }
+
+
     function ShowGames()
     {
         for (var nn = 0; nn < GAME_COUNT; ++nn)
@@ -760,7 +782,8 @@ tr.trLost td { color: #8fc38f; }
             if (g_aGame[nn].nCount > 0)
             {
                 var div = document.getElementById("divGame" + (nn + 1).toString());
-                var strHtml = "<table cellpadding='0' cellspacing='0' class='tblGameTitle'><tr><td>";
+                var strHtml = "<table cellpadding='0' cellspacing='0' class='tblGameSum' onclick='OnGameClick(" + nn.toString();
+                strHtml += ")'><tr><td>";
                 strHtml += g_aGameRule[g_aGame[nn].nIdxRule].strSpec;
                 strHtml += "</td><td>"
                 strHtml += "完成:";
@@ -781,7 +804,8 @@ tr.trLost td { color: #8fc38f; }
                 strHtml += "实时:";
                 strHtml += g_aGame[nn].nMoney.toString();
                 strHtml += "</td></tr></table>";
-                strHtml += "<table cellpadding='0' cellspacing='0' class='tblGame'>";
+                strHtml += "<table cellpadding='0' cellspacing='0' class='tblGame' id='tblGame" + nn.toString();
+                strHtml += "' style='display: none'><tr class='trTitle'><td>编号</td><td>押</td><td>轮次</td><td>距离</td><td>输赢</td><td>押中</td></tr>";
                 var nLastIdx = 0;
                 if (g_aGame[nn].nCount > 10)
                     nLastIdx = g_aGame[nn].nCount - 10;
@@ -798,23 +822,17 @@ tr.trLost td { color: #8fc38f; }
                         else
                             strCls = "trLost";
                     }
-                    strHtml += "<tr class='";
+                    strHtml += "<tr class='trItems ";
                     strHtml += strCls;
-                    strHtml += "'><td style='text-align: left'>Bet=";
-                    strHtml += GetColRowSpec(g_aGame[nn].aItem[n].nBet3C3R);
-                    strHtml += "; Round=";
-                    strHtml += g_aGame[nn].aItem[n].nRound.toString();
-                    strHtml += "; Distance=";
-                    strHtml += g_aGame[nn].aItem[n].nDistance.toString();
-                    strHtml += "; Money=";
-                    strHtml += g_aGame[nn].aItem[n].nMoney.toString();
-                    if (g_aGame[nn].aItem[n].nStatus == 0)
-                    {
-                        strHtml += "; 已结束";
-                    }
-                    strHtml += "</td></tr>";
+                    strHtml += "'><td>" + (g_aGame[nn].aItem[n].nIdx + 1).toString() + "</td>";
+                    strHtml += "<td>" + GetColRowSpec(g_aGame[nn].aItem[n].nBet3C3R) + "</td>";
+                    strHtml += "<td>" + g_aGame[nn].aItem[n].nRound.toString() + "</td>";
+                    strHtml += "<td>" + g_aGame[nn].aItem[n].nDistance.toString() + "</td>";
+                    strHtml += "<td>" + g_aGame[nn].aItem[n].nMoney.toString() + "</td>";
+                    strHtml += "<td>" + ((g_aGame[nn].aItem[n].nHit == 1)? "中" : "&nbsp;") + "</td>";
+                    strHtml += "</tr>";
                 }
-                strHtml += "</table><br>";
+                strHtml += "</table>";
 
                 div.innerHTML = strHtml;
             }
@@ -989,6 +1007,7 @@ tr.trLost td { color: #8fc38f; }
 
         div.style.display = strDisplay;
     }
+
 </script>
 
 </head>
@@ -1148,8 +1167,7 @@ tr.trLost td { color: #8fc38f; }
         <div id="divGame3" style="font-size: 24px"></div>
         <div id="divGame4" style="font-size: 24px"></div>
     </div>
-    <div id="divInput" style="position:fixed; top: 200px; z-index:9; width: 100%; height: 100px; ">
-        <div style="height: 12px; background-color: #EEEEEE; width: 100%"></div>
+    <div id="divInput" style="position:fixed; top: 200px; z-index:9; width: 100%; padding: 13px 0; background-color: #EEEEEE; ">
         <table cellpadding="0" cellspacing="0" id="tblBoard">
             <tr>
                 <td id="tdB0" rowspan="3" onclick="OnClick(0)">0</td>
@@ -1195,7 +1213,6 @@ tr.trLost td { color: #8fc38f; }
                 <td id="tdB34" onclick="OnClick(34)">34</td>
             </tr>
         </table>
-        <div style="height: 12px; background-color: #EEEEEE; width: 100%"></div>
     </div>
 </body>
 </html>
