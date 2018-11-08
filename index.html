@@ -757,31 +757,17 @@ tr.trLost td { color: #8fc38f; }
         }
     }
 
-    function OnGameClick(nGameIdx)
-    {
-        var strDisplay = "";
-        if(g_aGame[nGameIdx].nShowStatus == 1)
-        {
-            strDisplay = "none";
-            g_aGame[nGameIdx].nShowStatus = 0;
-        }
-        else
-        {
-            g_aGame[nGameIdx].nShowStatus = 1;
-        }
-
-        var tbl = document.getElementById("tblGame" + nGameIdx.toString());
-        tbl.style.display = strDisplay;
-    }
-
-
     function ShowGames()
     {
         for (var nn = 0; nn < GAME_COUNT; ++nn)
         {
-            if (g_aGame[nn].nCount > 0)
+            var div = document.getElementById("divGame" + (nn + 1).toString());
+            if (g_aGame[nn].nCount <= 0)
             {
-                var div = document.getElementById("divGame" + (nn + 1).toString());
+                div.innerHTML = "";
+            }
+            else
+            {
                 var strHtml = "<table cellpadding='0' cellspacing='0' class='tblGameSum' onclick='OnGameClick(" + nn.toString();
                 strHtml += ")'><tr><td>";
                 strHtml += g_aGameRule[g_aGame[nn].nIdxRule].strSpec;
@@ -855,6 +841,7 @@ tr.trLost td { color: #8fc38f; }
         Show3C3R();
         ShowQueue();
         RefreshButtons();
+        ShowGames();
     }
 
     function Refresh(bInit)
@@ -882,7 +869,7 @@ tr.trLost td { color: #8fc38f; }
 	        }
 	    }
 
-	    RefreshTheme();
+        RefreshTheme();
     }
 
     function OnPageInit()
@@ -1008,12 +995,49 @@ tr.trLost td { color: #8fc38f; }
         div.style.display = strDisplay;
     }
 
+    function OnGameClick(nGameIdx)
+    {
+        var bShow = false;
+
+        var strDisplay = "";
+        if(g_aGame[nGameIdx].nShowStatus == 1)
+        {
+            strDisplay = "none";
+            g_aGame[nGameIdx].nShowStatus = 0;
+        }
+        else
+        {
+            bShow = true;
+            g_aGame[nGameIdx].nShowStatus = 1;
+        }
+
+        if (bShow)
+        {
+            for(var n = 0; n < GAME_COUNT; ++ n)
+            {
+                if (n == nGameIdx)
+                    continue;
+
+                if (g_aGame[n].nShowStatus == 1)
+                {
+                    var tblOther = document.getElementById("tblGame" + n.toString());
+                    g_aGame[n].nShowStatus = 0;
+                    tblOther.style.display = "none";
+                }
+            }
+        }
+
+        var tbl = document.getElementById("tblGame" + nGameIdx.toString());
+        tbl.style.display = strDisplay;
+    }
+
 </script>
 
 </head>
-<body onload="OnPageInit()">
-    <div style="position:fixed; z-index:99; right: 0px; top:0px; width: 120px; height: 120px; opacity: 0;" onclick="OnShowInputClick()"></div>
-    <div style="position:absolute; z-index:0">
+<body onload="OnPageInit()" style="padding: 0; margin :0">
+    <div style="position:fixed; z-index:99; right: 0px; top:0px; width: 200px; height: 188px; opacity: 0;" 
+         onclick="OnShowInputClick()"></div>
+    <div style="position:absolute; z-index:0; padding: 0; margin: 0">
         <table cellpadding="0" cellspacing="0" border="0" id="tblStatistics">
             <tr>
                 <td class="title_c" id="tdT3C3R0">第1组</td>
