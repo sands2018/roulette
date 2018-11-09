@@ -577,7 +577,7 @@ tr.trLost td { color: #8fc38f; }
     {
         var nStart = 0;
         if (g_nQueueIdx > QUEUE_MAX_COUNT)
-            nStart = g_nQueueIdx - QUEUE_MAX_COUNT;
+            nStart = g_nQueueIdx - QUEUE_MAX_COUNT + 1;
 
         for (var n = nStart; n <= g_nQueueIdx; ++n)
         {
