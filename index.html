@@ -861,7 +861,7 @@ tr.trLost td { color: #8fc38f; }
         var divIntervals = document.getElementById("divStatsIntervals");
         var strHtml = "";
 
-        if (g_StatsInterval.anValues[0].length > 0)
+        if (g_nQueueIdx >= 0)
         {
             strHtml = "<table cellpadding='0' cellspacing='0' id='tblStatsIntervals'>";
             for (var nn = 0; nn < g_StatsInterval.c_nCount; ++nn)
