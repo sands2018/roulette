@@ -324,9 +324,6 @@ tr.trLost td { color: #8fc38f; }
 
         this.AddNum = function(num)
         {
-            var nNumCol = GetNumCol(num);
-            var nNumRow = GetNumRow(num);
-
             // add distance for all item:
 
             for (var n = 0; n < this.nCount; ++n)
@@ -350,6 +347,9 @@ tr.trLost td { color: #8fc38f; }
 
                 return;
             }
+
+            var nNumCol = GetNumCol(num);
+            var nNumRow = GetNumRow(num);
 
             var anNum3C3R = [nNumCol, nNumRow + 3];
 
@@ -432,19 +432,39 @@ tr.trLost td { color: #8fc38f; }
 
         this.anValues = [];
 
-        this.anValues[0] = [];
-        this.anValues[1] = [];
-        this.anValues[2] = [];
-        this.anValues[3] = [];
-        this.anValues[4] = [];
-        this.anValues[5] = [];
-        this.anValues[6] = [];
+        this.anValues[0] = [0];
+        this.anValues[1] = [0];
+        this.anValues[2] = [0];
+        this.anValues[3] = [0];
+        this.anValues[4] = [0];
+        this.anValues[5] = [0];
+        this.anValues[6] = [0];
 
         this.AddNum = function(num)
         {
-            for(var n = 0; n < this.c_nCount; ++ n)
+            // 0:
+
+            if (num == 0)
             {
-                this.anValues[n][0] = 0;
+                this.anValues[6][this.anValues[6].length] = 0;
+                return;
+            }
+
+            this.anValues[6][this.anValues[6].length - 1]++;
+
+            var nNumCol = GetNumCol(num);
+            var nNumRow = GetNumRow(num);
+
+            for (var n = 0; n < 6; ++n)
+            {
+                if ((n == nNumCol) || (n == (nNumRow + 3)))
+                {
+                    this.anValues[n][this.anValues[n].length] = 0;
+                }
+                else
+                {
+                    this.anValues[n][this.anValues[n].length - 1]++;
+                }
             }
         }
     }
@@ -853,17 +873,14 @@ tr.trLost td { color: #8fc38f; }
                 strHtml += "<td><div id='divStatsInterval" + nn.toString() + "' ";
                 strHtml += "onclick='OnStatsIntervalClick(" + nn.toString() + ")'>";
 
-                for (var n = 0; n < g_StatsInterval.anValues[n].length; ++n)
-                {
+                var nLength = g_StatsInterval.anValues[nn].length;
 
-                }
-
-                for (var n = 0; n < 100; ++n)
+                for (var n = 0; n < nLength; ++n)
                 {
                     if (n > 0)
                         strHtml += ", ";
 
-                    strHtml += n.toString();
+                    strHtml += g_StatsInterval.anValues[nn][nLength - n - 1].toString();
                 }
 
                 strHtml += "</div></td></tr>";
@@ -1130,8 +1147,41 @@ tr.trLost td { color: #8fc38f; }
 
     function OnStatsIntervalClick(nIdx)
     {
+        var C_EXPAND_HEIGHT = 166;
+        var C_COLLAPSE_HEIGHT = 34;
+
+        var bExpand = false;
+        var nHeight = C_EXPAND_HEIGHT;
+
+        if (g_StatsInterval.anExpand[nIdx] == 1)
+        {
+            nHeight = C_COLLAPSE_HEIGHT;
+            g_StatsInterval.anExpand[nIdx] = 0;
+        }
+        else
+        {
+            bExpand = true;
+            g_StatsInterval.anExpand[nIdx] = 1;
+        }
+
+        if (bExpand)
+        {
+            for(var n = 0; n < g_StatsInterval.c_nCount; ++ n)
+            {
+                if (n == nIdx)
+                    continue;
+
+                if (g_StatsInterval.anExpand[n] == 1)
+                {
+                    var divOther = document.getElementById("divStatsInterval" + n.toString());
+                    g_StatsInterval.anExpand[n] = 0;
+                    divOther.style.height = C_COLLAPSE_HEIGHT;
+                }
+            }
+        }
+
         var div = document.getElementById("divStatsInterval" + nIdx.toString());
-        div.style.height = 166;
+        div.style.height = nHeight;
     }
 
     function OnGameClick(nGameIdx)
