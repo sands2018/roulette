@@ -469,19 +469,9 @@ tr.trLost td { color: #8fc38f; }
         }
     }
 
-    function RefreshStatsInterval(bInit)
+    function InitStatsInterval()
     {
-        if(bInit)
-        {
-            g_StatsInterval = new CStatsInterval();
-        }
-        else
-        {
-            for(var n = 0; n < g_StatsInterval.nCount; ++ n)
-            {
-                g_StatsInterval.anInterval[n].splice(0, g_StatsInterval.anInterval[n].length);
-            }
-        }
+        g_StatsInterval = new CStatsInterval();
 
         for(var n = 0; n < g_StatsInterval.c_nCount; ++ n)
         {
@@ -531,22 +521,14 @@ tr.trLost td { color: #8fc38f; }
         g_aGameRule[3] = rule1;
     }
 
-    function RefreshGame(bInit)
+    function InitGame()
     {
         for (var n = 0; n < GAME_COUNT; ++n)
         {
-            if (bInit)
-            {
-                var game = new CGame(n);
-                game.nCount = 0;
+            var game = new CGame(n);
+            game.nCount = 0;
 
-                g_aGame[n] = game;
-            }
-            else
-            {
-                g_aGame[n].RemoveAll();
-                g_aGame[n].nShowStatus = 0;
-            }
+            g_aGame[n] = game;
         }
     }
 
@@ -988,30 +970,32 @@ tr.trLost td { color: #8fc38f; }
         ShowGames();
     }
 
-    function Refresh(bInit)
+    function RefreshPage()
     {
-        g_nQueueIdx = -1;
-
-        for (var n = 0; n < 6; ++n)
-	    {
-	        g_an3C3R[n] = 0;
-	        g_anIdx3C3R[n] = n;
-	    }
-
-
-        RefreshStatsInterval(bInit);
-        RefreshGame(bInit);
-        ShowInput(true);
-
-        RefreshTheme();
+        window.location.reload();
     }
+
+    // message handlers: ------------------------------------------------------
 
     function OnPageInit()
     {
         OnTest();
+
         InitGameRuleList();
 
-        Refresh(true);
+        g_nQueueIdx = -1;
+
+        for (var n = 0; n < 6; ++n)
+        {
+            g_an3C3R[n] = 0;
+            g_anIdx3C3R[n] = n;
+        }
+
+        InitStatsInterval();
+        InitGame();
+        ShowInput(true);
+
+        RefreshTheme();
     }
 
     function OnClick(num)
@@ -1067,7 +1051,7 @@ tr.trLost td { color: #8fc38f; }
 
         if (g_nQueueIdx == 0)
         {
-            Refresh(false);
+            RefreshPage();
             return;
         }
 
@@ -1096,8 +1080,10 @@ tr.trLost td { color: #8fc38f; }
             return;
         
         var confirmed = confirm("确定要重新开始？");
-        if(confirmed != 0)
-            Refresh(false);
+        if (confirmed != 0)
+        {
+            RefreshPage();
+        }
     }
 
     function OnChangeTheme()
