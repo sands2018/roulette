@@ -264,6 +264,7 @@ tr.trLost td { color: #8fc38f; }
     function CGame(nIdxRule)
     {
         this.nIdxRule = nIdxRule;
+
         this.nCount = 0;
         this.nMoney = 0;
 
@@ -496,6 +497,43 @@ tr.trLost td { color: #8fc38f; }
                             this.anFailed[r][n]++;
                         }
                     }
+                }
+            }
+        }
+
+        this.DeleteNum = function(num)
+        {
+            if (num == 0)
+            {
+                return;
+            }
+
+            var anCountBak = [];
+            var anFailedBak = [];
+            anFailedBak[0] = [];
+            anFailedBak[1] = [];
+
+            var nCount = this.anStart.length;
+
+            for (var n = 0; n < nCount; ++n)
+            {
+                anCountBak[n] = this.anCount[n];
+
+                for(var nn = 0; nn < this.anRound.length; ++ nn)
+                {
+                    anFailedBak[nn][n] = this.anFailed[nn][n];
+                }
+            }
+
+            this.AddNum(num);
+            
+            for (var n = 0; n < nCount; ++n)
+            {
+                this.anCount[n] = anCountBak[n] - (this.anCount[n] - anCountBak[n]);
+
+                for (var nn = 0; nn < this.anRound.length; ++nn)
+                {
+                    this.anFailed[nn][n] = anFailedBak[nn][n] - (this.anFailed[nn][n] - anFailedBak[nn][n]);
                 }
             }
         }
@@ -1163,6 +1201,9 @@ tr.trLost td { color: #8fc38f; }
             return;
         }
 
+        var num = g_an3C3R[g_nQueueIdx];
+        g_StatsInterval.DeleteNum(num);
+
         --g_nQueueIdx;
 
         Calc3C3R_Delete();
@@ -1171,6 +1212,8 @@ tr.trLost td { color: #8fc38f; }
         Show3C3R();
         ShowQueue();
         RefreshButtons();
+        ShowStatsIntervals();
+        ShowGames();
     }
 
     function OnExpand()
