@@ -11,12 +11,12 @@ td
 	cursor: pointer;
 }
 
-#tblBoard
+#tblKeyboard, #tblGameBoard
 {
     border: 1px solid;
 }
 
-#tblBoard td 
+#tblKeyboard td, #tblGameBoard td
 {
 	width: 95px;
 	height: 95px;
@@ -141,6 +141,8 @@ tr.trLost td { color: #8fc38f; }
     var MAX_COUNT = 10000;
     var QUEUE_MAX_COUNT = 100;
     var GAME_SHOW_ITEM_COUNT = 20;
+
+    var g_strInputBoard = "B";
 
     var g_anQueueNum = [];
     var g_nQueueIdx = -1;
@@ -563,16 +565,30 @@ tr.trLost td { color: #8fc38f; }
 
     function InitStyles()
     {
-        var tbl = document.getElementById("tblBoard");
-        tbl.style.borderColor = g_s_c_board_b[g_s_theme_id];
+        var tblK = document.getElementById("tblKeyboard");
+        tblK.style.borderColor = g_s_c_board_b[g_s_theme_id];
 
-        for(var n = 0; n <= 36; ++n)
+        var tblB = document.getElementById("tblGameBoard");
+        tblB.style.borderColor = g_s_c_board_b[g_s_theme_id];
+
+        for (var n = 0; n <= 36; ++n)
         {
-            var td = document.getElementById("tdB" + n.toString());
-            td.style.backgroundColor = GetNumberBackgroundColor(n);
-            td.style.borderColor = g_s_c_board_b[g_s_theme_id];
-            td.style.color = GetNumberColor();
+            var tdK = document.getElementById("tdK" + n.toString());
+            tdK.style.backgroundColor = GetNumberBackgroundColor(n);
+            tdK.style.borderColor = g_s_c_board_b[g_s_theme_id];
+            tdK.style.color = GetNumberColor();
+
+            var tdB = document.getElementById("tdB" + n.toString());
+            tdB.style.backgroundColor = GetNumberBackgroundColor(n);
+            tdB.style.borderColor = g_s_c_board_b[g_s_theme_id];
+            tdB.style.color = GetNumberColor();
         }
+
+        var td1 = document.getElementById("tdBSwitch");
+        td1.style.borderColor = g_s_c_board_b[g_s_theme_id];
+
+        var td2 = document.getElementById("tdKSwitch");
+        td2.style.borderColor = g_s_c_board_b[g_s_theme_id];
     }
 
     // functions: -------------------------------------------------------------
@@ -1068,6 +1084,25 @@ tr.trLost td { color: #8fc38f; }
         RefreshTheme();
     }
 
+    function OnSwitchInput(nIdx)
+    {
+        var divK = document.getElementById("divKeyboard");
+        var divB = document.getElementById("divGameBoard");
+
+        if (nIdx == 0)
+        {
+            divK.style.display = "none";
+            divB.style.display = "";
+            g_strInputBoard = "B";
+        }
+        else
+        {
+            divB.style.display = "none";
+            divK.style.display = "";
+            g_strInputBoard = "K";
+        }
+    }
+
     function OnClick(num)
     {
         // queue: -------------------------------
@@ -1184,8 +1219,20 @@ tr.trLost td { color: #8fc38f; }
             strDisplay = "none";
         }
 
-        var div = document.getElementById("divInput");
+        var strID = "divGameBoard";
+        var strIDAnother = "divKeyboard";
+
+        if (g_strInputBoard == "K")
+        {
+            var strID = "divKeyboard";
+            var strIDAnother = "divGameBoard";
+        }
+
+        var div = document.getElementById(strID);
         div.style.display = strDisplay;
+
+        div = document.getElementById(strIDAnother);
+        div.style.display = "none";
     }
 
     function OnShowInputClick()
@@ -1342,29 +1389,56 @@ tr.trLost td { color: #8fc38f; }
         <div id="divGames"></div>
 
     </div>
-    <div id="divInput" style="position:fixed; bottom: 0px; z-index:9; width: 100%; padding: 0; ">
-        <table cellpadding="0" cellspacing="0" id="tblBoard">
+    <div id="divKeyboard" style="position:fixed; bottom: 0px; z-index:10; width: 100%; padding: 0; ">
+        <table cellpadding="0" cellspacing="0" id="tblKeyboard">
             <tr>
-                <td id="tdB0" onclick="OnClick(0)" rowspan="4">0</td>
+                <td id="tdK0" onclick="OnClick(0)" rowspan="2">0</td>
                 
-                <td id="tdB1" onclick="OnClick(1)">1</td><td id="tdB2" onclick="OnClick(2)">2</td><td id="tdB3" onclick="OnClick(3)">3</td>
-                <td id="tdB4" onclick="OnClick(4)">4</td><td id="tdB5" onclick="OnClick(5)">5</td><td id="tdB6" onclick="OnClick(6)">6</td>
-                <td id="tdB7" onclick="OnClick(7)">7</td><td id="tdB8" onclick="OnClick(8)">8</td><td id="tdB9" onclick="OnClick(9)">9</td>
+                <td id="tdK1" onclick="OnClick(1)">1</td><td id="tdK2" onclick="OnClick(2)">2</td><td id="tdK3" onclick="OnClick(3)">3</td>
+                <td id="tdK4" onclick="OnClick(4)">4</td><td id="tdK5" onclick="OnClick(5)">5</td><td id="tdK6" onclick="OnClick(6)">6</td>
+                <td id="tdK7" onclick="OnClick(7)">7</td><td id="tdK8" onclick="OnClick(8)">8</td><td id="tdK9" onclick="OnClick(9)">9</td>
             </tr>
             <tr>
-                <td id="tdB10" onclick="OnClick(10)">10</td><td id="tdB11" onclick="OnClick(11)">11</td><td id="tdB12" onclick="OnClick(12)">12</td>
-                <td id="tdB13" onclick="OnClick(13)">13</td><td id="tdB14" onclick="OnClick(14)">14</td><td id="tdB15" onclick="OnClick(15)">15</td>
-                <td id="tdB16" onclick="OnClick(16)">16</td><td id="tdB17" onclick="OnClick(17)">17</td><td id="tdB18" onclick="OnClick(18)">18</td>
+                <td id="tdK10" onclick="OnClick(10)">10</td><td id="tdK11" onclick="OnClick(11)">11</td><td id="tdK12" onclick="OnClick(12)">12</td>
+                <td id="tdK13" onclick="OnClick(13)">13</td><td id="tdK14" onclick="OnClick(14)">14</td><td id="tdK15" onclick="OnClick(15)">15</td>
+                <td id="tdK16" onclick="OnClick(16)">16</td><td id="tdK17" onclick="OnClick(17)">17</td><td id="tdK18" onclick="OnClick(18)">18</td>
             </tr>
             <tr>
-                <td id="tdB19" onclick="OnClick(19)">19</td><td id="tdB20" onclick="OnClick(20)">20</td><td id="tdB21" onclick="OnClick(21)">21</td>
-                <td id="tdB22" onclick="OnClick(22)">22</td><td id="tdB23" onclick="OnClick(23)">23</td><td id="tdB24" onclick="OnClick(24)">24</td>
-                <td id="tdB25" onclick="OnClick(25)">25</td><td id="tdB26" onclick="OnClick(26)">26</td><td id="tdB27" onclick="OnClick(27)">27</td>
+                <td id="tdKSwitch" onclick="OnSwitchInput(0)" rowspan="2">&nbsp;</td>
+
+                <td id="tdK19" onclick="OnClick(19)">19</td><td id="tdK20" onclick="OnClick(20)">20</td><td id="tdK21" onclick="OnClick(21)">21</td>
+                <td id="tdK22" onclick="OnClick(22)">22</td><td id="tdK23" onclick="OnClick(23)">23</td><td id="tdK24" onclick="OnClick(24)">24</td>
+                <td id="tdK25" onclick="OnClick(25)">25</td><td id="tdK26" onclick="OnClick(26)">26</td><td id="tdK27" onclick="OnClick(27)">27</td>
             </tr>
             <tr>
-                <td id="tdB28" onclick="OnClick(28)">28</td><td id="tdB29" onclick="OnClick(29)">29</td><td id="tdB30" onclick="OnClick(30)">30</td>
-                <td id="tdB31" onclick="OnClick(31)">31</td><td id="tdB32" onclick="OnClick(32)">32</td><td id="tdB33" onclick="OnClick(33)">33</td>
-                <td id="tdB34" onclick="OnClick(34)">34</td><td id="tdB35" onclick="OnClick(35)">35</td><td id="tdB36" onclick="OnClick(36)">36</td>
+                <td id="tdK28" onclick="OnClick(28)">28</td><td id="tdK29" onclick="OnClick(29)">29</td><td id="tdK30" onclick="OnClick(30)">30</td>
+                <td id="tdK31" onclick="OnClick(31)">31</td><td id="tdK32" onclick="OnClick(32)">32</td><td id="tdK33" onclick="OnClick(33)">33</td>
+                <td id="tdK34" onclick="OnClick(34)">34</td><td id="tdK35" onclick="OnClick(35)">35</td><td id="tdK36" onclick="OnClick(36)">36</td>
+            </tr>
+        </table>
+    </div>
+    <div id="divGameBoard" style="position:fixed; bottom: 0px; z-index:9; width: 100%; padding: 0; ">
+        <table cellpadding="0" cellspacing="0" id="tblGameBoard">
+            <tr>
+                <td id="tdB3" onclick="OnClick(3)">3</td><td id="tdB6" onclick="OnClick(6)">6</td><td id="tdB9" onclick="OnClick(9)">9</td>
+                <td id="tdB12" onclick="OnClick(12)">12</td><td id="tdB15" onclick="OnClick(15)">15</td><td id="tdB18" onclick="OnClick(18)">18</td>
+                <td id="tdB21" onclick="OnClick(21)">21</td><td id="tdB24" onclick="OnClick(24)">24</td><td id="tdB27" onclick="OnClick(27)">27</td>
+                <td id="tdB30" onclick="OnClick(30)">30</td><td id="tdB33" onclick="OnClick(33)">33</td><td id="tdB36" onclick="OnClick(36)">36</td>
+            </tr>
+            <tr>
+                <td id="tdB2" onclick="OnClick(2)">2</td><td id="tdB5" onclick="OnClick(5)">5</td><td id="tdB8" onclick="OnClick(8)">8</td>
+                <td id="tdB11" onclick="OnClick(11)">11</td><td id="tdB14" onclick="OnClick(14)">14</td><td id="tdB17" onclick="OnClick(17)">17</td>
+                <td id="tdB20" onclick="OnClick(20)">20</td><td id="tdB23" onclick="OnClick(23)">23</td><td id="tdB26" onclick="OnClick(26)">26</td>
+                <td id="tdB29" onclick="OnClick(29)">29</td><td id="tdB32" onclick="OnClick(32)">32</td><td id="tdB35" onclick="OnClick(35)">35</td>
+            </tr>
+            <tr>
+                <td id="tdB1" onclick="OnClick(1)">1</td><td id="tdB4" onclick="OnClick(4)">4</td><td id="tdB7" onclick="OnClick(7)">7</td>
+                <td id="tdB10" onclick="OnClick(10)">10</td><td id="tdB13" onclick="OnClick(13)">13</td><td id="tdB16" onclick="OnClick(16)">16</td>
+                <td id="tdB19" onclick="OnClick(19)">19</td><td id="tdB22" onclick="OnClick(22)">22</td><td id="tdB25" onclick="OnClick(25)">25</td>
+                <td id="tdB28" onclick="OnClick(28)">28</td><td id="tdB31" onclick="OnClick(31)">31</td><td id="tdB34" onclick="OnClick(34)">34</td>
+            </tr>
+            <tr>
+                <td id="tdB0" onclick="OnClick(0)" colspan="10">0</td><td id="tdBSwitch" onclick="OnSwitchInput(1)" colspan="2">&nbsp;</td>
             </tr>
         </table>
     </div>
