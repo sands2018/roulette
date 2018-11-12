@@ -46,15 +46,16 @@ td
 .title_c { width: 100px; color: #403000 }
 .value_c { width: 80px; border-left: 0; }
 
-#tblStatsIntervals { border: 1px solid #8f8f8f; border-bottom: 0; width: 100%; }
-#tblStatsIntervals td { border-bottom: 1px solid #8f8f8f; font-size: 36px; padding: 3px 8px; text-align: left; }
+#tblStatsIntervals { border: 1px solid #8f8f8f; border-bottom: 0; width: 100%; margin-bottom: 8px }
+#tblStatsIntervals td { border-bottom: 1px solid #8f8f8f; font-size: 36px; padding: 3px 8px; text-align: center; }
 #tblStatsIntervals td:first-child { border-right: 1px solid #8f8f8f; width: 80px; text-align: center; } 
-#tblStatsIntervals div 
+#divStatsInterval 
 {  
     overflow: hidden;
     text-overflow: ellipsis;
     width: 100%; 
-    height: 38px;
+    height: 48px;
+    font-size: 36px;
 }
 
 table.tblGameSum td { font-size: 36px; padding-right: 20px; }
@@ -427,43 +428,71 @@ tr.trLost td { color: #8fc38f; }
 
     function CStatsInterval()
     {
-        this.c_nCount = 7;
-        this.anExpand = [];
+        this.anRound = [];
+        this.anRound[0] = 4;
+        this.anRound[1] = 6;
 
-        this.anValues = [];
+        this.anStart = [];
 
-        this.anValues[0] = [0];
-        this.anValues[1] = [0];
-        this.anValues[2] = [0];
-        this.anValues[3] = [0];
-        this.anValues[4] = [0];
-        this.anValues[5] = [0];
-        this.anValues[6] = [0];
+        this.anStart[0] = 5;
+        this.anStart[1] = 6;
+        this.anStart[2] = 7;
+        this.anStart[3] = 8;
+        this.anStart[4] = 9;
 
-        this.AddNum = function(num)
+        this.anCount = [];
+        this.anCount[0] = 0;
+        this.anCount[1] = 0;
+        this.anCount[2] = 0;
+        this.anCount[3] = 0;
+        this.anCount[4] = 0;
+
+        this.anFailed = [];
+        this.anFailed[0] = [0, 0, 0, 0, 0];
+        this.anFailed[1] = [0, 0, 0, 0, 0];
+
+        // 11 -> 30 and above, maintained outside this class:
+
+        this.anLargeCount = [];
+        this.nExpand = 0;
+
+
+        this.AddNum = function (num)
         {
             // 0:
 
             if (num == 0)
             {
-                this.anValues[6][this.anValues[6].length] = 0;
                 return;
             }
 
-            this.anValues[6][this.anValues[6].length - 1]++;
+            var nCount = this.anStart.length;
 
-            var nNumCol = GetNumCol(num);
-            var nNumRow = GetNumRow(num);
-
-            for (var n = 0; n < 6; ++n)
+            for (var nn = 0; nn < 6; ++nn)
             {
-                if ((n == nNumCol) || (n == (nNumRow + 3)))
+                // whether hit start:
+
+                for (var n = 0; n < nCount; ++n)
                 {
-                    this.anValues[n][this.anValues[n].length] = 0;
+                    if (g_an3C3R[nn] == this.anStart[n])
+                    {
+                        this.anCount[n]++;
+                    }
                 }
-                else
+
+                // whether hit end:
+
+                for (var n = 0; n < nCount; ++n)
                 {
-                    this.anValues[n][this.anValues[n].length - 1]++;
+                    var nRound = this.anRound.length;
+
+                    for (var r = 0; r < nRound; ++r)
+                    {
+                        if ((g_an3C3R[nn] == (this.anStart[n] + this.anRound[r])))
+                        {
+                            this.anFailed[r][n]++;
+                        }
+                    }
                 }
             }
         }
@@ -473,9 +502,9 @@ tr.trLost td { color: #8fc38f; }
     {
         g_StatsInterval = new CStatsInterval();
 
-        for(var n = 0; n < g_StatsInterval.c_nCount; ++ n)
+        for(var n = 0; n < 20; ++ n)
         {
-            g_StatsInterval.anExpand[n] = 0;
+            g_StatsInterval.anLargeCount[n] = 0;
         }
     }
 
@@ -532,8 +561,6 @@ tr.trLost td { color: #8fc38f; }
         }
     }
 
-    // functions: -------------------------------------------------------------
-
     function InitStyles()
     {
         var tbl = document.getElementById("tblBoard");
@@ -547,6 +574,8 @@ tr.trLost td { color: #8fc38f; }
             td.style.color = GetNumberColor();
         }
     }
+
+    // functions: -------------------------------------------------------------
 
     function GetQueueItemBorderStyle(num)
     {
@@ -695,8 +724,21 @@ tr.trLost td { color: #8fc38f; }
             g_an3C3R[n]++;
         }
 
-        g_an3C3R[nCol] = 0;
-        g_an3C3R[3+nRow] = 0;
+        var anNum3C3R = [nCol, nRow + 3];
+
+        for (var n = 0; n < 2; ++n)
+        {
+            var nCount = g_an3C3R[anNum3C3R[n]] - 1;
+            if (nCount >= 11)
+            {
+                var nIdx = nCount - 11;
+                if (nIdx >= 19)
+                    nIdx == 19;
+
+                g_StatsInterval.anLargeCount[nIdx]++;
+            }
+            g_an3C3R[anNum3C3R[n]] = 0;
+        }
     }
 
     function Calc3C3R_Delete()
@@ -846,27 +888,56 @@ tr.trLost td { color: #8fc38f; }
         if (g_nQueueIdx >= 0)
         {
             strHtml = "<table cellpadding='0' cellspacing='0' id='tblStatsIntervals'>";
-            for (var nn = 0; nn < g_StatsInterval.c_nCount; ++nn)
+            strHtml += "<tr><td>开始</td><td>出现</td><td>概率</td>";
+            for (var nn = 0; nn < g_StatsInterval.anRound.length; ++nn)
             {
-                var strTitle = "0";
-                if (nn < 6)
-                    strTitle = GetColRowSpec(nn);
-                strHtml += "<tr><td>" + strTitle + "</td>";
-                strHtml += "<td><div id='divStatsInterval" + nn.toString() + "' ";
-                strHtml += "onclick='OnStatsIntervalClick(" + nn.toString() + ")'>";
+                strHtml += "<td>" + g_StatsInterval.anRound[nn].toString() + "轮失败</td><td>概率</td>";
+            }
+            strHtml += "</tr>";
 
-                var nLength = g_StatsInterval.anValues[nn].length;
+            var nTotal = g_nQueueIdx + 1;
 
-                for (var n = 0; n < nLength; ++n)
+            for (var n = 0; n < g_StatsInterval.anStart.length; ++n)
+            {
+                strHtml += "<tr><td>" + g_StatsInterval.anStart[n].toString() + "</td>";
+                strHtml += "<td>" + g_StatsInterval.anCount[n].toString() + "</td>";
+
+                var percent1 = g_StatsInterval.anCount[n] * 100 / nTotal;
+                strHtml += "<td>" + percent1.toFixed(1) + "%</td>";
+
+
+                for (var nn = 0; nn < g_StatsInterval.anRound.length; ++nn)
                 {
-                    if (n > 0)
-                        strHtml += ", ";
+                    strHtml += "<td>" + g_StatsInterval.anFailed[nn][n].toString() + "</td>";
 
-                    strHtml += g_StatsInterval.anValues[nn][nLength - n - 1].toString();
+                    var percent2 = 0;
+                    if (g_StatsInterval.anCount[n] > 0)
+                        percent2 = g_StatsInterval.anFailed[nn][n] * 100 / g_StatsInterval.anCount[n];
+                    strHtml += "<td>" + percent2.toFixed(1) + "%</td>";
                 }
 
-                strHtml += "</div></td></tr>";
+                strHtml += "</tr>";
             }
+            strHtml += "</table>";
+            strHtml += "<div id='divStatsInterval' onclick='OnStatsIntervalClick()'>";
+            strHtml += "总：" + nTotal.toString() + "&nbsp;&nbsp;&nbsp;";
+            var bFirst = true;
+            for (var n = 0; n < g_StatsInterval.anLargeCount.length; ++n)
+            {
+                if(g_StatsInterval.anLargeCount[n] > 0)
+                {
+                    if (!bFirst)
+                        strHtml += ";&nbsp;";
+
+                    bFirst = false;
+
+                    var strNum = (n + 11).toString();
+                    if (n == 19)
+                        strNum += "及以上";
+                    strHtml += strNum + "(" + g_StatsInterval.anLargeCount[n].toString() + ")";
+                }
+            }
+            strHtml += "</div>"
         }
 
         divIntervals.innerHTML = strHtml;
@@ -1130,42 +1201,24 @@ tr.trLost td { color: #8fc38f; }
 
     }
 
-    function OnStatsIntervalClick(nIdx)
+    function OnStatsIntervalClick()
     {
-        var C_EXPAND_HEIGHT = 166;
-        var C_COLLAPSE_HEIGHT = 34;
+        var C_EXPAND_HEIGHT = 150;
+        var C_COLLAPSE_HEIGHT = 48;
 
-        var bExpand = false;
         var nHeight = C_EXPAND_HEIGHT;
 
-        if (g_StatsInterval.anExpand[nIdx] == 1)
+        if (g_StatsInterval.nExpand == 1)
         {
             nHeight = C_COLLAPSE_HEIGHT;
-            g_StatsInterval.anExpand[nIdx] = 0;
+            g_StatsInterval.nExpand = 0;
         }
         else
         {
-            bExpand = true;
-            g_StatsInterval.anExpand[nIdx] = 1;
+            g_StatsInterval.nExpand = 1;
         }
 
-        if (bExpand)
-        {
-            for(var n = 0; n < g_StatsInterval.c_nCount; ++ n)
-            {
-                if (n == nIdx)
-                    continue;
-
-                if (g_StatsInterval.anExpand[n] == 1)
-                {
-                    var divOther = document.getElementById("divStatsInterval" + n.toString());
-                    g_StatsInterval.anExpand[n] = 0;
-                    divOther.style.height = C_COLLAPSE_HEIGHT;
-                }
-            }
-        }
-
-        var div = document.getElementById("divStatsInterval" + nIdx.toString());
+        var div = document.getElementById("divStatsInterval");
         div.style.height = nHeight;
     }
 
