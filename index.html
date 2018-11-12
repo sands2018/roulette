@@ -94,6 +94,7 @@ tr.trLost td { color: #8fc38f; }
     var g_s_c_num_bk_g = ["#35A300", "white", "white"]; // green
     var g_s_c_num_bk_r = ["#CC2200", "white", "white"]; // red
     var g_s_c_num_bk_b = ["#222222", "white", "white"]; // black
+    var g_s_c_num_bk_s = ["#35A300", "white", "white"]; // switch
 
     // queue background color:
     var g_s_c_que_bk_g = ["35A300", "#D3EED3", "white"]; // green
@@ -585,10 +586,12 @@ tr.trLost td { color: #8fc38f; }
         }
 
         var td1 = document.getElementById("tdBSwitch");
+        td1.style.backgroundColor = g_s_c_num_bk_s[g_s_theme_id];
         td1.style.borderColor = g_s_c_board_b[g_s_theme_id];
 
         var td2 = document.getElementById("tdKSwitch");
         td2.style.borderColor = g_s_c_board_b[g_s_theme_id];
+        td2.style.backgroundColor = g_s_c_num_bk_s[g_s_theme_id];
     }
 
     // functions: -------------------------------------------------------------
