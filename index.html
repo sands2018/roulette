@@ -312,7 +312,24 @@ tr.trLost td { color: #8fc38f; }
             this.nBalance += item.nMoney;
         }
 
-        this.Add = function(item)
+        this.AfterItemRestores = function (item)
+        {
+            this.nCountCompleted--;
+
+            if (item.nMoney > 0)
+                this.nCountWon--;
+            else if (item.nMoney == 0)
+                this.nCountDrew--;
+            else
+                this.nCountLost--;
+
+            if (item.nHit == 1)
+                this.nCountHit--;
+
+            this.nBalance -= item.nMoney;
+        }
+
+        this.Add = function (item)
         {
             this.aItem[this.nCount] = item;
             this.aItem[this.nCount].nIdx = this.nCount;
@@ -374,8 +391,6 @@ tr.trLost td { color: #8fc38f; }
 
             var anNum3C3R = [nNumCol, nNumRow + 3];
 
-            var abHitted = [false, false];
-
             // whether hitted by column or row:
 
             for (var nn = 0; nn < 2; ++nn)
@@ -392,7 +407,6 @@ tr.trLost td { color: #8fc38f; }
                         this.aItem[n].nHit = 1;
 
                         this.AfterItemEnds(this.aItem[n]);
-                        abHitted[nn] = true;
                     }
                 }
             }
@@ -404,15 +418,17 @@ tr.trLost td { color: #8fc38f; }
                 if (this.aItem[n].nStatus == 0)
                     continue;
 
-                this.aItem[n].nRound++;
-                this.aItem[n].nMoney -= g_aGameRule[this.nIdxRule].anBet[this.aItem[n].nRound - 1];
-
                 if (this.aItem[n].nRound == g_aGameRule[this.nIdxRule].nRound)
                 {
                     this.aItem[n].nStatus = 0;
                     this.aItem[n].nHit = 0;
 
                     this.AfterItemEnds(this.aItem[n]);
+                }
+                else
+                {
+                    this.aItem[n].nRound++;
+                    this.aItem[n].nMoney -= g_aGameRule[this.nIdxRule].anBet[this.aItem[n].nRound - 1];
                 }
             }
 
@@ -437,6 +453,108 @@ tr.trLost td { color: #8fc38f; }
 
             this.nMoney = this.nBalance;
             for(var n = 0; n < this.nCount; ++n)
+            {
+                if (this.aItem[n].nStatus == 0)
+                    continue;
+
+                this.nMoney += this.aItem[n].nMoney;
+            }
+        }
+
+
+        this.DeleteNum = function (num)
+        {
+            // decrease distance for all item:
+
+            for (var n = 0; n < this.nCount; ++n)
+            {
+                this.aItem[n].nDistance--;
+            }
+
+            // number 0:
+
+            if (num == 0)
+            {
+                this.nMoney = this.nBalance;
+                for (var n = 0; n < this.nCount; ++n)
+                {
+                    if (this.aItem[n].nStatus == 0)
+                        continue;
+
+                    this.aItem[n].nMoney += g_aGameRule[this.nIdxRule].anBet[this.aItem[n].nRound - 1];
+                    this.nMoney += this.aItem[n].nMoney;
+                }
+
+                return;
+            }
+
+            var nNumCol = GetNumCol(num);
+            var nNumRow = GetNumRow(num);
+
+            var anNum3C3R = [nNumCol, nNumRow + 3];
+
+            // whether hitted by column or row:
+
+            for (var nn = 0; nn < 2; ++nn)
+            {
+                for (var n = 0; n < this.nCount; ++n)
+                {
+                    if (this.aItem[n].nStatus == 0)
+                    {
+                        if (this.aItem[n].nBet3C3R == anNum3C3R[nn])
+                        {
+                            if (this.aItem[n].nDistance == (this.aItem[n].nRound - 1))
+                            {
+                                AfterItemRestores(this.aItem[n]);
+
+                                this.aItem[n].nMoney -= g_aGameRule[this.nIdxRule].anBet[this.aItem[n].nRound - 1] * 3;
+                                this.nMoney -= g_aGameRule[this.nIdxRule].anBet[this.aItem[n].nRound - 1] * 3;
+
+                                this.aItem[n].nStatus = 1;
+                                this.aItem[n].nHit = 10; // temp value
+                            }
+                        }
+                    }
+                }
+            }
+
+            // increase round, see if it ends:
+
+            for (var n = this.nCount - 1; n >= 0; --n)
+            {
+                if (this.aItem[n].nHit == 10)
+                {
+                    this.aItem[n].nHit = 0;
+                }
+                else
+                {
+                    if (this.aItem[n].nStatus == 0)
+                    {
+                        if (this.aItem[n].nDistance == (this.aItem[n].nRound - 1))
+                        {
+                            AfterItemRestores(this.aItem[n]);
+
+                            this.aItem[n].nStatus = 1;
+                            this.aItem[n].nHit = 0;
+                        }
+                    }
+
+                    if (this.aItem[n].nStatus == 1)
+                    {
+                        this.aItem[n].nMoney += g_aGameRule[this.nIdxRule].anBet[this.aItem[n].nRound - 1];
+                        this.nMoney += g_aGameRule[this.nIdxRule].anBet[this.aItem[n].nRound - 1];
+
+                        this.aItem[n].nRound--;
+                        if (this.aItem[n].nRound == 0)
+                            this.RemoveAt(n);
+                    }
+                }
+            }
+
+            // calculate realtime money:
+
+            this.nMoney = this.nBalance;
+            for (var n = 0; n < this.nCount; ++n)
             {
                 if (this.aItem[n].nStatus == 0)
                     continue;
@@ -1297,6 +1415,13 @@ tr.trLost td { color: #8fc38f; }
 
         var num = g_anQueueNum[g_nQueueIdx];
         g_StatsInterval.DeleteNum(num);
+       
+        // games: -------------------------------
+
+        for (var n = 0; n < GAME_COUNT; ++n)
+        {
+            g_aGame[n].DeleteNum(num);
+        }
 
         Calc3C3R_Delete(num);
 
