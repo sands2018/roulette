@@ -58,8 +58,8 @@ td
 
 #tblStatsIntervals { border: 1px solid #8f8f8f; border-bottom: 0; width: 100%; margin-bottom: 8px }
 #tblStatsIntervals td { border-bottom: 1px solid #8f8f8f; font-size: 36px; padding: 3px 8px; text-align: center; }
-#tblStatsIntervals td:first-child { border-right: 1px solid #8f8f8f; width: 80px; text-align: center; } 
-#divStatsInterval 
+#tblStatsIntervals td:first-child { border-right: 1px solid #8f8f8f; width: 100px; text-align: center; } 
+#divStatsInterval0, #divStatsInterval1
 {  
     overflow: hidden;
     text-overflow: ellipsis;
@@ -67,6 +67,10 @@ td
     height: 48px;
     font-size: 36px;
 }
+#tblStatsIntervals .tdStatsInterval { text-align: left; }
+#tblStatsIntervals .tdTotal { font-family:Arial; font-size: 40px; color: #dd8877; font-weight: bold; padding: 0px 18px } 
+#tblStatsIntervals .tdZero { font-family:Arial; font-size: 40px; color: #8fc38f; font-weight: bold; padding: 0px 18px }
+#tblStatsIntervals .txtZero { color: #83aa83 }
 
 table.tblGameSum td { font-size: 36px; padding-right: 20px; }
 .tblGame { border: #8f8f8f 1px solid; margin-bottom: 18px; }
@@ -470,7 +474,9 @@ tr.trLost td { color: #8fc38f; }
         // 11 -> 30 and above, maintained outside this class:
 
         this.anLargeCount = [];
-        this.nExpand = 0;
+        this.anZero = [];
+
+        this.anExpandStatus = [0, 0];
 
         this.AddNum = function (num)
         {
@@ -478,7 +484,22 @@ tr.trLost td { color: #8fc38f; }
 
             if (num == 0)
             {
+                this.anZero.push(0);
                 return;
+            }
+
+            var nIdxLast = this.anZero.length - 1;
+            if (nIdxLast < 0)
+            {
+                this.anZero.push(1);
+            }
+            else if (this.anZero[nIdxLast] == 0)
+            {
+                this.anZero.push(1);
+            }
+            else
+            {
+                this.anZero[nIdxLast]++;
             }
 
             var nCount = this.anStart.length;
@@ -516,6 +537,7 @@ tr.trLost td { color: #8fc38f; }
         {
             if (num == 0)
             {
+                this.anZero.pop();
                 return;
             }
 
@@ -547,6 +569,19 @@ tr.trLost td { color: #8fc38f; }
                 for (var nn = 0; nn < this.anRound.length; ++nn)
                 {
                     this.anFailed[nn][n] = anFailedBak[nn][n] - (this.anFailed[nn][n] - anFailedBak[nn][n]);
+                }
+            }
+
+            var nIdxLast = this.anZero.length - 1;
+            if (nIdxLast >= 0)
+            {
+                if(this.anZero[nIdxLast] == 1)
+                {
+                    this.anZero.pop();
+                }
+                else
+                {
+                    this.anZero[nIdxLast]--;
                 }
             }
         }
@@ -1009,9 +1044,11 @@ tr.trLost td { color: #8fc38f; }
 
                 strHtml += "</tr>";
             }
-            strHtml += "</table>";
-            strHtml += "<div id='divStatsInterval' onclick='OnStatsIntervalClick()'>";
-            strHtml += "总：" + nTotal.toString() + "&nbsp;&nbsp;&nbsp;";
+            var strColSpan = (2 + g_StatsInterval.anRound.length * 2).toString();
+
+            strHtml += "<tr><td class='tdTotal'>" + nTotal.toString(); + "</td>"
+            strHtml += "<td class='tdStatsInterval' colspan='" + strColSpan + "'>";
+            strHtml += "<div id='divStatsInterval0' onclick='OnStatsIntervalClick(0)'>";
             var bFirst = true;
             for (var n = 0; n < g_StatsInterval.anLargeCount.length; ++n)
             {
@@ -1028,7 +1065,30 @@ tr.trLost td { color: #8fc38f; }
                     strHtml += strNum + "(" + g_StatsInterval.anLargeCount[n].toString() + ")";
                 }
             }
-            strHtml += "</div>"
+            strHtml += "</div></td></tr><tr><td class='tdZero'>0</td>"
+            strHtml += "<td class='tdStatsInterval' colspan='" + strColSpan + "'>";
+            strHtml += "<div id='divStatsInterval1' onclick='OnStatsIntervalClick(1)'>";
+            bFirst = true;
+            var strNum = "";
+            for (var n = g_StatsInterval.anZero.length - 1; n >= 0 ; --n)
+            {
+                if (!bFirst)
+                    strHtml += ";&nbsp;";
+
+                bFirst = false;
+                if (g_StatsInterval.anZero[n] == 0)
+                {
+                    strNum = "<span class='txtZero'>" + g_StatsInterval.anZero[n].toString() + "</span>";
+                }
+                else
+                {
+                    strNum = g_StatsInterval.anZero[n].toString();
+                }
+                    
+                strHtml += strNum;
+            }
+            strHtml += "</div></td></tr>"
+            strHtml += "</table>";
         }
 
         divIntervals.innerHTML = strHtml;
@@ -1326,25 +1386,40 @@ tr.trLost td { color: #8fc38f; }
 
     }
 
-    function OnStatsIntervalClick()
+    function OnStatsIntervalClick(nID)
     {
         var C_EXPAND_HEIGHT = 150;
         var C_COLLAPSE_HEIGHT = 48;
 
         var nHeight = C_EXPAND_HEIGHT;
 
-        if (g_StatsInterval.nExpand == 1)
+        for (var n = 0; n < g_StatsInterval.anExpandStatus.length; ++n)
         {
-            nHeight = C_COLLAPSE_HEIGHT;
-            g_StatsInterval.nExpand = 0;
-        }
-        else
-        {
-            g_StatsInterval.nExpand = 1;
-        }
+            if(n == nID)
+            {
+                if (g_StatsInterval.anExpandStatus[n] == 0)
+                    g_StatsInterval.anExpandStatus[n] = 1;
+                else
+                    g_StatsInterval.anExpandStatus[n] = 0;
+            }
+            else
+            {
+                g_StatsInterval.anExpandStatus[n] = 0;
+            }
 
-        var div = document.getElementById("divStatsInterval");
-        div.style.height = nHeight;
+            if (g_StatsInterval.anExpandStatus[n] == 1)
+            {
+                nHeight = C_EXPAND_HEIGHT;
+                g_StatsInterval.nExpand = 0;
+            }
+            else
+            {
+                nHeight = C_COLLAPSE_HEIGHT;
+            }
+
+            var div = document.getElementById("divStatsInterval" + n.toString());
+            div.style.height = nHeight;
+        }
     }
 
     function OnGameClick(nGameIdx)
