@@ -18,16 +18,26 @@ td
 
 #tblKeyboard td, #tblGameBoard td
 {
-	width: 95px;
-	height: 95px;
 	font-size: 50px;
 	border: 1px solid;
 }
 
+#tblKeyboard td
+{
+	width: 110px;
+	height: 105px;
+}
+
+#tblGameBoard td
+{
+	width: 95px;
+	height: 95px;
+}
+
 #tblQueue td 
 {
-	width: 50px;
-	height: 50px;
+	width: 58px;
+	height: 58px;
 	font-size: 36px;
 }
 
@@ -42,7 +52,7 @@ td
     border: 1px solid white;
 }
 
-.title_c,.value_c { font-size: 36px; padding: 7px 0px 5px 0px; border: 1px solid;}
+.title_c,.value_c { font-size: 36px; padding: 8px 0px 7px 0px; border: 1px solid;}
 .title_c { width: 100px; color: #403000 }
 .value_c { width: 80px; border-left: 0; }
 
@@ -141,7 +151,9 @@ tr.trLost td { color: #8fc38f; }
 
     var MAX_COUNT = 10000;
     var QUEUE_MAX_COUNT = 100;
+    var QUEUE_LINE_NUM_COUNT = 15;
     var GAME_SHOW_ITEM_COUNT = 20;
+
 
     var g_strInputBoard = "B";
 
@@ -460,7 +472,6 @@ tr.trLost td { color: #8fc38f; }
         this.anLargeCount = [];
         this.nExpand = 0;
 
-
         this.AddNum = function (num)
         {
             // 0:
@@ -512,6 +523,8 @@ tr.trLost td { color: #8fc38f; }
             var anFailedBak = [];
             anFailedBak[0] = [];
             anFailedBak[1] = [];
+
+            var anLargeCountBak = [];
 
             var nCount = this.anStart.length;
 
@@ -672,7 +685,7 @@ tr.trLost td { color: #8fc38f; }
 
 	    if (g_nQueueIdx >= 0)
         {
-	        nQueueRow = Math.floor((g_nQueueIdx - nStart) / 20) + 1;
+	        nQueueRow = Math.floor((g_nQueueIdx - nStart) / QUEUE_LINE_NUM_COUNT) + 1;
 	    }
 
 	    var strID = "divBlank";
@@ -682,7 +695,9 @@ tr.trLost td { color: #8fc38f; }
 	    else
 	        div.style.display = "";
 
-	    for (var n = 1; n <= 5; ++n)
+	    var nLineCount = (QUEUE_MAX_COUNT / QUEUE_LINE_NUM_COUNT).toFixed(0);
+
+	    for (var n = 1; n <= nLineCount; ++n)
 	    {
 	        strID = "trRow" + n.toString();
 	        var tr = document.getElementById(strID);
@@ -730,7 +745,7 @@ tr.trLost td { color: #8fc38f; }
             strClrRestart = strClrEnabled;
             strBorderClrRestart = strBorderClrEnabled;
         }
-        if (g_nQueueIdx >= 20)
+        if (g_nQueueIdx >= QUEUE_LINE_NUM_COUNT)
         {
             strBkClrExpand = strBkClrEnabled;
             strClrExpand = strClrEnabled;
@@ -781,6 +796,8 @@ tr.trLost td { color: #8fc38f; }
             g_an3C3R[n]++;
         }
 
+        // process g_StatsInterval.anLargeCount: ----------
+
         var anNum3C3R = [nCol, nRow + 3];
 
         for (var n = 0; n < 2; ++n)
@@ -798,8 +815,13 @@ tr.trLost td { color: #8fc38f; }
         }
     }
 
-    function Calc3C3R_Delete()
+    function Calc3C3R_Delete(num)
     {
+        --g_nQueueIdx;
+
+        if (num == 0)
+            return;
+
         var abOccur = [];
 
         for (var n = 0; n < 6; ++n)
@@ -811,19 +833,11 @@ tr.trLost td { color: #8fc38f; }
 
         for (var n = g_nQueueIdx; n >= 0; --n)
         {
-            var num = g_anQueueNum[n];
-            if (num == 0) continue;
+            var numQ = g_anQueueNum[n];
+            if (numQ == 0) continue;
 
-            var nCol = Math.floor((num - 1) / 12);
-            var nRow = num % 3;
-            if (nRow == 1)
-            {
-                nRow = 2;
-            }
-            else if (nRow == 2)
-            {
-                nRow = 1;
-            }
+            var nCol = GetNumCol(numQ);
+            var nRow = GetNumRow(numQ);
 
             var bChanged = false;
 
@@ -845,6 +859,26 @@ tr.trLost td { color: #8fc38f; }
 
             if (!bChanged)
                 break;
+        }
+
+        // process g_StatsInterval.anLargeCount: ----------
+
+        var nCol = GetNumCol(num);
+        var nRow = GetNumRow(num);
+
+        var anNum3C3R = [nCol, nRow + 3];
+
+        for (var n = 0; n < 2; ++n)
+        {
+            var nCount = g_an3C3R[anNum3C3R[n]];
+            if (nCount >= 11)
+            {
+                var nIdx = nCount - 11;
+                if (nIdx >= 19)
+                    nIdx == 19;
+
+                g_StatsInterval.anLargeCount[nIdx]--;
+            }
         }
     }
 
@@ -948,7 +982,7 @@ tr.trLost td { color: #8fc38f; }
             strHtml += "<tr><td>开始</td><td>出现</td><td>概率</td>";
             for (var nn = 0; nn < g_StatsInterval.anRound.length; ++nn)
             {
-                strHtml += "<td>" + g_StatsInterval.anRound[nn].toString() + "轮失败</td><td>概率</td>";
+                strHtml += "<td>" + g_StatsInterval.anRound[nn].toString() + "把不中</td><td>概率</td>";
             }
             strHtml += "</tr>";
 
@@ -1201,12 +1235,10 @@ tr.trLost td { color: #8fc38f; }
             return;
         }
 
-        var num = g_an3C3R[g_nQueueIdx];
+        var num = g_anQueueNum[g_nQueueIdx];
         g_StatsInterval.DeleteNum(num);
 
-        --g_nQueueIdx;
-
-        Calc3C3R_Delete();
+        Calc3C3R_Delete(num);
 
         Sort3C3R();
         Show3C3R();
@@ -1387,31 +1419,36 @@ tr.trLost td { color: #8fc38f; }
                 <td id="td0"></td><td id="td1"></td><td id="td2"></td><td id="td3"></td><td id="td4"></td>
                 <td id="td5"></td><td id="td6"></td><td id="td7"></td><td id="td8"></td><td id="td9"></td>
                 <td id="td10"></td><td id="td11"></td><td id="td12"></td><td id="td13"></td><td id="td14"></td>
-                <td id="td15"></td><td id="td16"></td><td id="td17"></td><td id="td18"></td><td id="td19"></td>
             </tr>
             <tr id="trRow2">
+                <td id="td15"></td><td id="td16"></td><td id="td17"></td><td id="td18"></td><td id="td19"></td>
                 <td id="td20"></td><td id="td21"></td><td id="td22"></td><td id="td23"></td><td id="td24"></td>
                 <td id="td25"></td><td id="td26"></td><td id="td27"></td><td id="td28"></td><td id="td29"></td>
-                <td id="td30"></td><td id="td31"></td><td id="td32"></td><td id="td33"></td><td id="td34"></td>
-                <td id="td35"></td><td id="td36"></td><td id="td37"></td><td id="td38"></td><td id="td39"></td>
             </tr>
             <tr id="trRow3">
+                <td id="td30"></td><td id="td31"></td><td id="td32"></td><td id="td33"></td><td id="td34"></td>
+                <td id="td35"></td><td id="td36"></td><td id="td37"></td><td id="td38"></td><td id="td39"></td>
                 <td id="td40"></td><td id="td41"></td><td id="td42"></td><td id="td43"></td><td id="td44"></td>
+            </tr>
+            <tr id="trRow4">
                 <td id="td45"></td><td id="td46"></td><td id="td47"></td><td id="td48"></td><td id="td49"></td>
                 <td id="td50"></td><td id="td51"></td><td id="td52"></td><td id="td53"></td><td id="td54"></td>
                 <td id="td55"></td><td id="td56"></td><td id="td57"></td><td id="td58"></td><td id="td59"></td>
             </tr>
-            <tr id="trRow4">
+            <tr id="trRow5">
                 <td id="td60"></td><td id="td61"></td><td id="td62"></td><td id="td63"></td><td id="td64"></td>
                 <td id="td65"></td><td id="td66"></td><td id="td67"></td><td id="td68"></td><td id="td69"></td>
                 <td id="td70"></td><td id="td71"></td><td id="td72"></td><td id="td73"></td><td id="td74"></td>
-                <td id="td75"></td><td id="td76"></td><td id="td77"></td><td id="td78"></td><td id="td79"></td>
             </tr>
-            <tr id="trRow5">
+            <tr id="trRow6">
+                <td id="td75"></td><td id="td76"></td><td id="td77"></td><td id="td78"></td><td id="td79"></td>
                 <td id="td80"></td><td id="td81"></td><td id="td82"></td><td id="td83"></td><td id="td84"></td>
                 <td id="td85"></td><td id="td86"></td><td id="td87"></td><td id="td88"></td><td id="td89"></td>
+            </tr>
+            <tr id="trRow7">
                 <td id="td90"></td><td id="td91"></td><td id="td92"></td><td id="td93"></td><td id="td94"></td>
                 <td id="td95"></td><td id="td96"></td><td id="td97"></td><td id="td98"></td><td id="td99"></td>
+                <td id="td100" colspan="5">&nbsp;</td>
             </tr>
         </table>
         <div style="height: 8px"></div>
@@ -1438,8 +1475,6 @@ tr.trLost td { color: #8fc38f; }
     <div id="divKeyboard" style="position:fixed; bottom: 0px; z-index:10; width: 100%; padding: 0; ">
         <table cellpadding="0" cellspacing="0" id="tblKeyboard">
             <tr>
-                <td id="tdK0" onclick="OnClick(0)" rowspan="2">0</td>
-                
                 <td id="tdK1" onclick="OnClick(1)">1</td><td id="tdK2" onclick="OnClick(2)">2</td><td id="tdK3" onclick="OnClick(3)">3</td>
                 <td id="tdK4" onclick="OnClick(4)">4</td><td id="tdK5" onclick="OnClick(5)">5</td><td id="tdK6" onclick="OnClick(6)">6</td>
                 <td id="tdK7" onclick="OnClick(7)">7</td><td id="tdK8" onclick="OnClick(8)">8</td><td id="tdK9" onclick="OnClick(9)">9</td>
@@ -1450,8 +1485,6 @@ tr.trLost td { color: #8fc38f; }
                 <td id="tdK16" onclick="OnClick(16)">16</td><td id="tdK17" onclick="OnClick(17)">17</td><td id="tdK18" onclick="OnClick(18)">18</td>
             </tr>
             <tr>
-                <td id="tdKSwitch" onclick="OnSwitchInput(0)" rowspan="2">&nbsp;</td>
-
                 <td id="tdK19" onclick="OnClick(19)">19</td><td id="tdK20" onclick="OnClick(20)">20</td><td id="tdK21" onclick="OnClick(21)">21</td>
                 <td id="tdK22" onclick="OnClick(22)">22</td><td id="tdK23" onclick="OnClick(23)">23</td><td id="tdK24" onclick="OnClick(24)">24</td>
                 <td id="tdK25" onclick="OnClick(25)">25</td><td id="tdK26" onclick="OnClick(26)">26</td><td id="tdK27" onclick="OnClick(27)">27</td>
@@ -1461,7 +1494,10 @@ tr.trLost td { color: #8fc38f; }
                 <td id="tdK31" onclick="OnClick(31)">31</td><td id="tdK32" onclick="OnClick(32)">32</td><td id="tdK33" onclick="OnClick(33)">33</td>
                 <td id="tdK34" onclick="OnClick(34)">34</td><td id="tdK35" onclick="OnClick(35)">35</td><td id="tdK36" onclick="OnClick(36)">36</td>
             </tr>
-        </table>
+            <tr>
+                <td id="tdK0" onclick="OnClick(0)" colspan="7">0</td><td id="tdKSwitch" onclick="OnSwitchInput(0)" colspan="2">&nbsp;</td>
+            </tr>
+</table>
     </div>
     <div id="divGameBoard" style="position:fixed; bottom: 0px; z-index:9; width: 100%; padding: 0; ">
         <table cellpadding="0" cellspacing="0" id="tblGameBoard">
