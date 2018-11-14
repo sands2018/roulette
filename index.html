@@ -855,20 +855,23 @@ tr.trLost td { color: #8fc38f; }
         }
 
         var nCalcCount = STATS_GROUPS_COUNTS[g_nSGCountIdx];
-        
-        var nStart = 0;
+        var nCount = 0;
 
-        if (nCalcCount < (g_nQueueIdx + 1))
-            nStart = (g_nQueueIdx + 1) - nCalcCount;
-
-        for (var n = g_nQueueIdx; n >= nStart; --n)
+        for (var n = g_nQueueIdx; n >= 0; --n)
         {
+            if (g_anQueueNum[n] == 0)
+                continue;
+
             var numQ = g_anQueueNum[n];
             var nCol = GetNumCol(numQ);
             var nRow = GetNumRow(numQ);
 
             g_t_an3C3RCount[nCol]++;
             g_t_an3C3RCount[nRow + 3]++;
+
+            ++nCount;
+            if (nCount >= nCalcCount)
+                break;
         }
 
         Sort(g_t_an3C3RCount, g_t_anIdx3C3RCount, true);
