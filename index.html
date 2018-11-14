@@ -72,6 +72,13 @@ td
 #tblStatsIntervals .tdZero { font-family:Arial; font-size: 40px; color: #8fc38f; font-weight: bold; padding: 0px 18px }
 #tblStatsIntervals .txtZero { color: #83aa83 }
 
+#tblStatsGroups { border: 1px solid #8f8f8f; width: 100% }
+#tblStatsGroupsCount td { padding: 5px 0px; }
+#tdSGButtons { padding: 0; text-align: right; width: 60px; }
+#tblStatsGroups td { font-size: 36px; text-align: left; padding-left: 12px; }
+#tblSGButtons td { border: 1px solid #AA8833; padding: 8px 20px; text-align: center; }
+.SGCNumber { font-size: 40px; color: #dd8877; font-weight: bold }
+
 table.tblGameSum td { font-size: 36px; padding-right: 20px; }
 .tblGame { border: #8f8f8f 1px solid; margin-bottom: 18px; }
 table.tblGame td { font-size: 36px; }
@@ -150,6 +157,8 @@ tr.trLost td { color: #8fc38f; }
     // 3c3r border color
     var g_s_c_3c3r_b = ["white", "#AA8833", "white"];
 
+    // stats groups active button background color
+    var g_s_c_sg_bk_active = "#EBE3CB";
 
     // global variables: ------------------------------------------------------
 
@@ -157,7 +166,7 @@ tr.trLost td { color: #8fc38f; }
     var QUEUE_MAX_COUNT = 100;
     var QUEUE_LINE_NUM_COUNT = 15;
     var GAME_SHOW_ITEM_COUNT = 20;
-
+    var STATS_GROUPS_COUNTS = [20, 40, 80];
 
     var g_strInputBoard = "B";
 
@@ -171,12 +180,14 @@ tr.trLost td { color: #8fc38f; }
     var g_nShowInputStatus = 1;
 
     var g_StatsInterval;
-
+    var g_nSGCountIdx = 0;
     var g_aGame = [];
 
     var GAME_COUNT = 3;
     var g_aGameRule = [];
 
+    var g_t_an3C3RCount = [0, 0, 0, 0, 0, 0];
+    var g_t_anIdx3C3RCount = [0, 1, 2, 3, 4, 5];
 
     // basic: -----------------------------------------------------------------
 
@@ -804,12 +815,130 @@ tr.trLost td { color: #8fc38f; }
 
     // functions: -------------------------------------------------------------
 
+    function Sort(anValue, anIndex, bAsend)
+    {
+        var nCount = anValue.length;
+
+        var bChanged = false;
+        do
+        {
+            bChanged = false;
+
+            for (var n = 0; n < nCount - 1; ++n)
+            {
+                if ((bAsend && (anValue[anIndex[n]] > anValue[anIndex[n + 1]]))
+                    || (!bAsend && (anValue[anIndex[n]] < anValue[anIndex[n + 1]])))
+                {
+                    tmp = anIndex[n];
+                    anIndex[n] = anIndex[n + 1];
+                    anIndex[n + 1] = tmp;
+
+                    bChanged = true;
+                }
+            }
+        } while (bChanged);
+    }
+
     function GetQueueItemBorderStyle(num)
     {
         return "1px solid " + GetQueueNumberBorderColor(num);
     }
 
     ///////////////////////////////////////////////////////////////////////////
+
+    function Calc_StatsGroupsCount()
+    {
+        for (var n = 0; n < 6; ++n)
+        {
+            g_t_an3C3RCount[n] = 0;
+            g_t_anIdx3C3RCount[n] = n;
+        }
+
+        var nCalcCount = STATS_GROUPS_COUNTS[g_nSGCountIdx];
+        
+        var nStart = 0;
+
+        if (nCalcCount < (g_nQueueIdx + 1))
+            nStart = (g_nQueueIdx + 1) - nCalcCount;
+
+        for (var n = g_nQueueIdx; n >= nStart; --n)
+        {
+            var numQ = g_anQueueNum[n];
+            var nCol = GetNumCol(numQ);
+            var nRow = GetNumRow(numQ);
+
+            g_t_an3C3RCount[nCol]++;
+            g_t_an3C3RCount[nRow + 3]++;
+        }
+
+        Sort(g_t_an3C3RCount, g_t_anIdx3C3RCount, true);
+    }
+
+    function NumberString_StatsGroupsCount(nNum)
+    {
+        return "<span class='SGCNumber'>" + nNum.toString() + "</span>"
+    }
+
+    function Show_StatsGroupsCount()
+    {
+        var div = document.getElementById("divStatsGroups");
+        var strDisplay = "";
+        if (g_nQueueIdx < 0)
+            strDisplay = "none";
+        div.style.display = strDisplay;
+
+        var tdCol = document.getElementById("tdStatsGroupsCol");
+        var strHtml = "";
+        var bFirst = true;
+        for (var n = 0; n < 6; ++n)
+        {
+            var nIdx = g_t_anIdx3C3RCount[n];
+            if (nIdx >= 3)
+                continue;
+
+            if (!bFirst)
+                strHtml += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+            bFirst = false;
+
+            strHtml += GetColRowSpec(nIdx) + "&nbsp;&nbsp;";
+            strHtml += NumberString_StatsGroupsCount(g_t_an3C3RCount[nIdx]);
+        }
+        tdCol.innerHTML = strHtml;
+
+        strHtml = "";
+        var tdRow = document.getElementById("tdStatsGroupsRow");
+        bFirst = true;
+        for (var n = 0; n < 6; ++n)
+        {
+            var nIdx = g_t_anIdx3C3RCount[n];
+            if (nIdx < 3)
+                continue;
+
+            if (!bFirst)
+                strHtml += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+            bFirst = false;
+
+            strHtml += GetColRowSpec(nIdx) + "&nbsp;&nbsp;";
+            strHtml += NumberString_StatsGroupsCount(g_t_an3C3RCount[nIdx]);
+        }
+        tdRow.innerHTML = strHtml;
+
+        strHtml = "";
+        var tdAll = document.getElementById("tdStatsGroupsAll");
+        bFirst = true;
+        for (var n = 0; n < 6; ++n)
+        {
+            var nIdx = g_t_anIdx3C3RCount[n];
+
+            if (!bFirst)
+                strHtml += "&nbsp;&nbsp;&nbsp;";
+            bFirst = false;
+
+            strHtml += GetColRowSpec(nIdx) + "&nbsp;";
+            strHtml += NumberString_StatsGroupsCount(g_t_an3C3RCount[nIdx]);
+        }
+        tdAll.innerHTML = strHtml;
+    }
 
     function ShowQueue()
     {
@@ -1313,6 +1442,43 @@ tr.trLost td { color: #8fc38f; }
         ShowGames();
     }
 
+    function InitSGButtons()
+    {
+        var td = document.getElementById("tdSGButtons");
+        var strHtml = "<table cellpadding='0' cellspacing='5' border='0' id='tblSGButtons'>";
+        var nCount = STATS_GROUPS_COUNTS.length;
+        for (var n = 0; n < nCount; ++n)
+        {
+            strHtml += "<tr><td id='tdSGCount" + n.toString() + "' ";
+            strHtml += "onclick='OnSGCountClick(" + n.toString() + ")'>";
+            strHtml += STATS_GROUPS_COUNTS[n].toString() + "</td></tr>";
+        }
+        strHtml += "</table>";
+
+        td.innerHTML = strHtml;
+
+        g_nSGCountIdx = 0;
+        RefreshSGButtons();
+    }
+
+    function RefreshSGButtons()
+    {
+        var nCount = STATS_GROUPS_COUNTS.length;
+        var strBkColor = "";
+
+        for (var n = 0; n < nCount; ++n)
+        {
+            if (n == g_nSGCountIdx)
+                strBkColor = g_s_c_sg_bk_active;
+            else
+                strBkColor = "white";
+
+            var td = document.getElementById("tdSGCount" + n.toString());
+            td.style.backgroundColor = strBkColor;
+        }
+    }
+
+
     function RefreshPage()
     {
         window.location.reload();
@@ -1335,6 +1501,7 @@ tr.trLost td { color: #8fc38f; }
         }
 
         InitStatsInterval();
+        InitSGButtons();
         InitGame();
         ShowInput(true);
 
@@ -1392,6 +1559,11 @@ tr.trLost td { color: #8fc38f; }
 
         ShowStatsIntervals();
 
+        // stats group count: -------------------
+
+        Calc_StatsGroupsCount();
+        Show_StatsGroupsCount();
+
         // games: -------------------------------
 
         for (var n = 0; n < GAME_COUNT; ++n)
@@ -1417,6 +1589,8 @@ tr.trLost td { color: #8fc38f; }
             return;
         }
 
+        // stats intervals: ---------------------
+
         var num = g_anQueueNum[g_nQueueIdx];
         g_StatsInterval.DeleteNum(num);
        
@@ -1428,6 +1602,12 @@ tr.trLost td { color: #8fc38f; }
         }
 
         Calc3C3R_Delete(num);
+
+        // stats group count: -------------------
+
+        Calc_StatsGroupsCount();
+        Show_StatsGroupsCount();
+
 
         Sort3C3R();
         Show3C3R();
@@ -1551,6 +1731,15 @@ tr.trLost td { color: #8fc38f; }
         }
     }
 
+    function OnSGCountClick(nIdx)
+    {
+        g_nSGCountIdx = nIdx;
+        RefreshSGButtons();
+
+        Calc_StatsGroupsCount();
+        Show_StatsGroupsCount();
+    }
+
     function OnGameClick(nGameIdx)
     {
         var bShow = false;
@@ -1616,7 +1805,7 @@ tr.trLost td { color: #8fc38f; }
             </tr>
         </table>
     </div>
-    <div style="position:absolute; z-index:0; top: 75px; padding: 0; margin: 0">
+    <div style="position:absolute; z-index:0; top: 75px; padding: 0; margin: 0; width: 100%">
         <div style="height: 8px" id="divBlank"></div>
         <table cellpadding="0" cellspacing="5" border="0" id="tblQueue">
             <tr id="trRow1">
@@ -1671,6 +1860,22 @@ tr.trLost td { color: #8fc38f; }
 
         <div style="height: 18px"></div>
         <div id="divStatsIntervals"></div>
+
+        <div id="divStatsGroups" style="display: none">
+            <div style="height: 18px"></div>
+            <table cellpadding="0" cellspacing="0" id="tblStatsGroups">
+                <tr>
+                    <td>
+                        <table cellpadding="0" cellspacing="0" id="tblStatsGroupsCount">
+                            <tr><td id="tdStatsGroupsCol"></td></tr>
+                            <tr><td id="tdStatsGroupsRow"></td></tr>
+                            <tr><td id="tdStatsGroupsAll"></td></tr>
+                        </table>
+                    </td>
+                    <td id="tdSGButtons" rowspan="3"></td>
+                </tr>
+            </table>
+        </div>
 
         <div style="height: 18px"></div>
         <div id="divGames"></div>
