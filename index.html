@@ -208,6 +208,25 @@ tr.trLost td { color: #8fc38f; }
 
     // basic: -----------------------------------------------------------------
 
+    function InitGlobalVariables()
+    {
+        g_strInputBoard = "B";
+
+        if (g_anQueueNum.length > 0)
+            g_anQueueNum.splice(0, g_anQueueNum.length);
+
+        g_nQueueIdx = -1;
+
+        g_an3C3R.splice(0, g_an3C3R.length);
+        g_anIdx3C3R.splice(0, g_anIdx3C3R.length);
+
+        g_nExpandStatus = 0;
+        g_nShowInputStatus = 1;
+
+        g_nSGCountIdx = 0;
+        g_aGame = [];
+    }
+
     function OnTest()
     {
         var txt = document.getElementById("txtClipboard");
@@ -987,7 +1006,8 @@ tr.trLost td { color: #8fc38f; }
 		    var td = document.getElementById(strIdTd);
 		    td.innerHTML = "&nbsp;";
 		    td.style.backgroundColor = "#FFFFFF";
-	    }
+		    td.style.border = "0";
+        }
 
 	    var nQueueRow = 0;
 
@@ -1489,9 +1509,36 @@ tr.trLost td { color: #8fc38f; }
         td2.style.display = strDisplay;
     }
 
+    function PageInit()
+    {
+        for (var n = 0; n < 6; ++n)
+        {
+            g_an3C3R[n] = 0;
+            g_anIdx3C3R[n] = n;
+        }
+
+        g_nSGCountIdx = 1;
+
+        InitStatsInterval();
+        InitGame();
+
+        Show_StatsGroupsCount();
+
+        Show_3C3R();
+        Show_Queue();
+        Show_RefreshSysButtons();
+        Show_StatsIntervals();
+        Show_Games();
+
+        Show_3R3CLast2();
+        Show_RefreshTheme();
+    }
+
     function RefreshPage()
     {
-        window.location.reload();
+        //window.location.reload();
+        InitGlobalVariables();
+        PageInit();
     }
 
     // message handlers: ------------------------------------------------------
@@ -1504,20 +1551,7 @@ tr.trLost td { color: #8fc38f; }
 
         g_nQueueIdx = -1;
 
-        for (var n = 0; n < 6; ++n)
-        {
-            g_an3C3R[n] = 0;
-            g_anIdx3C3R[n] = n;
-        }
-
-        g_nSGCountIdx = 1;
-
-        InitStatsInterval();
-        Show_InitSGButtons();
-        InitGame();
-        Show_Keyboard(true);
-
-        Show_RefreshTheme();
+        PageInit();
     }
 
     function OnSwitchInput(nIdx)
@@ -1813,7 +1847,7 @@ tr.trLost td { color: #8fc38f; }
 </script>
 
 </head>
-<body onload="OnPageInit()" style="padding: 0; margin :0">
+<body onload="OnPageInit()" style="padding: 0; margin :0; background-color: white">
     <div style="position:fixed; z-index:19; right: 0px; top:0px; width: 100%; background-color: white" 
          onclick="OnShowKeyboardClick()">
         <div style="padding: 12px 8px">
