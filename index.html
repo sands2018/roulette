@@ -166,7 +166,7 @@ tr.trLost td { color: #8fc38f; }
     var QUEUE_MAX_COUNT = 100;
     var QUEUE_LINE_NUM_COUNT = 15;
     var GAME_SHOW_ITEM_COUNT = 20;
-    var STATS_GROUPS_COUNTS = [20, 40, 60, 80, 100, 200];
+    var STATS_GROUPS_COUNTS = [20, 40, 60, 80, 100, 99999];
 
     var g_strInputBoard = "B";
 
@@ -1453,7 +1453,13 @@ tr.trLost td { color: #8fc38f; }
         {
             strHtml += "<td id='tdSGCount" + n.toString() + "' ";
             strHtml += "onclick='OnSGCountClick(" + n.toString() + ")'>";
-            strHtml += STATS_GROUPS_COUNTS[n].toString() + "</td>";
+
+            if (STATS_GROUPS_COUNTS[n] > 999)
+                strHtml += "全部";
+            else
+                strHtml += STATS_GROUPS_COUNTS[n].toString();
+
+            strHtml += "</td>";
         }
         strHtml += "</tr></table>";
 
