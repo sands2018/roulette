@@ -72,11 +72,11 @@ td
 #tblStatsIntervals .tdZero { font-family:Arial; font-size: 40px; color: #8fc38f; font-weight: bold; padding: 0px 18px }
 #tblStatsIntervals .txtZero { color: #83aa83 }
 
-#tblStatsGroups { border: 1px solid #8f8f8f; width: 100% }
-#tblStatsGroupsCount td { padding: 5px 0px; }
-#tdSGButtons { padding: 0; text-align: right; width: 60px; }
-#tblStatsGroups td { font-size: 36px; text-align: left; padding-left: 12px; }
-#tblSGButtons td { border: 1px solid #AA8833; padding: 8px 20px; text-align: center; }
+#tblStatsGroups { border-top: 1px solid #8f8f8f; width: 100% }
+#tblStatsGroups td { font-size: 36px; text-align: left; padding-left: 12px; border-bottom: 1px solid #8f8f8f; }
+#tblStatsGroups #tdSGButtons { padding: 0; border-bottom: 0; text-align: right; }
+#tblSGButtons { width: 100% }
+#tblSGButtons td { border: 1px solid #AA8833; padding: 8px 28px;  width: 150px; text-align: center; }
 .SGCNumber { font-size: 40px; color: #dd8877; font-weight: bold }
 
 table.tblGameSum td { font-size: 36px; padding-right: 20px; }
@@ -166,7 +166,7 @@ tr.trLost td { color: #8fc38f; }
     var QUEUE_MAX_COUNT = 100;
     var QUEUE_LINE_NUM_COUNT = 15;
     var GAME_SHOW_ITEM_COUNT = 20;
-    var STATS_GROUPS_COUNTS = [20, 40, 80];
+    var STATS_GROUPS_COUNTS = [20, 40, 60, 80, 100, 200];
 
     var g_strInputBoard = "B";
 
@@ -900,10 +900,10 @@ tr.trLost td { color: #8fc38f; }
                 continue;
 
             if (!bFirst)
-                strHtml += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                strHtml += "&nbsp;&nbsp;&nbsp;";
             bFirst = false;
 
-            strHtml += GetColRowSpec(nIdx) + "&nbsp;&nbsp;";
+            strHtml += GetColRowSpec(nIdx) + "&nbsp;";
             strHtml += NumberString_StatsGroupsCount(g_t_an3C3RCount[nIdx]);
         }
         tdCol.innerHTML = strHtml;
@@ -918,10 +918,10 @@ tr.trLost td { color: #8fc38f; }
                 continue;
 
             if (!bFirst)
-                strHtml += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                strHtml += "&nbsp;&nbsp;&nbsp;";
             bFirst = false;
 
-            strHtml += GetColRowSpec(nIdx) + "&nbsp;&nbsp;";
+            strHtml += GetColRowSpec(nIdx) + "&nbsp;";
             strHtml += NumberString_StatsGroupsCount(g_t_an3C3RCount[nIdx]);
         }
         tdRow.innerHTML = strHtml;
@@ -1447,17 +1447,17 @@ tr.trLost td { color: #8fc38f; }
 
     function InitSGButtons()
     {
-        var td = document.getElementById("tdSGButtons");
-        var strHtml = "<table cellpadding='0' cellspacing='5' border='0' id='tblSGButtons'>";
+        var strHtml = "<table cellpadding='0' cellspacing='5' border='0' id='tblSGButtons'><tr>";
         var nCount = STATS_GROUPS_COUNTS.length;
         for (var n = 0; n < nCount; ++n)
         {
-            strHtml += "<tr><td id='tdSGCount" + n.toString() + "' ";
+            strHtml += "<td id='tdSGCount" + n.toString() + "' ";
             strHtml += "onclick='OnSGCountClick(" + n.toString() + ")'>";
-            strHtml += STATS_GROUPS_COUNTS[n].toString() + "</td></tr>";
+            strHtml += STATS_GROUPS_COUNTS[n].toString() + "</td>";
         }
-        strHtml += "</table>";
+        strHtml += "</tr></table>";
 
+        var td = document.getElementById("tdSGButtons");
         td.innerHTML = strHtml;
 
         g_nSGCountIdx = 1;
@@ -1868,15 +1868,11 @@ tr.trLost td { color: #8fc38f; }
             <div style="height: 18px"></div>
             <table cellpadding="0" cellspacing="0" id="tblStatsGroups">
                 <tr>
-                    <td>
-                        <table cellpadding="0" cellspacing="0" id="tblStatsGroupsCount">
-                            <tr><td id="tdStatsGroupsCol"></td></tr>
-                            <tr><td id="tdStatsGroupsRow"></td></tr>
-                            <tr><td id="tdStatsGroupsAll"></td></tr>
-                        </table>
-                    </td>
-                    <td id="tdSGButtons" rowspan="3"></td>
+                    <td id="tdStatsGroupsCol" width="53%" style="border-right: 1px solid #8f8f8f"></td>
+                    <td id="tdStatsGroupsRow"></td>
                 </tr>
+                <tr><td id="tdStatsGroupsAll" colspan="2"></td></tr>
+                <tr><td id="tdSGButtons" colspan="2"></td></tr>
             </table>
         </div>
 
