@@ -43,7 +43,7 @@ td
 
 .bttn 
 {
-	width: 180px;
+	width: 170px;
 	height: 60px;
     line-height: 60px;
     text-align: center;
@@ -52,9 +52,9 @@ td
     border: 1px solid white;
 }
 
-.title_c,.value_c { font-size: 36px; padding: 8px 0px 7px 0px; border: 1px solid;}
-.title_c { width: 100px; color: #403000 }
-.value_c { width: 80px; border-left: 0; }
+.title_c,.value_c { padding: 8px 0px 7px 0px; border: 1px solid;}
+.title_c { font-size: 36px; width: 100px; color: #403000 }
+.value_c { font-size: 40px; width: 80px; border-left: 0; }
 
 #tblStatsIntervals { border: 1px solid #8f8f8f; border-bottom: 0; width: 100%; margin-bottom: 8px }
 #tblStatsIntervals td { border-bottom: 1px solid #8f8f8f; font-size: 36px; padding: 3px 8px; text-align: center; }
@@ -88,6 +88,22 @@ tr.trActive td { color: black; }
 tr.trWon td { color: #c38f8f; }
 tr.trDrew td { color: #a3a3a3; }
 tr.trLost td { color: #8fc38f; }
+
+#divImportExport
+{ 
+    position:fixed; top: 0px; z-index:9999; width: 100%; height: 100%; 
+    background-color:white; text-align: center;
+}
+#tblImportExport #tdTxt
+{
+    border: 1px solid #AA8833
+}
+#tblPanelButtons td
+{
+    border: 1px solid #AA8833;
+}
+
+#txtClipboard { font-size: 36px; border: 0 } 
 
 </style>
 
@@ -193,6 +209,8 @@ tr.trLost td { color: #8fc38f; }
 
     function OnTest()
     {
+        var txt = document.getElementById("txtClipboard");
+        txt.value = "12,12,1,12,12,12,12,12,12,12,12,12";
     }
 
     function GetNumCol(num)
@@ -943,7 +961,7 @@ tr.trLost td { color: #8fc38f; }
         tdAll.innerHTML = strHtml;
     }
 
-    function ShowQueue()
+    function Show_Queue()
     {
         var nStart = 0;
         if (g_nQueueIdx > QUEUE_MAX_COUNT)
@@ -997,7 +1015,7 @@ tr.trLost td { color: #8fc38f; }
 	    }
     }
 
-    function RefreshButtons()
+    function Show_RefreshSysButtons()
     {
         var strBkClrDisabled = g_s_c_btn_bk_disabled[g_s_theme_id];
         var strBkClrEnabled = g_s_c_btn_bk_enabled[g_s_theme_id];
@@ -1008,72 +1026,40 @@ tr.trLost td { color: #8fc38f; }
         var strBorderClrDisabled = g_s_c_btn_b_disabled[g_s_theme_id];
         var strBorderClrEnabled = g_s_c_btn_b_enabled[g_s_theme_id];
 
-        var strBkClrDelete = strBkClrDisabled;
-        var strClrDelete = strClrDisabled;
-        var strBorderClrDelete = strBorderClrDisabled;
+        var astrIDBttn = ["tdBttnTheme", "tdBttnDelete", "tdBttnRestart", "tdBttnExport", "tdBttnImport"];
+        var abEnabled = [];
 
-        var strBkClrExpand = strBkClrDisabled;
-        var strClrExpand = strClrDisabled;
-        var strBorderClrExpand = strBorderClrDisabled;
-
-        var strBkClrRestart = strBkClrDisabled;
-        var strClrRestart = strClrDisabled;
-        var strBorderClrRestart = strBorderClrDisabled;
-
-        var strBkClrTheme = strBkClrEnabled;
-        var strClrTheme = strClrEnabled;
-        var strBorderClrTheme = strBorderClrEnabled;
-
-        if (g_nQueueIdx >= 0)
+        for (var n = 0; n < astrIDBttn.length; ++n)
         {
-            strBkClrDelete = strBkClrEnabled;
-            strClrDelete = strClrEnabled;
-            strBorderClrDelete = strBorderClrEnabled;
+            abEnabled[n] = true;
+        }
 
-            strBkClrRestart = strBkClrEnabled;
-            strClrRestart = strClrEnabled;
-            strBorderClrRestart = strBorderClrEnabled;
-        }
-        if (g_nQueueIdx >= QUEUE_LINE_NUM_COUNT)
+        if (g_nQueueIdx < 0)
         {
-            strBkClrExpand = strBkClrEnabled;
-            strClrExpand = strClrEnabled;
-            strBorderClrExpand = strBorderClrEnabled;
+            abEnabled[1] = false; // delete
+            abEnabled[2] = false; // restart
+            abEnabled[3] = false; // export
         }
-        else
+
+        if (g_nQueueIdx < QUEUE_LINE_NUM_COUNT)
         {
             g_nExpandStatus = 0;
         }
-
-        var strBttnExpand = "展开";
-        if(g_nExpandStatus == 1)
+        else
         {
-            strBttnExpand = "收起";
+            g_nExpandStatus = 1;
         }
 
-        var bttn = document.getElementById("tdBttnDelete");
-        bttn.style.backgroundColor = strBkClrDelete;
-        bttn.style.color = strClrDelete;
-        bttn.style.borderColor = strBorderClrDelete;
-
-        bttn = document.getElementById("tdBttnExpand");
-        bttn.style.backgroundColor = strBkClrExpand;
-        bttn.style.color = strClrExpand;
-        bttn.style.borderColor = strBorderClrExpand;
-        bttn.innerHTML = strBttnExpand;
-
-        bttn = document.getElementById("tdBttnRestart");
-        bttn.style.backgroundColor = strBkClrRestart;
-        bttn.style.color = strClrRestart;
-        bttn.style.borderColor = strBorderClrRestart;
-
-        bttn = document.getElementById("tdBttnTheme");
-        bttn.style.backgroundColor = strBkClrTheme;
-        bttn.style.color = strClrTheme;
-        bttn.style.borderColor = strBorderClrTheme;
+        for (var n = 0; n < astrIDBttn.length; ++n)
+        {
+            var bttn = document.getElementById(astrIDBttn[n]);
+            bttn.style.backgroundColor = abEnabled[n] ? strBkClrEnabled : strBkClrDisabled;
+            bttn.style.color = abEnabled[n] ? strClrEnabled : strClrDisabled;
+            bttn.style.borderColor = abEnabled[n] ? strBorderClrEnabled : strBorderClrDisabled;
+        }
     }
 
-    function Calc3C3R_Add(num)
+    function Calc_3C3RAddNum(num)
     {
         if(num == 0) return;
 	
@@ -1104,7 +1090,7 @@ tr.trLost td { color: #8fc38f; }
         }
     }
 
-    function Calc3C3R_Delete(num)
+    function Calc_3C3RDeleteNum(num)
     {
         --g_nQueueIdx;
 
@@ -1171,7 +1157,7 @@ tr.trLost td { color: #8fc38f; }
         }
     }
 
-    function Sort3C3R()
+    function Calc_Sort3C3R()
     {
         // sort:
         var bChanged = false;
@@ -1214,7 +1200,7 @@ tr.trLost td { color: #8fc38f; }
         return strSpec;
     }
 
-    function Show3C3R()
+    function Show_3C3R()
     {
         // show:
         for (var n = 0; n < 6; ++n)
@@ -1260,7 +1246,7 @@ tr.trLost td { color: #8fc38f; }
         }
     }
 
-    function ShowStatsIntervals()
+    function Show_StatsIntervals()
     {
         var divIntervals = document.getElementById("divStatsIntervals");
         var strHtml = "";
@@ -1348,7 +1334,7 @@ tr.trLost td { color: #8fc38f; }
         divIntervals.innerHTML = strHtml;
     }
 
-    function ShowGames()
+    function Show_Games()
     {
         var divGames = document.getElementById("divGames");
         var strDivGames = "";
@@ -1425,7 +1411,7 @@ tr.trLost td { color: #8fc38f; }
         }
     }
 
-    function RefreshTheme()
+    function Show_RefreshTheme()
     {
         var strTitle = "淡雅版";
 
@@ -1438,14 +1424,14 @@ tr.trLost td { color: #8fc38f; }
         bttn.innerHTML = strTitle;
 
         InitStyles();
-        Show3C3R();
-        ShowQueue();
-        RefreshButtons();
-        ShowStatsIntervals();
-        ShowGames();
+        Show_3C3R();
+        Show_Queue();
+        Show_RefreshSysButtons();
+        Show_StatsIntervals();
+        Show_Games();
     }
 
-    function InitSGButtons()
+    function Show_InitSGButtons()
     {
         var strHtml = "<table cellpadding='0' cellspacing='5' border='0' id='tblSGButtons'><tr>";
         var nCount = STATS_GROUPS_COUNTS.length;
@@ -1466,11 +1452,10 @@ tr.trLost td { color: #8fc38f; }
         var td = document.getElementById("tdSGButtons");
         td.innerHTML = strHtml;
 
-        g_nSGCountIdx = 1;
-        RefreshSGButtons();
+        Show_RefreshSGButtons();
     }
 
-    function RefreshSGButtons()
+    function Show_RefreshSGButtons()
     {
         var nCount = STATS_GROUPS_COUNTS.length;
         var strBkColor = "";
@@ -1509,12 +1494,14 @@ tr.trLost td { color: #8fc38f; }
             g_anIdx3C3R[n] = n;
         }
 
-        InitStatsInterval();
-        InitSGButtons();
-        InitGame();
-        ShowInput(true);
+        g_nSGCountIdx = 1;
 
-        RefreshTheme();
+        InitStatsInterval();
+        Show_InitSGButtons();
+        InitGame();
+        Show_Keyboard(true);
+
+        Show_RefreshTheme();
     }
 
     function OnSwitchInput(nIdx)
@@ -1554,19 +1541,19 @@ tr.trLost td { color: #8fc38f; }
 
         g_anQueueNum[g_nQueueIdx] = num;
 
-        ShowQueue();
+        Show_Queue();
 
         // 3C3R: --------------------------------
 
-        Calc3C3R_Add(num);
-        Sort3C3R();
-        Show3C3R();
+        Calc_3C3RAddNum(num);
+        Calc_Sort3C3R();
+        Show_3C3R();
 	
         // stats intervals: ---------------------
 
         g_StatsInterval.AddNum(num, true);
 
-        ShowStatsIntervals();
+        Show_StatsIntervals();
 
         // stats group count: -------------------
 
@@ -1580,14 +1567,14 @@ tr.trLost td { color: #8fc38f; }
             g_aGame[n].AddNum(num);
         }
 
-        ShowGames();
+        Show_Games();
 
         // buttons: -----------------------------
 
-	    RefreshButtons();
+        Show_RefreshSysButtons();
     }
 
-    function OnDelete()
+    function OnSysDelete()
     {
         if (g_nQueueIdx < 0)
             return;
@@ -1610,7 +1597,7 @@ tr.trLost td { color: #8fc38f; }
             g_aGame[n].DeleteNum(num);
         }
 
-        Calc3C3R_Delete(num);
+        Calc_3C3RDeleteNum(num);
 
         // stats group count: -------------------
 
@@ -1618,24 +1605,24 @@ tr.trLost td { color: #8fc38f; }
         Show_StatsGroupsCount();
 
 
-        Sort3C3R();
-        Show3C3R();
-        ShowQueue();
-        RefreshButtons();
-        ShowStatsIntervals();
-        ShowGames();
+        Calc_Sort3C3R();
+        Show_3C3R();
+        Show_Queue();
+        Show_RefreshSysButtons();
+        Show_StatsIntervals();
+        Show_Games();
     }
 
-    function OnExpand()
+    function OnSysExpand()
     {
         g_nExpandStatus++;
         g_nExpandStatus = g_nExpandStatus % 2;
 
-        ShowQueue();
-        RefreshButtons();
+        Show_Queue();
+        Show_RefreshSysButtons();
     }
 
-    function OnRestart()
+    function OnSysRestart()
     {
         if (g_nQueueIdx < 0)
             return;
@@ -1647,7 +1634,7 @@ tr.trLost td { color: #8fc38f; }
         }
     }
 
-    function OnChangeTheme()
+    function OnSysChangeTheme()
     {
         if (g_s_theme_id > 1)
             return;
@@ -1661,10 +1648,10 @@ tr.trLost td { color: #8fc38f; }
             g_s_theme_id = 0;
         }
 
-        RefreshTheme();
+        Show_RefreshTheme();
     }
 
-    function ShowInput(bShow)
+    function Show_Keyboard(bShow)
     {
         g_nShowInputStatus = 1;
         var strDisplay = "";
@@ -1691,15 +1678,15 @@ tr.trLost td { color: #8fc38f; }
         div.style.display = "none";
     }
 
-    function OnShowInputClick()
+    function OnShowKeyboardClick()
     {
         if(g_nShowInputStatus == 1)
         {
-            ShowInput(false);
+            Show_Keyboard(false);
         }
         else
         {
-            ShowInput(true);
+            Show_Keyboard(true);
         }
 
     }
@@ -1743,7 +1730,7 @@ tr.trLost td { color: #8fc38f; }
     function OnSGCountClick(nIdx)
     {
         g_nSGCountIdx = nIdx;
-        RefreshSGButtons();
+        Show_RefreshSGButtons();
 
         Calc_StatsGroupsCount();
         Show_StatsGroupsCount();
@@ -1785,13 +1772,30 @@ tr.trLost td { color: #8fc38f; }
         tbl.style.display = strDisplay;
     }
 
+    function OnSysExport()
+    {
+        var div = document.getElementById("divImportExport");
+        div.style.display = "";
+    }
+
+    function OnSysImport()
+    {
+        var div = document.getElementById("divImportExport");
+        div.style.display = "";
+    }
+
+    function OnCopy()
+    {
+        var div = document.getElementById("divImportExport");
+        div.style.display = "none";
+    }
+
 </script>
 
 </head>
 <body onload="OnPageInit()" style="padding: 0; margin :0">
-    <div style="position:fixed; z-index:99; right: 0px; top:0px; width: 200px; height: 188px; opacity: 0;" 
-         onclick="OnShowInputClick()"></div>
-    <div style="position:fixed; z-index:19; right: 0px; top:0px; width: 100%; padding: 5px 0; background-color: white">
+    <div style="position:fixed; z-index:19; right: 0px; top:0px; width: 100%; padding: 5px 0; background-color: white" 
+         onclick="OnShowKeyboardClick()">
         <table cellpadding="0" cellspacing="0" border="0" id="tblStatistics">
             <tr>
                 <td class="title_c" id="tdT3C3R0">第1组</td>
@@ -1816,7 +1820,7 @@ tr.trLost td { color: #8fc38f; }
     </div>
     <div style="position:absolute; z-index:0; top: 75px; padding: 0; margin: 0; width: 100%">
         <div style="height: 8px" id="divBlank"></div>
-        <table cellpadding="0" cellspacing="5" border="0" id="tblQueue">
+        <table cellpadding="0" cellspacing="5" border="0" id="tblQueue" onclick="OnSysExpand()">
             <tr id="trRow1">
                 <td id="td0"></td><td id="td1"></td><td id="td2"></td><td id="td3"></td><td id="td4"></td>
                 <td id="td5"></td><td id="td6"></td><td id="td7"></td><td id="td8"></td><td id="td9"></td>
@@ -1857,13 +1861,15 @@ tr.trLost td { color: #8fc38f; }
 
         <table cellpadding="0" cellspacing="0" border="0">
             <tr>
-                <td id="tdBttnTheme" class="bttn" style="background-color: #007820" onclick="OnChangeTheme()">NA</td>
+                <td id="tdBttnTheme" class="bttn" style="background-color: #007820" onclick="OnSysChangeTheme()">NA</td>
                 <td>&nbsp;&nbsp;&nbsp;</td>
-                <td id="tdBttnRestart" class="bttn" style="background-color: #007820" onclick="OnRestart()">重新开始</td>
+                <td id="tdBttnRestart" class="bttn" style="background-color: #007820" onclick="OnSysRestart()">重新开始</td>
                 <td>&nbsp;&nbsp;&nbsp;</td>
-                <td id="tdBttnDelete" class="bttn" style="background-color: #007820" onclick="OnDelete()">删除</td>
+                <td id="tdBttnDelete" class="bttn" style="background-color: #007820" onclick="OnSysDelete()">删除</td>
                 <td>&nbsp;&nbsp;&nbsp;</td>
-                <td id="tdBttnExpand" class="bttn" style="background-color: #007820" onclick="OnExpand()">展开</td>
+                <td id="tdBttnExport" class="bttn" style="background-color: #007820" onclick="OnSysExport()">导出</td>
+                <td>&nbsp;&nbsp;&nbsp;</td>
+                <td id="tdBttnImport" class="bttn" style="background-color: #007820" onclick="OnSysImport()">导入</td>
             </tr>
         </table>
 
@@ -1937,6 +1943,22 @@ tr.trLost td { color: #8fc38f; }
                 <td id="tdB0" onclick="OnClick(0)" colspan="10">0</td><td id="tdBSwitch" onclick="OnSwitchInput(1)" colspan="2">&nbsp;</td>
             </tr>
         </table>
+    </div>
+    <div id="divImportExport" style="display: none;">
+        <table cellpadding="0" cellspacing="20" style="width: 100%" id="tblImportExport">
+            <tr><td id="tdSpec"></td></tr>
+            <tr><td id="tdTxt"><textarea style="width: 100%; height: 800px" id="txtClipboard"></textarea></td></tr>
+            <tr>
+                <td id="tdBttns">
+                    <table cellpadding="0" cellspacing="0" border="0" id="tblPanelButtons">
+                        <tr>
+                            <td class="bttn" onclick="OnCopy()">OK</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        
     </div>
 </body>
 </html>
