@@ -179,13 +179,16 @@ tr.trLost td { color: #8fc38f; }
 
     // global variables: ------------------------------------------------------
 
+    var COOKIE_SG_COUNT_IDX = "StatsGroupCountIdx";
+    var COOKIE_KEYBOARD_ID = "KeyboardID";
+
     var MAX_COUNT = 10000;
     var QUEUE_MAX_COUNT = 100;
     var QUEUE_LINE_NUM_COUNT = 15;
     var GAME_SHOW_ITEM_COUNT = 20;
     var STATS_GROUPS_COUNTS = [20, 40, 60, 80, 100, 99999];
 
-    var g_strInputBoard = "B";
+    var g_strKeyboardID = "B";
 
     var g_anQueueNum = [];
     var g_nQueueIdx = -1;
@@ -197,7 +200,7 @@ tr.trLost td { color: #8fc38f; }
     var g_nShowInputStatus = 1;
 
     var g_StatsInterval;
-    var g_nSGCountIdx = 0;
+    var g_nSGCountIdx = 1;
     var g_aGame = [];
 
     var GAME_COUNT = 3;
@@ -210,8 +213,6 @@ tr.trLost td { color: #8fc38f; }
 
     function InitGlobalVariables()
     {
-        g_strInputBoard = "B";
-
         if (g_anQueueNum.length > 0)
             g_anQueueNum.splice(0, g_anQueueNum.length);
 
@@ -223,7 +224,6 @@ tr.trLost td { color: #8fc38f; }
         g_nExpandStatus = 0;
         g_nShowInputStatus = 1;
 
-        g_nSGCountIdx = 0;
         g_aGame = [];
     }
 
@@ -312,6 +312,29 @@ tr.trLost td { color: #8fc38f; }
         }
     }
 
+    function SetCookie(c_name, value, expiredays)
+    {
+        var exdate = new Date()
+        exdate.setDate(exdate.getDate() + expiredays)
+        document.cookie = c_name + "=" + escape(value) +
+        ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString())
+    }
+
+    function GetCookie(c_name)
+    {
+        if (document.cookie.length > 0)
+        {
+            var c_start = document.cookie.indexOf(c_name + "=")
+            if (c_start != -1)
+            {
+                c_start = c_start + c_name.length + 1
+                var c_end = document.cookie.indexOf(";", c_start)
+                if (c_end == -1) c_end = document.cookie.length
+                return unescape(document.cookie.substring(c_start, c_end))
+            }
+        }
+        return ""
+    }
 
     // classes: ---------------------------------------------------------------
 
@@ -1066,10 +1089,6 @@ tr.trLost td { color: #8fc38f; }
         {
             g_nExpandStatus = 0;
         }
-        else
-        {
-            g_nExpandStatus = 1;
-        }
 
         for (var n = 0; n < astrIDBttn.length; ++n)
         {
@@ -1511,27 +1530,24 @@ tr.trLost td { color: #8fc38f; }
 
     function PageInit()
     {
+        g_nQueueIdx = -1;
+
         for (var n = 0; n < 6; ++n)
         {
             g_an3C3R[n] = 0;
             g_anIdx3C3R[n] = n;
         }
 
-        g_nSGCountIdx = 1;
-
         InitStatsInterval();
         InitGame();
 
         Show_StatsGroupsCount();
 
-        Show_3C3R();
-        Show_Queue();
-        Show_RefreshSysButtons();
-        Show_StatsIntervals();
-        Show_Games();
+        Show_InitSGButtons();
 
         Show_3R3CLast2();
         Show_Keyboard(true);
+
         Show_RefreshTheme();
     }
 
@@ -1550,7 +1566,21 @@ tr.trLost td { color: #8fc38f; }
 
         InitGameRuleList();
 
-        g_nQueueIdx = -1;
+        var nSGCountIdx = 1;
+        var strSGCountIdx = GetCookie(COOKIE_SG_COUNT_IDX);
+        if (strSGCountIdx.length > 0)
+        {
+            nSGCountIdx = parseInt(strSGCountIdx);
+            if((nSGCountIdx < 0) || (nSGCountIdx >= STATS_GROUPS_COUNTS.length))
+                nSGCountIdx = 1;
+        }
+        g_nSGCountIdx = nSGCountIdx;
+
+        var strKeyboardID = "B";
+        var strKeyboard = GetCookie(COOKIE_KEYBOARD_ID);
+        if (strKeyboard.length == 1)
+            strKeyboardID = strKeyboard;
+        g_strKeyboardID = strKeyboardID;
 
         PageInit();
     }
@@ -1564,14 +1594,16 @@ tr.trLost td { color: #8fc38f; }
         {
             divK.style.display = "none";
             divB.style.display = "";
-            g_strInputBoard = "B";
+            g_strKeyboardID = "B";
         }
         else
         {
             divB.style.display = "none";
             divK.style.display = "";
-            g_strInputBoard = "K";
+            g_strKeyboardID = "K";
         }
+
+        SetCookie(COOKIE_KEYBOARD_ID, g_strKeyboardID);
     }
 
     function OnClick(num)
@@ -1720,7 +1752,7 @@ tr.trLost td { color: #8fc38f; }
         var strID = "divGameBoard";
         var strIDAnother = "divKeyboard";
 
-        if (g_strInputBoard == "K")
+        if (g_strKeyboardID == "K")
         {
             var strID = "divKeyboard";
             var strIDAnother = "divGameBoard";
@@ -1785,6 +1817,8 @@ tr.trLost td { color: #8fc38f; }
     function OnSGCountClick(nIdx)
     {
         g_nSGCountIdx = nIdx;
+        SetCookie(COOKIE_SG_COUNT_IDX, g_nSGCountIdx.toString());
+
         Show_RefreshSGButtons();
 
         Calc_StatsGroupsCount();
