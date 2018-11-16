@@ -93,18 +93,14 @@ tr.trLost td { color: #8fc38f; }
 #divImportExport
 { 
     position:fixed; top: 0px; z-index:9999; width: 100%; height: 100%; 
-    background-color:white; text-align: center;
+    background-color:white; 
 }
-#tblImportExport #tdTxt
-{
-    border: 1px solid #AA8833
-}
-#tblPanelButtons td
-{
-    border: 1px solid #AA8833;
-}
-
+#tdImportExportTitle { font-size: 36px; padding: 10px; background-color: #EEE8D3; }
 #txtClipboard { font-size: 36px; border: 0 } 
+#tblImportExport .tdSpec { font-size: 36px; text-align: left; padding: 8px 0 3px 0; }
+#tblImportExport #tdTxt { border: 1px solid #AA8833; }
+#tblPanelButtons td { border: 1px solid #AA8833; }
+.bttnImportExport {	width: 280px; height: 70px }
 
 </style>
 
@@ -229,8 +225,6 @@ tr.trLost td { color: #8fc38f; }
 
     function OnTest()
     {
-        var txt = document.getElementById("txtClipboard");
-        txt.value = "12,12,1,12,12,12,12,12,12,12,12,12";
     }
 
     function GetNumCol(num)
@@ -1528,7 +1522,7 @@ tr.trLost td { color: #8fc38f; }
         td2.style.display = strDisplay;
     }
 
-    function PageInit()
+    function PageInit_Data()
     {
         g_nQueueIdx = -1;
 
@@ -1540,7 +1534,10 @@ tr.trLost td { color: #8fc38f; }
 
         InitStatsInterval();
         InitGame();
+    }
 
+    function PageInit_Show()
+    {
         Show_StatsGroupsCount();
 
         Show_InitSGButtons();
@@ -1555,7 +1552,8 @@ tr.trLost td { color: #8fc38f; }
     {
         //window.location.reload();
         InitGlobalVariables();
-        PageInit();
+        PageInit_Data();
+        PageInit_Show();
     }
 
     // message handlers: ------------------------------------------------------
@@ -1582,7 +1580,8 @@ tr.trLost td { color: #8fc38f; }
             strKeyboardID = strKeyboard;
         g_strKeyboardID = strKeyboardID;
 
-        PageInit();
+        PageInit_Data();
+        PageInit_Show();
     }
 
     function OnSwitchInput(nIdx)
@@ -1605,6 +1604,54 @@ tr.trLost td { color: #8fc38f; }
 
         SetCookie(COOKIE_KEYBOARD_ID, g_strKeyboardID);
     }
+
+    function Calc_AddNum(num)
+    {
+        // queue: -------------------------------
+
+        if (g_nQueueIdx == (MAX_COUNT - 1))
+        {
+            for (var n = 0; n <= g_nQueueIdx - 1; ++n)
+            {
+                g_anQueueNum[n] = g_anQueueNum[n + 1];
+            }
+        }
+        else
+        {
+            g_nQueueIdx++;
+        }
+
+        g_anQueueNum[g_nQueueIdx] = num;
+
+        // 3C3R: --------------------------------
+
+        Calc_3C3RAddNum(num);
+        Calc_Sort3C3R();
+	
+        // stats intervals: ---------------------
+
+        g_StatsInterval.AddNum(num, true);
+
+        // games: -------------------------------
+
+        for (var n = 0; n < GAME_COUNT; ++n)
+        {
+            g_aGame[n].AddNum(num);
+        }
+    }
+
+    function Show_AddNum(num)
+    {
+        Show_Queue();
+        Show_3C3R();
+        Show_StatsIntervals();
+        Calc_StatsGroupsCount();
+        Show_StatsGroupsCount();
+        Show_Games();
+        Show_RefreshSysButtons();
+        Show_3R3CLast2();
+    }
+
 
     function OnClick(num)
     {
@@ -1658,6 +1705,7 @@ tr.trLost td { color: #8fc38f; }
 
         Show_3R3CLast2();
     }
+
 
     function OnSysDelete()
     {
@@ -1861,22 +1909,97 @@ tr.trLost td { color: #8fc38f; }
         tbl.style.display = strDisplay;
     }
 
-    function OnSysExport()
+    function OnSysImportExport(bImport)
     {
+        var tdTitle = document.getElementById("tdImportExportTitle");
+        var txt = document.getElementById("txtClipboard");
+        var trSpecImport = document.getElementById("trSpecImport");
+        var trSpecExport = document.getElementById("trSpecExport");
+        var tdBttnDoImport = document.getElementById("tdBttnDoImport");
+
+        if (bImport)
+        {
+            tdTitle.innerHTML = "导&nbsp;&nbsp;&nbsp;入";
+            txt.value = "";
+            trSpecImport.style.display = "";
+            trSpecExport.style.display = "none";
+            tdBttnDoImport.style.display = "";
+        }
+        else
+        {
+            tdTitle.innerHTML = "导&nbsp;&nbsp;&nbsp;出";
+            var strExport = "";
+            var bFirst = true;
+            for (var n = 0; n < g_anQueueNum.length; ++n)
+            {
+                if (!bFirst)
+                    strExport += ",";
+                bFirst = false;
+
+                strExport += g_anQueueNum[n].toString();
+            }
+
+            txt.value = strExport;
+            trSpecImport.style.display = "none";
+            trSpecExport.style.display = "";
+            tdBttnDoImport.style.display = "none";
+        }
+
         var div = document.getElementById("divImportExport");
         div.style.display = "";
     }
 
-    function OnSysImport()
-    {
-        var div = document.getElementById("divImportExport");
-        div.style.display = "";
-    }
-
-    function OnCopy()
+    function OnImportExportOK()
     {
         var div = document.getElementById("divImportExport");
         div.style.display = "none";
+    }
+
+    function OnImport()
+    {
+        var txt = document.getElementById("txtClipboard");
+        var strNumbers = txt.value;
+        if (strNumbers.length <= 0)
+        {
+            alert("请在输入框中输入要导入的数据!");
+            return;
+        }
+
+        var astrNum = strNumbers.split(",");
+        if (astrNum.length <= 0)
+        {
+            alert("请在输入框中输入要导入的数据!");
+            return;
+        }
+
+        var anNum = [];
+        for (var n = 0; n < astrNum.length; ++n)
+        {
+            var nNum = parseInt(astrNum[n]);
+            if(isNaN(nNum) || (nNum < 0) || (nNum > 36))
+            {
+                alert("要导入的数据不正确，请检查！");
+                return;
+            }
+
+            anNum[n] = nNum;
+        }
+
+        if (g_nQueueIdx >= 0)
+        {
+            var confirmed = confirm("导入操作将首先清空当前的数据，确实要导入吗？");
+            if (confirmed == 0)
+                return;
+        }
+
+        InitGlobalVariables();
+        PageInit_Data();
+
+        for (var n = 0; n < anNum.length; ++n)
+            Calc_AddNum(anNum[n]);
+
+        Show_AddNum();
+        OnImportExportOK();
     }
 
 </script>
@@ -1958,9 +2081,9 @@ tr.trLost td { color: #8fc38f; }
                 <td>&nbsp;&nbsp;&nbsp;</td>
                 <td id="tdBttnDelete" class="bttn" style="background-color: #007820" onclick="OnSysDelete()">删除</td>
                 <td>&nbsp;&nbsp;&nbsp;</td>
-                <td id="tdBttnExport" class="bttn" style="background-color: #007820" onclick="OnSysExport()">导出</td>
+                <td id="tdBttnExport" class="bttn" style="background-color: #007820" onclick="OnSysImportExport(false)">导出</td>
                 <td>&nbsp;&nbsp;&nbsp;</td>
-                <td id="tdBttnImport" class="bttn" style="background-color: #007820" onclick="OnSysImport()">导入</td>
+                <td id="tdBttnImport" class="bttn" style="background-color: #007820" onclick="OnSysImportExport(true)">导入</td>
             </tr>
         </table>
 
@@ -2036,20 +2159,23 @@ tr.trLost td { color: #8fc38f; }
         </table>
     </div>
     <div id="divImportExport" style="display: none;">
-        <table cellpadding="0" cellspacing="20" style="width: 100%" id="tblImportExport">
-            <tr><td id="tdSpec"></td></tr>
+        <table cellpadding="0" cellspacing="30" style="width: 100%" id="tblImportExport">
+            <tr><td>&nbsp;</td></tr>
+            <tr><td id="tdImportExportTitle"></td></tr>
+            <tr id="trSpecImport"><td class="tdSpec">请在下面输入框内输入需要导入的数据：</td></tr>
+            <tr id="trSpecExport"><td class="tdSpec">请把下面输入框的内容复制到剪贴板，然后导出：</td></tr>
             <tr><td id="tdTxt"><textarea style="width: 100%; height: 800px" id="txtClipboard"></textarea></td></tr>
             <tr>
-                <td id="tdBttns">
-                    <table cellpadding="0" cellspacing="0" border="0" id="tblPanelButtons">
+                <td style="text-align: center">
+                    <table cellpadding="0" cellspacing="20" border="0" style="margin: auto" id="tblPanelButtons">
                         <tr>
-                            <td class="bttn" onclick="OnCopy()">OK</td>
+                            <td class="bttn bttnImportExport" id="tdBttnDoImport" onclick="OnImport()">导入</td>
+                            <td class="bttn bttnImportExport" onclick="OnImportExportOK()">OK</td>
                         </tr>
                     </table>
                 </td>
             </tr>
         </table>
-        
     </div>
 </body>
 </html>
