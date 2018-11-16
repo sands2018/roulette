@@ -188,6 +188,7 @@ tr.trLost td { color: #8fc38f; }
 
     var g_anQueueNum = [];
     var g_nQueueIdx = -1;
+    var g_nNoZeroNumCount = 0;
 
     var g_an3C3R = [];
     var g_anIdx3C3R = [];
@@ -213,6 +214,7 @@ tr.trLost td { color: #8fc38f; }
             g_anQueueNum.splice(0, g_anQueueNum.length);
 
         g_nQueueIdx = -1;
+        g_nNoZeroNumCount = 0;
 
         g_an3C3R.splice(0, g_an3C3R.length);
         g_anIdx3C3R.splice(0, g_anIdx3C3R.length);
@@ -1339,7 +1341,7 @@ tr.trLost td { color: #8fc38f; }
                     strHtml += strNum + "(" + g_StatsInterval.anLargeCount[n].toString() + ")";
                 }
             }
-            strHtml += "</div></td></tr><tr><td class='tdZero'>0</td>"
+            strHtml += "</div></td></tr><tr><td class='tdZero'>" + g_nNoZeroNumCount.toString() + "</td>";
             strHtml += "<td class='tdStatsInterval' colspan='" + strColSpan + "'>";
             strHtml += "<div id='divStatsInterval1' onclick='OnStatsIntervalClick(1)'>";
             bFirst = true;
@@ -1607,6 +1609,9 @@ tr.trLost td { color: #8fc38f; }
 
     function Calc_AddNum(num)
     {
+        if (num != 0)
+            g_nNoZeroNumCount++;
+
         // queue: -------------------------------
 
         if (g_nQueueIdx == (MAX_COUNT - 1))
@@ -1655,6 +1660,9 @@ tr.trLost td { color: #8fc38f; }
 
     function OnClick(num)
     {
+        if (num != 0)
+            g_nNoZeroNumCount++;
+
         // queue: -------------------------------
 
         if (g_nQueueIdx == (MAX_COUNT - 1))
@@ -1712,6 +1720,11 @@ tr.trLost td { color: #8fc38f; }
         if (g_nQueueIdx < 0)
             return;
 
+        var num = g_anQueueNum[g_nQueueIdx];
+
+        if (num != 0)
+                g_nNoZeroNumCount--;
+
         if (g_nQueueIdx == 0)
         {
             RefreshPage();
@@ -1720,7 +1733,6 @@ tr.trLost td { color: #8fc38f; }
 
         // stats intervals: ---------------------
 
-        var num = g_anQueueNum[g_nQueueIdx];
         g_StatsInterval.DeleteNum(num);
        
         // games: -------------------------------
