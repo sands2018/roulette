@@ -177,14 +177,13 @@ tr.trLost td { color: #8fc38f; }
 
     var COOKIE_SG_COUNT_IDX = "StatsGroupCountIdx";
     var COOKIE_KEYBOARD_ID = "KeyboardID";
+    var COOKIE_STATSINTV_STATUS = "StatsIntvStatus";
 
     var MAX_COUNT = 10000;
     var QUEUE_MAX_COUNT = 100;
     var QUEUE_LINE_NUM_COUNT = 15;
     var GAME_SHOW_ITEM_COUNT = 20;
     var STATS_GROUPS_COUNTS = [20, 40, 60, 80, 100, 99999];
-
-    var g_strKeyboardID = "B";
 
     var g_anQueueNum = [];
     var g_nQueueIdx = -1;
@@ -193,11 +192,13 @@ tr.trLost td { color: #8fc38f; }
     var g_an3C3R = [];
     var g_anIdx3C3R = [];
 
+    var g_strKeyboardID = "B";
     var g_nExpandStatus = 0;
     var g_nShowInputStatus = 1;
+    var g_nSGCountIdx = 1;
+    var g_nStatsIntervalStatus = 0; // 0 - 全部显示， 1 - 第一行不显示， 2 - 第一行、最后一行不显示
 
     var g_StatsInterval;
-    var g_nSGCountIdx = 1;
     var g_aGame = [];
 
     var GAME_COUNT = 3;
@@ -1291,7 +1292,7 @@ tr.trLost td { color: #8fc38f; }
 
         if (g_nQueueIdx >= 0)
         {
-            strHtml = "<table cellpadding='0' cellspacing='0' id='tblStatsIntervals'>";
+            strHtml = "<table cellpadding='0' cellspacing='0' id='tblStatsIntervals' onclick='OnStatsIntervalClick()'>";
             strHtml += "<tr><td>开始</td><td>出现</td><td>概率</td>";
             for (var nn = 0; nn < g_StatsInterval.anRound.length; ++nn)
             {
@@ -1303,7 +1304,7 @@ tr.trLost td { color: #8fc38f; }
 
             for (var n = 0; n < g_StatsInterval.anStart.length; ++n)
             {
-                strHtml += "<tr><td>" + g_StatsInterval.anStart[n].toString() + "</td>";
+                strHtml += "<tr id='trStatsIntv" + n.toString() + "'><td>" + g_StatsInterval.anStart[n].toString() + "</td>";
                 strHtml += "<td>" + g_StatsInterval.anCount[n].toString() + "</td>";
 
                 var percent1 = g_StatsInterval.anCount[n] * 100 / nTotal;
@@ -1326,7 +1327,7 @@ tr.trLost td { color: #8fc38f; }
 
             strHtml += "<tr><td class='tdTotal'>" + nTotal.toString(); + "</td>"
             strHtml += "<td class='tdStatsInterval' colspan='" + strColSpan + "'>";
-            strHtml += "<div id='divStatsInterval0' onclick='OnStatsIntervalClick(0)'>";
+            strHtml += "<div id='divStatsInterval0' onclick='OnStatsIntervalListClick(0)'>";
             var bFirst = true;
             for (var n = 0; n < g_StatsInterval.anLargeCount.length; ++n)
             {
@@ -1345,7 +1346,7 @@ tr.trLost td { color: #8fc38f; }
             }
             strHtml += "</div></td></tr><tr><td class='tdZero'>" + g_nNoZeroNumCount.toString() + "</td>";
             strHtml += "<td class='tdStatsInterval' colspan='" + strColSpan + "'>";
-            strHtml += "<div id='divStatsInterval1' onclick='OnStatsIntervalClick(1)'>";
+            strHtml += "<div id='divStatsInterval1' onclick='OnStatsIntervalListClick(1)'>";
             bFirst = true;
             var strNum = "";
             for (var n = g_StatsInterval.anZero.length - 1; n >= 0 ; --n)
@@ -1583,6 +1584,16 @@ tr.trLost td { color: #8fc38f; }
         if (strKeyboard.length == 1)
             strKeyboardID = strKeyboard;
         g_strKeyboardID = strKeyboardID;
+
+        var nStatsIntervalStatus = 0;
+        var strStatsIntervalStatus = GetCookie(COOKIE_STATSINTV_STATUS);
+        if (strStatsIntervalStatus.length > 0)
+        {
+            nStatsIntervalStatus = parseInt(strStatsIntervalStatus);
+            if ((nStatsIntervalStatus < 0) || (nStatsIntervalStatus > 2))
+                nStatsIntervalStatus = 0;
+        }
+        g_nStatsIntervalStatus = nStatsIntervalStatus;
 
         PageInit_Data();
         PageInit_Show();
@@ -1840,7 +1851,33 @@ tr.trLost td { color: #8fc38f; }
 
     }
 
-    function OnStatsIntervalClick(nID)
+    function OnStatsIntervalClick()
+    {
+        g_nStatsIntervalStatus++;
+        g_nStatsIntervalStatus = g_nStatsIntervalStatus % 3;
+        SetCookie(COOKIE_STATSINTV_STATUS, g_nStatsIntervalStatus);
+
+        var tr1 = document.getElementById("trStatsIntv0");
+        var tr2 = document.getElementById("trStatsIntv" + (g_StatsInterval.anStart.length - 1).toString());
+
+        if(g_nStatsIntervalStatus == 0)
+        {
+            tr1.style.display = "";
+            tr2.style.display = "";
+        }
+        else if(g_nStatsIntervalStatus == 1)
+        {
+            tr1.style.display = "none";
+            tr2.style.display = "";
+        }
+        else
+        {
+            tr1.style.display = "none";
+            tr2.style.display = "none";
+        }
+    }
+
+    function OnStatsIntervalListClick(nID)
     {
         var C_EXPAND_HEIGHT = 150;
         var C_COLLAPSE_HEIGHT = 48;
