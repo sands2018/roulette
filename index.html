@@ -60,6 +60,11 @@ td
 .value_c { font-size: 40px; width: 80px; border-left: 0; }
 .space_c { font-size: 10px; width: 23px; }
 
+#divColumns { margin-bottom: 8px; font-size: 40px; padding: 0 10px; }  
+.ColumnsCount { font-size: 44px; color: #dd8877; font-weight: bold }
+.ColumnNormal { background-color: white; }
+.ColumnHighlight { background-color: #f8ebd8; }
+
 #tblStatsIntervals { border: 1px solid #8f8f8f; border-bottom: 0; width: 100%; margin-bottom: 8px }
 #tblStatsIntervals td { border-bottom: 1px solid #8f8f8f; font-size: 36px; padding: 3px 8px; text-align: center; }
 #tblStatsIntervals td:first-child { border-right: 1px solid #8f8f8f; width: 100px; text-align: center; } 
@@ -183,8 +188,9 @@ tr.trLost td, .tdLost { color: #7fc37f; }
 
     // global variables: ------------------------------------------------------
 
-    var COOKIE_SG_COUNT_IDX = "StatsGroupCountIdx";
     var COOKIE_KEYBOARD_ID = "KeyboardID";
+    var COOKIE_COLUMNS_STATUS = "ColumnsStatus";
+    var COOKIE_SG_COUNT_IDX = "StatsGroupCountIdx";
     var COOKIE_STATSINTV_STATUS = "StatsIntvStatus";
 
     var MAX_COUNT = 10000;
@@ -200,7 +206,10 @@ tr.trLost td, .tdLost { color: #7fc37f; }
     var g_an3C3R = [];
     var g_anIdx3C3R = [];
 
+    var g_anColumnsStart = [1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31];
+
     var g_strKeyboardID = "B";
+    var g_nColumnsStatus = 0;
     var g_nExpandStatus = 0;
     var g_nShowInputStatus = 1;
     var g_nSGCountIdx = 1;
@@ -213,6 +222,9 @@ tr.trLost td, .tdLost { color: #7fc37f; }
 
     var g_t_an3C3RCount = [0, 0, 0, 0, 0, 0];
     var g_t_anIdx3C3RCount = [0, 1, 2, 3, 4, 5];
+
+    var g_t_anColumnsCount = [0,0,0,0,0,0,0,0,0,0,0];
+    var g_t_anIdxColumnsCount = [0,1,2,3,4,5,6,7,8,9,10];
 
     // basic: -----------------------------------------------------------------
 
@@ -255,6 +267,25 @@ tr.trLost td, .tdLost { color: #7fc37f; }
         }
 
         return nRow;
+    }
+
+    function GetNumColumn(num)
+    {
+        var anCol = [];
+
+        anCol[0] = Math.floor((num - 1) / 6) * 2;
+
+        if ((num > 3) && (num < 34))
+            anCol[1] = Math.floor((num - 4) / 6) * 2 + 1;
+        else
+            anCol[1] = -1;
+
+        return anCol;
+    }
+
+    function GetColumnSpec(nIdx)
+    {
+        return g_anColumnsStart[nIdx].toString() + "-" + (g_anColumnsStart[nIdx] + 5).toString();
     }
 
     function GetNumberColor()
@@ -341,6 +372,12 @@ tr.trLost td, .tdLost { color: #7fc37f; }
     }
 
     // classes: ---------------------------------------------------------------
+
+    function CPair()
+    {
+        this.value1 = -1;
+        this.value2 = -1;
+    }
 
     function CGameItem()
     {
@@ -1057,18 +1094,11 @@ tr.trLost td, .tdLost { color: #7fc37f; }
 	        nQueueRow = Math.floor((g_nQueueIdx - nStart) / QUEUE_LINE_NUM_COUNT) + 1;
 	    }
 
-	    var strID = "divBlank";
-	    var div = document.getElementById(strID);
-	    if (nQueueRow == 0)
-	        div.style.display = "none";
-	    else
-	        div.style.display = "";
-
 	    var nLineCount = (QUEUE_MAX_COUNT / QUEUE_LINE_NUM_COUNT).toFixed(0);
 
 	    for (var n = 1; n <= nLineCount; ++n)
 	    {
-	        strID = "trRow" + n.toString();
+	        var strID = "trRow" + n.toString();
 	        var tr = document.getElementById(strID);
 	        if ((nQueueRow > 0) && ((n == 1) || ((n <= nQueueRow) && (g_nExpandStatus == 1))))
 	            tr.style.display = "";
@@ -1282,6 +1312,144 @@ tr.trLost td, .tdLost { color: #7fc37f; }
         }
     }
 
+    function Calc_Columns()
+    {
+        var anCounting = [];
+
+        for (var nn = 0; nn < g_anColumnsStart.length; ++nn)
+        {
+            g_t_anColumnsCount[nn] = 0;
+            g_t_anIdxColumnsCount[nn] = nn;
+            anCounting[nn] = 1;
+        }
+
+        if (g_nQueueIdx < 0)
+            return;
+
+        for(var n = g_nQueueIdx; n >= 0; --n)
+        {
+            var bChanged = false;
+
+            if (g_anQueueNum[n] == 0)
+                continue;
+
+            var anColumn = GetNumColumn(g_anQueueNum[n]);
+
+            for (var nn = 0; nn < g_anColumnsStart.length; ++nn)
+            {
+                if ((nn == anColumn[0]) || (nn == anColumn[1]))
+                {
+                    anCounting[nn] = 0;
+                }
+                else
+                {
+                    if(anCounting[nn] != 0)
+                    {
+                        ++g_t_anColumnsCount[nn];
+                        bChanged = true;
+                    }
+                }
+            }
+
+            if (!bChanged)
+                break;
+        }
+
+        Sort(g_t_anColumnsCount, g_t_anIdxColumnsCount, false);
+    }
+
+    function CheckHighlightColumns(aPair)
+    {
+        for(var n1 = 0; n1 < g_anColumnsStart.length; ++n1)
+        {
+            var nIdx1 = g_t_anIdxColumnsCount[n1];
+            if (g_t_anColumnsCount[nIdx1] < 6)
+                break;
+            
+            var nFound1 = nIdx1;
+            var nFound2 = -1;
+
+            for(var n2 = n1 + 1; n2 < g_anColumnsStart.length; ++ n2)
+            {
+                var nIdx2 = g_t_anIdxColumnsCount[n2];
+                if (g_t_anColumnsCount[nIdx2] < 6)
+                    break;
+
+                if((nIdx2 != (nIdx1 + 1)) && (nIdx2 != (nIdx1 - 1)))
+                {
+                    var bFound = true;
+
+                    if ((nIdx2 % 2) == 0)
+                    {
+                        if ((nIdx2 == nIdx1 + 2) || (nIdx2 == nIdx1 - 2))
+                            bFound = false;
+                    }
+
+                    if (bFound)
+                    {
+                        nFound2 = nIdx2;
+                        break;
+                    }
+                }
+            }
+
+            if (nFound2 > 0)
+            {
+                var pair = new CPair();
+                pair.value1 = nFound1;
+                pair.value2 = nFound2;
+
+                aPair.push(pair);
+            }
+        }
+    }
+
+    function Show_Columns()
+    {
+        var aPair = [];
+        CheckHighlightColumns(aPair);
+
+        var div = document.getElementById("divColumns");
+        var strHtml = "";
+        var bFirst = true;
+        
+        /*
+        for(var n = 0; n < g_anColumnsStart.length; ++ n)
+        {
+            if (!bFirst)
+                strHtml += "&nbsp;";
+            bFirst = false;
+
+            if (n == 6)
+                strHtml += "<br>";
+
+            strHtml += "<span class='" + ((anStatus[n] == 0) ? "ColumnNormal" : "ColumnHighlight") + "'>";
+            strHtml += "&nbsp;" + GetColumnSpec(g_t_anIdxColumnsCount[n]) + "&nbsp;<span class='ColumnsCount'>" + g_t_anColumnsCount[g_t_anIdxColumnsCount[n]].toString() + "</span>&nbsp;</span>";
+        }
+        */
+
+        for (var n = 0; n < aPair.length; ++n)
+        {
+            if ((n != 0) && ((n % 2) == 0))
+                strHtml += "<br>";
+            else if (!bFirst)
+                strHtml += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+
+            bFirst = false;
+
+
+            strHtml += "[&nbsp;" + GetColumnSpec(g_t_anIdxColumnsCount[aPair[n].value1]) + "&nbsp;<span class='ColumnsCount'>" + g_t_anColumnsCount[aPair[n].value1].toString() + "</span>&nbsp;&nbsp;&nbsp;";
+            strHtml += "&nbsp;" + GetColumnSpec(g_t_anIdxColumnsCount[aPair[n].value2]) + "&nbsp;<span class='ColumnsCount'>" + g_t_anColumnsCount[aPair[n].value2].toString() + "</span>&nbsp;]";
+        }
+
+        div.innerHTML = strHtml;
+
+        if (aPair.length > 0)
+            div.style.display = (g_nColumnsStatus == 0) ? "none" : "";
+        else
+            div.style.display = "none";
+    }
+
     function Show_StatsIntervals()
     {
         var divIntervals = document.getElementById("divStatsIntervals");
@@ -1452,6 +1620,7 @@ tr.trLost td, .tdLost { color: #7fc37f; }
 
         InitStyles();
         Show_3C3R();
+        Show_Columns();
         Show_Queue();
         Show_RefreshSysButtons();
         Show_StatsIntervals();
@@ -1573,6 +1742,16 @@ tr.trLost td, .tdLost { color: #7fc37f; }
             strKeyboardID = strKeyboard;
         g_strKeyboardID = strKeyboardID;
 
+        var nColumnsStatus = 0;
+        var strColumnsStatus = GetCookie(COOKIE_COLUMNS_STATUS);
+        if (strColumnsStatus.length > 0)
+        {
+            nColumnsStatus = parseInt(strColumnsStatus);
+            if (nColumnsStatus != 0)
+                nColumnsStatus = 1;
+        }
+        g_nColumnsStatus = nColumnsStatus;
+
         var nStatsIntervalStatus = 0;
         var strStatsIntervalStatus = GetCookie(COOKIE_STATSINTV_STATUS);
         if (strStatsIntervalStatus.length > 0)
@@ -1606,6 +1785,25 @@ tr.trLost td, .tdLost { color: #7fc37f; }
         }
 
         SetCookie(COOKIE_KEYBOARD_ID, g_strKeyboardID);
+    }
+
+    function OnShowColumnsClick()
+    {
+        var strDisplay = "";
+        if(g_nColumnsStatus == 1)
+        {
+            g_nColumnsStatus = 0;
+            strDisplay = "none";
+        }
+        else
+        {
+            g_nColumnsStatus = 1;
+        }
+
+        var div = document.getElementById("divColumns");
+        div.style.display = strDisplay;
+
+        SetCookie(COOKIE_COLUMNS_STATUS, g_nColumnsStatus);
     }
 
     function Calc_AddNum(num)
@@ -1646,10 +1844,12 @@ tr.trLost td, .tdLost { color: #7fc37f; }
         }
     }
 
-    function Show_AddNum(num)
+    function Show_AddNum()
     {
         Show_Queue();
         Show_3C3R();
+        Calc_Columns();
+        Show_Columns();
         Show_StatsIntervals();
         Calc_StatsGroupsCount();
         Show_StatsGroupsCount();
@@ -1662,7 +1862,7 @@ tr.trLost td, .tdLost { color: #7fc37f; }
     function OnAddNum(num)
     {
         Calc_AddNum(num);
-        Show_AddNum(num);
+        Show_AddNum();
     }
 
 
@@ -1704,6 +1904,8 @@ tr.trLost td, .tdLost { color: #7fc37f; }
         Sort(g_an3C3R, g_anIdx3C3R, false);
 
         Show_3C3R();
+        Calc_Columns();
+        Show_Columns();
         Show_Queue();
         Show_RefreshSysButtons();
         Show_StatsIntervals();
@@ -2013,7 +2215,7 @@ tr.trLost td, .tdLost { color: #7fc37f; }
 </head>
 <body onload="OnPageInit()" style="padding: 0; margin :0; background-color: white">
     <div style="position:fixed; z-index:19; right: 0px; top:0px; width: 100%; background-color: white" 
-         onclick="OnShowKeyboardClick()">
+         onclick="OnShowColumnsClick()">
         <div style="padding: 12px 8px">
             <table cellpadding="0" cellspacing="0" border="0" id="tblStatistics">
                 <tr>
@@ -2038,8 +2240,9 @@ tr.trLost td, .tdLost { color: #7fc37f; }
             </table>
         </div>
     </div>
-    <div style="position:absolute; z-index:0; top: 88px; padding: 0; margin: 0; width: 100%">
+    <div style="position:absolute; z-index:0; top: 90px; padding: 0; margin: 0; width: 100%">
         <div style="height: 8px" id="divBlank"></div>
+        <div id="divColumns"></div>
         <table cellpadding="0" cellspacing="5" border="0" id="tblQueue" onclick="OnSysExpand()">
             <tr id="trRow1">
                 <td id="td0"></td><td id="td1"></td><td id="td2"></td><td id="td3"></td><td id="td4"></td>
