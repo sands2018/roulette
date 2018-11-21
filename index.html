@@ -11,30 +11,9 @@ td
 	cursor: pointer;
 }
 
-.kbspace1 
+.kbspace1
 {
-    height: 8px; background-color: white; filter: alpha(Opacity=30); -moz-opacity: 0.3; opacity: 0.3;
-}
-.kbspace2 
-{
-    height: 8px; background-color: white; filter: alpha(Opacity=50); -moz-opacity: 0.5; opacity: 0.5;
-}
-.kbspace3 
-{
-    height: 8px; background-color: white; filter: alpha(Opacity=70); -moz-opacity: 0.7; opacity: 0.7;
-}
-.kbspace4 
-{
-    height: 11px; background-color: white; filter: alpha(Opacity=90); -moz-opacity: 0.9; opacity: 0.9;
-}
-.kbspace5 
-{
-    border: 0; height: 15px; background-color: white; filter: alpha(Opacity=100); -moz-opacity: 1; opacity: 1;
-}
-
-.kbspace
-{
-    border: 0; height: 50px;
+    padding: 0; margin: 0; border: 0; height: 60px;
     background: #ffffff;
     background: -webkit-linear-gradient(rgba(255,255,255,0),rgba(255,255,255,1));
     background: -moz-linear-gradient(top,rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%); /*FireFox*/
@@ -42,38 +21,25 @@ td
     background: -ms-linear-gradient(rgba(255,255,255,0),rgba(255,255,255,1)); /*IE10及IE10+*/
 }
 
-#tblKeyboard, #tblGameBoard
+.kbspace2
 {
-    border: 1px solid;
+    padding: 0; margin: 0; height: 20px; border: 1px solid white;
+    background-color: white; filter: alpha(Opacity=100); -moz-opacity: 1; opacity: 1;
 }
 
-#tblKeyboard td, #tblGameBoard td
-{
-	font-size: 50px;
-	border: 1px solid;
-}
+#divCover { font-size: 40px; }
+#divNumbers { padding: 20px; }
 
-#tblKeyboard td
-{
-	width: 110px;
-	height: 105px;
-}
-
-#tblGameBoard td
-{
-	width: 95px;
-	height: 95px;
-}
+#tblKeyboard, #tblGameBoard { border: 1px solid; }
+#tblKeyboard td, #tblGameBoard td { font-size: 50px; border: 1px solid; }
+#tblKeyboard td { width: 110px; height: 105px; }
+#tblGameBoard td { width: 95px; height: 95px; }
 
 .tdHide { font-family: Arial }
 #tblKeyboard #tdKSwitch, #tblGameBoard #tdBSwitch { font-size: 40px }
 
-#tblQueue td 
-{
-	width: 58px;
-	height: 58px;
-	font-size: 36px;
-}
+#tblQueue { z-index: 3000; }
+#tblQueue td { width: 58px; height: 58px; font-size: 36px; }
 
 .bttn 
 {
@@ -215,7 +181,7 @@ tr.trLost td, .tdLost { color: #7fc37f; }
     var g_s_c_sg_bk_active = "#EBE3CB";
 
     // elements style need to be changed
-    var g_s_ctlid_kbtd = ["tdBSwitch", "tdKSwitch", "tdBHide", "tdKHide"];
+    var g_s_ctlid_kbtd = ["tdBEsc", "tdBSwitch", "tdBHide", "tdKEsc", "tdKSwitch", "tdKHide"];
 
     // global variables: ------------------------------------------------------
 
@@ -223,6 +189,7 @@ tr.trLost td, .tdLost { color: #7fc37f; }
     var COOKIE_COLUMNS_STATUS = "ColumnsStatus";
     var COOKIE_SG_COUNT_IDX = "StatsGroupCountIdx";
     var COOKIE_STATSINTV_STATUS = "StatsIntvStatus";
+    var COOKIE_STATSGROUP_STATUS = "StatsGroupStatus";
 
     var MAX_COUNT = 10000;
     var QUEUE_MAX_COUNT = 100;
@@ -239,12 +206,14 @@ tr.trLost td, .tdLost { color: #7fc37f; }
 
     var g_anColumnsStart = [1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31];
 
+    var g_nEscapeStatus = 0;
     var g_strKeyboardID = "B";
     var g_nColumnsStatus = 0;
     var g_nExpandStatus = 0;
     var g_nShowInputStatus = 1;
     var g_nSGCountIdx = 1;
     var g_nStatsIntervalStatus = 0; // 0 - 全部显示， 1 - 第一行不显示， 2 - 第一行、最后一行不显示
+    var g_nStatsGroupStatus = 1;
 
     var g_StatsInterval;
     var g_aGame = [];
@@ -264,6 +233,7 @@ tr.trLost td, .tdLost { color: #7fc37f; }
         if (g_anQueueNum.length > 0)
             g_anQueueNum.splice(0, g_anQueueNum.length);
 
+        g_nEscapeStatus = 0;
         g_nQueueIdx = -1;
         g_nNoZeroNumCount = 0;
 
@@ -1731,7 +1701,10 @@ tr.trLost td, .tdLost { color: #7fc37f; }
 
     function PageInit_Show()
     {
+        Show_Covers();
+
         Show_StatsGroupsCount();
+        Show_StatsGroupAll();
 
         Show_InitSGButtons();
 
@@ -1792,6 +1765,16 @@ tr.trLost td, .tdLost { color: #7fc37f; }
                 nStatsIntervalStatus = 0;
         }
         g_nStatsIntervalStatus = nStatsIntervalStatus;
+
+        var nStatsGroupStatus = 1;
+        var strStatsGroupStatus = GetCookie(COOKIE_STATSGROUP_STATUS);
+        if (strStatsGroupStatus.length > 0)
+        {
+            nStatsGroupStatus = parseInt(strStatsGroupStatus);
+            if (nStatsGroupStatus != 0)
+                nStatsGroupStatus = 1;
+        }
+        g_nStatsGroupStatus = nStatsGroupStatus;
 
         PageInit_Data();
         PageInit_Show();
@@ -1877,6 +1860,7 @@ tr.trLost td, .tdLost { color: #7fc37f; }
 
     function Show_AddNum()
     {
+        Show_Covers();
         Show_Queue();
         Show_3C3R();
         Calc_Columns();
@@ -1884,6 +1868,7 @@ tr.trLost td, .tdLost { color: #7fc37f; }
         Show_StatsIntervals();
         Calc_StatsGroupsCount();
         Show_StatsGroupsCount();
+        Show_StatsGroupAll();
         Show_Games();
         Show_RefreshSysButtons();
         Show_3R3CLast2();
@@ -1913,6 +1898,8 @@ tr.trLost td, .tdLost { color: #7fc37f; }
             return;
         }
 
+        Show_Covers();
+
         // stats intervals: ---------------------
 
         g_StatsInterval.DeleteNum(num);
@@ -1930,6 +1917,7 @@ tr.trLost td, .tdLost { color: #7fc37f; }
 
         Calc_StatsGroupsCount();
         Show_StatsGroupsCount();
+        Show_StatsGroupAll();
 
 
         Sort(g_an3C3R, g_anIdx3C3R, false);
@@ -2101,6 +2089,30 @@ tr.trLost td, .tdLost { color: #7fc37f; }
         }
     }
 
+    function Show_StatsGroupAll()
+    {
+        var strDisplay = "";
+
+        if (g_nStatsGroupStatus == 0)
+            strDisplay = "none";
+
+        var tr = document.getElementById("trStatsGroupAll");
+        tr.style.display = strDisplay;
+    }
+
+
+    function OnStatsGroupClick()
+    {
+        if (g_nStatsGroupStatus == 1)
+            g_nStatsGroupStatus = 0;
+        else
+            g_nStatsGroupStatus = 1;
+
+        SetCookie(COOKIE_STATSGROUP_STATUS, g_nStatsGroupStatus);
+
+        Show_StatsGroupAll();
+    }
+
     function OnSGCountClick(nIdx)
     {
         g_nSGCountIdx = nIdx;
@@ -2110,6 +2122,7 @@ tr.trLost td, .tdLost { color: #7fc37f; }
 
         Calc_StatsGroupsCount();
         Show_StatsGroupsCount();
+        Show_StatsGroupAll();
     }
 
     function OnGameClick(nGameIdx)
@@ -2241,11 +2254,48 @@ tr.trLost td, .tdLost { color: #7fc37f; }
         OnImportExportOK();
     }
 
+    function Show_Covers()
+    {
+        var div = document.getElementById("divCover");
+
+        var strDisplay = "";
+        if (g_nEscapeStatus == 0)
+        {
+            strDisplay = "none";
+        }
+        else
+        {
+            var bFirst = true;
+            var strHtml = "<div id='divNumbers'>";
+            for(var n = g_nQueueIdx; n >= 0; --n)
+            {
+                if (!bFirst)
+                    strHtml += ", ";
+                bFirst = false;
+                strHtml += g_anQueueNum[n].toString();
+            }
+            strHtml += "</div>";
+            div.innerHTML = strHtml;
+        }
+
+        div.style.display = strDisplay;
+    }
+
+    function OnEscape()
+    {
+        g_nEscapeStatus++;
+        g_nEscapeStatus = g_nEscapeStatus % 2;
+
+        Show_Covers();
+    }
+
 </script>
 
 </head>
 <body onload="OnPageInit()" style="padding: 0; margin :0; background-color: white">
-    <div style="position:fixed; z-index:19; right: 0px; top:0px; width: 100%; background-color: white" 
+    <div style="position:fixed; z-index: 199; right: 0px; top:0px; 
+        width: 100%; height: 100%; background-color: white" id="divCover"></div>
+    <div style="position:fixed; z-index: 99; right: 0px; top:0px; width: 100%; background-color: white" 
          onclick="OnShowColumnsClick()">
         <div style="padding: 12px 8px">
             <table cellpadding="0" cellspacing="0" border="0" id="tblStatistics">
@@ -2273,7 +2323,7 @@ tr.trLost td, .tdLost { color: #7fc37f; }
     </div>
     <div style="position:absolute; z-index:0; top: 90px; padding: 0; margin: 0; width: 100%">
         <div style="height: 8px" id="divBlank"></div>
-        <div id="divColumns"></div>
+        <div id="divColumns" onclick="OnShowColumnsClick()"></div>
         <table cellpadding="0" cellspacing="5" border="0" id="tblQueue" onclick="OnSysExpand()">
             <tr id="trRow1">
                 <td id="td0"></td><td id="td1"></td><td id="td2"></td><td id="td3"></td><td id="td4"></td>
@@ -2333,11 +2383,11 @@ tr.trLost td, .tdLost { color: #7fc37f; }
         <div id="divStatsGroups" style="display: none">
             <div style="height: 13px"></div>
             <table cellpadding="0" cellspacing="0" id="tblStatsGroups">
-                <tr>
+                <tr onclick="OnStatsGroupClick()">
                     <td id="tdStatsGroupsCol" width="53%" style="border-right: 1px solid #8f8f8f"></td>
                     <td id="tdStatsGroupsRow"></td>
                 </tr>
-                <tr><td id="tdStatsGroupsAll" colspan="2"></td></tr>
+                <tr id="trStatsGroupAll" onclick="OnStatsGroupClick()"><td id="tdStatsGroupsAll" colspan="2"></td></tr>
                 <tr><td id="tdSGButtons" colspan="2"></td></tr>
             </table>
         </div>
@@ -2346,12 +2396,9 @@ tr.trLost td, .tdLost { color: #7fc37f; }
         <div id="divGames"></div>
 
     </div>
-    <div id="divKeyboard" style="position:fixed; bottom: 0px; z-index:10; width: 100%;">
+    <div id="divKeyboard" style="position:fixed; bottom: 0px; z-index:1003; width: 100%;">
         <div class="kbspace1">&nbsp;</div>
         <div class="kbspace2">&nbsp;</div>
-        <div class="kbspace3">&nbsp;</div>
-        <div class="kbspace4">&nbsp;</div>
-        <div class="kbspace5">&nbsp;</div>
         <table cellpadding="0" cellspacing="0" id="tblKeyboard">
             <tr>
                 <td id="tdK1" onclick="OnAddNum(1)">1</td><td id="tdK2" onclick="OnAddNum(2)">2</td><td id="tdK3" onclick="OnAddNum(3)">3</td>
@@ -2374,15 +2421,16 @@ tr.trLost td, .tdLost { color: #7fc37f; }
                 <td id="tdK34" onclick="OnAddNum(34)">34</td><td id="tdK35" onclick="OnAddNum(35)">35</td><td id="tdK36" onclick="OnAddNum(36)">36</td>
             </tr>
             <tr>
-                <td id="tdK0" onclick="OnAddNum(0)" colspan="6">0</td>
+                <td id="tdKEsc" onclick="OnEscape()" colspan="2">esc</td>
+                <td id="tdK0" onclick="OnAddNum(0)" colspan="4">0</td>
                 <td id="tdKSwitch" onclick="OnSwitchInput(0)" colspan="2">switch</td>
                 <td id="tdKHide" class="tdHide" onclick="OnHideKeyboard()">x</td>
             </tr>
         </table>
     </div>
-    <div id="divGameBoard" style="position:fixed; bottom: 0px; z-index:9; width: 100%;">
-        <div class="kbspace">&nbsp;</div>
-        <div class="kbspace5">&nbsp;</div>
+    <div id="divGameBoard" style="position:fixed; bottom: 0px; z-index:1002; width: 100%;">
+        <div class="kbspace1">&nbsp;</div>
+        <div class="kbspace2">&nbsp;</div>
         <table cellpadding="0" cellspacing="0" id="tblGameBoard">
             <tr>
                 <td id="tdB3" onclick="OnAddNum(3)">3</td><td id="tdB6" onclick="OnAddNum(6)">6</td><td id="tdB9" onclick="OnAddNum(9)">9</td>
@@ -2403,13 +2451,14 @@ tr.trLost td, .tdLost { color: #7fc37f; }
                 <td id="tdB28" onclick="OnAddNum(28)">28</td><td id="tdB31" onclick="OnAddNum(31)">31</td><td id="tdB34" onclick="OnAddNum(34)">34</td>
             </tr>
             <tr>
-                <td id="tdB0" onclick="OnAddNum(0)" colspan="8">0</td>
+                <td id="tdBEsc" onclick="OnEscape()" colspan="2">esc</td>
+                <td id="tdB0" onclick="OnAddNum(0)" colspan="6">0</td>
                 <td id="tdBSwitch" onclick="OnSwitchInput(1)" colspan="3">switch</td>
                 <td id="tdBHide" class="tdHide" onclick="OnHideKeyboard()">x</td>
             </tr>
         </table>
     </div>
-    <div id="divShowKeyboard" style="position:fixed; right: 0px; bottom: 0px; z-index:3; width: 100px; height: 100px; display:none" onclick="OnShowKeyboard()"></div>
+    <div id="divShowKeyboard" style="position:fixed; right: 0px; bottom: 0px; z-index:1001; width: 100px; height: 100px; display:none" onclick="OnShowKeyboard()"></div>
     <div id="divImportExport" style="display: none;">
         <table cellpadding="0" cellspacing="30" style="width: 100%" id="tblImportExport">
             <tr><td>&nbsp;</td></tr>
