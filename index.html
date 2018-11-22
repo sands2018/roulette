@@ -43,7 +43,7 @@ td
 
 .bttn 
 {
-	width: 150px;
+	width: 143px;
 	height: 60px;
     line-height: 60px;
     text-align: center;
@@ -51,7 +51,6 @@ td
 	font-size: 36px;
     border: 1px solid white;
 }
-#tdBttnTheme { width: 100px; }
 
 .title_c,.value_c { padding: 8px 0px; border: 1px solid;}
 .title_c { font-size: 36px; width: 100px; color: #403000 }
@@ -1615,11 +1614,11 @@ tr.trLost td, .tdLost { color: #7fc37f; }
 
     function Show_RefreshTheme()
     {
-        var strTitle = "淡";
+        var strTitle = "淡雅";
 
         if(g_s_theme_id == 1)
         {
-            strTitle = "彩";
+            strTitle = "彩色";
         }
 
         var bttn = document.getElementById("tdBttnTheme");
@@ -2172,6 +2171,9 @@ tr.trLost td, .tdLost { color: #7fc37f; }
 
     function OnSysRestore()
     {
+        if (g_nQueueIdx >= 0)
+            return;
+
         var strBackup = GetCookie(COOKIE_BACKUP);
         DoImport(strBackup, true);
     }
