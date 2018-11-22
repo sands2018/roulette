@@ -43,7 +43,7 @@ td
 
 .bttn 
 {
-	width: 170px;
+	width: 150px;
 	height: 60px;
     line-height: 60px;
     text-align: center;
@@ -51,6 +51,7 @@ td
 	font-size: 36px;
     border: 1px solid white;
 }
+#tdBttnTheme { width: 100px; }
 
 .title_c,.value_c { padding: 8px 0px; border: 1px solid;}
 .title_c { font-size: 36px; width: 100px; color: #403000 }
@@ -185,6 +186,7 @@ tr.trLost td, .tdLost { color: #7fc37f; }
 
     // global variables: ------------------------------------------------------
 
+    var COOKIE_BACKUP = "COOKIE_BACKUP";
     var COOKIE_KEYBOARD_ID = "KeyboardID";
     var COOKIE_COLUMNS_STATUS = "ColumnsStatus";
     var COOKIE_SG_COUNT_IDX = "StatsGroupCountIdx";
@@ -1119,7 +1121,7 @@ tr.trLost td, .tdLost { color: #7fc37f; }
         var strBorderClrDisabled = g_s_c_btn_b_disabled[g_s_theme_id];
         var strBorderClrEnabled = g_s_c_btn_b_enabled[g_s_theme_id];
 
-        var astrIDBttn = ["tdBttnTheme", "tdBttnDelete", "tdBttnRestart", "tdBttnExport", "tdBttnImport"];
+        var astrIDBttn = ["tdBttnTheme", "tdBttnRestart", "tdBttnDelete", "tdBttnRestore", "tdBttnExport", "tdBttnImport"];
         var abEnabled = [];
 
         for (var n = 0; n < astrIDBttn.length; ++n)
@@ -1129,9 +1131,13 @@ tr.trLost td, .tdLost { color: #7fc37f; }
 
         if (g_nQueueIdx < 0)
         {
-            abEnabled[1] = false; // delete
-            abEnabled[2] = false; // restart
-            abEnabled[3] = false; // export
+            abEnabled[1] = false; // restart
+            abEnabled[2] = false; // delete
+            abEnabled[4] = false; // export
+        }
+        else
+        {
+            abEnabled[3] = false; // restore
         }
 
         if (g_nQueueIdx < QUEUE_LINE_NUM_COUNT)
@@ -1609,11 +1615,11 @@ tr.trLost td, .tdLost { color: #7fc37f; }
 
     function Show_RefreshTheme()
     {
-        var strTitle = "淡雅版";
+        var strTitle = "淡";
 
         if(g_s_theme_id == 1)
         {
-            strTitle = "彩色版";
+            strTitle = "彩";
         }
 
         var bttn = document.getElementById("tdBttnTheme");
@@ -1879,6 +1885,8 @@ tr.trLost td, .tdLost { color: #7fc37f; }
     {
         Calc_AddNum(num);
         Show_AddNum();
+
+        SetCookie(COOKIE_BACKUP, GetNumString());
     }
 
 
@@ -1919,7 +1927,6 @@ tr.trLost td, .tdLost { color: #7fc37f; }
         Show_StatsGroupsCount();
         Show_StatsGroupAll();
 
-
         Sort(g_an3C3R, g_anIdx3C3R, false);
 
         Show_3C3R();
@@ -1931,6 +1938,8 @@ tr.trLost td, .tdLost { color: #7fc37f; }
         Show_Games();
 
         Show_3R3CLast2();
+
+        SetCookie(COOKIE_BACKUP, GetNumString());
     }
 
     function OnSysExpand()
@@ -2161,6 +2170,28 @@ tr.trLost td, .tdLost { color: #7fc37f; }
         tbl.style.display = strDisplay;
     }
 
+    function OnSysRestore()
+    {
+        var strBackup = GetCookie(COOKIE_BACKUP);
+        DoImport(strBackup, true);
+    }
+
+    function GetNumString()
+    {
+        var strExport = "";
+        var bFirst = true;
+        for (var n = 0; n <= g_nQueueIdx; ++n)
+        {
+            if (!bFirst)
+                strExport += ",";
+            bFirst = false;
+
+            strExport += g_anQueueNum[n].toString();
+        }
+
+        return strExport;
+    }
+
     function OnSysImportExport(bImport)
     {
         var tdTitle = document.getElementById("tdImportExportTitle");
@@ -2180,16 +2211,7 @@ tr.trLost td, .tdLost { color: #7fc37f; }
         else
         {
             tdTitle.innerHTML = "导&nbsp;&nbsp;&nbsp;出";
-            var strExport = "";
-            var bFirst = true;
-            for (var n = 0; n < g_anQueueNum.length; ++n)
-            {
-                if (!bFirst)
-                    strExport += ",";
-                bFirst = false;
-
-                strExport += g_anQueueNum[n].toString();
-            }
+            var strExport = GetNumString();
 
             txt.value = strExport;
             trSpecImport.style.display = "none";
@@ -2217,21 +2239,34 @@ tr.trLost td, .tdLost { color: #7fc37f; }
             return;
         }
 
+        if (DoImport(strNumbers, false))
+            OnImportExportOK();
+    }
+
+    function DoImport(strNumbers, bFromCookie)
+    {
         var astrNum = strNumbers.split(",");
-        if (astrNum.length <= 0)
+        if ((strNumbers.length <= 0) || (astrNum.length <= 0))
         {
-            alert("请在输入框中输入要导入的数据!");
-            return;
+            if (bFromCookie)
+                alert("没有找到数据！");
+            else
+                alert("请在输入框中输入要导入的数据！");
+
+            return false;
         }
 
         var anNum = [];
         for (var n = 0; n < astrNum.length; ++n)
         {
             var nNum = parseInt(astrNum[n]);
-            if(isNaN(nNum) || (nNum < 0) || (nNum > 36))
+            if (isNaN(nNum) || (nNum < 0) || (nNum > 36))
             {
-                alert("要导入的数据不正确，请检查！");
-                return;
+                if (bFromCookie)
+                    alert("数据不正确！");
+                else
+                    alert("要导入的数据不正确，请检查！");
+                return false;
             }
 
             anNum[n] = nNum;
@@ -2239,9 +2274,15 @@ tr.trLost td, .tdLost { color: #7fc37f; }
 
         if (g_nQueueIdx >= 0)
         {
-            var confirmed = confirm("导入操作将首先清空当前的数据，确实要导入吗？");
+            var strMsg = "";
+            if (bFromCookie)
+                strMsg = "确定要恢复吗？";
+            else
+                strMsg = "导入操作将首先清空当前的数据，确实要导入吗？";
+
+            var confirmed = confirm(strMsg);
             if (confirmed == 0)
-                return;
+                return false;
         }
 
         InitGlobalVariables();
@@ -2251,7 +2292,8 @@ tr.trLost td, .tdLost { color: #7fc37f; }
             Calc_AddNum(anNum[n]);
 
         Show_AddNum();
-        OnImportExportOK();
+
+        return true;
     }
 
     function Show_Covers()
@@ -2367,9 +2409,11 @@ tr.trLost td, .tdLost { color: #7fc37f; }
             <tr>
                 <td id="tdBttnTheme" class="bttn" style="background-color: #007820" onclick="OnSysChangeTheme()">NA</td>
                 <td>&nbsp;&nbsp;&nbsp;</td>
-                <td id="tdBttnRestart" class="bttn" style="background-color: #007820" onclick="OnSysRestart()">重新开始</td>
+                <td id="tdBttnRestart" class="bttn" style="background-color: #007820" onclick="OnSysRestart()">重置</td>
                 <td>&nbsp;&nbsp;&nbsp;</td>
                 <td id="tdBttnDelete" class="bttn" style="background-color: #007820" onclick="OnDeleteNum()">删除</td>
+                <td>&nbsp;&nbsp;&nbsp;</td>
+                <td id="tdBttnRestore" class="bttn" style="background-color: #007820" onclick="OnSysRestore()">恢复</td>
                 <td>&nbsp;&nbsp;&nbsp;</td>
                 <td id="tdBttnExport" class="bttn" style="background-color: #007820" onclick="OnSysImportExport(false)">导出</td>
                 <td>&nbsp;&nbsp;&nbsp;</td>
