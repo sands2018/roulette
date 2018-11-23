@@ -30,6 +30,13 @@ td
 #divCover { font-size: 40px; }
 #divNumbers { padding: 20px; }
 
+#tblDivPopupTitleBar td { border: 1px solid #dfbc33; border-right: 0; font-size: 40px }
+#tblDivPopupTitleBar td:first-child { border-left: 0 }
+#tblStatsFinally { width: 100%; border-bottom: 1px solid #dfbc33 }  
+#tblStatsFinally td { padding: 3px 20px; font-size: 40px }
+#tblStatsFinally td.tdSFTitle { color: #ab8b30; border-left: 1px solid #dfbc33 }
+#tblStatsFinally td:first-child { border-left: 0 }
+
 #tblKeyboard, #tblGameBoard { border: 1px solid; }
 #tblKeyboard td, #tblGameBoard td { font-size: 50px; border: 1px solid; }
 #tblKeyboard td { width: 110px; height: 105px; }
@@ -38,7 +45,6 @@ td
 .tdHide { font-family: Arial }
 #tblKeyboard #tdKSwitch, #tblGameBoard #tdBSwitch { font-size: 40px }
 
-#tblQueue { z-index: 3000; }
 #tblQueue td { width: 58px; height: 58px; font-size: 36px; }
 
 .bttn 
@@ -113,6 +119,17 @@ tr.trLost td, .tdLost { color: #7fc37f; }
 
 <script language="javascript">
 
+    /* z-index:
+        0     - main div;
+        99   - number queue;
+        901  - div stats finally
+        999  - cover;
+        3001 - show gameboard/keyboard
+        3002 - gameboard;
+        3003 - keyboard
+        9999 - div import/export
+    */
+
     // styles: ----------------------------------------------------------------
 
     var g_s_theme_id = 1;
@@ -126,7 +143,7 @@ tr.trLost td, .tdLost { color: #7fc37f; }
     ];
 
     // board border color:
-    var g_s_c_board_b = ["#DFBC33", "#DFBC33", "white"];
+    var g_s_c_board_b = ["#dfbc33", "#dfbc33", "white"];
 
     // number text color:
     var g_s_c_num = ["white", "#434343", "#f3f3f3"];
@@ -215,6 +232,7 @@ tr.trLost td, .tdLost { color: #7fc37f; }
     var g_nSGCountIdx = 1;
     var g_nStatsIntervalStatus = 0; // 0 - 全部显示， 1 - 第一行不显示， 2 - 第一行、最后一行不显示
     var g_nStatsGroupStatus = 1;
+    var g_nPopupStatsFinallyStatus = 0;
 
     var g_StatsInterval;
     var g_aGame = [];
@@ -225,7 +243,9 @@ tr.trLost td, .tdLost { color: #7fc37f; }
     var g_t_anIdx3C3RCount = [0, 1, 2, 3, 4, 5];
 
     var g_t_anColumnsCount = [0,0,0,0,0,0,0,0,0,0,0];
-    var g_t_anIdxColumnsCount = [0,1,2,3,4,5,6,7,8,9,10];
+    var g_t_anIdxColumnsCount = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+    var g_astrPopupDivID = ["divStatsFinally"];
 
     // basic: -----------------------------------------------------------------
 
@@ -680,26 +700,26 @@ tr.trLost td, .tdLost { color: #7fc37f; }
 
     function CStatsInterval()
     {
+        this.anFailedRound = [];
+        this.anFailedRound[0] = 4;
+        this.anFailedRound[1] = 6;
+
         this.anRound = [];
+
         this.anRound[0] = 4;
-        this.anRound[1] = 6;
+        this.anRound[1] = 5;
+        this.anRound[2] = 6;
+        this.anRound[3] = 7;
+        this.anRound[4] = 8;
+        this.anRound[5] = 9;
 
-        this.anStart = [];
-
-        this.anStart[0] = 4;
-        this.anStart[1] = 5;
-        this.anStart[2] = 6;
-        this.anStart[3] = 7;
-        this.anStart[4] = 8;
-        this.anStart[5] = 9;
-
-        this.anCount = [];
-        this.anCount[0] = 0;
-        this.anCount[1] = 0;
-        this.anCount[2] = 0;
-        this.anCount[3] = 0;
-        this.anCount[4] = 0;
-        this.anCount[5] = 0;
+        this.anNotYetCount = [];
+        this.anNotYetCount[0] = 0;
+        this.anNotYetCount[1] = 0;
+        this.anNotYetCount[2] = 0;
+        this.anNotYetCount[3] = 0;
+        this.anNotYetCount[4] = 0;
+        this.anNotYetCount[5] = 0;
 
         this.anFailed = [];
         this.anFailed[0] = [0, 0, 0, 0, 0, 0];
@@ -741,7 +761,7 @@ tr.trLost td, .tdLost { color: #7fc37f; }
                 }
             }
 
-            var nCount = this.anStart.length;
+            var nCount = this.anRound.length;
 
             for (var nn = 0; nn < 6; ++nn)
             {
@@ -749,9 +769,9 @@ tr.trLost td, .tdLost { color: #7fc37f; }
 
                 for (var n = 0; n < nCount; ++n)
                 {
-                    if (g_an3C3R[nn] == this.anStart[n])
+                    if (g_an3C3R[nn] == this.anRound[n])
                     {
-                        this.anCount[n]++;
+                        this.anNotYetCount[n]++;
                     }
                 }
 
@@ -759,11 +779,11 @@ tr.trLost td, .tdLost { color: #7fc37f; }
 
                 for (var n = 0; n < nCount; ++n)
                 {
-                    var nRound = this.anRound.length;
+                    var nRound = this.anFailedRound.length;
 
                     for (var r = 0; r < nRound; ++r)
                     {
-                        if ((g_an3C3R[nn] == (this.anStart[n] + this.anRound[r])))
+                        if ((g_an3C3R[nn] == (this.anRound[n] + this.anFailedRound[r])))
                         {
                             this.anFailed[r][n]++;
                         }
@@ -787,13 +807,13 @@ tr.trLost td, .tdLost { color: #7fc37f; }
 
             var anLargeCountBak = [];
 
-            var nCount = this.anStart.length;
+            var nCount = this.anRound.length;
 
             for (var n = 0; n < nCount; ++n)
             {
-                anCountBak[n] = this.anCount[n];
+                anCountBak[n] = this.anNotYetCount[n];
 
-                for(var nn = 0; nn < this.anRound.length; ++ nn)
+                for (var nn = 0; nn < this.anFailedRound.length; ++nn)
                 {
                     anFailedBak[nn][n] = this.anFailed[nn][n];
                 }
@@ -803,9 +823,9 @@ tr.trLost td, .tdLost { color: #7fc37f; }
             
             for (var n = 0; n < nCount; ++n)
             {
-                this.anCount[n] = anCountBak[n] - (this.anCount[n] - anCountBak[n]);
+                this.anNotYetCount[n] = anCountBak[n] - (this.anNotYetCount[n] - anCountBak[n]);
 
-                for (var nn = 0; nn < this.anRound.length; ++nn)
+                for (var nn = 0; nn < this.anFailedRound.length; ++nn)
                 {
                     this.anFailed[nn][n] = anFailedBak[nn][n] - (this.anFailed[nn][n] - anFailedBak[nn][n]);
                 }
@@ -871,23 +891,37 @@ tr.trLost td, .tdLost { color: #7fc37f; }
         rule3.strSpec = "WW_7_1234";
 
         var rule4 = new CGameRule();
-        rule4.nSkip = 5;
-        rule4.nRound = 4;
-        rule4.anBet = [10, 20, 40, 80];
-        rule4.strSpec = "WZS_5_1248";
+        rule4.nSkip = 6;
+        rule4.nRound = 5;
+        rule4.anBet = [10, 20, 30, 40, 50];
+        rule4.strSpec = "WW_6_12345";
 
         var rule5 = new CGameRule();
-        rule5.nSkip = 5;
-        rule5.nRound = 4;
-        rule5.anBet = [20, 30, 40, 60];
-        rule5.strSpec = "WZS_5_2346";
+        rule5.nSkip = 7;
+        rule5.nRound = 5;
+        rule5.anBet = [10, 20, 30, 40, 50];
+        rule5.strSpec = "WW_7_12345";
 
-        g_aGameRule[0] = rule4;
-        g_aGameRule[1] = rule5;
-        g_aGameRule[2] = rule0;
-        g_aGameRule[3] = rule1;
-        g_aGameRule[4] = rule2;
-        g_aGameRule[5] = rule3;
+        var rule6 = new CGameRule();
+        rule6.nSkip = 5;
+        rule6.nRound = 4;
+        rule6.anBet = [10, 20, 40, 80];
+        rule6.strSpec = "WZS_5_1248";
+
+        var rule7 = new CGameRule();
+        rule7.nSkip = 5;
+        rule7.nRound = 4;
+        rule7.anBet = [20, 30, 40, 60];
+        rule7.strSpec = "WZS_5_2346";
+
+        g_aGameRule[0] = rule6;
+        g_aGameRule[1] = rule7;
+        g_aGameRule[2] = rule2;
+        g_aGameRule[3] = rule3;
+        g_aGameRule[4] = rule4;
+        g_aGameRule[5] = rule5;
+        g_aGameRule[6] = rule0;
+        g_aGameRule[7] = rule1;
     }
 
     function InitGame()
@@ -1463,38 +1497,38 @@ tr.trLost td, .tdLost { color: #7fc37f; }
 
         if (g_nQueueIdx >= 0)
         {
-            strHtml = "<table cellpadding='0' cellspacing='0' id='tblStatsIntervals' onclick='OnStatsIntervalClick(true)'>";
-            strHtml += "<tr><td>开始</td><td>出现</td><td>概率</td>";
-            for (var nn = 0; nn < g_StatsInterval.anRound.length; ++nn)
+            strHtml = "<table cellpadding='0' cellspacing='0' id='tblStatsIntervals'>";
+            strHtml += "<tr onclick='OnShowStatsFinally()'><td>轮次</td><td>不出</td><td>概率</td>";
+            for (var nn = 0; nn < g_StatsInterval.anFailedRound.length; ++nn)
             {
-                strHtml += "<td>" + g_StatsInterval.anRound[nn].toString() + "把不中</td><td>概率</td>";
+                strHtml += "<td>F" + g_StatsInterval.anFailedRound[nn].toString() + "</td><td>概率</td>";
             }
             strHtml += "</tr>";
 
             var nTotal = g_nQueueIdx + 1;
 
-            for (var n = 0; n < g_StatsInterval.anStart.length; ++n)
+            for (var n = 0; n < g_StatsInterval.anRound.length; ++n)
             {
-                strHtml += "<tr id='trStatsIntv" + n.toString() + "'><td>" + g_StatsInterval.anStart[n].toString() + "</td>";
-                strHtml += "<td>" + g_StatsInterval.anCount[n].toString() + "</td>";
+                strHtml += "<tr id='trStatsIntv" + n.toString() + "' onclick='OnStatsIntervalClick(true)'><td>" + g_StatsInterval.anRound[n].toString() + "</td>";
+                strHtml += "<td>" + g_StatsInterval.anNotYetCount[n].toString() + "</td>";
 
-                var percent1 = g_StatsInterval.anCount[n] * 100 / nTotal;
+                var percent1 = g_StatsInterval.anNotYetCount[n] * 100 / nTotal;
                 strHtml += "<td>" + percent1.toFixed(1) + "%</td>";
 
 
-                for (var nn = 0; nn < g_StatsInterval.anRound.length; ++nn)
+                for (var nn = 0; nn < g_StatsInterval.anFailedRound.length; ++nn)
                 {
                     strHtml += "<td>" + g_StatsInterval.anFailed[nn][n].toString() + "</td>";
 
                     var percent2 = 0;
-                    if (g_StatsInterval.anCount[n] > 0)
-                        percent2 = g_StatsInterval.anFailed[nn][n] * 100 / g_StatsInterval.anCount[n];
+                    if (g_StatsInterval.anNotYetCount[n] > 0)
+                        percent2 = g_StatsInterval.anFailed[nn][n] * 100 / g_StatsInterval.anNotYetCount[n];
                     strHtml += "<td>" + percent2.toFixed(1) + "%</td>";
                 }
 
                 strHtml += "</tr>";
             }
-            var strColSpan = (2 + g_StatsInterval.anRound.length * 2).toString();
+            var strColSpan = (2 + g_StatsInterval.anFailedRound.length * 2).toString();
 
             strHtml += "<tr><td class='tdTotal'>" + nTotal.toString(); + "</td>"
             strHtml += "<td class='tdStatsInterval' colspan='" + strColSpan + "'>";
@@ -1885,6 +1919,8 @@ tr.trLost td, .tdLost { color: #7fc37f; }
         Calc_AddNum(num);
         Show_AddNum();
 
+        CalcAndShow_StatsFinally();
+
         SetCookie(COOKIE_BACKUP, GetNumString());
     }
 
@@ -2042,7 +2078,7 @@ tr.trLost td, .tdLost { color: #7fc37f; }
         }
 
         var tr1 = document.getElementById("trStatsIntv0");
-        var tr2 = document.getElementById("trStatsIntv" + (g_StatsInterval.anStart.length - 1).toString());
+        var tr2 = document.getElementById("trStatsIntv" + (g_StatsInterval.anRound.length - 1).toString());
 
         if(g_nStatsIntervalStatus == 0)
         {
@@ -2325,6 +2361,99 @@ tr.trLost td, .tdLost { color: #7fc37f; }
         div.style.display = strDisplay;
     }
 
+    function OnHidePopup()
+    {
+        var div = document.getElementById("divPopup");
+        div.style.display = "none";
+
+        g_nPopupStatsFinallyStatus = 0;
+    }
+
+    function ShowPopup(strDivID, strTitle)
+    {
+        for(var n = 0; n < g_astrPopupDivID.length; ++n)
+        {
+            var div = document.getElementById(g_astrPopupDivID[n]);
+
+            if (g_astrPopupDivID[n] != strDivID)
+                div.style.display = "none";
+            else
+                div.style.display = "";
+        }
+
+        var td = document.getElementById("tdDivPopupTitle");
+        td.innerHTML = strTitle;
+    }
+
+    function CalcAndShow_StatsFinally()
+    {
+        if (g_nPopupStatsFinallyStatus == 0)
+            return;
+
+        var nCount = 30;
+        var anCount = [];
+        var nTotal = 0;
+        var an3C3RPrevIdx = [];
+
+        for(var nn = 0; nn < 6; ++ nn)
+            an3C3RPrevIdx[nn] = -1;
+
+        for(var nn = 0; nn < nCount; ++ nn)
+            anCount[nn] = 0;
+
+        for(var n = 0; n <= g_nQueueIdx; ++ n)
+        {
+            if (g_anQueueNum[n] == 0)
+                continue;
+
+            nTotal++;
+
+            var nCol = GetNumCol(g_anQueueNum[n]);
+            var nRow = GetNumRow(g_anQueueNum[n]);
+
+            var nGap = n - an3C3RPrevIdx[nCol] - 1;
+            if (nGap > 29) nGap = 29;
+            anCount[nGap]++;
+            an3C3RPrevIdx[nCol] = n;
+
+            nGap = n - an3C3RPrevIdx[nRow + 3] - 1;
+            if (nGap > 29) nGap = 29;
+            anCount[nGap]++;
+            an3C3RPrevIdx[nRow + 3] = n;
+        }
+
+        var strHtml = "<table cellpadding='0' cellspacing='0' id='tblStatsFinally'><tr>";
+        for(var n = 0; n < nCount; ++ n)
+        {
+            if ((n != 0) && ((n % 3) == 0))
+                strHtml += "</tr><tr>";
+
+            strHtml += "<td class='tdSFTitle'>" + (n + 1).toString() + ((n == (nCount - 1)) ? "+" : "") + "</td>";
+            strHtml += "<td>" + anCount[n].toString() + "</td>";
+            var strPercent = "0";
+            if (nTotal > 0)
+                strPercent = (anCount[n] * 50 / nTotal).toFixed(1).toString();
+
+            strHtml += "<td>" + strPercent + "%</td>";
+        }
+        strHtml += "</tr></table>";
+
+        var div = document.getElementById("divStatsFinally");
+        div.innerHTML = strHtml;
+    }
+
+    function OnShowStatsFinally()
+    {
+        g_nPopupStatsFinallyStatus = 1;
+
+        CalcAndShow_StatsFinally();
+
+        ShowPopup("divStatsFinally", "轮次统计数据");
+
+        var div = document.getElementById("divPopup");
+        div.style.display = "";
+    }
+
     function OnEscape()
     {
         g_nEscapeStatus++;
@@ -2337,7 +2466,7 @@ tr.trLost td, .tdLost { color: #7fc37f; }
 
 </head>
 <body onload="OnPageInit()" style="padding: 0; margin :0; background-color: white">
-    <div style="position:fixed; z-index: 199; right: 0px; top:0px; 
+    <div style="position:fixed; z-index: 999; right: 0px; top:0px; 
         width: 100%; height: 100%; background-color: white" id="divCover"></div>
     <div style="position:fixed; z-index: 99; right: 0px; top:0px; width: 100%; background-color: white" 
          onclick="OnShowColumnsClick()">
@@ -2364,6 +2493,17 @@ tr.trLost td, .tdLost { color: #7fc37f; }
                 </tr>
             </table>
         </div>
+    </div>
+    <div id="divPopup" style="position:absolute; z-index:900; top: 90px; padding: 0; margin: 0; 
+        width: 100%; height: 3000px; background-color: white; display: none;">
+        <div style="width: 100%; height: 20px">&nbsp;</div>
+        <table cellpadding="0" cellspacing="0" style="width: 100%;" id="tblDivPopupTitleBar">
+            <tr>
+                <td style="width: 91%; text-align: center" id="tdDivPopupTitle">&nbsp;</td>
+                <td style="width: 9%; height: 80px; font-family: Arial" onclick="OnHidePopup()">x</td>
+            </tr>
+        </table>
+        <div id="divStatsFinally"></div>
     </div>
     <div style="position:absolute; z-index:0; top: 90px; padding: 0; margin: 0; width: 100%">
         <div style="height: 8px" id="divBlank"></div>
@@ -2442,7 +2582,7 @@ tr.trLost td, .tdLost { color: #7fc37f; }
         <div id="divGames"></div>
 
     </div>
-    <div id="divKeyboard" style="position:fixed; bottom: 0px; z-index:1003; width: 100%;">
+    <div id="divKeyboard" style="position:fixed; bottom: 0px; z-index:3003; width: 100%;">
         <div class="kbspace1">&nbsp;</div>
         <div class="kbspace2">&nbsp;</div>
         <table cellpadding="0" cellspacing="0" id="tblKeyboard">
@@ -2474,7 +2614,7 @@ tr.trLost td, .tdLost { color: #7fc37f; }
             </tr>
         </table>
     </div>
-    <div id="divGameBoard" style="position:fixed; bottom: 0px; z-index:1002; width: 100%;">
+    <div id="divGameBoard" style="position:fixed; bottom: 0px; z-index:3002; width: 100%;">
         <div class="kbspace1">&nbsp;</div>
         <div class="kbspace2">&nbsp;</div>
         <table cellpadding="0" cellspacing="0" id="tblGameBoard">
@@ -2504,7 +2644,7 @@ tr.trLost td, .tdLost { color: #7fc37f; }
             </tr>
         </table>
     </div>
-    <div id="divShowKeyboard" style="position:fixed; right: 0px; bottom: 0px; z-index:1001; width: 100px; height: 100px; display:none" onclick="OnShowKeyboard()"></div>
+    <div id="divShowKeyboard" style="position:fixed; right: 0px; bottom: 0px; z-index:3001; width: 100px; height: 100px; display:none" onclick="OnShowKeyboard()"></div>
     <div id="divImportExport" style="display: none;">
         <table cellpadding="0" cellspacing="30" style="width: 100%" id="tblImportExport">
             <tr><td>&nbsp;</td></tr>
