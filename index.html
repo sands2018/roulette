@@ -2429,11 +2429,12 @@ tr.trLost td, .tdLost { color: #7fc37f; }
             if ((n != 0) && ((n % 3) == 0))
                 strHtml += "</tr><tr>";
 
-            strHtml += "<td class='tdSFTitle'>" + (n + 1).toString() + ((n == (nCount - 1)) ? "+" : "") + "</td>";
-            strHtml += "<td>" + anCount[n].toString() + "</td>";
+            var nIdx = 10 * (n % 3) + Math.floor(n / 3);
+            strHtml += "<td class='tdSFTitle'>" + (nIdx + 1).toString() + ((nIdx == (nCount - 1)) ? "+" : "") + "</td>";
+            strHtml += "<td>" + anCount[nIdx].toString() + "</td>";
             var strPercent = "0";
             if (nTotal > 0)
-                strPercent = (anCount[n] * 50 / nTotal).toFixed(1).toString();
+                strPercent = (anCount[nIdx] * 50 / nTotal).toFixed(1).toString();
 
             strHtml += "<td>" + strPercent + "%</td>";
         }
