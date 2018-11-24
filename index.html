@@ -369,12 +369,22 @@ tr.trLost td, .tdLost { color: #7fc37f; }
         }
     }
 
-    function SetCookie(c_name, value, expiredays)
+    function DoSetCookie(c_name, value, expiredays)
     {
+        if (expiredays == null)
+        {
+            document.cookie = c_name + "=" + escape(value);
+            return;
+        }
+
         var exdate = new Date()
         exdate.setDate(exdate.getDate() + expiredays)
-        document.cookie = c_name + "=" + escape(value) +
-        ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString())
+        document.cookie = c_name + "=" + escape(value) + ";expires=" + exdate.toGMTString();
+    }
+
+    function SetCookie(c_name, value)
+    {
+        DoSetCookie(c_name, value, 9999);
     }
 
     function GetCookie(c_name)
