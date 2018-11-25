@@ -30,13 +30,6 @@ td
 #divCover { font-size: 40px; }
 #divNumbers { padding: 20px; }
 
-#tblDivPopupTitleBar td { border: 1px solid #dfbc33; border-right: 0; font-size: 40px }
-#tblDivPopupTitleBar td:first-child { border-left: 0 }
-#tblStatsFinally { width: 100%; border-bottom: 1px solid #dfbc33 }  
-#tblStatsFinally td { padding: 3px 20px; font-size: 40px }
-#tblStatsFinally td.tdSFTitle { color: #ab8b30; border-left: 1px solid #dfbc33 }
-#tblStatsFinally td:first-child { border-left: 0 }
-
 #tblKeyboard, #tblGameBoard { border: 1px solid; }
 #tblKeyboard td, #tblGameBoard td { font-size: 50px; border: 1px solid; }
 #tblKeyboard td { width: 110px; height: 105px; }
@@ -67,6 +60,14 @@ td
 .ColumnsCount { font-size: 44px; color: #dd8877; font-weight: bold }
 .ColumnNormal { background-color: white; }
 .ColumnHighlight { background-color: #f8ebd8; }
+
+#tblDivPopupTitleBar td { border: 1px solid #dfbc33; border-right: 0; font-size: 40px }
+#tblDivPopupTitleBar td:first-child { border-left: 0 }
+#tblStatsFinally { width: 100%; border-bottom: 1px solid #dfbc33 }  
+#tblStatsFinally td { padding: 3px 10px; font-size: 40px }
+#tblStatsFinally td.tdSFTitle { color: #ab8b30; border-left: 1px solid #dfbc33 }
+#tblStatsFinally td:first-child { border-left: 0 }
+#tblStatsFinally td.tdSFPercent { color: #888888 }
 
 #tblStatsIntervals { border: 1px solid #8f8f8f; border-bottom: 0; width: 100%; margin-bottom: 8px }
 #tblStatsIntervals td { border-bottom: 1px solid #8f8f8f; font-size: 36px; padding: 3px 8px; text-align: center; }
@@ -2401,15 +2402,18 @@ tr.trLost td, .tdLost { color: #7fc37f; }
         if (g_nPopupStatsFinallyStatus == 0)
             return;
 
-        var nCount = 30;
+        var MAX_COUNT = 30;
+
         var anCount = [];
+        var anCountAbove = [];
+        var nCount30Above = 0;
         var nTotal = 0;
         var an3C3RPrevIdx = [];
 
         for(var nn = 0; nn < 6; ++ nn)
             an3C3RPrevIdx[nn] = -1;
 
-        for(var nn = 0; nn < nCount; ++ nn)
+        for (var nn = 0; nn < MAX_COUNT; ++nn)
             anCount[nn] = 0;
 
         for(var n = 0; n <= g_nQueueIdx; ++ n)
@@ -2423,30 +2427,58 @@ tr.trLost td, .tdLost { color: #7fc37f; }
             var nRow = GetNumRow(g_anQueueNum[n]);
 
             var nGap = n - an3C3RPrevIdx[nCol] - 1;
-            if (nGap > 29) nGap = 29;
-            anCount[nGap]++;
+            if (nGap < MAX_COUNT)
+                anCount[nGap]++;
+            else
+                nCount30Above++;
+
             an3C3RPrevIdx[nCol] = n;
 
             nGap = n - an3C3RPrevIdx[nRow + 3] - 1;
-            if (nGap > 29) nGap = 29;
-            anCount[nGap]++;
+            if (nGap < MAX_COUNT)
+                anCount[nGap]++;
+            else
+                nCount30Above++;
             an3C3RPrevIdx[nRow + 3] = n;
         }
 
+        anCountAbove[MAX_COUNT - 1] = anCount[MAX_COUNT - 1] + nCount30Above;
+
+        for (var n = MAX_COUNT - 2; n >= 0; --n)
+            anCountAbove[n] = anCount[n] + anCountAbove[n + 1];
+
+        var BIG_COL_COUNT = 2;
+        var EACH_COL_COUNT = MAX_COUNT / BIG_COL_COUNT;
+
         var strHtml = "<table cellpadding='0' cellspacing='0' id='tblStatsFinally'><tr>";
-        for(var n = 0; n < nCount; ++ n)
+        for (var n = 0; n < MAX_COUNT; ++n)
         {
-            if ((n != 0) && ((n % 3) == 0))
+            if ((n != 0) && ((n % BIG_COL_COUNT) == 0))
                 strHtml += "</tr><tr>";
 
-            var nIdx = 10 * (n % 3) + Math.floor(n / 3);
-            strHtml += "<td class='tdSFTitle'>" + (nIdx + 1).toString() + ((nIdx == (nCount - 1)) ? "+" : "") + "</td>";
-            strHtml += "<td>" + anCount[nIdx].toString() + "</td>";
+            var nIdx = EACH_COL_COUNT * (n % BIG_COL_COUNT) + Math.floor(n / BIG_COL_COUNT);
+
+            strHtml += "<td class='tdSFTitle'>" + (nIdx + 1).toString() + ((nIdx == (MAX_COUNT - 1)) ? "+" : "") + "</td>";
+
+            var nCount = anCount[nIdx];
+            if (nIdx == (MAX_COUNT - 1))
+                nCount += nCount30Above;
+
+            strHtml += "<td>" + nCount.toString() + "</td>";
+
             var strPercent = "0";
             if (nTotal > 0)
                 strPercent = (anCount[nIdx] * 50 / nTotal).toFixed(1).toString();
 
-            strHtml += "<td>" + strPercent + "%</td>";
+            strHtml += "<td class='tdSFPercent'>" + strPercent + "%</td>";
+
+            strHtml += "<td>" + anCountAbove[nIdx].toString() + "</td>";
+
+            strPercent = "0";
+            if (nTotal > 0)
+                strPercent = (anCountAbove[nIdx] * 50 / nTotal).toFixed(1).toString();
+
+            strHtml += "<td class='tdSFPercent'>" + strPercent + "%</td>";
         }
         strHtml += "</tr></table>";
 
@@ -2506,9 +2538,9 @@ tr.trLost td, .tdLost { color: #7fc37f; }
             </table>
         </div>
     </div>
-    <div id="divPopup" style="position:absolute; z-index:900; top: 90px; padding: 0; margin: 0; 
+    <div id="divPopup" style="position:absolute; z-index:900; top: 0px; padding: 0; margin: 0; 
         width: 100%; height: 3000px; background-color: white; display: none;">
-        <div style="width: 100%; height: 50px">&nbsp;</div>
+        <div style="width: 100%; height: 10px">&nbsp;</div>
         <table cellpadding="0" cellspacing="0" style="width: 100%;" id="tblDivPopupTitleBar">
             <tr>
                 <td style="width: 91%; text-align: center" id="tdDivPopupTitle">&nbsp;</td>
