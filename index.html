@@ -42,7 +42,7 @@ td
 
 .bttn 
 {
-	width: 143px;
+	width: 123px;
 	height: 60px;
     line-height: 60px;
     text-align: center;
@@ -210,7 +210,7 @@ tr.trLost td, .tdLost { color: #7fc37f; }
     var COOKIE_STATSINTV_STATUS = "StatsIntvStatus";
     var COOKIE_STATSGROUP_STATUS = "StatsGroupStatus";
 
-    var MAX_COUNT = 10000;
+    var MAX_NUM_COUNT = 10000;
     var QUEUE_MAX_COUNT = 100;
     var QUEUE_LINE_NUM_COUNT = 15;
     var GAME_SHOW_ITEM_COUNT = 20;
@@ -1165,7 +1165,7 @@ tr.trLost td, .tdLost { color: #7fc37f; }
         var strBorderClrDisabled = g_s_c_btn_b_disabled[g_s_theme_id];
         var strBorderClrEnabled = g_s_c_btn_b_enabled[g_s_theme_id];
 
-        var astrIDBttn = ["tdBttnTheme", "tdBttnRestart", "tdBttnDelete", "tdBttnRestore", "tdBttnExport", "tdBttnImport"];
+        var astrIDBttn = ["tdBttnTheme", "tdBttnRestart", "tdBttnDelete", "tdBttnRestore", "tdBttnExport", "tdBttnImport", "tdBttnStatsFinally"];
         var abEnabled = [];
 
         for (var n = 0; n < astrIDBttn.length; ++n)
@@ -1178,6 +1178,7 @@ tr.trLost td, .tdLost { color: #7fc37f; }
             abEnabled[1] = false; // restart
             abEnabled[2] = false; // delete
             abEnabled[4] = false; // export
+            abEnabled[6] = false; // stats finally
         }
         else
         {
@@ -1878,7 +1879,7 @@ tr.trLost td, .tdLost { color: #7fc37f; }
 
         // queue: -------------------------------
 
-        if (g_nQueueIdx == (MAX_COUNT - 1))
+        if (g_nQueueIdx == (MAX_NUM_COUNT - 1))
         {
             for (var n = 0; n <= g_nQueueIdx - 1; ++n)
             {
@@ -2359,6 +2360,37 @@ tr.trLost td, .tdLost { color: #7fc37f; }
         {
             var bFirst = true;
             var strHtml = "<div id='divNumbers'>";
+
+            // 3C3R brief -----------------------
+
+            for(var n = 0; n < 6; ++ n)
+            {
+                if (g_an3C3R[g_anIdx3C3R[n]].toString() < 5)
+                    continue;
+
+                if (!bFirst)
+                    strHtml += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                bFirst = false;
+
+                var strTitle = "";
+                if (g_anIdx3C3R[n] == 0)
+                    strTitle = "一";
+                else if (g_anIdx3C3R[n] == 1)
+                    strTitle = "二";
+                else if (g_anIdx3C3R[n] == 2)
+                    strTitle = "三";
+                else
+                    strTitle = (g_anIdx3C3R[n] - 2).toString();
+                strHtml += strTitle + "&nbsp;(";
+                strHtml += g_an3C3R[g_anIdx3C3R[n]].toString() + ")";
+            }
+
+            if(!bFirst)
+                strHtml += "<br><br>";
+            bFirst = true;
+
+            // numbers --------------------------
+
             for(var n = g_nQueueIdx; n >= 0; --n)
             {
                 if (!bFirst)
@@ -2591,19 +2623,15 @@ tr.trLost td, .tdLost { color: #7fc37f; }
         </table>
         <div style="height: 8px"></div>
 
-        <table cellpadding="0" cellspacing="0" border="0">
+        <table cellpadding="0" cellspacing="10" border="0" style="width: 100%">
             <tr>
-                <td id="tdBttnTheme" class="bttn" style="background-color: #007820" onclick="OnSysChangeTheme()">NA</td>
-                <td>&nbsp;&nbsp;&nbsp;</td>
-                <td id="tdBttnRestart" class="bttn" style="background-color: #007820" onclick="OnSysRestart()">重置</td>
-                <td>&nbsp;&nbsp;&nbsp;</td>
-                <td id="tdBttnDelete" class="bttn" style="background-color: #007820" onclick="OnDeleteNum()">删除</td>
-                <td>&nbsp;&nbsp;&nbsp;</td>
-                <td id="tdBttnRestore" class="bttn" style="background-color: #007820" onclick="OnSysRestore()">恢复</td>
-                <td>&nbsp;&nbsp;&nbsp;</td>
-                <td id="tdBttnExport" class="bttn" style="background-color: #007820" onclick="OnSysImportExport(false)">导出</td>
-                <td>&nbsp;&nbsp;&nbsp;</td>
-                <td id="tdBttnImport" class="bttn" style="background-color: #007820" onclick="OnSysImportExport(true)">导入</td>
+                <td id="tdBttnTheme" class="bttn" onclick="OnSysChangeTheme()">NA</td>
+                <td id="tdBttnRestart" class="bttn" onclick="OnSysRestart()">重置</td>
+                <td id="tdBttnDelete" class="bttn" onclick="OnDeleteNum()">删除</td>
+                <td id="tdBttnRestore" class="bttn" onclick="OnSysRestore()">恢复</td>
+                <td id="tdBttnExport" class="bttn" onclick="OnSysImportExport(false)">导出</td>
+                <td id="tdBttnImport" class="bttn" onclick="OnSysImportExport(true)">导入</td>
+                <td id="tdBttnStatsFinally" class="bttn" onclick="OnShowStatsFinally()">轮次</td>
             </tr>
         </table>
 
