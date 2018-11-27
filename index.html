@@ -1424,9 +1424,10 @@ tr.trLost td, .tdLost { color: #7fc37f; }
             if (g_t_anColumnsCount[nIdx1] < 5)
                 break;
             
-            var nFound1 = nIdx1;
-            anSelected[n1] = 1;
+            if (anSelected[n1] != 0)
+                continue;
 
+            var nFound1 = nIdx1;
             var nFound2 = -1;
 
             for(var n2 = n1 + 1; n2 < g_anColumnsStart.length; ++ n2)
@@ -1459,6 +1460,8 @@ tr.trLost td, .tdLost { color: #7fc37f; }
 
             if (nFound2 > 0)
             {
+                anSelected[n1] = 1;
+
                 var pair = new CPair();
                 pair.value1 = nFound1;
                 pair.value2 = nFound2;
