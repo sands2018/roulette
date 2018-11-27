@@ -1494,9 +1494,32 @@ tr.trLost td, .tdLost { color: #7fc37f; }
             strHtml += "&nbsp;" + GetColumnSpec(aPair[n].value2) + "&nbsp;<span class='ColumnsCount'>" + g_t_anColumnsCount[aPair[n].value2].toString() + "</span>&nbsp;]";
         }
 
+        var bShow = true;
+
+        if (aPair.length <= 0)
+        {
+            bShow = false;
+            bFirst = true;
+            for(var n = 0; n < g_t_anColumnsCount.length; ++ n)
+            {
+                if (g_t_anColumnsCount[g_t_anIdxColumnsCount[n]] < 10)
+                    break;
+
+                bShow = true;
+
+                if ((n != 0) && ((n % 2) == 0))
+                    strHtml += "<br>";
+                else if (!bFirst)
+                    strHtml += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                bFirst = false;
+
+                strHtml += "&nbsp;" + GetColumnSpec(g_t_anIdxColumnsCount[n]) + "&nbsp;<span class='ColumnsCount'>" + g_t_anColumnsCount[g_t_anIdxColumnsCount[n]].toString() + "</span>&nbsp;";
+            }
+        }
+
         div.innerHTML = strHtml;
 
-        if (aPair.length > 0)
+        if (bShow)
             div.style.display = (g_nColumnsStatus == 0) ? "none" : "";
         else
             div.style.display = "none";
