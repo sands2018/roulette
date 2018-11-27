@@ -1490,8 +1490,8 @@ tr.trLost td, .tdLost { color: #7fc37f; }
             bFirst = false;
 
 
-            strHtml += "[&nbsp;" + GetColumnSpec(g_t_anIdxColumnsCount[aPair[n].value1]) + "&nbsp;<span class='ColumnsCount'>" + g_t_anColumnsCount[aPair[n].value1].toString() + "</span>&nbsp;&nbsp;&nbsp;";
-            strHtml += "&nbsp;" + GetColumnSpec(g_t_anIdxColumnsCount[aPair[n].value2]) + "&nbsp;<span class='ColumnsCount'>" + g_t_anColumnsCount[aPair[n].value2].toString() + "</span>&nbsp;]";
+            strHtml += "[&nbsp;" + GetColumnSpec(aPair[n].value1) + "&nbsp;<span class='ColumnsCount'>" + g_t_anColumnsCount[aPair[n].value1].toString() + "</span>&nbsp;&nbsp;&nbsp;";
+            strHtml += "&nbsp;" + GetColumnSpec(aPair[n].value2) + "&nbsp;<span class='ColumnsCount'>" + g_t_anColumnsCount[aPair[n].value2].toString() + "</span>&nbsp;]";
         }
 
         div.innerHTML = strHtml;
