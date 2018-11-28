@@ -925,6 +925,30 @@ tr.trLost td, .tdLost { color: #7fc37f; }
         rule7.anBet = [20, 30, 40, 60];
         rule7.strSpec = "WZS_5_2346";
 
+        var rule8 = new CGameRule();
+        rule8.nSkip = 3;
+        rule8.nRound = 3;
+        rule8.anBet = [10, 20, 40];
+        rule8.strSpec = "WZS_3_124";
+
+        var rule9 = new CGameRule();
+        rule9.nSkip = 4;
+        rule9.nRound = 3;
+        rule9.anBet = [10, 20, 40];
+        rule9.strSpec = "WZS_4_124";
+
+        var rule10 = new CGameRule();
+        rule10.nSkip = 5;
+        rule10.nRound = 3;
+        rule10.anBet = [10, 20, 40];
+        rule10.strSpec = "WZS_5_124";
+
+        var rule11 = new CGameRule();
+        rule11.nSkip = 6;
+        rule11.nRound = 3;
+        rule11.anBet = [10, 20, 40];
+        rule11.strSpec = "WZS_6_124";
+
         g_aGameRule[0] = rule6;
         g_aGameRule[1] = rule7;
         g_aGameRule[2] = rule2;
@@ -933,6 +957,10 @@ tr.trLost td, .tdLost { color: #7fc37f; }
         g_aGameRule[5] = rule5;
         g_aGameRule[6] = rule0;
         g_aGameRule[7] = rule1;
+        g_aGameRule[8] = rule8;
+        g_aGameRule[9] = rule9;
+        g_aGameRule[10] = rule10;
+        g_aGameRule[11] = rule11;
     }
 
     function InitGame()
