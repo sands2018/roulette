@@ -949,6 +949,18 @@ tr.trLost td, .tdLost { color: #7fc37f; }
         rule11.anBet = [10, 20, 40];
         rule11.strSpec = "WZS_6_124";
 
+        var rule12 = new CGameRule();
+        rule12.nSkip = 5;
+        rule12.nRound = 4;
+        rule12.anBet = [10, 20, 30, 50];
+        rule12.strSpec = "WZS_5_1235";
+
+        var rule13 = new CGameRule();
+        rule13.nSkip = 6;
+        rule13.nRound = 4;
+        rule13.anBet = [10, 20, 30, 50];
+        rule13.strSpec = "WZS_6_1235";
+
         g_aGameRule[0] = rule6;
         g_aGameRule[1] = rule7;
         g_aGameRule[2] = rule2;
@@ -961,6 +973,8 @@ tr.trLost td, .tdLost { color: #7fc37f; }
         g_aGameRule[9] = rule9;
         g_aGameRule[10] = rule10;
         g_aGameRule[11] = rule11;
+        g_aGameRule[12] = rule12;
+        g_aGameRule[13] = rule13;
     }
 
     function InitGame()
