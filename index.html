@@ -63,9 +63,11 @@ td
 
 #tblDivPopupTitleBar td { border: 1px solid #dfbc33; border-right: 0; font-size: 40px }
 #tblDivPopupTitleBar td:first-child { border-left: 0 }
-#tblStatsFinally { width: 100%; border-bottom: 1px solid #dfbc33 }  
-#tblStatsFinally td { padding: 3px 10px; font-size: 40px }
-#tblStatsFinally td.tdSFTitle { color: #ab8b30; border-left: 1px solid #dfbc33 }
+#tblStatsFinally, #tblStatsNumCount { width: 100%; border: 1px solid #dfbc33 }  
+#tblStatsFinally { border-left: 0; border-right: 0 }  
+#tblStatsNumCount { border-left: 0; border-right: 0; border-top: 0 }  
+#tblStatsFinally td { padding: 0 10px; font-size: 40px }
+#tblStatsFinally td.tdSFTitle, #tblStatsNumCount td.tdSFTitle { color: #ab8b30; border-left: 1px solid #dfbc33 }
 #tblStatsFinally td:first-child { border-left: 0 }
 #tblStatsFinally td.tdSFPercent { color: #888888 }
 
@@ -85,11 +87,12 @@ td
 #tblStatsIntervals .tdZero { font-family:Arial; font-size: 40px; color: #8fc38f; font-weight: bold; padding: 0px 18px }
 #tblStatsIntervals .txtZero { color: #83aa83 }
 
+#tblStatsNumCount td { font-size: 40px; padding: 2px 10px }  
 #tblStatsGroups { border-top: 1px solid #8f8f8f; width: 100% }
 #tblStatsGroups td { font-size: 36px; text-align: left; padding-left: 12px; border-bottom: 1px solid #8f8f8f; }
 #tblStatsGroups #tdSGButtons { padding: 0; border-bottom: 0; text-align: right; }
 #tblSGButtons { width: 100% }
-#tblSGButtons td { border: 1px solid #AA8833; padding: 5px 28px;  width: 150px; text-align: center; }
+#tblSGButtons td, #tblSNCButtons td { font-size: 40px; border: 1px solid #AA8833; padding: 5px 28px;  width: 150px; text-align: center; }
 .SGCNumber { font-size: 40px; color: #dd8877; font-weight: bold }
 
 table.tblGameSum td { font-size: 36px; padding: 0 20px; }
@@ -215,6 +218,7 @@ tr.trLost td, .tdLost { color: #7fc37f; }
     var QUEUE_LINE_NUM_COUNT = 15;
     var GAME_SHOW_ITEM_COUNT = 20;
     var STATS_GROUPS_COUNTS = [20, 40, 60, 80, 100, 99999];
+    var STATS_NUMCOUNT_COUNTS = [40, 100, 99999];
 
     var g_anQueueNum = [];
     var g_nQueueIdx = -1;
@@ -233,7 +237,8 @@ tr.trLost td, .tdLost { color: #7fc37f; }
     var g_nSGCountIdx = 1;
     var g_nStatsIntervalStatus = 0; // 0 - 全部显示， 1 - 第一行不显示， 2 - 第一行、最后一行不显示
     var g_nStatsGroupStatus = 1;
-    var g_nPopupStatsFinallyStatus = 0;
+    var g_nPopupStatsMiscStatus = 0;
+    var g_nSNCCountIdx = 1;
 
     var g_StatsInterval;
     var g_aGame = [];
@@ -246,7 +251,7 @@ tr.trLost td, .tdLost { color: #7fc37f; }
     var g_t_anColumnsCount = [0,0,0,0,0,0,0,0,0,0,0];
     var g_t_anIdxColumnsCount = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
-    var g_astrPopupDivID = ["divStatsFinally"];
+    var g_astrPopupDivID = ["divStatsMisc"];
 
     // basic: -----------------------------------------------------------------
 
@@ -264,6 +269,8 @@ tr.trLost td, .tdLost { color: #7fc37f; }
 
         g_nExpandStatus = 0;
         g_nShowInputStatus = 1;
+
+        g_nStatsNumCountSel = 1;
 
         g_aGame = [];
     }
@@ -1590,7 +1597,7 @@ tr.trLost td, .tdLost { color: #7fc37f; }
         if (g_nQueueIdx >= 0)
         {
             strHtml = "<table cellpadding='0' cellspacing='0' id='tblStatsIntervals'>";
-            strHtml += "<tr onclick='OnShowStatsFinally()'><td>轮次</td><td>不出</td><td>概率</td>";
+            strHtml += "<tr onclick='OnShowStatsMisc()'><td>轮次</td><td>不出</td><td>概率</td>";
             for (var nn = 0; nn < g_StatsInterval.anFailedRound.length; ++nn)
             {
                 strHtml += "<td>F" + g_StatsInterval.anFailedRound[nn].toString() + "</td><td>概率</td>";
@@ -1783,6 +1790,27 @@ tr.trLost td, .tdLost { color: #7fc37f; }
         Show_RefreshSGButtons();
     }
 
+    function Show_InitSNCButtons()
+    {
+        strHtml = "<table cellpadding='0' cellspacing='5' border='0' id='tblSNCButtons'><tr>";
+        var nCount = STATS_NUMCOUNT_COUNTS.length;
+        for (var n = 0; n < nCount; ++n)
+        {
+            strHtml += "<td id='tdSNCCount" + n.toString() + "' ";
+            strHtml += "onclick='OnSNCCountClick(" + n.toString() + ")'>";
+
+            if (STATS_NUMCOUNT_COUNTS[n] > 999)
+                strHtml += "全部";
+            else
+                strHtml += STATS_NUMCOUNT_COUNTS[n].toString();
+
+            strHtml += "</td>";
+        }
+        strHtml += "</tr></table>";
+
+        return strHtml;
+    }
+
     function Show_RefreshSGButtons()
     {
         var nCount = STATS_GROUPS_COUNTS.length;
@@ -1796,6 +1824,23 @@ tr.trLost td, .tdLost { color: #7fc37f; }
                 strBkColor = "white";
 
             var td = document.getElementById("tdSGCount" + n.toString());
+            td.style.backgroundColor = strBkColor;
+        }
+    }
+
+    function Show_RefreshSNCButtons()
+    {
+        var nCount = STATS_NUMCOUNT_COUNTS.length;
+        var strBkColor = "";
+
+        for (var n = 0; n < nCount; ++n)
+        {
+            if (n == g_nSNCCountIdx)
+                strBkColor = g_s_c_sg_bk_active;
+            else
+                strBkColor = "white";
+
+            var td = document.getElementById("tdSNCCount" + n.toString());
             td.style.backgroundColor = strBkColor;
         }
     }
@@ -2012,7 +2057,7 @@ tr.trLost td, .tdLost { color: #7fc37f; }
         Calc_AddNum(num);
         Show_AddNum();
 
-        CalcAndShow_StatsFinally();
+        CalcAndShow_StatsMisc();
 
         SetCookie(COOKIE_BACKUP, GetNumString());
     }
@@ -2262,6 +2307,13 @@ tr.trLost td, .tdLost { color: #7fc37f; }
         Show_StatsGroupAll();
     }
 
+    function OnSNCCountClick(nIdx)
+    {
+        g_nSGCountIdx = nIdx;
+
+        Show_RefreshSNCButtons();
+    }
+
     function OnGameClick(nGameIdx)
     {
         var bShow = false;
@@ -2490,7 +2542,7 @@ tr.trLost td, .tdLost { color: #7fc37f; }
         var div = document.getElementById("divPopup");
         div.style.display = "none";
 
-        g_nPopupStatsFinallyStatus = 0;
+        g_nPopupStatsMiscStatus = 0;
     }
 
     function ShowPopup(strDivID, strTitle)
@@ -2509,10 +2561,65 @@ tr.trLost td, .tdLost { color: #7fc37f; }
         td.innerHTML = strTitle;
     }
 
-    function CalcAndShow_StatsFinally()
+    function CalcAndShow_StatsMisc()
     {
-        if (g_nPopupStatsFinallyStatus == 0)
+        if (g_nPopupStatsMiscStatus == 0)
             return;
+
+        var strHtml = "";
+
+        // stats numbers :-----------------------------------------------------
+
+        var anNumCount = [];
+        var anNumCountIdx = [];
+        for (var n = 0; n <= 36; ++n)
+        {
+            anNumCount[n] = 0;
+            anNumCountIdx[n] = n;
+        }
+
+        var nStatsCount = STATS_NUMCOUNT_COUNTS[g_nSNCCountIdx];
+
+        var nStart = 0;
+
+        nStart = g_nQueueIdx - nStatsCount + 1;
+        if (nStart < 0)
+            nStart = 0;
+
+        for (var n = g_nQueueIdx; n >= nStart; --n)
+            anNumCount[g_anQueueNum[n]]++;
+
+        Sort(anNumCount, anNumCountIdx, true);
+
+        strHtml += "<table cellpadding='0' cellspacing='0' id='tblStatsNumCount'><tr>";
+        for (var n = 0; n < 40; ++n)
+        {
+            if ((n != 0) && ((n % 4) == 0))
+                strHtml += "</tr><tr>";
+
+            var nIdx = 10 * (n % 4) + Math.floor(n / 4);
+            var strT = "";
+            var strV = "";
+            if (nIdx <= 36)
+            {
+                strT = anNumCountIdx[nIdx].toString();
+                strV = anNumCount[anNumCountIdx[nIdx]].toString();
+            }
+            else
+            {
+                strT = "&nbsp;"
+                strV = "&nbsp;"
+            }
+
+            strHtml += "<td class='tdSFTitle'>" + strT + "</td>";
+            strHtml += "<td>" + strV + "</td>";
+        }
+
+        strHtml += "</tr></table>";
+
+        strHtml += Show_InitSNCButtons();
+
+        // stats finally :-----------------------------------------------------
 
         var MAX_COUNT = 30;
 
@@ -2562,7 +2669,7 @@ tr.trLost td, .tdLost { color: #7fc37f; }
         var BIG_COL_COUNT = 2;
         var EACH_COL_COUNT = MAX_COUNT / BIG_COL_COUNT;
 
-        var strHtml = "<table cellpadding='0' cellspacing='0' id='tblStatsFinally'><tr>";
+        strHtml += "<table cellpadding='0' cellspacing='0' id='tblStatsFinally'><tr>";
         for (var n = 0; n < MAX_COUNT; ++n)
         {
             if ((n != 0) && ((n % BIG_COL_COUNT) == 0))
@@ -2594,17 +2701,19 @@ tr.trLost td, .tdLost { color: #7fc37f; }
         }
         strHtml += "</tr></table>";
 
-        var div = document.getElementById("divStatsFinally");
+        var div = document.getElementById("divStatsMisc");
         div.innerHTML = strHtml;
+
+        //Show_RefreshSNCButtons();
     }
 
-    function OnShowStatsFinally()
+    function OnShowStatsMisc()
     {
-        g_nPopupStatsFinallyStatus = 1;
+        g_nPopupStatsMiscStatus = 1;
 
-        CalcAndShow_StatsFinally();
+        CalcAndShow_StatsMisc();
 
-        ShowPopup("divStatsFinally", "轮次统计数据");
+        ShowPopup("divStatsMisc", "统计数据");
 
         var div = document.getElementById("divPopup");
         div.style.display = "";
@@ -2659,7 +2768,7 @@ tr.trLost td, .tdLost { color: #7fc37f; }
                 <td style="width: 9%; height: 80px; font-family: Arial" onclick="OnHidePopup()">x</td>
             </tr>
         </table>
-        <div id="divStatsFinally"></div>
+        <div id="divStatsMisc"></div>
     </div>
     <div style="position:absolute; z-index:0; top: 90px; padding: 0; margin: 0; width: 100%">
         <div style="height: 8px" id="divBlank"></div>
@@ -2711,7 +2820,7 @@ tr.trLost td, .tdLost { color: #7fc37f; }
                 <td id="tdBttnRestore" class="bttn" onclick="OnSysRestore()">恢复</td>
                 <td id="tdBttnExport" class="bttn" onclick="OnSysImportExport(false)">导出</td>
                 <td id="tdBttnImport" class="bttn" onclick="OnSysImportExport(true)">导入</td>
-                <td id="tdBttnStatsFinally" class="bttn" onclick="OnShowStatsFinally()">轮次</td>
+                <td id="tdBttnStatsFinally" class="bttn" onclick="OnShowStatsMisc()">统计</td>
             </tr>
         </table>
 
