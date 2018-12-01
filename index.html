@@ -1,27 +1,849 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿<html>
 <head>
-    <meta charset="UTF-8">
-    <title>target-input</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<style>
+
+td 
+{
+	text-align: center;
+	vertical-align: middle;
+	cursor: pointer;
+}
+
+.kbspace1
+{
+    padding: 0; margin: 0; border: 0; height: 50px;
+    background: #ffffff;
+    background: -webkit-linear-gradient(rgba(255,255,255,0),rgba(255,255,255,1));
+    background: -moz-linear-gradient(top,rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%); /*FireFox*/
+    background: -o-linear-gradient(top,rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%);  /* Opear */
+    background: -ms-linear-gradient(rgba(255,255,255,0),rgba(255,255,255,1)); /*IE10及IE10+*/
+}
+
+.kbspace2
+{
+    padding: 0; margin: 0; height: 20px; border: 1px solid white;
+    background-color: white; filter: alpha(Opacity=100); -moz-opacity: 1; opacity: 1;
+}
+
+#divCover { font-size: 40px; }
+#divNumbers { padding: 20px; }
+
+#tblKeyboard, #tblGameBoard { border: 1px solid; }
+#tblKeyboard td, #tblGameBoard td { font-size: 50px; border: 1px solid; }
+#tblKeyboard td { width: 110px; height: 105px; }
+#tblGameBoard td { width: 95px; height: 95px; }
+
+.tdHide { font-family: Arial }
+#tblKeyboard #tdKSwitch, #tblGameBoard #tdBSwitch { font-size: 40px }
+
+#tblQueue td { width: 58px; height: 58px; font-size: 36px; }
+
+.bttn 
+{
+	width: 123px;
+	height: 60px;
+    line-height: 60px;
+    text-align: center;
+    vertical-align: middle;
+	font-size: 36px;
+    border: 1px solid white;
+}
+
+.title_c,.value_c { padding: 8px 0px; border: 1px solid;}
+.title_c { font-size: 36px; width: 100px; color: #403000 }
+.value_c { font-size: 40px; width: 80px; border-left: 0; }
+.space_c { font-size: 10px; width: 23px; }
+
+#divColumns { margin-bottom: 8px; font-size: 40px; padding: 0 10px; }  
+.ColumnsCount { font-size: 44px; color: #dd8877; font-weight: bold }
+.ColumnNormal { background-color: white; }
+.ColumnHighlight { background-color: #f8ebd8; }
+
+#tblDivPopupTitleBar td { border: 1px solid #dfbc33; border-right: 0; font-size: 40px }
+#tblDivPopupTitleBar td:first-child { border-left: 0 }
+#tblStatsFinally, #tblStatsNumCount { width: 100%; border: 1px solid #dfbc33 }  
+#tblStatsFinally { border-left: 0; border-right: 0 }  
+#tblStatsNumCount { border-left: 0; border-right: 0; border-top: 0 }  
+#tblStatsFinally td { padding: 0 10px; font-size: 40px }
+#tblStatsFinally td.tdSFTitle, #tblStatsNumCount td.tdSFTitle { color: #ab8b30; border-left: 1px solid #dfbc33 }
+#tblStatsFinally td:first-child { border-left: 0 }
+#tblStatsFinally td.tdSFPercent { color: #888888 }
+
+#tblStatsIntervals { border: 1px solid #8f8f8f; border-bottom: 0; width: 100%; margin-bottom: 8px }
+#tblStatsIntervals td { border-bottom: 1px solid #8f8f8f; font-size: 36px; padding: 3px 8px; text-align: center; }
+#tblStatsIntervals td:first-child { border-right: 1px solid #8f8f8f; width: 100px; text-align: center; } 
+#divStatsInterval0, #divStatsInterval1
+{  
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%; 
+    height: 48px;
+    font-size: 36px;
+}
+#tblStatsIntervals .tdStatsInterval { text-align: left; }
+#tblStatsIntervals .tdTotal { font-family:Arial; font-size: 40px; color: #dd8877; font-weight: bold; padding: 0px 18px } 
+#tblStatsIntervals .tdZero { font-family:Arial; font-size: 40px; color: #8fc38f; font-weight: bold; padding: 0px 18px }
+#tblStatsIntervals .txtZero { color: #83aa83 }
+
+#tblStatsNumCount td { font-size: 40px; padding: 2px 10px }  
+#tblStatsGroups { border-top: 1px solid #8f8f8f; width: 100% }
+#tblStatsGroups td { font-size: 36px; text-align: left; padding-left: 12px; border-bottom: 1px solid #8f8f8f; }
+#tblStatsGroups #tdSGButtons { padding: 0; border-bottom: 0; text-align: right; }
+#tblSGButtons { width: 100% }
+#tblSGButtons td, #tblSNCButtons td { font-size: 40px; border: 1px solid #AA8833; padding: 5px 28px;  width: 150px; text-align: center; }
+.SGCNumber { font-size: 40px; color: #dd8877; font-weight: bold }
+
+table.tblGameSum td { font-size: 36px; padding: 0 20px; }
+table.tblGameSum { width: 100%; border: 1px solid #8f8f8f; }
+table.tblGameSum #trGameSumTitle td { border-bottom: 1px solid #8f8f8f; } 
+.tblGame { border: #8f8f8f 1px solid; margin-bottom: 18px; }
+table.tblGame td { font-size: 36px; }
+tr.trTitle td { color: #434343; padding: 0px 30px; }
+tr.trItems td { text-align: center; padding: 0px 20px; border-top: #8f8f8f 1px solid; }  
+tr.trActive td { color: black; }
+tr.trWon td, .tdWon { color: #c37f7f; }
+tr.trDrew td, .tdDrew { color: #939393; }
+tr.trLost td, .tdLost { color: #7fc37f; }
+
+#divImportExport
+{ 
+    position:fixed; top: 0px; z-index:9999; width: 100%; height: 100%; 
+    background-color:white; 
+}
+#tdImportExportTitle { font-size: 36px; padding: 10px; background-color: #EEE8D3; }
+#txtClipboard { font-size: 36px; border: 0 } 
+#tblImportExport .tdSpec { font-size: 36px; text-align: left; padding: 8px 0 3px 0; }
+#tblImportExport #tdTxt { border: 1px solid #AA8833; }
+#tblPanelButtons td { border: 1px solid #AA8833; }
+.bttnImportExport {	width: 280px; height: 70px }
+
+</style>
+
+<script type="text/javascript" src="clipboard.min.js"></script>
+
+<script language="javascript">
+
+    /* z-index:
+        0     - main div;
+        99   - number queue;
+        3001 - show gameboard/keyboard
+        3002 - gameboard;
+        3003 - keyboard
+        9999 - div import/export
+    */
+
+    // styles: ----------------------------------------------------------------
+
+    var g_s_theme_id = 1;
+
+    var g_astrNumberColor =
+    [
+	    "g",
+        "r", "b", "r", "b", "r", "b", "r", "b", "r", "b", "b", "r",
+	    "b", "r", "b", "r", "b", "r", "r", "b", "r", "b", "r", "b",
+	    "r", "b", "r", "b", "b", "r", "b", "r", "b", "r", "b", "r"
+    ];
+
+    // board border color:
+    var g_s_c_board_b = ["#dfbc33", "#dfbc33", "white"];
+
+    // number text color:
+    var g_s_c_num = ["white", "#434343", "#f3f3f3"];
+
+    // number background color:
+    var g_s_c_num_bk_g = ["#35A300", "white", "white"]; // green
+    var g_s_c_num_bk_r = ["#CC2200", "white", "white"]; // red
+    var g_s_c_num_bk_b = ["#222222", "white", "white"]; // black
+    var g_s_c_num_bk_s = ["#35A300", "white", "white"]; // switch
+
+    // queue background color:
+    var g_s_c_que_bk_g = ["35A300", "#D3EED3", "white"]; // green
+    var g_s_c_que_bk_r = ["CC2200", "white", "white"]; // red
+    var g_s_c_que_bk_b = ["222222", "#EAEAEA", "white"]; // black
+
+    // queue border color:
+    var g_s_c_que_b_g = ["white", "#CCFFCC", "white"]; 
+    var g_s_c_que_b_r = ["white", "#FFDDAA", "white"]; 
+    var g_s_c_que_b_b = ["white", "#DDDDDD", "white"]; 
+
+    // button background color:
+    var g_s_c_btn_bk_enabled = ["#008838", "white", "white"];
+    var g_s_c_btn_bk_disabled = ["#888888", "white", "white"];
+
+    // button text color:
+    var g_s_c_btn_enabled = ["white", "#AA8833", "#f3f3f3"];
+    var g_s_c_btn_disabled = ["white", "BBBBBB", "#f3f3f3"];
+
+    // button border color:
+    var g_s_c_btn_b_enabled = ["white", "#AA8833", "white"];
+    var g_s_c_btn_b_disabled = ["white", "BBBBBB", "white"];
+
+    // 3c3r color
+    var g_s_c_3c3r = ["black", "black", "#f3f3f3"]; // text color
+    var g_s_c_3c3r_bk = ["#EBE3CB", "white", "white"]; // background color
+    var g_s_c_3c3r_t_bk = ["#DFD7CB", "white", "white"]; // title background color
+
+    // 3c3r >=5 color
+    var g_s_c_3c3r_5 = ["white", "black", "#f3f3f3"]; // text color
+    var g_s_c_3c3r_5_bk = ["rgb(158,118,200)", "#EEEEEE", "white"]; // background color
+    var g_s_c_3c3r_5_t_bk = ["rgb(128,88,158)", "#DDDDDD", "white"]; // title background color
+
+    // 3c3r >=6 background color
+    var g_s_c_3c3r_6 = ["white", "black", "#f3f3f3"]; // text color
+    var g_s_c_3c3r_6_bk = ["rgb(0,128,255)", "#EBE3CB", "white"]; // background color
+    var g_s_c_3c3r_6_t_bk = ["rgb(0,93,218)", "#DFD7CB", "white"]; // title background color
+
+    // 3c3r border color
+    var g_s_c_3c3r_b = ["white", "#AA8833", "white"];
+
+    // stats groups active button background color
+    var g_s_c_sg_bk_active = "#EBE3CB";
+
+    // elements style need to be changed
+    var g_s_ctlid_kbtd = ["tdBEsc", "tdBSwitch", "tdBHide", "tdKEsc", "tdKSwitch", "tdKHide"];
+
+    // global variables: --------------------------------------------
+
+    var MAX_NUM_COUNT = 10000;
+    var QUEUE_MAX_COUNT = 100;
+    var QUEUE_LINE_NUM_COUNT = 15;
+
+    var g_anQueueNum = [];
+    var g_nQueueIdx = -1;
+    var g_nNoZeroNumCount = 0;
+
+    function CSysStatus()
+    {
+        this.KeyboardID = "K";
+        this.QueueExpand = 0;
+    }
+
+    var g_status = new CSysStatus();
+
+    function CIndexedArray()
+    {
+        this.anValue = [];
+        this.anIdx = [];
+
+        this.Sort = function(bAsend)
+        {
+            var nCount = anValue.length;
+
+            var bChanged = false;
+            do
+            {
+                bChanged = false;
+
+                for (var n = 0; n < nCount - 1; ++n)
+                {
+                    if ((bAsend && (anValue[anIndex[n]] > anValue[anIndex[n + 1]]))
+                        || (!bAsend && (anValue[anIndex[n]] < anValue[anIndex[n + 1]])))
+                    {
+                        tmp = anIndex[n];
+                        anIndex[n] = anIndex[n + 1];
+                        anIndex[n + 1] = tmp;
+
+                        bChanged = true;
+                    }
+                }
+            } while (bChanged);
+        }
+
+        this.IndexedValue = function(idx)
+        {
+            return this.anValue[this.anIdx[idx]];
+        }
+    }
+
+    var g_3C3R = new CIndexedArray();
+
+
+    function GetNumberColor()
+    {
+        return g_s_c_num[g_s_theme_id];
+    }
+
+    function GetNumberBackgroundColor(num)
+    {
+        var strColor = g_astrNumberColor[num];
+
+        if (strColor == "r")
+        {
+            return g_s_c_num_bk_r[g_s_theme_id];
+        }
+        else if (strColor == "b")
+        {
+            return g_s_c_num_bk_b[g_s_theme_id];
+        }
+        else
+        {
+            return g_s_c_num_bk_g[g_s_theme_id];
+        }
+    }
+
+    function GetQueueNumberBackgroundColor(num)
+    {
+        var strColor = g_astrNumberColor[num];
+
+        if (strColor == "r")
+        {
+            return g_s_c_que_bk_r[g_s_theme_id];
+        }
+        else if (strColor == "b")
+        {
+            return g_s_c_que_bk_b[g_s_theme_id];
+        }
+        else
+        {
+            return g_s_c_que_bk_g[g_s_theme_id];
+        }
+    }
+
+    function GetQueueNumberBorderColor(num)
+    {
+        var strColor = g_astrNumberColor[num];
+
+        if (strColor == "r")
+        {
+            return g_s_c_que_b_r[g_s_theme_id];
+        }
+        else if (strColor == "b")
+        {
+            return g_s_c_que_b_b[g_s_theme_id];
+        }
+        else
+        {
+            return g_s_c_que_b_g[g_s_theme_id];
+        }
+    }
+
+    function GetQueueItemBorderStyle(num)
+    {
+        return "1px solid " + GetQueueNumberBorderColor(num);
+    }
+
+
+    function GetColRowSpec(nIdx3C3R)
+    {
+        var strSpec;
+
+        if (nIdx3C3R < 3)
+        {
+            if (nIdx3C3R == 0)
+                strSpec = "一组";
+            else if (nIdx3C3R == 1)
+                strSpec = "二组";
+            else
+                strSpec = "三组";
+        }
+        else
+        {
+            strSpec = (nIdx3C3R - 3 + 1).toString() + "行";
+        }
+
+        return strSpec;
+    }
+
+
+
+    function Show_RefreshTheme()
+    {
+        var strTitle = "淡雅";
+
+        if (g_s_theme_id == 1)
+        {
+            strTitle = "彩色";
+        }
+
+        var bttn = document.getElementById("tdBttnTheme");
+        bttn.innerHTML = strTitle;
+
+        var tblK = document.getElementById("tblKeyboard");
+        tblK.style.borderColor = g_s_c_board_b[g_s_theme_id];
+
+        var tblB = document.getElementById("tblGameBoard");
+        tblB.style.borderColor = g_s_c_board_b[g_s_theme_id];
+
+        for (var n = 0; n <= 36; ++n)
+        {
+            var tdK = document.getElementById("tdK" + n.toString());
+            tdK.style.backgroundColor = GetNumberBackgroundColor(n);
+            tdK.style.borderColor = g_s_c_board_b[g_s_theme_id];
+            tdK.style.color = GetNumberColor();
+
+            var tdB = document.getElementById("tdB" + n.toString());
+            tdB.style.backgroundColor = GetNumberBackgroundColor(n);
+            tdB.style.borderColor = g_s_c_board_b[g_s_theme_id];
+            tdB.style.color = GetNumberColor();
+        }
+
+        for (var n = 0; n < g_s_ctlid_kbtd.length; ++n)
+        {
+            var td = document.getElementById(g_s_ctlid_kbtd[n]);
+            td.style.backgroundColor = g_s_c_num_bk_s[g_s_theme_id];
+            td.style.borderColor = g_s_c_board_b[g_s_theme_id];
+            td.style.color = g_s_c_num[g_s_theme_id];
+        }
+
+        Show_3C3R();
+        Show_Queue();
+        Show_RefreshSysButtons();
+    }
+
+    function Show_3C3R()
+    {
+        // show:
+        for (var n = 0; n < 6; ++n)
+        {
+            var strIdTd = "td3C3R" + n.toString();
+            var td = document.getElementById(strIdTd);
+            td.innerHTML = g_3C3R.IndexedValue(n);
+            strIdTd = "tdT3C3R" + n.toString();
+            var strTitle = GetColRowSpec(g_3C3R.anIdx[n]);
+            var tdT = document.getElementById(strIdTd);
+            tdT.innerHTML = strTitle;
+
+            if (g_3C3R.IndexedValue(n) >= 5)
+            {
+                if (g_3C3R.IndexedValue(n) > 5)
+                {
+                    td.style.color = g_s_c_3c3r_6[g_s_theme_id];
+                    tdT.style.color = g_s_c_3c3r_6[g_s_theme_id];
+                    td.style.backgroundColor = g_s_c_3c3r_6_bk[g_s_theme_id];
+                    tdT.style.backgroundColor = g_s_c_3c3r_6_t_bk[g_s_theme_id];
+                }
+                else
+                {
+                    td.style.color = g_s_c_3c3r_5[g_s_theme_id];
+                    tdT.style.color = g_s_c_3c3r_5[g_s_theme_id];
+                    td.style.backgroundColor = g_s_c_3c3r_5_bk[g_s_theme_id];
+                    tdT.style.backgroundColor = g_s_c_3c3r_5_t_bk[g_s_theme_id];
+                }
+                td.style.fontWeight = "bold";
+            }
+            else
+            {
+                td.style.color = g_s_c_3c3r[g_s_theme_id];
+                tdT.style.color = g_s_c_3c3r[g_s_theme_id];
+                td.style.backgroundColor = g_s_c_3c3r_bk[g_s_theme_id];
+                tdT.style.backgroundColor = g_s_c_3c3r_t_bk[g_s_theme_id];
+
+                td.style.fontWeight = "normal";
+            }
+
+            td.style.borderColor = g_s_c_3c3r_b[g_s_theme_id];
+            tdT.style.borderColor = g_s_c_3c3r_b[g_s_theme_id];
+        }
+    }
+
+    function Show_Queue()
+    {
+        var nStart = 0;
+        if (g_nQueueIdx > QUEUE_MAX_COUNT)
+            nStart = g_nQueueIdx - QUEUE_MAX_COUNT + 1;
+
+        for (var n = nStart; n <= g_nQueueIdx; ++n)
+        {
+            var nn = (n - nStart);
+            var nIdx = g_nQueueIdx - nn;
+
+            var strIdTd = "td" + nn.toString();
+            var td = document.getElementById(strIdTd);
+            td.innerHTML = g_anQueueNum[nIdx];
+            td.style.backgroundColor = GetQueueNumberBackgroundColor(g_anQueueNum[nIdx]);
+            td.style.color = GetNumberColor();
+            td.style.border = GetQueueItemBorderStyle(g_anQueueNum[nIdx]);
+        }
+
+        for (var n = g_nQueueIdx + 1; n < QUEUE_MAX_COUNT; ++n)
+        {
+            var strIdTd = "td" + n.toString();
+            var td = document.getElementById(strIdTd);
+            td.innerHTML = "&nbsp;";
+            td.style.backgroundColor = "#FFFFFF";
+            td.style.border = "0";
+        }
+
+        var nQueueRow = 0;
+
+        if (g_nQueueIdx >= 0)
+        {
+            nQueueRow = Math.floor((g_nQueueIdx - nStart) / QUEUE_LINE_NUM_COUNT) + 1;
+        }
+
+        if (g_nQueueIdx < QUEUE_LINE_NUM_COUNT)
+        {
+            g_status.QueueExpand = 0;
+        }
+
+        var nLineCount = (QUEUE_MAX_COUNT / QUEUE_LINE_NUM_COUNT).toFixed(0);
+
+        for (var n = 1; n <= nLineCount; ++n)
+        {
+            var strID = "trRow" + n.toString();
+            var tr = document.getElementById(strID);
+            if ((nQueueRow > 0) && ((n == 1) || ((n <= nQueueRow) && (g_status.QueueExpand == 1))))
+                tr.style.display = "";
+            else
+                tr.style.display = "none";
+        }
+    }
+
+    function Show_RefreshSysButtons()
+    {
+        var strBkClrDisabled = g_s_c_btn_bk_disabled[g_s_theme_id];
+        var strBkClrEnabled = g_s_c_btn_bk_enabled[g_s_theme_id];
+
+        var strClrDisabled = g_s_c_btn_disabled[g_s_theme_id];
+        var strClrEnabled = g_s_c_btn_enabled[g_s_theme_id];
+
+        var strBorderClrDisabled = g_s_c_btn_b_disabled[g_s_theme_id];
+        var strBorderClrEnabled = g_s_c_btn_b_enabled[g_s_theme_id];
+
+        var astrIDBttn = ["tdBttnTheme", "tdBttnRestart", "tdBttnDelete", "tdBttnRestore", "tdBttnExport", "tdBttnImport", "tdBttnStatsFinally"];
+        var abEnabled = [];
+
+        for (var n = 0; n < astrIDBttn.length; ++n)
+        {
+            abEnabled[n] = true;
+        }
+
+        if (g_nQueueIdx < 0)
+        {
+            abEnabled[1] = false; // restart
+            abEnabled[2] = false; // delete
+            abEnabled[4] = false; // export
+            abEnabled[6] = false; // stats finally
+        }
+        else
+        {
+            abEnabled[3] = false; // restore
+        }
+
+        for (var n = 0; n < astrIDBttn.length; ++n)
+        {
+            var bttn = document.getElementById(astrIDBttn[n]);
+            bttn.style.backgroundColor = abEnabled[n] ? strBkClrEnabled : strBkClrDisabled;
+            bttn.style.color = abEnabled[n] ? strClrEnabled : strClrDisabled;
+            bttn.style.borderColor = abEnabled[n] ? strBorderClrEnabled : strBorderClrDisabled;
+        }
+    }
+
+
+    function Calc_AddNum(num)
+    {
+        if (num != 0)
+            g_nNoZeroNumCount++;
+
+        // queue: -------------------------------
+
+        if (g_nQueueIdx == (MAX_NUM_COUNT - 1))
+        {
+            for (var n = 0; n <= g_nQueueIdx - 1; ++n)
+            {
+                g_anQueueNum[n] = g_anQueueNum[n + 1];
+            }
+        }
+        else
+        {
+            g_nQueueIdx++;
+        }
+
+        g_anQueueNum[g_nQueueIdx] = num;
+    }
+
+    function Show_AddNum()
+    {
+        Show_Queue();
+        Show_3C3R();
+    }
+
+    function PageInit_Data()
+    {
+        for (var n = 0; n < 6; ++n)
+        {
+            g_3C3R.anValue[n] = 0;
+            g_3C3R.anIdx[n] = n;
+        }
+
+        g_status.QueueExpand = 0;
+
+        if (g_anQueueNum.length > 0)
+            g_anQueueNum.splice(0, g_anQueueNum.length);
+        g_nQueueIdx = -1;
+        g_nNoZeroNumCount = 0;
+    }
+
+
+    function OnPageInit()
+    {
+        PageInit_Data();
+
+        Show_Keyboard(true);
+        Show_3C3R();
+
+        Show_RefreshTheme();
+    }
+
+
+    function OnSwitchInput(nIdx)
+    {
+        var divK = document.getElementById("divKeyboard");
+        var divB = document.getElementById("divGameBoard");
+
+        if (nIdx == 0)
+        {
+            divK.style.display = "none";
+            divB.style.display = "";
+            g_status.KeyboardID = "B";
+        }
+        else
+        {
+            divB.style.display = "none";
+            divK.style.display = "";
+            g_status.KeyboardID = "K";
+        }
+    }
+
+    function OnSysChangeTheme()
+    {
+        if (g_s_theme_id > 1)
+            return;
+
+        if(g_s_theme_id == 0)
+        {
+            g_s_theme_id = 1;
+        }
+        else
+        {
+            g_s_theme_id = 0;
+        }
+
+        Show_RefreshTheme();
+    }
+
+    function OnSysExpand()
+    {
+        g_status.QueueExpand++;
+        g_status.QueueExpand = g_status.QueueExpand % 2;
+
+        Show_Queue();
+        Show_RefreshSysButtons();
+    }
+
+
+    function Show_Keyboard(bShow)
+    {
+        var strDisplay = "";
+
+        if (!bShow)
+            strDisplay = "none";
+
+        var strID = "divGameBoard";
+        var strIDAnother = "divKeyboard";
+
+        if (g_status.KeyboardID == "K")
+        {
+            var strID = "divKeyboard";
+            var strIDAnother = "divGameBoard";
+        }
+
+        var div = document.getElementById(strID);
+        div.style.display = strDisplay;
+
+        div = document.getElementById(strIDAnother);
+        div.style.display = "none";
+
+        var divKB = document.getElementById("divShowKeyboard");
+        divKB.style.display = bShow ? "none" : "";
+    }
+
+    function OnShowKeyboardClick()
+    {
+        if(g_nShowInputStatus == 1)
+        {
+            Show_Keyboard(false);
+        }
+        else
+        {
+            Show_Keyboard(true);
+        }
+
+    }
+
+    function OnHideKeyboard()
+    {
+        Show_Keyboard(false);
+    }
+
+    function OnShowKeyboard()
+    {
+        Show_Keyboard(true);
+    }
+
+    function OnEscape()
+    {
+        g_nEscapeStatus++;
+        g_nEscapeStatus = g_nEscapeStatus % 2;
+
+        Show_Covers();
+    }
+
+    function OnAddNum(num)
+    {
+        Calc_AddNum(num);
+        Show_AddNum();
+    }
+
+</script>
+
 </head>
-<body>
-    <!-- 1. Define some markup -->
-    <input id="foo" type="text" value="hello">
-    <button class="btn" data-clipboard-action="copy" data-clipboard-target="#foo">Copy</button>
-    <!-- 2. Include library -->
-    <script src="clipboard.min.js"></script>
-    <!-- 3. Instantiate clipboard -->
-    <script>
-    var clipboard = new ClipboardJS('.btn');
+<body onload="OnPageInit()" style="padding: 0; margin :0; background-color: white">
+    <div style="position:fixed; z-index: 99; right: 0px; top:0px; width: 100%; background-color: white" 
+         onclick="OnShowColumnsClick()">
+        <div style="padding: 12px 8px">
+            <table cellpadding="0" cellspacing="0" border="0" id="tblStatistics">
+                <tr>
+                    <td class="title_c" id="tdT3C3R0">第1组</td>
+                    <td class="value_c" id="td3C3R0">0</td>
+                    <td class="space_c">&nbsp;</td>
+                    <td class="title_c" id="tdT3C3R1">第2组</td>
+                    <td class="value_c" id="td3C3R1">0</td>
+                    <td class="space_c">&nbsp;</td>
+                    <td class="title_c" id="tdT3C3R2">第3组</td>
+                    <td class="value_c" id="td3C3R2">0</td>
+                    <td class="space_c">&nbsp;</td>
+                    <td class="title_c" id="tdT3C3R3">第1行</td>
+                    <td class="value_c" id="td3C3R3">0</td>
+                    <td class="space_c">&nbsp;</td>
+                    <td class="title_c" id="tdT3C3R4">第2行</td>
+                    <td class="value_c" id="td3C3R4">0</td>
+                    <td class="space_c">&nbsp;</td>
+                    <td class="title_c" id="tdT3C3R5">第3行</td>
+                    <td class="value_c" id="td3C3R5">0</td>
+                </tr>
+            </table>
+        </div>
+    </div>
 
-    clipboard.on('success', function (e) {
-        alert("succeeded");
-    });
+    <div style="position:absolute; z-index:0; top: 90px; padding: 0; margin: 0; width: 100%">
+        <table cellpadding="0" cellspacing="5" border="0" id="tblQueue" onclick="OnSysExpand()">
+            <tr id="trRow1">
+                <td id="td0"></td><td id="td1"></td><td id="td2"></td><td id="td3"></td><td id="td4"></td>
+                <td id="td5"></td><td id="td6"></td><td id="td7"></td><td id="td8"></td><td id="td9"></td>
+                <td id="td10"></td><td id="td11"></td><td id="td12"></td><td id="td13"></td><td id="td14"></td>
+            </tr>
+            <tr id="trRow2">
+                <td id="td15"></td><td id="td16"></td><td id="td17"></td><td id="td18"></td><td id="td19"></td>
+                <td id="td20"></td><td id="td21"></td><td id="td22"></td><td id="td23"></td><td id="td24"></td>
+                <td id="td25"></td><td id="td26"></td><td id="td27"></td><td id="td28"></td><td id="td29"></td>
+            </tr>
+            <tr id="trRow3">
+                <td id="td30"></td><td id="td31"></td><td id="td32"></td><td id="td33"></td><td id="td34"></td>
+                <td id="td35"></td><td id="td36"></td><td id="td37"></td><td id="td38"></td><td id="td39"></td>
+                <td id="td40"></td><td id="td41"></td><td id="td42"></td><td id="td43"></td><td id="td44"></td>
+            </tr>
+            <tr id="trRow4">
+                <td id="td45"></td><td id="td46"></td><td id="td47"></td><td id="td48"></td><td id="td49"></td>
+                <td id="td50"></td><td id="td51"></td><td id="td52"></td><td id="td53"></td><td id="td54"></td>
+                <td id="td55"></td><td id="td56"></td><td id="td57"></td><td id="td58"></td><td id="td59"></td>
+            </tr>
+            <tr id="trRow5">
+                <td id="td60"></td><td id="td61"></td><td id="td62"></td><td id="td63"></td><td id="td64"></td>
+                <td id="td65"></td><td id="td66"></td><td id="td67"></td><td id="td68"></td><td id="td69"></td>
+                <td id="td70"></td><td id="td71"></td><td id="td72"></td><td id="td73"></td><td id="td74"></td>
+            </tr>
+            <tr id="trRow6">
+                <td id="td75"></td><td id="td76"></td><td id="td77"></td><td id="td78"></td><td id="td79"></td>
+                <td id="td80"></td><td id="td81"></td><td id="td82"></td><td id="td83"></td><td id="td84"></td>
+                <td id="td85"></td><td id="td86"></td><td id="td87"></td><td id="td88"></td><td id="td89"></td>
+            </tr>
+            <tr id="trRow7">
+                <td id="td90"></td><td id="td91"></td><td id="td92"></td><td id="td93"></td><td id="td94"></td>
+                <td id="td95"></td><td id="td96"></td><td id="td97"></td><td id="td98"></td><td id="td99"></td>
+                <td id="td100" colspan="5">&nbsp;</td>
+            </tr>
+        </table>
 
-    clipboard.on('error', function(e) {
-        console.log(e);
-    });
-    </script>
+        <div style="height: 8px"></div>
+
+        <table cellpadding="0" cellspacing="10" border="0" style="width: 100%">
+            <tr>
+                <td id="tdBttnTheme" class="bttn" onclick="OnSysChangeTheme()">NA</td>
+                <td id="tdBttnRestart" class="bttn" onclick="OnSysRestart()">重置</td>
+                <td id="tdBttnDelete" class="bttn" onclick="OnDeleteNum()">删除</td>
+                <td id="tdBttnRestore" class="bttn" onclick="OnSysRestore()">恢复</td>
+                <td id="tdBttnExport" class="bttn" onclick="OnSysImportExport(false)">导出</td>
+                <td id="tdBttnImport" class="bttn" onclick="OnSysImportExport(true)">导入</td>
+                <td id="tdBttnStatsFinally" class="bttn" onclick="OnShowStatsMisc()">统计</td>
+            </tr>
+        </table>
+    </div>
+
+    <div id="divKeyboard" style="position:fixed; bottom: 0px; z-index:3003; width: 100%;">
+        <div class="kbspace1">&nbsp;</div>
+        <div class="kbspace2">&nbsp;</div>
+        <table cellpadding="0" cellspacing="0" id="tblKeyboard">
+            <tr>
+                <td id="tdK1" onclick="OnAddNum(1)">1</td><td id="tdK2" onclick="OnAddNum(2)">2</td><td id="tdK3" onclick="OnAddNum(3)">3</td>
+                <td id="tdK4" onclick="OnAddNum(4)">4</td><td id="tdK5" onclick="OnAddNum(5)">5</td><td id="tdK6" onclick="OnAddNum(6)">6</td>
+                <td id="tdK7" onclick="OnAddNum(7)">7</td><td id="tdK8" onclick="OnAddNum(8)">8</td><td id="tdK9" onclick="OnAddNum(9)">9</td>
+            </tr>
+            <tr>
+                <td id="tdK10" onclick="OnAddNum(10)">10</td><td id="tdK11" onclick="OnAddNum(11)">11</td><td id="tdK12" onclick="OnAddNum(12)">12</td>
+                <td id="tdK13" onclick="OnAddNum(13)">13</td><td id="tdK14" onclick="OnAddNum(14)">14</td><td id="tdK15" onclick="OnAddNum(15)">15</td>
+                <td id="tdK16" onclick="OnAddNum(16)">16</td><td id="tdK17" onclick="OnAddNum(17)">17</td><td id="tdK18" onclick="OnAddNum(18)">18</td>
+            </tr>
+            <tr>
+                <td id="tdK19" onclick="OnAddNum(19)">19</td><td id="tdK20" onclick="OnAddNum(20)">20</td><td id="tdK21" onclick="OnAddNum(21)">21</td>
+                <td id="tdK22" onclick="OnAddNum(22)">22</td><td id="tdK23" onclick="OnAddNum(23)">23</td><td id="tdK24" onclick="OnAddNum(24)">24</td>
+                <td id="tdK25" onclick="OnAddNum(25)">25</td><td id="tdK26" onclick="OnAddNum(26)">26</td><td id="tdK27" onclick="OnAddNum(27)">27</td>
+            </tr>
+            <tr>
+                <td id="tdK28" onclick="OnAddNum(28)">28</td><td id="tdK29" onclick="OnAddNum(29)">29</td><td id="tdK30" onclick="OnAddNum(30)">30</td>
+                <td id="tdK31" onclick="OnAddNum(31)">31</td><td id="tdK32" onclick="OnAddNum(32)">32</td><td id="tdK33" onclick="OnAddNum(33)">33</td>
+                <td id="tdK34" onclick="OnAddNum(34)">34</td><td id="tdK35" onclick="OnAddNum(35)">35</td><td id="tdK36" onclick="OnAddNum(36)">36</td>
+            </tr>
+            <tr>
+                <td id="tdKEsc" onclick="OnEscape()" colspan="2">esc</td>
+                <td id="tdK0" onclick="OnAddNum(0)" colspan="4">0</td>
+                <td id="tdKSwitch" onclick="OnSwitchInput(0)" colspan="2">switch</td>
+                <td id="tdKHide" class="tdHide" onclick="OnHideKeyboard()">x</td>
+            </tr>
+        </table>
+    </div>
+    <div id="divGameBoard" style="position:fixed; bottom: 0px; z-index:3002; width: 100%;">
+        <div class="kbspace1">&nbsp;</div>
+        <div class="kbspace2">&nbsp;</div>
+        <table cellpadding="0" cellspacing="0" id="tblGameBoard">
+            <tr>
+                <td id="tdB3" onclick="OnAddNum(3)">3</td><td id="tdB6" onclick="OnAddNum(6)">6</td><td id="tdB9" onclick="OnAddNum(9)">9</td>
+                <td id="tdB12" onclick="OnAddNum(12)">12</td><td id="tdB15" onclick="OnAddNum(15)">15</td><td id="tdB18" onclick="OnAddNum(18)">18</td>
+                <td id="tdB21" onclick="OnAddNum(21)">21</td><td id="tdB24" onclick="OnAddNum(24)">24</td><td id="tdB27" onclick="OnAddNum(27)">27</td>
+                <td id="tdB30" onclick="OnAddNum(30)">30</td><td id="tdB33" onclick="OnAddNum(33)">33</td><td id="tdB36" onclick="OnAddNum(36)">36</td>
+            </tr>
+            <tr>
+                <td id="tdB2" onclick="OnAddNum(2)">2</td><td id="tdB5" onclick="OnAddNum(5)">5</td><td id="tdB8" onclick="OnAddNum(8)">8</td>
+                <td id="tdB11" onclick="OnAddNum(11)">11</td><td id="tdB14" onclick="OnAddNum(14)">14</td><td id="tdB17" onclick="OnAddNum(17)">17</td>
+                <td id="tdB20" onclick="OnAddNum(20)">20</td><td id="tdB23" onclick="OnAddNum(23)">23</td><td id="tdB26" onclick="OnAddNum(26)">26</td>
+                <td id="tdB29" onclick="OnAddNum(29)">29</td><td id="tdB32" onclick="OnAddNum(32)">32</td><td id="tdB35" onclick="OnAddNum(35)">35</td>
+            </tr>
+            <tr>
+                <td id="tdB1" onclick="OnAddNum(1)">1</td><td id="tdB4" onclick="OnAddNum(4)">4</td><td id="tdB7" onclick="OnAddNum(7)">7</td>
+                <td id="tdB10" onclick="OnAddNum(10)">10</td><td id="tdB13" onclick="OnAddNum(13)">13</td><td id="tdB16" onclick="OnAddNum(16)">16</td>
+                <td id="tdB19" onclick="OnAddNum(19)">19</td><td id="tdB22" onclick="OnAddNum(22)">22</td><td id="tdB25" onclick="OnAddNum(25)">25</td>
+                <td id="tdB28" onclick="OnAddNum(28)">28</td><td id="tdB31" onclick="OnAddNum(31)">31</td><td id="tdB34" onclick="OnAddNum(34)">34</td>
+            </tr>
+            <tr>
+                <td id="tdBEsc" onclick="OnEscape()" colspan="2">esc</td>
+                <td id="tdB0" onclick="OnAddNum(0)" colspan="6">0</td>
+                <td id="tdBSwitch" onclick="OnSwitchInput(1)" colspan="3">switch</td>
+                <td id="tdBHide" class="tdHide" onclick="OnHideKeyboard()">x</td>
+            </tr>
+        </table>
+    </div>
+    <div id="divShowKeyboard" style="position:fixed; right: 0px; bottom: 0px; z-index:3001; width: 100px; height: 100px; display:none" onclick="OnShowKeyboard()"></div>
 </body>
 </html>
