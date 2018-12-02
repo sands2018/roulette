@@ -90,9 +90,34 @@ var g_status = new CSysStatus();
 var g_3C3R = new CIndexedArray();
 
 
+function ChangeTheme(theme)
+{
+    var csslink = document.getElementById("linkTheme");
+    csslink.href = "css/" + theme + ".css";
+}
+
+
 function GetNumberColor()
 {
     return g_s_c_num[g_s_theme_id];
+}
+
+function GetNumberClass(num)
+{
+    var strColor = g_astrNumberColor[num];
+
+    if (strColor == "r")
+    {
+        return "tdRed";
+    }
+    else if (strColor == "b")
+    {
+        return "tdBlack";
+    }
+    else
+    {
+        return "tdGreen";
+    }
 }
 
 function GetNumberBackgroundColor(num)
@@ -186,9 +211,9 @@ function Show_RefreshTheme()
     {
         strTitle = "彩色";
     }
-    /*
     var bttn = document.getElementById("tdBttnTheme");
     bttn.innerHTML = strTitle;
+    /*
 
     var tblK = document.getElementById("tblKeyboard");
     tblK.style.borderColor = g_s_c_board_b[g_s_theme_id];
@@ -381,13 +406,25 @@ function PageInit_Data()
 }
 
 
+function Init_Theme()
+{
+    for (var n = 0; n <= 36; ++n)
+    {
+        var tdK = document.getElementById("tdK" + n.toString());
+        tdK.className = GetNumberClass(n);
+
+        var tdB = document.getElementById("tdB" + n.toString());
+        tdB.className = GetNumberClass(n);
+    }
+}
+
 function OnPageInit()
 {
     PageInit_Data();
 
     Show_Keyboard(true);
     Show_3C3R();
-
+    Init_Theme();
     Show_RefreshTheme();
 }
 

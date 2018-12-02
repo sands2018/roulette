@@ -1,2 +1,7 @@
 
-#tblKeyboard td, #tblGameBoard td { border: 1px solid green; }
+#tblKeyboard, #tblGameBoard { border: 1px solid #dfbc33; }
+#tblKeyboard td, #tblGameBoard td { color: white; border: 1px solid #dfbc33; }
+
+#tblKeyboard td.tdRed, #tblGameBoard td.tdRed { background-color: red }
+#tblKeyboard td.tdBlack, #tblGameBoard td.tdBlack { background-color: black }
+#tblKeyboard td.tdGreen, #tblGameBoard td.tdGreen { background-color: green }

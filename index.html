@@ -5,16 +5,7 @@
 
 <style>
 
-
-td 
-{
-	text-align: center;
-	vertical-align: middle;
-	cursor: pointer;
-}
-
-#tblKeyboard td, #tblGameBoard td { font-size: 50px; }
-
+td { text-align: center; vertical-align: middle; cursor: pointer; }
 .kbspace1
 {
     padding: 0; margin: 0; border: 0; height: 50px;
@@ -24,19 +15,17 @@ td
     background: -o-linear-gradient(top,rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%);  /* Opear */
     background: -ms-linear-gradient(rgba(255,255,255,0),rgba(255,255,255,1)); /*IE10及IE10+*/
 }
-
 .kbspace2
 {
     padding: 0; margin: 0; height: 20px; border: 1px solid white;
     background-color: white; filter: alpha(Opacity=100); -moz-opacity: 1; opacity: 1;
 }
+#tblKeyboard td, #tblGameBoard td { font-size: 50px; }
+#tblKeyboard td { width: 110px; height: 105px; }
+#tblGameBoard td { width: 95px; height: 95px; }
 
 #divCover { font-size: 40px; }
 #divNumbers { padding: 20px; }
-
-#tblKeyboard, #tblGameBoard { border: 1px solid; }
-#tblKeyboard td { width: 110px; height: 105px; }
-#tblGameBoard td { width: 95px; height: 95px; }
 
 .tdHide { font-family: Arial }
 #tblKeyboard #tdKSwitch, #tblGameBoard #tdBSwitch { font-size: 40px }
@@ -128,15 +117,9 @@ tr.trLost td, .tdLost { color: #7fc37f; }
 <script type="text/javascript" src="3rd/clipboard.min.js"></script>
 <script type="text/javascript" src="js/common.js?"></script>
 <script type="text/javascript" src="js/statistics.js"></script>
-<script type="text/javascript" src="js/main.js?v=1"></script>
+<script type="text/javascript" src="js/main.js"></script>
 
 <script language="javascript">
-
-    function ChangeTheme(theme)
-    {
-        var csslink = document.getElementById("linkTheme");
-        csslink.href = "css/" + theme + ".css?";
-    }
 
     function OnSysRestart()
     {
@@ -252,10 +235,10 @@ tr.trLost td, .tdLost { color: #7fc37f; }
                 <td id="tdK34" onclick="OnAddNum(34)">34</td><td id="tdK35" onclick="OnAddNum(35)">35</td><td id="tdK36" onclick="OnAddNum(36)">36</td>
             </tr>
             <tr>
-                <td id="tdKEsc" onclick="OnEscape()" colspan="2">esc</td>
+                <td id="tdKEsc" onclick="OnEscape()" colspan="2" class="tdGreen">esc</td>
                 <td id="tdK0" onclick="OnAddNum(0)" colspan="4">0</td>
-                <td id="tdKSwitch" onclick="OnSwitchInput(0)" colspan="2">switch</td>
-                <td id="tdKHide" class="tdHide" onclick="OnHideKeyboard()">x</td>
+                <td id="tdKSwitch" onclick="OnSwitchInput(0)" colspan="2" class="tdGreen">switch</td>
+                <td id="tdKHide" onclick="OnHideKeyboard()" class="tdHide tdGreen">x</td>
             </tr>
         </table>
     </div>
@@ -282,10 +265,10 @@ tr.trLost td, .tdLost { color: #7fc37f; }
                 <td id="tdB28" onclick="OnAddNum(28)">28</td><td id="tdB31" onclick="OnAddNum(31)">31</td><td id="tdB34" onclick="OnAddNum(34)">34</td>
             </tr>
             <tr>
-                <td id="tdBEsc" onclick="OnEscape()" colspan="2">esc</td>
+                <td id="tdBEsc" onclick="OnEscape()" colspan="2" class="tdGreen">esc</td>
                 <td id="tdB0" onclick="OnAddNum(0)" colspan="6">0</td>
-                <td id="tdBSwitch" onclick="OnSwitchInput(1)" colspan="3">switch</td>
-                <td id="tdBHide" class="tdHide" onclick="OnHideKeyboard()">x</td>
+                <td id="tdBSwitch" onclick="OnSwitchInput(1)" colspan="3" class="tdGreen">switch</td>
+                <td id="tdBHide" onclick="OnHideKeyboard()" class="tdHide tdGreen">x</td>
             </tr>
         </table>
     </div>
