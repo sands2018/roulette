@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <None Include="..\index.html" />
+    <None Include="..\js\common.js">
+      <Filter>js</Filter>
+    </None>
+    <None Include="..\js\main.js">
+      <Filter>js</Filter>
+    </None>
+    <None Include="..\js\statistics.js">
+      <Filter>js</Filter>
+    </None>
+    <None Include="..\3rd\clipboard.min.js">
+      <Filter>3rd</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="js">
+      <UniqueIdentifier>{023f1ca7-f6a6-486e-a65e-6970123999c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rd">
+      <UniqueIdentifier>{3d6e88a7-515d-4463-af24-b1a167394005}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
