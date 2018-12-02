@@ -19,9 +19,6 @@ var g_astrNumberColor =
     "r", "b", "r", "b", "b", "r", "b", "r", "b", "r", "b", "r"
 ];
 
-// board border color:
-var g_s_c_board_b = ["#dfbc33", "#dfbc33", "white"];
-
 // number text color:
 var g_s_c_num = ["white", "#434343", "#f3f3f3"];
 
