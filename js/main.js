@@ -74,9 +74,6 @@ var g_s_c_3c3r_b = ["white", "#AA8833", "white"];
 // stats groups active button background color
 var g_s_c_sg_bk_active = "#EBE3CB";
 
-// elements style need to be changed
-var g_s_ctlid_kbtd = ["tdBEsc", "tdBSwitch", "tdBHide", "tdKEsc", "tdKSwitch", "tdKHide"];
-
 // global variables: --------------------------------------------
 
 var QUEUE_MAX_COUNT = 100;
@@ -213,35 +210,7 @@ function Show_RefreshTheme()
     }
     var bttn = document.getElementById("tdBttnTheme");
     bttn.innerHTML = strTitle;
-    /*
 
-    var tblK = document.getElementById("tblKeyboard");
-    tblK.style.borderColor = g_s_c_board_b[g_s_theme_id];
-
-    var tblB = document.getElementById("tblGameBoard");
-    tblB.style.borderColor = g_s_c_board_b[g_s_theme_id];
-
-    for (var n = 0; n <= 36; ++n)
-    {
-        var tdK = document.getElementById("tdK" + n.toString());
-        tdK.style.backgroundColor = GetNumberBackgroundColor(n);
-        tdK.style.borderColor = g_s_c_board_b[g_s_theme_id];
-        tdK.style.color = GetNumberColor();
-
-        var tdB = document.getElementById("tdB" + n.toString());
-        tdB.style.backgroundColor = GetNumberBackgroundColor(n);
-        tdB.style.borderColor = g_s_c_board_b[g_s_theme_id];
-        tdB.style.color = GetNumberColor();
-    }
-
-    for (var n = 0; n < g_s_ctlid_kbtd.length; ++n)
-    {
-        var td = document.getElementById(g_s_ctlid_kbtd[n]);
-        td.style.backgroundColor = g_s_c_num_bk_s[g_s_theme_id];
-        td.style.borderColor = g_s_c_board_b[g_s_theme_id];
-        td.style.color = g_s_c_num[g_s_theme_id];
-    }
-    */
     Show_3C3R();
     Show_Queue();
     Show_RefreshSysButtons();
