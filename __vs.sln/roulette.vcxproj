@@ -111,6 +111,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="..\3rd\clipboard.min.js" />
+    <None Include="..\css\color.css" />
+    <None Include="..\css\debug.css" />
+    <None Include="..\css\tint.css" />
     <None Include="..\index.html" />
     <None Include="..\js\common.js" />
     <None Include="..\js\main.js" />

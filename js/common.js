@@ -48,7 +48,7 @@ function CSysStatus()
     this.KeyboardID = "K";
     this.QueueExpand = 0;
 
-    this.Reset = functiion()
+    this.Reset = function()
     {
         this.QueueExpand = 0;
     }

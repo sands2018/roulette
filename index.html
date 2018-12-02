@@ -1,8 +1,10 @@
 ﻿<html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link id="linkTheme" rel="stylesheet" href="css/tint.css" rel="external nofollow" />
 
 <style>
+
 
 td 
 {
@@ -10,6 +12,8 @@ td
 	vertical-align: middle;
 	cursor: pointer;
 }
+
+#tblKeyboard td, #tblGameBoard td { font-size: 50px; }
 
 .kbspace1
 {
@@ -31,7 +35,6 @@ td
 #divNumbers { padding: 20px; }
 
 #tblKeyboard, #tblGameBoard { border: 1px solid; }
-#tblKeyboard td, #tblGameBoard td { font-size: 50px; border: 1px solid; }
 #tblKeyboard td { width: 110px; height: 105px; }
 #tblGameBoard td { width: 95px; height: 95px; }
 
@@ -119,19 +122,31 @@ tr.trLost td, .tdLost { color: #7fc37f; }
 #tblPanelButtons td { border: 1px solid #AA8833; }
 .bttnImportExport {	width: 280px; height: 70px }
 
+
 </style>
 
 <script type="text/javascript" src="3rd/clipboard.min.js"></script>
-<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/common.js?"></script>
 <script type="text/javascript" src="js/statistics.js"></script>
-<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript" src="js/main.js?v=1"></script>
 
 <script language="javascript">
+
+    function ChangeTheme(theme)
+    {
+        var csslink = document.getElementById("linkTheme");
+        csslink.href = "css/" + theme + ".css?";
+    }
+
+    function OnSysRestart()
+    {
+        ChangeTheme("color");
+    }
 
 </script>
 
 </head>
-<body onload="OnPageInit()" style="padding: 0; margin :0; background-color: white">
+<body onload="OnPageInit()" style="padding: 0; margin :0; ">
     <div style="position:fixed; z-index: 99; right: 0px; top:0px; width: 100%; background-color: white" onclick="OnShowColumnsClick()">
         <div style="padding: 12px 8px">
             <table cellpadding="0" cellspacing="0" border="0">

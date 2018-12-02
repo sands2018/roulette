@@ -14,6 +14,15 @@
     <None Include="..\3rd\clipboard.min.js">
       <Filter>3rd</Filter>
     </None>
+    <None Include="..\css\color.css">
+      <Filter>css</Filter>
+    </None>
+    <None Include="..\css\debug.css">
+      <Filter>css</Filter>
+    </None>
+    <None Include="..\css\tint.css">
+      <Filter>css</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="js">
@@ -21,6 +30,9 @@
     </Filter>
     <Filter Include="3rd">
       <UniqueIdentifier>{3d6e88a7-515d-4463-af24-b1a167394005}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="css">
+      <UniqueIdentifier>{aa8d50f8-df78-4e39-89c1-3c9b70afb49b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

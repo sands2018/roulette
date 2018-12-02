@@ -186,7 +186,7 @@ function Show_RefreshTheme()
     {
         strTitle = "彩色";
     }
-
+    /*
     var bttn = document.getElementById("tdBttnTheme");
     bttn.innerHTML = strTitle;
 
@@ -216,7 +216,7 @@ function Show_RefreshTheme()
         td.style.borderColor = g_s_c_board_b[g_s_theme_id];
         td.style.color = g_s_c_num[g_s_theme_id];
     }
-
+    */
     Show_3C3R();
     Show_Queue();
     Show_RefreshSysButtons();
