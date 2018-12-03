@@ -376,7 +376,7 @@ function Show_Queue()
 
 function Show_RefreshSysButtons()
 {
-    var astrIDBttn = ["tdBttnTheme", "tdBttnRestart", "tdBttnDelete", "tdBttnRestore", "tdBttnExport", "tdBttnImport", "tdBttnStatsFinally"];
+    var astrIDBttn = ["tdBttnTheme", "tdBttnRestart", "tdBttnRestore", "tdBttnExport", "tdBttnImport", "tdBttnStatsFinally"];
     var abEnabled = [];
 
     for (var n = 0; n < astrIDBttn.length; ++n)
@@ -387,13 +387,12 @@ function Show_RefreshSysButtons()
     if (g_queue.nIDX < 0)
     {
         abEnabled[1] = false; // restart
-        abEnabled[2] = false; // delete
-        abEnabled[4] = false; // export
-        abEnabled[6] = false; // stats finally
+        abEnabled[3] = false; // export
+        abEnabled[5] = false; // stats finally
     }
     else
     {
-        abEnabled[3] = false; // restore
+        abEnabled[2] = false; // restore
     }
 
     for (var n = 0; n < astrIDBttn.length; ++n)
@@ -413,6 +412,7 @@ function Show_AddNum()
 {
     Show_Queue();
     Show_3C3R();
+    Show_RefreshSysButtons();
 }
 
 function PageInit_Data()

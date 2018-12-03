@@ -203,7 +203,6 @@ tr.trLost td, .tdLost { color: #7fc37f; }
             <tr>
                 <td id="tdBttnTheme" onclick="OnSysChangeTheme()">NA</td>
                 <td id="tdBttnRestart" onclick="OnSysRestart()">重置</td>
-                <td id="tdBttnDelete" onclick="OnDeleteNum()">删除</td>
                 <td id="tdBttnRestore" onclick="OnSysRestore()">恢复</td>
                 <td id="tdBttnExport" onclick="OnSysImportExport(false)">导出</td>
                 <td id="tdBttnImport" onclick="OnSysImportExport(true)">导入</td>
@@ -237,8 +236,9 @@ tr.trLost td, .tdLost { color: #7fc37f; }
                 <td id="tdK34" onclick="OnAddNum(34)">34</td><td id="tdK35" onclick="OnAddNum(35)">35</td><td id="tdK36" onclick="OnAddNum(36)">36</td>
             </tr>
             <tr>
-                <td id="tdKEsc" onclick="OnEscape()" colspan="2" class="tdGreen">esc</td>
-                <td id="tdK0" onclick="OnAddNum(0)" colspan="4">0</td>
+                <td id="tdKEsc" onclick="OnEscape()" class="tdGreen">esc</td>
+                <td id="tdK0" onclick="OnAddNum(0)" colspan="3">0</td>
+                <td id="tdKDel" onclick="OnDelNum()" colspan="2" class="tdGreen">del</td>
                 <td id="tdKSwitch" onclick="OnSwitchInput(0)" colspan="2" class="tdGreen">switch</td>
                 <td id="tdKHide" onclick="OnHideKeyboard()" class="tdHide tdGreen">x</td>
             </tr>
@@ -268,7 +268,8 @@ tr.trLost td, .tdLost { color: #7fc37f; }
             </tr>
             <tr>
                 <td id="tdBEsc" onclick="OnEscape()" colspan="2" class="tdGreen">esc</td>
-                <td id="tdB0" onclick="OnAddNum(0)" colspan="6">0</td>
+                <td id="tdB0" onclick="OnAddNum(0)" colspan="4">0</td>
+                <td id="tdBDel" onclick="OnDelNum()" colspan="2" class="tdGreen">del</td>
                 <td id="tdBSwitch" onclick="OnSwitchInput(1)" colspan="3" class="tdGreen">switch</td>
                 <td id="tdBHide" onclick="OnHideKeyboard()" class="tdHide tdGreen">x</td>
             </tr>
