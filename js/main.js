@@ -115,13 +115,13 @@ function Show3C3RItem(n, nValue, nIdx)
     {
         if (nValue > 5)
         {
-            td.className = "td3C3R_v td3C3RV5";
-            tdT.className = "td3C3R_t td3C3RT5";
+            td.className = "td3C3R_v td3C3RV6";
+            tdT.className = "td3C3R_t td3C3RT6";
         }
         else
         {
-            td.className = "td3C3R_v td3C3RV6";
-            tdT.className = "td3C3R_t td3C3RT6";
+            td.className = "td3C3R_v td3C3RV5";
+            tdT.className = "td3C3R_t td3C3RT5";
         }
         td.style.fontWeight = "bold";
     }
