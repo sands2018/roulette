@@ -20,7 +20,7 @@
     <None Include="..\css\debug.css">
       <Filter>css</Filter>
     </None>
-    <None Include="..\css\tint.css">
+    <None Include="..\css\normal.css">
       <Filter>css</Filter>
     </None>
   </ItemGroup>
