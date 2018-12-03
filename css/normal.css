@@ -1,0 +1,23 @@
+
+#tblKeyboard, #tblGameBoard { border: 1px solid #dfbc33; }
+#tblKeyboard td, #tblGameBoard td, #tblQueue td { color: black; }
+#tblKeyboard td, #tblGameBoard td { border: 1px solid #dfbc33; }
+#tblKeyboard td.tdRed, #tblGameBoard td.tdRed { background-color: white }
+#tblKeyboard td.tdBlack, #tblGameBoard td.tdBlack { background-color: white }
+#tblKeyboard td.tdGreen, #tblGameBoard td.tdGreen { background-color: white }
+#tblQueue td.tdRed { background-color: white; border: 1px solid #ffddaa }
+#tblQueue td.tdBlack { background-color: #eaeaea; border: 1px solid #eaeaea }
+#tblQueue td.tdGreen { background-color: #d3eed3; border: 1px solid #d3eed3 }
+#tblQueue td.tdEmpty { background-color: white; border: 0 }
+
+#tbl3C3R td { padding: 8px 0px; border: 1px solid #aa8833; }
+#tbl3C3R td.td3C3RT { color: black; background-color: white }
+#tbl3C3R td.td3C3RV { color: black; background-color: white }
+#tbl3C3R td.td3C3RT5 { color: black; background-color: #eeeeee }
+#tbl3C3R td.td3C3RV5 { color: black; background-color: #dddddd }
+#tbl3C3R td.td3C3RT6 { color: black; background-color: #dfd7cb }
+#tbl3C3R td.td3C3RV6 { color: black; background-color: #ebe3cb }
+
+#tblSysButtons td.tdSBEnabled { color: #aa8833; background-color: white; border: 1px solid #aa8833 }
+#tblSysButtons td.tdSBDisabled { color: #bbbbbb; background-color: white; border: 1px solid #bbbbbb }
+

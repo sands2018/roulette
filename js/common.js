@@ -1,11 +1,43 @@
-﻿function CIndexedArray()
+﻿var g_bDebug = true;
+
+function WriteData(key, value)
+{
+    if (!window.localStorage)
+        return;
+
+    var storage = window.localStorage;
+    storage[key] = value;
+}
+
+function ReadData(key, strDefault)
+{
+    if (!window.localStorage)
+        return strDefault;
+
+    var storage = window.localStorage;
+    var strValue = storage[key];
+    if (!strValue || (strValue == ""))
+        strValue = strDefault;
+    return strValue;
+}
+
+function SwitchTrueFalse(strValue)
+{
+    var str = "F";
+    if (strValue == "F")
+        str = "T";
+
+    return str;
+}
+
+function CIndexedArray()
 {
     this.anValue = [];
     this.anIdx = [];
 
     this.Sort = function (bAsend)
     {
-        var nCount = anValue.length;
+        var nCount = this.anValue.length;
 
         var bChanged = false;
         do
@@ -14,12 +46,12 @@
 
             for (var n = 0; n < nCount - 1; ++n)
             {
-                if ((bAsend && (anValue[anIndex[n]] > anValue[anIndex[n + 1]]))
-                    || (!bAsend && (anValue[anIndex[n]] < anValue[anIndex[n + 1]])))
+                if ((bAsend && (this.anValue[this.anIdx[n]] > this.anValue[this.anIdx[n + 1]]))
+                    || (!bAsend && (this.anValue[this.anIdx[n]] < this.anValue[this.anIdx[n + 1]])))
                 {
-                    tmp = anIndex[n];
-                    anIndex[n] = anIndex[n + 1];
-                    anIndex[n + 1] = tmp;
+                    tmp = this.anIdx[n];
+                    this.anIdx[n] = this.anIdx[n + 1];
+                    this.anIdx[n + 1] = tmp;
 
                     bChanged = true;
                 }
@@ -43,14 +75,22 @@
 }
 
 
+var DATA_KEYBOARDID = "KEYBOARDID";
+var DATA_SEPERATE3C3R = "SEPERATE3C3R";
+
 function CSysStatus()
 {
+    this.ThemeID = 0;
     this.KeyboardID = "K";
+    this.Seperate3C3R = "F";
     this.QueueExpand = 0;
 
     this.Reset = function()
     {
+        this.ThemeID = 0;
         this.QueueExpand = 0;
+        this.KeyboardID = ReadData(DATA_KEYBOARDID, "K");
+        this.Seperate3C3R = ReadData(DATA_SEPERATE3C3R, "F");
     }
 }
 
