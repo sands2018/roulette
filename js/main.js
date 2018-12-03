@@ -192,22 +192,136 @@ function Show_3C3R()
     td2.style.display = strDisplay;
 }
 
-function Show_3R3CLast2()
+function Calc_Columns(aPair)
 {
-    var strDisplay = "";
-
-    if (g_nQueueIdx >= 0)
+    var anSelected = [];
+    for (var n = 0; n < g_anColumnsStart.length; ++n)
     {
-        strDisplay = "none";
+        anSelected[n] = 0;
     }
 
-    var td1 = document.getElementById("td3C3R4");
-    var td2 = document.getElementById("td3C3R5");
+    for (var n1 = 0; n1 < g_anColumnsStart.length; ++n1)
+    {
+        var nIdx1 = g_t_anIdxColumnsCount[n1];
+        if (g_t_anColumnsCount[nIdx1] < 5)
+            break;
 
-    td1.style.display = strDisplay;
-    td2.style.display = strDisplay;
+        if (anSelected[n1] != 0)
+            continue;
+
+        var nFound1 = nIdx1;
+        var nFound2 = -1;
+
+        for (var n2 = n1 + 1; n2 < g_anColumnsStart.length; ++n2)
+        {
+            var nIdx2 = g_t_anIdxColumnsCount[n2];
+            if (g_t_anColumnsCount[nIdx2] < 5)
+                break;
+
+            if (anSelected[n2] != 0)
+                continue;
+
+            if ((nIdx2 != (nIdx1 + 1)) && (nIdx2 != (nIdx1 - 1)))
+            {
+                var bFound = true;
+
+                if ((nIdx2 % 2) == 0)
+                {
+                    if ((nIdx2 == nIdx1 + 2) || (nIdx2 == nIdx1 - 2))
+                        bFound = false;
+                }
+
+                if (bFound)
+                {
+                    nFound2 = nIdx2;
+                    anSelected[n2] = 1;
+                    break;
+                }
+            }
+        }
+
+        if (nFound2 > 0)
+        {
+            anSelected[n1] = 1;
+
+            var pair = new CPair();
+            pair.value1 = nFound1;
+            pair.value2 = nFound2;
+
+            aPair.push(pair);
+        }
+    }
 }
 
+
+function Show_Columns()
+{
+    var aPair = [];
+    Calc_Columns(aPair);
+
+    var div = document.getElementById("divColumns");
+    var strHtml = "";
+    var bFirst = true;
+
+    /*
+    for(var n = 0; n < g_anColumnsStart.length; ++ n)
+    {
+        if (!bFirst)
+            strHtml += "&nbsp;";
+        bFirst = false;
+
+        if (n == 6)
+            strHtml += "<br>";
+
+        strHtml += "<span class='" + ((anStatus[n] == 0) ? "ColumnNormal" : "ColumnHighlight") + "'>";
+        strHtml += "&nbsp;" + GetColumnSpec(g_t_anIdxColumnsCount[n]) + "&nbsp;<span class='ColumnsCount'>" + g_t_anColumnsCount[g_t_anIdxColumnsCount[n]].toString() + "</span>&nbsp;</span>";
+    }
+    */
+
+    for (var n = 0; n < aPair.length; ++n)
+    {
+        if ((n != 0) && ((n % 2) == 0))
+            strHtml += "<br>";
+        else if (!bFirst)
+            strHtml += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+
+        bFirst = false;
+
+
+        strHtml += "[&nbsp;" + GetColumnSpec(aPair[n].value1) + "&nbsp;<span class='ColumnsCount'>" + g_t_anColumnsCount[aPair[n].value1].toString() + "</span>&nbsp;&nbsp;&nbsp;";
+        strHtml += "&nbsp;" + GetColumnSpec(aPair[n].value2) + "&nbsp;<span class='ColumnsCount'>" + g_t_anColumnsCount[aPair[n].value2].toString() + "</span>&nbsp;]";
+    }
+
+    var bShow = true;
+
+    if (aPair.length <= 0)
+    {
+        bShow = false;
+        bFirst = true;
+        for (var n = 0; n < g_t_anColumnsCount.length; ++n)
+        {
+            if (g_t_anColumnsCount[g_t_anIdxColumnsCount[n]] < 10)
+                break;
+
+            bShow = true;
+
+            if ((n != 0) && ((n % 3) == 0))
+                strHtml += "<br>";
+            else if (!bFirst)
+                strHtml += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+            bFirst = false;
+
+            strHtml += "&nbsp;" + GetColumnSpec(g_t_anIdxColumnsCount[n]) + "&nbsp;<span class='ColumnsCount'>" + g_t_anColumnsCount[g_t_anIdxColumnsCount[n]].toString() + "</span>&nbsp;";
+        }
+    }
+
+    div.innerHTML = strHtml;
+
+    if (bShow)
+        div.style.display = (g_nColumnsStatus == 0) ? "none" : "";
+    else
+        div.style.display = "none";
+}
 
 
 function Show_Queue()
