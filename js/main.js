@@ -29,10 +29,11 @@ var QUEUE_LINE_NUM_COUNT = 15;
 
 var g_queue = new CNumQueue();
 
-
 var g_status = new CSysStatus();
 
-var g_3C3R = new CIndexedArray();
+var g_3C3R = new CStats3C3R();
+var g_columns = new CStatsColumns();
+
 
 
 function ChangeTheme(theme)
@@ -136,30 +137,30 @@ function Show3C3RItem(n, nValue, nIdx)
 
 function Show_3C3R()
 {
-    g_3C3R.Sort(false);
+    g_3C3R.data.Sort(false);
 
     if (g_status.Seperate3C3R == "F")
     {
         for (var n = 0; n < 6; ++n)
-            Show3C3RItem(n, g_3C3R.IndexedValue(n), g_3C3R.anIdx[n]);
+            Show3C3RItem(n, g_3C3R.data.Value(n), g_3C3R.data.anIdx[n]);
     }
     else
     {
         var nn = 0;
         for (var n = 0; n < 6; ++n)
         {
-            if (g_3C3R.anIdx[n] < 3)
+            if (g_3C3R.data.anIdx[n] < 3)
             {
-                Show3C3RItem(nn, g_3C3R.IndexedValue(n), g_3C3R.anIdx[n]);
+                Show3C3RItem(nn, g_3C3R.data.Value(n), g_3C3R.data.anIdx[n]);
                 ++nn;
             }
         }
 
         for (var n = 0; n < 6; ++n)
         {
-            if (g_3C3R.anIdx[n] >= 3)
+            if (g_3C3R.data.anIdx[n] >= 3)
             {
-                Show3C3RItem(nn, g_3C3R.IndexedValue(n), g_3C3R.anIdx[n]);
+                Show3C3RItem(nn, g_3C3R.data.Value(n), g_3C3R.data.anIdx[n]);
                 ++nn;
             }
         }
@@ -190,67 +191,6 @@ function Show_3C3R()
     td1.style.display = strDisplay;
     td1Other.style.display = strDisplayOther;
     td2.style.display = strDisplay;
-}
-
-function Calc_Columns(aPair)
-{
-    var anSelected = [];
-    for (var n = 0; n < g_anColumnsStart.length; ++n)
-    {
-        anSelected[n] = 0;
-    }
-
-    for (var n1 = 0; n1 < g_anColumnsStart.length; ++n1)
-    {
-        var nIdx1 = g_t_anIdxColumnsCount[n1];
-        if (g_t_anColumnsCount[nIdx1] < 5)
-            break;
-
-        if (anSelected[n1] != 0)
-            continue;
-
-        var nFound1 = nIdx1;
-        var nFound2 = -1;
-
-        for (var n2 = n1 + 1; n2 < g_anColumnsStart.length; ++n2)
-        {
-            var nIdx2 = g_t_anIdxColumnsCount[n2];
-            if (g_t_anColumnsCount[nIdx2] < 5)
-                break;
-
-            if (anSelected[n2] != 0)
-                continue;
-
-            if ((nIdx2 != (nIdx1 + 1)) && (nIdx2 != (nIdx1 - 1)))
-            {
-                var bFound = true;
-
-                if ((nIdx2 % 2) == 0)
-                {
-                    if ((nIdx2 == nIdx1 + 2) || (nIdx2 == nIdx1 - 2))
-                        bFound = false;
-                }
-
-                if (bFound)
-                {
-                    nFound2 = nIdx2;
-                    anSelected[n2] = 1;
-                    break;
-                }
-            }
-        }
-
-        if (nFound2 > 0)
-        {
-            anSelected[n1] = 1;
-
-            var pair = new CPair();
-            pair.value1 = nFound1;
-            pair.value2 = nFound2;
-
-            aPair.push(pair);
-        }
-    }
 }
 
 
@@ -417,7 +357,8 @@ function Show_AddNum()
 
 function PageInit_Data()
 {
-    g_3C3R.Reset(6);
+    g_3C3R.Reset();
+    //g_columns.Reset();
     g_status.Reset();
     g_queue.Reset();
 }
@@ -560,6 +501,6 @@ function OnAddNum(num)
 {
     Calc_AddNum(num);
     Show_AddNum();
-    Calc_3C3R_AddNum(num);
+    g_3C3R.AddNum(num);
     Show_3C3R();
 }

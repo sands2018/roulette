@@ -59,7 +59,7 @@ function CIndexedArray()
         } while (bChanged);
     }
 
-    this.IndexedValue = function (idx)
+    this.Value = function (idx)
     {
         return this.anValue[this.anIdx[idx]];
     }
@@ -93,8 +93,6 @@ function CSysStatus()
         this.Seperate3C3R = ReadData(DATA_SEPERATE3C3R, "F");
     }
 }
-
-
 
 function CNumQueue()
 {
@@ -133,5 +131,4 @@ function CNumQueue()
         this.nCountNoZero = 0;
     }
 }
-
 
