@@ -1,5 +1,29 @@
 ﻿var g_bDebug = true;
 
+// styles: ----------------------------------------------------------------
+
+var g_s_theme_id = 1;
+
+var g_astrNumberColor =
+[
+    "g",
+    "r", "b", "r", "b", "r", "b", "r", "b", "r", "b", "b", "r",
+    "b", "r", "b", "r", "b", "r", "r", "b", "r", "b", "r", "b",
+    "r", "b", "r", "b", "b", "r", "b", "r", "b", "r", "b", "r"
+];
+
+// stats groups active button background color
+var g_s_c_sg_bk_active = "#EBE3CB";
+
+// global variables: ------------------------------------------------
+
+var QUEUE_MAX_COUNT = 100;
+var QUEUE_LINE_NUM_COUNT = 15;
+var STATS_GROUPS_COUNTS = [20, 40, 60, 80, 100, 99999];
+
+
+// ------------------------------------------------------------------
+
 function WriteData(key, value)
 {
     if (!window.localStorage)
@@ -78,6 +102,7 @@ function CIndexedArray()
 var DATA_KEYBOARDID = "KEYBOARDID";
 var DATA_SEPERATE3C3R = "SEPERATE3C3R";
 var DATA_COLUMNSBUTTON = "COLUMNSBUTTON";
+var DATA_SGCOUNTIDX = "SGCOUNTIDX";
 
 function CSysStatus()
 {
@@ -86,6 +111,7 @@ function CSysStatus()
     this.Seperate3C3R = "F";
     this.QueueExpand = 0;
     this.ColumnsButton = 5;
+    this.SGCountIdx = 1; // stats group
 
     this.Reset = function()
     {
@@ -99,6 +125,12 @@ function CSysStatus()
         if ((nVal < 3) || (nVal > 7))
             nVal = 5;
         this.ColumnsButton = nVal;
+
+        strVal = ReadData(DATA_SGCOUNTIDX, "1");
+        nVal = parseInt(strVal);
+        if ((nVal < 0) || (nVal >= STATS_GROUPS_COUNTS.length))
+            nVal = 1;
+        this.SGCountIdx = nVal;
     }
 }
 

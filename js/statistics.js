@@ -135,3 +135,32 @@ function CStatsColumns()
     }
 }
 
+
+function Calc_StatsGroupsCount(stats3C3R, queue)
+{
+    stats3C3R.Reset(6);
+
+    var nCalcCount = STATS_GROUPS_COUNTS[g_status.SGCountIdx];
+    var nCount = 0;
+
+    for (var n = queue.nIDX; n >= 0; --n)
+    {
+        if (queue.anNum[n] == 0)
+            continue;
+
+        var numQ = queue.anNum[n];
+        var nCol = GetNumCol(numQ);
+        var nRow = GetNumRow(numQ);
+
+        stats3C3R.anValue[nCol]++;
+        stats3C3R.anValue[nRow + 3]++;
+
+        ++nCount;
+        if (nCount >= nCalcCount)
+            break;
+    }
+
+    stats3C3R.Sort(true);
+}
+
+

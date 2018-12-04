@@ -252,19 +252,19 @@ tr.trLost td, .tdLost { color: #7fc37f; }
                 <td id="tdBttnStatsFinally" onclick="OnShowStatsMisc()">统计</td>
             </tr>
         </table>
+
+        <div id="divStatsGroups">
+            <div style="height: 13px"></div>
+            <table cellpadding="0" cellspacing="0" id="tblStatsGroups">
+                <tr>
+                    <td id="tdStatsGroupsCol" width="53%" style="border-right: 1px solid #8f8f8f"></td>
+                    <td id="tdStatsGroupsRow"></td>
+                </tr>
+                <tr><td id="tdSGButtons" colspan="2"></td></tr>
+            </table>
+        </div>
     </div>
 
-    <div id="divStatsGroups" style="display: none">
-        <div style="height: 13px"></div>
-        <table cellpadding="0" cellspacing="0" id="tblStatsGroups">
-            <tr>
-                <td id="tdStatsGroupsCol" width="53%" style="border-right: 1px solid #8f8f8f"></td>
-                <td id="tdStatsGroupsRow"></td>
-            </tr>
-            <tr id="trStatsGroupAll" onclick="OnStatsGroupClick()"><td id="tdStatsGroupsAll" colspan="2"></td></tr>
-            <tr><td id="tdSGButtons" colspan="2"></td></tr>
-        </table>
-    </div>
 
     <div id="divKeyboard" style="position:fixed; bottom: 0px; z-index:3003; width: 100%;">
         <div class="kbspace1">&nbsp;</div>

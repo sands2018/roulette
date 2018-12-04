@@ -7,25 +7,6 @@
     9999 - div import/export
 */
 
-// styles: ----------------------------------------------------------------
-
-var g_s_theme_id = 1;
-
-var g_astrNumberColor =
-[
-    "g",
-    "r", "b", "r", "b", "r", "b", "r", "b", "r", "b", "b", "r",
-    "b", "r", "b", "r", "b", "r", "r", "b", "r", "b", "r", "b",
-    "r", "b", "r", "b", "b", "r", "b", "r", "b", "r", "b", "r"
-];
-
-// stats groups active button background color
-var g_s_c_sg_bk_active = "#EBE3CB";
-
-// global variables: --------------------------------------------
-
-var QUEUE_MAX_COUNT = 100;
-var QUEUE_LINE_NUM_COUNT = 15;
 
 var g_queue = new CNumQueue();
 
@@ -431,6 +412,7 @@ function OnPageInit()
     Show_3C3R();
     Show_Columns();
     Show_RefreshColumnsButtons();
+    Show_StatsGroupsCount();
     Init_Theme();
     Show_RefreshTheme();
 
@@ -552,6 +534,7 @@ function OnAddNum(num)
     Show_AddNum();
     g_3C3R.AddNum(num);
     Show_3C3R();
+    Show_StatsGroupsCount();
 }
 
 function OnColumnsButton(nMin)
@@ -607,39 +590,6 @@ function Show_InitSGButtons()
     Show_RefreshSGButtons();
 }
 
-
-
-function Calc_StatsGroupsCount()
-{
-    for (var n = 0; n < 6; ++n)
-    {
-        g_t_an3C3RCount[n] = 0;
-        g_t_anIdx3C3RCount[n] = n;
-    }
-
-    var nCalcCount = STATS_GROUPS_COUNTS[g_nSGCountIdx];
-    var nCount = 0;
-
-    for (var n = g_nQueueIdx; n >= 0; --n)
-    {
-        if (g_anQueueNum[n] == 0)
-            continue;
-
-        var numQ = g_anQueueNum[n];
-        var nCol = GetNumCol(numQ);
-        var nRow = GetNumRow(numQ);
-
-        g_t_an3C3RCount[nCol]++;
-        g_t_an3C3RCount[nRow + 3]++;
-
-        ++nCount;
-        if (nCount >= nCalcCount)
-            break;
-    }
-
-    Sort(g_t_an3C3RCount, g_t_anIdx3C3RCount, true);
-}
-
 function NumberString_StatsGroupsCount(nNum)
 {
     return "<span class='SGCNumber'>" + nNum.toString() + "</span>"
@@ -647,9 +597,12 @@ function NumberString_StatsGroupsCount(nNum)
 
 function Show_StatsGroupsCount()
 {
+    var stats3C3R = new CIndexedArray();
+    Calc_StatsGroupsCount(stats3C3R, g_queue);
+
     var div = document.getElementById("divStatsGroups");
     var strDisplay = "";
-    if (g_nQueueIdx < 0)
+    if (g_queue.nIDX < 0)
         strDisplay = "none";
     div.style.display = strDisplay;
 
@@ -658,7 +611,7 @@ function Show_StatsGroupsCount()
     var bFirst = true;
     for (var n = 0; n < 6; ++n)
     {
-        var nIdx = g_t_anIdx3C3RCount[n];
+        var nIdx = stats3C3R.anIdx[n];
         if (nIdx >= 3)
             continue;
 
@@ -667,7 +620,7 @@ function Show_StatsGroupsCount()
         bFirst = false;
 
         strHtml += GetColRowSpec(nIdx) + "&nbsp;";
-        strHtml += NumberString_StatsGroupsCount(g_t_an3C3RCount[nIdx]);
+        strHtml += NumberString_StatsGroupsCount(stats3C3R.anValue[nIdx]);
     }
     tdCol.innerHTML = strHtml;
 
@@ -676,7 +629,7 @@ function Show_StatsGroupsCount()
     bFirst = true;
     for (var n = 0; n < 6; ++n)
     {
-        var nIdx = g_t_anIdx3C3RCount[n];
+        var nIdx = stats3C3R.anIdx[n];
         if (nIdx < 3)
             continue;
 
@@ -685,24 +638,8 @@ function Show_StatsGroupsCount()
         bFirst = false;
 
         strHtml += GetColRowSpec(nIdx) + "&nbsp;";
-        strHtml += NumberString_StatsGroupsCount(g_t_an3C3RCount[nIdx]);
+        strHtml += NumberString_StatsGroupsCount(stats3C3R.anValue[nIdx]);
     }
     tdRow.innerHTML = strHtml;
-
-    strHtml = "";
-    var tdAll = document.getElementById("tdStatsGroupsAll");
-    bFirst = true;
-    for (var n = 0; n < 6; ++n)
-    {
-        var nIdx = g_t_anIdx3C3RCount[n];
-
-        if (!bFirst)
-            strHtml += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-        bFirst = false;
-
-        strHtml += GetColRowSpec(nIdx) + "&nbsp;";
-        strHtml += NumberString_StatsGroupsCount(g_t_an3C3RCount[nIdx]);
-    }
-    tdAll.innerHTML = strHtml;
 }
 
