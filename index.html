@@ -5,7 +5,7 @@
 
 <style>
 
-td { text-align: center; vertical-align: middle; cursor: pointer; }
+td { text-align: center; vertical-align: middle; cursor: pointer; font-size: 40px }
 .kbspace1
 {
     padding: 0; margin: 0; border: 0; height: 50px;
@@ -39,6 +39,15 @@ td { text-align: center; vertical-align: middle; cursor: pointer; }
 }
 
 #tblQueue td { width: 58px; height: 58px; font-size: 36px; }
+#tblQueue td.Empty { background-color: white; border: 0 }
+
+#tblColumns td { border: 0; height: 70px; padding: 3px 10px }
+#tblColumns td.Title { width: 120px; }
+#tblColumns td.Value { width: 60px; }
+#tblColumns td.Space { width: 13px; font-size: 8px; padding: 0 }
+
+#tblColumns { margin-bottom: 10px }
+.tdBttn { padding: 3px; width: 120px }
 
 
 
@@ -79,6 +88,7 @@ td { text-align: center; vertical-align: middle; cursor: pointer; }
 #tblStatsIntervals .tdZero { font-family:Arial; font-size: 40px; color: #8fc38f; font-weight: bold; padding: 0px 18px }
 #tblStatsIntervals .txtZero { color: #83aa83 }
 
+
 #tblStatsNumCount td { font-size: 40px; padding: 2px 10px }  
 #tblStatsGroups { border-top: 1px solid #8f8f8f; width: 100% }
 #tblStatsGroups td { font-size: 36px; text-align: left; padding-left: 12px; border-bottom: 1px solid #8f8f8f; }
@@ -86,6 +96,9 @@ td { text-align: center; vertical-align: middle; cursor: pointer; }
 #tblSGButtons { width: 100% }
 #tblSGButtons td, #tblSNCButtons td { font-size: 40px; border: 1px solid #AA8833; padding: 5px 28px;  width: 150px; text-align: center; }
 .SGCNumber { font-size: 40px; color: #dd8877; font-weight: bold }
+
+
+
 
 table.tblGameSum td { font-size: 36px; padding: 0 20px; }
 table.tblGameSum { width: 100%; border: 1px solid #8f8f8f; }
@@ -157,8 +170,38 @@ tr.trLost td, .tdLost { color: #7fc37f; }
     </div>
 
     <div style="position:absolute; z-index:0; top: 90px; padding: 0; margin: 0; width: 100%">
-        <div style="height: 8px" id="divBlank"></div>
-        <div id="divColumns"></div>
+        <div id="divColumns">
+            <div style="height: 8px" id="divBlank"></div>
+            <table cellpadding="0" cellspacing="2" border="0" id="tblColumns" style="width: 100%">
+                <tr id="trColumns0">
+                    <td id="tdColumnsT0"></td><td id="tdColumnsV0"></td><td class="Space Empty">&nbsp;</td>
+                    <td id="tdColumnsT1"></td><td id="tdColumnsV1"></td><td class="Space Empty">&nbsp;</td>
+                    <td id="tdColumnsT2"></td><td id="tdColumnsV2"></td><td class="Space Empty">&nbsp;</td>
+                    <td id="tdColumnsT3"></td><td id="tdColumnsV3"></td>
+                </tr>
+                <tr id="trColumns1">
+                    <td id="tdColumnsT4"></td><td id="tdColumnsV4"></td><td class="Space Empty">&nbsp;</td>
+                    <td id="tdColumnsT5"></td><td id="tdColumnsV5"></td><td class="Space Empty">&nbsp;</td>
+                    <td id="tdColumnsT6"></td><td id="tdColumnsV6"></td><td class="Space Empty">&nbsp;</td>
+                    <td id="tdColumnsT7"></td><td id="tdColumnsV7"></td>
+                </tr>
+                <tr id="trColumns2">
+                    <td id="tdColumnsT8"></td><td id="tdColumnsV8"></td><td class="Space Empty">&nbsp;</td>
+                    <td id="tdColumnsT9"></td><td id="tdColumnsV9"></td><td class="Space Empty">&nbsp;</td>
+                    <td id="tdColumnsT10"></td><td id="tdColumnsV10"></td><td class="Space Empty">&nbsp;</td>
+                    <td id="tdColumnsT11"></td><td id="tdColumnsV11"></td>
+                </tr>
+            </table>
+            <table cellpadding='0' cellspacing='5' border='0' id='tblColumnsButtons'>
+                <tr>
+                    <td id="tdCBttn3" class="tdBttn" onclick="OnColumnsButton(3)">3</td><td class="Empty">&nbsp;</td>
+                    <td id="tdCBttn4" class="tdBttn" onclick="OnColumnsButton(4)">4</td><td class="Empty">&nbsp;</td>
+                    <td id="tdCBttn5" class="tdBttn" onclick="OnColumnsButton(5)">5</td><td class="Empty">&nbsp;</td>
+                    <td id="tdCBttn6" class="tdBttn" onclick="OnColumnsButton(6)">6</td><td class="Empty">&nbsp;</td>
+                    <td id="tdCBttn7" class="tdBttn" onclick="OnColumnsButton(7)">7</td>
+                </tr>
+            </table>
+        </div>
         <table cellpadding="0" cellspacing="5" border="0" id="tblQueue" onclick="OnSysExpand()">
             <tr id="trRow1">
                 <td id="td0" class="tdRed"></td><td id="td1"></td><td id="td2"></td><td id="td3"></td><td id="td4"></td>
@@ -208,6 +251,18 @@ tr.trLost td, .tdLost { color: #7fc37f; }
                 <td id="tdBttnImport" onclick="OnSysImportExport(true)">导入</td>
                 <td id="tdBttnStatsFinally" onclick="OnShowStatsMisc()">统计</td>
             </tr>
+        </table>
+    </div>
+
+    <div id="divStatsGroups" style="display: none">
+        <div style="height: 13px"></div>
+        <table cellpadding="0" cellspacing="0" id="tblStatsGroups">
+            <tr>
+                <td id="tdStatsGroupsCol" width="53%" style="border-right: 1px solid #8f8f8f"></td>
+                <td id="tdStatsGroupsRow"></td>
+            </tr>
+            <tr id="trStatsGroupAll" onclick="OnStatsGroupClick()"><td id="tdStatsGroupsAll" colspan="2"></td></tr>
+            <tr><td id="tdSGButtons" colspan="2"></td></tr>
         </table>
     </div>
 

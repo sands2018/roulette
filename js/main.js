@@ -193,76 +193,108 @@ function Show_3C3R()
     td2.style.display = strDisplay;
 }
 
+function GetColumnSpec(nIdx)
+{
+    return g_columns.anStart[nIdx].toString() + "-" + (g_columns.anStart[nIdx] + 5).toString();
+}
+
 
 function Show_Columns()
 {
-    var aPair = [];
-    Calc_Columns(aPair);
+    var nMin = g_status.ColumnsButton;
+    var nColumnCount = g_columns.anStart.length;
+    var nCount = 0;
 
-    var div = document.getElementById("divColumns");
-    var strHtml = "";
-    var bFirst = true;
-
-    /*
-    for(var n = 0; n < g_anColumnsStart.length; ++ n)
+    for(var n = 0; n < nColumnCount; ++ n)
     {
-        if (!bFirst)
-            strHtml += "&nbsp;";
-        bFirst = false;
+        if (g_columns.data.Value(n) < nMin)
+            break;
 
-        if (n == 6)
-            strHtml += "<br>";
-
-        strHtml += "<span class='" + ((anStatus[n] == 0) ? "ColumnNormal" : "ColumnHighlight") + "'>";
-        strHtml += "&nbsp;" + GetColumnSpec(g_t_anIdxColumnsCount[n]) + "&nbsp;<span class='ColumnsCount'>" + g_t_anColumnsCount[g_t_anIdxColumnsCount[n]].toString() + "</span>&nbsp;</span>";
-    }
-    */
-
-    for (var n = 0; n < aPair.length; ++n)
-    {
-        if ((n != 0) && ((n % 2) == 0))
-            strHtml += "<br>";
-        else if (!bFirst)
-            strHtml += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-
-        bFirst = false;
-
-
-        strHtml += "[&nbsp;" + GetColumnSpec(aPair[n].value1) + "&nbsp;<span class='ColumnsCount'>" + g_t_anColumnsCount[aPair[n].value1].toString() + "</span>&nbsp;&nbsp;&nbsp;";
-        strHtml += "&nbsp;" + GetColumnSpec(aPair[n].value2) + "&nbsp;<span class='ColumnsCount'>" + g_t_anColumnsCount[aPair[n].value2].toString() + "</span>&nbsp;]";
+        ++nCount;
     }
 
-    var bShow = true;
+    var tbl = document.getElementById("tblColumns");
+    var tr1 = document.getElementById("trColumns1");
+    var tr2 = document.getElementById("trColumns2");
 
-    if (aPair.length <= 0)
+    tbl.style.display = "";
+    tr1.style.display = "";
+    tr2.style.display = "";
+
+    if (nCount <= 0)
     {
-        bShow = false;
-        bFirst = true;
-        for (var n = 0; n < g_t_anColumnsCount.length; ++n)
+        tbl.style.display = "none";
+        return;
+    }
+    else 
+    {
+        if(nCount <= 4)
         {
-            if (g_t_anColumnsCount[g_t_anIdxColumnsCount[n]] < 10)
-                break;
-
-            bShow = true;
-
-            if ((n != 0) && ((n % 3) == 0))
-                strHtml += "<br>";
-            else if (!bFirst)
-                strHtml += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-            bFirst = false;
-
-            strHtml += "&nbsp;" + GetColumnSpec(g_t_anIdxColumnsCount[n]) + "&nbsp;<span class='ColumnsCount'>" + g_t_anColumnsCount[g_t_anIdxColumnsCount[n]].toString() + "</span>&nbsp;";
+            tr1.style.display = "none";
+            tr2.style.display = "none";
+        }
+        else if(nCount <= 8)
+        {
+            tr2.style.display = "none";
         }
     }
 
-    div.innerHTML = strHtml;
+    var anActive = [];
+    for(var n = 0; n < nCount; ++ n)
+        anActive[n] = 1;
 
-    if (bShow)
-        div.style.display = (g_nColumnsStatus == 0) ? "none" : "";
-    else
-        div.style.display = "none";
+    for(var n = 0; n < nCount - 1; ++n)
+    {
+        if (anActive[n] == 0)
+            continue;
+
+        if((g_columns.data.anIdx[n] % 2) != 0)
+            continue;
+
+        for(var nn = n + 1; nn < nCount; ++ nn)
+        {
+            var nMinIdx = Math.min(g_columns.data.anIdx[n], g_columns.data.anIdx[nn]);
+            var nMaxIdx = Math.max(g_columns.data.anIdx[n], g_columns.data.anIdx[nn]);
+
+            if (((nMinIdx % 4) == 0) && ((nMaxIdx - nMinIdx) == 2))
+            {
+                anActive[n] = 0;
+                anActive[nn] = 0;
+                break;
+            }
+        }
+    }
+
+    for(var n = 0; n < 12; ++ n)
+    {
+        var tdT = document.getElementById("tdColumnsT" + n.toString());
+        var tdV = document.getElementById("tdColumnsV" + n.toString());
+
+        if (n >= nCount)
+        {
+            tdT.innerHTML = "&nbsp;";
+            tdV.innerHTML = "&nbsp;";
+            tdT.className = "Title Empty";
+            tdV.className = "Value Empty";
+        }
+        else
+        {
+            tdT.innerHTML = GetColumnSpec(g_columns.data.anIdx[n]);
+            tdV.innerHTML = g_columns.data.Value(n).toString();
+
+            if(anActive[n] == 1)
+            {
+                tdT.className = "Title TActive";
+                tdV.className = "Value VActive";
+            }
+            else
+            {
+                tdT.className = "Title TInactive";
+                tdV.className = "Value VInactive";
+            }
+        }
+    }
 }
-
 
 function Show_Queue()
 {
@@ -286,7 +318,7 @@ function Show_Queue()
         var strIdTd = "td" + n.toString();
         var td = document.getElementById(strIdTd);
         td.innerHTML = "&nbsp;";
-        td.className = "tdEmpty";
+        td.className = "Empty";
     }
 
     var nQueueRow = 0;
@@ -342,23 +374,38 @@ function Show_RefreshSysButtons()
     }
 }
 
+function Show_RefreshColumnsButtons()
+{
+    var anCount = [3, 4, 5, 6, 7];
+    for (var n = 0; n < anCount.length; ++n)
+    {
+        var td = document.getElementById("tdCBttn" + anCount[n].toString());
+
+        if (anCount[n] == g_status.ColumnsButton)
+            td.className = "tdBttn tdSelBttn";
+        else
+            td.className = "tdBttn";
+    }
+}
 
 function Calc_AddNum(num)
 {
     g_queue.AddNum(num);
+    g_columns.ReCalc(g_queue);
 }
 
 function Show_AddNum()
 {
     Show_Queue();
     Show_3C3R();
+    Show_Columns();
     Show_RefreshSysButtons();
 }
 
 function PageInit_Data()
 {
     g_3C3R.Reset();
-    //g_columns.Reset();
+    g_columns.Reset();
     g_status.Reset();
     g_queue.Reset();
 }
@@ -382,6 +429,8 @@ function OnPageInit()
 
     Show_Keyboard(true);
     Show_3C3R();
+    Show_Columns();
+    Show_RefreshColumnsButtons();
     Init_Theme();
     Show_RefreshTheme();
 
@@ -504,3 +553,156 @@ function OnAddNum(num)
     g_3C3R.AddNum(num);
     Show_3C3R();
 }
+
+function OnColumnsButton(nMin)
+{
+    if (nMin == g_status.ColumnsButton)
+        return;
+
+    g_status.ColumnsButton = nMin;
+    WriteData(DATA_COLUMNSBUTTON, nMin.toString());
+
+    Show_Columns();
+    Show_RefreshColumnsButtons();
+}
+
+function Show_RefreshSGButtons()
+{
+    var nCount = STATS_GROUPS_COUNTS.length;
+    var strBkColor = "";
+
+    for (var n = 0; n < nCount; ++n)
+    {
+        if (n == g_nSGCountIdx)
+            strBkColor = g_s_c_sg_bk_active;
+        else
+            strBkColor = "white";
+
+        var td = document.getElementById("tdSGCount" + n.toString());
+        td.style.backgroundColor = strBkColor;
+    }
+}
+
+function Show_InitSGButtons()
+{
+    var strHtml = "<table cellpadding='0' cellspacing='5' border='0' id='tblSGButtons'><tr>";
+    var nCount = STATS_GROUPS_COUNTS.length;
+    for (var n = 0; n < nCount; ++n)
+    {
+        strHtml += "<td id='tdSGCount" + n.toString() + "' ";
+        strHtml += "onclick='OnSGCountClick(" + n.toString() + ")'>";
+
+        if (STATS_GROUPS_COUNTS[n] > 999)
+            strHtml += "全部";
+        else
+            strHtml += STATS_GROUPS_COUNTS[n].toString();
+
+        strHtml += "</td>";
+    }
+    strHtml += "</tr></table>";
+
+    var td = document.getElementById("tdSGButtons");
+    td.innerHTML = strHtml;
+
+    Show_RefreshSGButtons();
+}
+
+
+
+function Calc_StatsGroupsCount()
+{
+    for (var n = 0; n < 6; ++n)
+    {
+        g_t_an3C3RCount[n] = 0;
+        g_t_anIdx3C3RCount[n] = n;
+    }
+
+    var nCalcCount = STATS_GROUPS_COUNTS[g_nSGCountIdx];
+    var nCount = 0;
+
+    for (var n = g_nQueueIdx; n >= 0; --n)
+    {
+        if (g_anQueueNum[n] == 0)
+            continue;
+
+        var numQ = g_anQueueNum[n];
+        var nCol = GetNumCol(numQ);
+        var nRow = GetNumRow(numQ);
+
+        g_t_an3C3RCount[nCol]++;
+        g_t_an3C3RCount[nRow + 3]++;
+
+        ++nCount;
+        if (nCount >= nCalcCount)
+            break;
+    }
+
+    Sort(g_t_an3C3RCount, g_t_anIdx3C3RCount, true);
+}
+
+function NumberString_StatsGroupsCount(nNum)
+{
+    return "<span class='SGCNumber'>" + nNum.toString() + "</span>"
+}
+
+function Show_StatsGroupsCount()
+{
+    var div = document.getElementById("divStatsGroups");
+    var strDisplay = "";
+    if (g_nQueueIdx < 0)
+        strDisplay = "none";
+    div.style.display = strDisplay;
+
+    var tdCol = document.getElementById("tdStatsGroupsCol");
+    var strHtml = "";
+    var bFirst = true;
+    for (var n = 0; n < 6; ++n)
+    {
+        var nIdx = g_t_anIdx3C3RCount[n];
+        if (nIdx >= 3)
+            continue;
+
+        if (!bFirst)
+            strHtml += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+        bFirst = false;
+
+        strHtml += GetColRowSpec(nIdx) + "&nbsp;";
+        strHtml += NumberString_StatsGroupsCount(g_t_an3C3RCount[nIdx]);
+    }
+    tdCol.innerHTML = strHtml;
+
+    strHtml = "";
+    var tdRow = document.getElementById("tdStatsGroupsRow");
+    bFirst = true;
+    for (var n = 0; n < 6; ++n)
+    {
+        var nIdx = g_t_anIdx3C3RCount[n];
+        if (nIdx < 3)
+            continue;
+
+        if (!bFirst)
+            strHtml += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+        bFirst = false;
+
+        strHtml += GetColRowSpec(nIdx) + "&nbsp;";
+        strHtml += NumberString_StatsGroupsCount(g_t_an3C3RCount[nIdx]);
+    }
+    tdRow.innerHTML = strHtml;
+
+    strHtml = "";
+    var tdAll = document.getElementById("tdStatsGroupsAll");
+    bFirst = true;
+    for (var n = 0; n < 6; ++n)
+    {
+        var nIdx = g_t_anIdx3C3RCount[n];
+
+        if (!bFirst)
+            strHtml += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+        bFirst = false;
+
+        strHtml += GetColRowSpec(nIdx) + "&nbsp;";
+        strHtml += NumberString_StatsGroupsCount(g_t_an3C3RCount[nIdx]);
+    }
+    tdAll.innerHTML = strHtml;
+}
+

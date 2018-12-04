@@ -77,6 +77,7 @@ function CIndexedArray()
 
 var DATA_KEYBOARDID = "KEYBOARDID";
 var DATA_SEPERATE3C3R = "SEPERATE3C3R";
+var DATA_COLUMNSBUTTON = "COLUMNSBUTTON";
 
 function CSysStatus()
 {
@@ -84,6 +85,7 @@ function CSysStatus()
     this.KeyboardID = "K";
     this.Seperate3C3R = "F";
     this.QueueExpand = 0;
+    this.ColumnsButton = 5;
 
     this.Reset = function()
     {
@@ -91,6 +93,12 @@ function CSysStatus()
         this.QueueExpand = 0;
         this.KeyboardID = ReadData(DATA_KEYBOARDID, "K");
         this.Seperate3C3R = ReadData(DATA_SEPERATE3C3R, "F");
+
+        var strVal = ReadData(DATA_COLUMNSBUTTON, "5");
+        var nVal = parseInt(strVal);
+        if ((nVal < 3) || (nVal > 7))
+            nVal = 5;
+        this.ColumnsButton = nVal;
     }
 }
 

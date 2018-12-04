@@ -5,7 +5,6 @@
 #tblKeyboard td.tdRed, #tblGameBoard td.tdRed, #tblQueue td.tdRed { background-color: white }
 #tblKeyboard td.tdBlack, #tblGameBoard td.tdBlack, #tblQueue td.tdBlack { background-color: white }
 #tblKeyboard td.tdGreen, #tblGameBoard td.tdGreen, #tblQueue td.tdGreen { background-color: white }
-#tblQueue td.tdEmpty { background-color: white; border: 0 }
 
 #tbl3C3R td { padding: 8px 0px; border: 1px solid white; }
 #tbl3C3R td.td3C3RT { color: #eeeeee; background-color: white }
@@ -17,4 +16,14 @@
 
 #tblSysButtons td.tdSBEnabled { color: #e8e8e8; background-color: white; border: 1px solid #e8e8e8 }
 #tblSysButtons td.tdSBDisabled { color: #f8f8f8; background-color: white; border: 1px solid #f8f8f8 }
+
+#tblColumns td { background-color: #f8f8f8; }
+#tblColumns td.TActive { color: #cfcfcf }
+#tblColumns td.TInactive { color: #e8e8e8; background-color: #ffffff }
+#tblColumns td.VActive { color: #cfcfcf }
+#tblColumns td.VInactive { color: #e8e8e8; background-color: #ffffff }
+#tblColumns td.Empty { background-color: white; }
+
+.tdBttn { border: 1px solid #f3efe8; color: #e8e8e8; }
+.tdSelBttn { background-color: #f8f5f3 }
 
