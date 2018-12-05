@@ -692,13 +692,39 @@ function OnSysExport()
 
 function OnSysImport()
 {
-    navigator.clipboard.readText()
-        .then(text =>
-        {
-            alert(text);
-        })
-        .catch(err =>
-        {
-            alert("error");
-        });
+    var tdTitle = document.getElementById("tdImportExportTitle");
+    var txt = document.getElementById("txtClipboard");
+    var trSpecImport = document.getElementById("trSpecImport");
+    var trSpecExport = document.getElementById("trSpecExport");
+    var tdBttnDoImport = document.getElementById("tdBttnDoImport");
+
+    tdTitle.innerHTML = "导&nbsp;&nbsp;&nbsp;入";
+    txt.value = "";
+    trSpecImport.style.display = "";
+    trSpecExport.style.display = "none";
+    tdBttnDoImport.style.display = "";
+    var div = document.getElementById("divImportExport");
+    div.style.display = "";
+    txt.select();
+}
+
+function OnImport()
+{
+    var txt = document.getElementById("txtClipboard");
+    var strNumbers = txt.value;
+    if (strNumbers.length <= 0)
+    {
+        alert("请在输入框中输入要导入的数据!");
+        return;
+    }
+
+    //if (DoImport(strNumbers, false))
+        //OnImportExportOK();
+}
+
+
+function OnImportExportOK()
+{
+    var div = document.getElementById("divImportExport");
+    div.style.display = "none";
 }

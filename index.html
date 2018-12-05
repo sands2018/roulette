@@ -338,5 +338,24 @@ tr.trLost td, .tdLost { color: #7fc37f; }
         </div>
     </div>
     <div id="divShowKeyboard" style="position:fixed; right: 0px; bottom: 0px; z-index:3001; width: 100px; height: 100px; display:none" onclick="OnShowKeyboard()"></div>
+    <div id="divImportExport" style="display: none;">
+        <table cellpadding="0" cellspacing="30" style="width: 100%" id="tblImportExport">
+            <tr><td>&nbsp;</td></tr>
+            <tr><td id="tdImportExportTitle"></td></tr>
+            <tr id="trSpecImport"><td class="tdSpec">请在下面编辑框内准备好需要导入的数据，然后按导入：</td></tr>
+            <tr id="trSpecExport"><td class="tdSpec">请把下面编辑框的内容复制到剪贴板，然后导出：</td></tr>
+            <tr><td id="tdTxt"><textarea style="width: 100%; height: 600px" id="txtClipboard"></textarea></td></tr>
+            <tr>
+                <td style="text-align: center">
+                    <table cellpadding="0" cellspacing="20" border="0" style="margin: auto" id="tblPanelButtons">
+                        <tr>
+                            <td class="bttn bttnImportExport" id="tdBttnDoImport" onclick="OnImport()">导入</td>
+                            <td class="bttn bttnImportExport" onclick="OnImportExportOK()">退出</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
 </body>
 </html>
