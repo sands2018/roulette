@@ -21,7 +21,6 @@ var QUEUE_MAX_COUNT = 100;
 var QUEUE_LINE_NUM_COUNT = 15;
 var STATS_GROUPS_COUNTS = [20, 40, 60, 80, 100, 99999];
 
-
 // ------------------------------------------------------------------
 
 function WriteData(key, value)
@@ -98,7 +97,7 @@ function CIndexedArray()
     }
 }
 
-
+var DATA_NUMBERS = "NUMBERS";
 var DATA_KEYBOARDID = "KEYBOARDID";
 var DATA_SEPERATE3C3R = "SEPERATE3C3R";
 var DATA_COLUMNSBUTTON = "COLUMNSBUTTON";
@@ -110,8 +109,8 @@ function CSysStatus()
     this.KeyboardID = "K";
     this.Seperate3C3R = "F";
     this.QueueExpand = 0;
-    this.ColumnsButton = 5;
-    this.SGCountIdx = 1; // stats group
+    this.ColumnsCountBttn = 5;
+    this.SGCountBttnIdx = 1; // stats group
 
     this.Reset = function()
     {
@@ -124,13 +123,13 @@ function CSysStatus()
         var nVal = parseInt(strVal);
         if ((nVal < 3) || (nVal > 7))
             nVal = 5;
-        this.ColumnsButton = nVal;
+        this.ColumnsCountBttn = nVal;
 
         strVal = ReadData(DATA_SGCOUNTIDX, "1");
         nVal = parseInt(strVal);
         if ((nVal < 0) || (nVal >= STATS_GROUPS_COUNTS.length))
             nVal = 1;
-        this.SGCountIdx = nVal;
+        this.SGCountBttnIdx = nVal;
     }
 }
 
@@ -171,4 +170,52 @@ function CNumQueue()
         this.nCountNoZero = 0;
     }
 }
+
+function NumArrayToString(queue)
+{
+    var strExport = "";
+    var bFirst = true;
+    for (var n = 0; n <= queue.nIDX; ++n)
+    {
+        if (!bFirst)
+            strExport += ",";
+        bFirst = false;
+
+        strExport += queue.anNum[n].toString();
+    }
+
+    return strExport;
+}
+
+function CReturnArray()
+{
+    this.anVal = [];
+    this.rn = 0;
+}
+
+function NumStringToArray(strNumbers, rtn)
+{
+    var astrNum = strNumbers.split(",");
+    if ((strNumbers.length <= 0) || (astrNum.length <= 0))
+    {
+        rtn.rn = 0;
+        return;
+    }
+
+    var anNum = [];
+    for (var n = 0; n < astrNum.length; ++n)
+    {
+        var nNum = parseInt(astrNum[n]);
+        if (isNaN(nNum) || (nNum < 0) || (nNum > 36))
+        {
+            rtn.rn = -1;
+            return;
+        }
+
+        rtn.anVal[n] = nNum;
+    }
+
+    rtn.rn = 1;
+}
+
 

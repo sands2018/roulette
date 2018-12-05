@@ -17,13 +17,15 @@
 #tblSysButtons td.tdSBEnabled { color: #e8e8e8; background-color: white; border: 1px solid #e8e8e8 }
 #tblSysButtons td.tdSBDisabled { color: #f8f8f8; background-color: white; border: 1px solid #f8f8f8 }
 
-#tblColumns td { background-color: #f8f8f8; }
-#tblColumns td.TActive { color: #cfcfcf }
-#tblColumns td.TInactive { color: #e8e8e8; background-color: #ffffff }
-#tblColumns td.VActive { color: #cfcfcf }
-#tblColumns td.VInactive { color: #e8e8e8; background-color: #ffffff }
-#tblColumns td.Empty { background-color: white; }
+#tblColumns td.TActive { color: #cfcfcf; background-color: #f8f8f8; }
+#tblColumns td.TInactive { color: #e8e8e8; background-color: #ffffff; }
+#tblColumns td.VActive { color: #cfcfcf; background-color: #f8f8f8; }
+#tblColumns td.VInactive { color: #e8e8e8; background-color: #ffffff; }
 
 .tdBttn { border: 1px solid #f3efe8; color: #e8e8e8; }
 .tdSelBttn { background-color: #f8f5f3 }
 
+#tblStatsGroups { border-top: 1px solid #e8e8e8; border-bottom: 1px solid #e8e8e8; }
+#tblStatsGroups td:first-child { border-right: 1px solid #e8e8e8; }
+.SGCTitle { color: #e8e8e8; }
+.SGCNumber { color: #e8e8e8; }

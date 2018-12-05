@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>function-target</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <!-- 1. Define some markup -->
+    <button id="tdBttnExport" onclick="OnPaste()">COPYPASTE</button>
+    <div>hello</div>
+
+    <!-- 2. Include library -->
+    <script type="text/javascript" src="http://www.htmleaf.com/js/jquery/1.10.2/jquery.min.js"></script>
+    <script src="3rd/clipboard.min.js"></script>
+
+    <!-- 3. Instantiate clipboard -->
+    <script>
+        function OnPaste()
+        {
+            navigator.clipboard.readText()
+              .then(text =>
+              {
+                  alert(text);
+              })
+              .catch(err =>
+              {
+                  alert("error");
+              });
+        }
+    </script>
+</body>
+</html>

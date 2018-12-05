@@ -7,14 +7,12 @@
     9999 - div import/export
 */
 
+// global variables: ----------------------------------------------------------
 
 var g_queue = new CNumQueue();
-
 var g_status = new CSysStatus();
-
 var g_3C3R = new CStats3C3R();
 var g_columns = new CStatsColumns();
-
 
 
 function ChangeTheme(theme)
@@ -182,7 +180,7 @@ function GetColumnSpec(nIdx)
 
 function Show_Columns()
 {
-    var nMin = g_status.ColumnsButton;
+    var nMin = g_status.ColumnsCountBttn;
     var nColumnCount = g_columns.anStart.length;
     var nCount = 0;
 
@@ -355,23 +353,10 @@ function Show_RefreshSysButtons()
     }
 }
 
-function Show_RefreshColumnsButtons()
-{
-    var anCount = [3, 4, 5, 6, 7];
-    for (var n = 0; n < anCount.length; ++n)
-    {
-        var td = document.getElementById("tdCBttn" + anCount[n].toString());
-
-        if (anCount[n] == g_status.ColumnsButton)
-            td.className = "tdBttn tdSelBttn";
-        else
-            td.className = "tdBttn";
-    }
-}
-
 function Calc_AddNum(num)
 {
     g_queue.AddNum(num);
+    g_3C3R.AddNum(num);
     g_columns.ReCalc(g_queue);
 }
 
@@ -380,6 +365,7 @@ function Show_AddNum()
     Show_Queue();
     Show_3C3R();
     Show_Columns();
+    Show_StatsGroupsCount();
     Show_RefreshSysButtons();
 }
 
@@ -413,6 +399,7 @@ function OnPageInit()
     Show_Columns();
     Show_RefreshColumnsButtons();
     Show_StatsGroupsCount();
+    Show_RefreshSGButtons();
     Init_Theme();
     Show_RefreshTheme();
 
@@ -528,25 +515,55 @@ function OnSeperate3C3RClick()
     Show_3C3R();
 }
 
+function SaveNumbers()
+{
+    var strNum = NumArrayToString(g_queue);
+    WriteData(DATA_NUMBERS, strNum);
+}
+
 function OnAddNum(num)
 {
     Calc_AddNum(num);
     Show_AddNum();
-    g_3C3R.AddNum(num);
-    Show_3C3R();
-    Show_StatsGroupsCount();
+    SaveNumbers();
 }
 
-function OnColumnsButton(nMin)
+function OnColumnsBttnClick(nMin)
 {
-    if (nMin == g_status.ColumnsButton)
+    if (nMin == g_status.ColumnsCountBttn)
         return;
 
-    g_status.ColumnsButton = nMin;
+    g_status.ColumnsCountBttn = nMin;
     WriteData(DATA_COLUMNSBUTTON, nMin.toString());
 
     Show_Columns();
     Show_RefreshColumnsButtons();
+}
+
+function Show_RefreshColumnsButtons()
+{
+    var anCount = [3, 4, 5, 6, 7];
+    for (var n = 0; n < anCount.length; ++n)
+    {
+        var td = document.getElementById("tdCBttn" + anCount[n].toString());
+
+        if (anCount[n] == g_status.ColumnsCountBttn)
+            td.className = "tdBttn tdSelBttn";
+        else
+            td.className = "tdBttn";
+    }
+}
+
+function OnSGCountBttnClick(nIdx)
+{
+    if (nIdx == g_status.SGCountBttnIdx)
+        return;
+
+    g_status.SGCountBttnIdx = nIdx;
+    WriteData(DATA_SGCOUNTIDX, nIdx.toString());
+
+    Show_StatsGroupsCount();
+    Show_RefreshSGButtons();
 }
 
 function Show_RefreshSGButtons()
@@ -556,38 +573,18 @@ function Show_RefreshSGButtons()
 
     for (var n = 0; n < nCount; ++n)
     {
-        if (n == g_nSGCountIdx)
-            strBkColor = g_s_c_sg_bk_active;
-        else
-            strBkColor = "white";
-
         var td = document.getElementById("tdSGCount" + n.toString());
-        td.style.backgroundColor = strBkColor;
+
+        if (n == g_status.SGCountBttnIdx)
+            td.className = "tdBttn tdSelBttn";
+        else
+            td.className = "tdBttn";
     }
 }
 
-function Show_InitSGButtons()
+function TitleString_StatsGroupsCount(strTitle)
 {
-    var strHtml = "<table cellpadding='0' cellspacing='5' border='0' id='tblSGButtons'><tr>";
-    var nCount = STATS_GROUPS_COUNTS.length;
-    for (var n = 0; n < nCount; ++n)
-    {
-        strHtml += "<td id='tdSGCount" + n.toString() + "' ";
-        strHtml += "onclick='OnSGCountClick(" + n.toString() + ")'>";
-
-        if (STATS_GROUPS_COUNTS[n] > 999)
-            strHtml += "全部";
-        else
-            strHtml += STATS_GROUPS_COUNTS[n].toString();
-
-        strHtml += "</td>";
-    }
-    strHtml += "</tr></table>";
-
-    var td = document.getElementById("tdSGButtons");
-    td.innerHTML = strHtml;
-
-    Show_RefreshSGButtons();
+    return "<span class='SGCTitle'>" + strTitle + "</span>"
 }
 
 function NumberString_StatsGroupsCount(nNum)
@@ -619,7 +616,7 @@ function Show_StatsGroupsCount()
             strHtml += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
         bFirst = false;
 
-        strHtml += GetColRowSpec(nIdx) + "&nbsp;";
+        strHtml += TitleString_StatsGroupsCount(GetColRowSpec(nIdx)) + "&nbsp;";
         strHtml += NumberString_StatsGroupsCount(stats3C3R.anValue[nIdx]);
     }
     tdCol.innerHTML = strHtml;
@@ -637,9 +634,71 @@ function Show_StatsGroupsCount()
             strHtml += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
         bFirst = false;
 
-        strHtml += GetColRowSpec(nIdx) + "&nbsp;";
+        strHtml += TitleString_StatsGroupsCount(GetColRowSpec(nIdx)) + "&nbsp;";
         strHtml += NumberString_StatsGroupsCount(stats3C3R.anValue[nIdx]);
     }
     tdRow.innerHTML = strHtml;
 }
 
+function OnSysRestore()
+{
+    if (g_queue.nIDX >= 0)
+        return;
+
+    var strNum = ReadData(DATA_NUMBERS);
+    var rtn = new CReturnArray();
+    NumStringToArray(strNum, rtn);
+    if (rtn.rn < 0)
+        alert("保存的数据可能已经损坏数");
+    else if (rtn.rn == 0)
+        alert("没有找到保存的数据");
+    else
+    {
+        var confirmed = confirm("确定要恢复吗？");
+        if (confirmed == 0)
+            return;
+
+        PageInit_Data();
+
+        for (var n = 0; n < rtn.anVal.length; ++n)
+        {
+            g_queue.AddNum(rtn.anVal[n]);
+            g_3C3R.AddNum(rtn.anVal[n]);
+        }
+
+        g_columns.ReCalc(g_queue);
+
+        Show_AddNum();
+    }
+}
+
+function OnSysExport()
+{
+    var clipboard = new ClipboardJS('#tdBttnExport');
+    var strData = NumArrayToString(g_queue);
+    $("#tdBttnExport").attr("data-clipboard-action", "copy");
+    $("#tdBttnExport").attr("data-clipboard-text", strData);
+
+    clipboard.on('success', function (e)
+    {
+        alert("数据已复制到粘贴板");
+    });
+
+    clipboard.on('error', function (e)
+    {
+        alert("数据复制失败");
+    });
+}
+
+function OnSysImport()
+{
+    navigator.clipboard.readText()
+        .then(text =>
+        {
+            alert(text);
+        })
+        .catch(err =>
+        {
+            alert("error");
+        });
+}

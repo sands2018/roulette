@@ -20,13 +20,15 @@
 #tblSysButtons td.tdSBEnabled { color: #aa8833; background-color: white; border: 1px solid #aa8833 }
 #tblSysButtons td.tdSBDisabled { color: #bbbbbb; background-color: white; border: 1px solid #bbbbbb }
 
-#tblColumns td { background-color: #eeeeee; }
-#tblColumns td.TActive { color: black }
-#tblColumns td.TInactive { color: #a3a3a3; background-color: #f8f8f8 }
-#tblColumns td.VActive { color: #aa3322 }
-#tblColumns td.VInactive { color: #c38f78; background-color: #f8f8f8 }
-#tblColumns td.Empty { background-color: white; }
+#tblColumns td.TActive { color: black; background-color: #eeeeee; }
+#tblColumns td.TInactive { color: #a3a3a3; background-color: #f8f8f8; }
+#tblColumns td.VActive { color: #aa3322; background-color: #eeeeee; }
+#tblColumns td.VInactive { color: #c38f78; background-color: #f8f8f8; }
 
 .tdBttn { border: 1px solid #aa8833; }
 .tdSelBttn { background-color: #ebe3cb }
 
+#tblStatsGroups { border-top: 1px solid #8f8f8f; border-bottom: 1px solid #8f8f8f; }
+#tblStatsGroups td:first-child { border-right: 1px solid #8f8f8f; }
+.SGCTitle { color: black; }
+.SGCNumber { color: #aa3322; }
