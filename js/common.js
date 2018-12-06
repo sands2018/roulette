@@ -1,4 +1,4 @@
-﻿var g_bDebug = true;
+﻿var g_nDebug = 0;
 
 // styles: ----------------------------------------------------------------
 
@@ -97,6 +97,78 @@ function CIndexedArray()
     }
 }
 
+function CBttnOptions(strName, astrTitle, anValue, nSelIdx, bFullSize)
+{
+    this.DATA_KEY = "BTTNS_" + strName + "_IDX";
+    this.strName = strName;
+    this.bFullSize = bFullSize;
+    this.nCount = astrTitle.length;
+
+    var strVal = ReadData(this.DATA_KEY, nSelIdx.toString());
+    var nVal = parseInt(strVal);
+    if ((nVal < 0) || (nVal >= this.nCount))
+        nVal = 0;
+    this.nSelIdx = nVal;
+
+    this.astrTitle = [];
+    this.anValue = [];
+
+    for(var n = 0; n < this.nCount; ++ n)
+    {
+        this.astrTitle[n] = astrTitle[n];
+        this.anValue[n] = anValue[n];
+    }
+
+    this.Value = function()
+    {
+        return this.anValue[this.nSelIdx];
+    }
+
+    this.OnClick = function(nIdx)
+    {
+        if(this.nSelIdx == nIdx)
+            return;
+        
+        this.nSelIdx = nIdx;
+
+        for(var n = 0; n < this.nCount; ++ n)
+        {
+            var td = document.getElementById("tdBttn" + this.strName + n.toString());
+
+            if(n == nIdx)
+                td.className = "tdBttn tdSelBttn";
+            else
+                td.className = "tdBttn";
+        }
+
+        WriteData(this.DATA_KEY, nIdx);
+    }
+
+    this.GetHtml = function()
+    {
+        var strStyle = "";
+        if (this.bFullSize)
+            strStyle = "style='width: 100%' ";
+
+        var strHtml = "<table cellpadding='0' cellspacing='10' border='0' " + strStyle + "id='tblBttn" + this.strName + "'><tr>";
+        for (var n = 0; n < this.nCount; ++n)
+        {
+            var strClass = "tdBttn";
+            if (n == this.nSelIdx)
+                strClass += " tdSelBttn";
+
+            strHtml += "<td id='tdBttn" + this.strName + n.toString() + "' ";
+            strHtml += "class='" + strClass + "' ";
+            strHtml += "onclick='OnBttn" + this.strName + "Click(" + n.toString() + ")'";
+            strHtml += ">" + this.astrTitle[n] + "</td>";
+        }
+
+        strHtml += "</tr></table>";
+
+        return strHtml;
+    }
+}
+
 var DATA_NUMBERS = "NUMBERS";
 var DATA_KEYBOARDID = "KEYBOARDID";
 var DATA_SEPERATE3C3R = "SEPERATE3C3R";
@@ -106,6 +178,7 @@ var DATA_SGCOUNTIDX = "SGCOUNTIDX";
 function CSysStatus()
 {
     this.ThemeID = 0;
+    this.Escape = 0;
     this.KeyboardID = "K";
     this.Seperate3C3R = "F";
     this.QueueExpand = 0;
@@ -114,7 +187,6 @@ function CSysStatus()
 
     this.Reset = function()
     {
-        this.ThemeID = 0;
         this.QueueExpand = 0;
         this.KeyboardID = ReadData(DATA_KEYBOARDID, "K");
         this.Seperate3C3R = ReadData(DATA_SEPERATE3C3R, "F");
@@ -140,6 +212,7 @@ function CNumQueue()
     this.anNum = [];
     this.nIDX = -1;
     this.nCountNoZero = 0;
+    this.anZero = []; // 需要显示的时候才计算
 
     this.AddNum = function(nNum)
     {
@@ -168,6 +241,35 @@ function CNumQueue()
 
         this.nIDX = -1;
         this.nCountNoZero = 0;
+    }
+
+    this.CalcZeroList = function()
+    {
+        if (this.anZero.length > 0)
+            this.anZero.splice(0, this.anZero.length);
+
+        for(var n = 0; n <= this.nIDX; ++n)
+        {
+            if (this.anNum[n] == 0)
+            {
+                this.anZero.push(0);
+            }
+            else
+            {
+                var nLen = this.anZero.length;
+                if(nLen == 0)
+                {
+                    this.anZero.push(1);
+                }
+                else
+                {
+                    if (this.anZero[nLen - 1] == 0)
+                        this.anZero.push(1);
+                    else
+                        this.anZero[nLen - 1]++;
+                }
+            }
+        }
     }
 }
 

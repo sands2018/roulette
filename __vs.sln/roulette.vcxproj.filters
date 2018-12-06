@@ -23,6 +23,9 @@
     <None Include="..\css\normal.css">
       <Filter>css</Filter>
     </None>
+    <None Include="..\css\grey.css">
+      <Filter>css</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="js">

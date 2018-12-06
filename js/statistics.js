@@ -38,9 +38,21 @@ function CStats3C3R()
 {
     this.data = new CIndexedArray();
 
+    var LARGE_COUNT_NUM = 20;
+    this.anLargeCount = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]];
+
+    this.anLargeCountCol = [];
+    this.anLargeCountRow = [];
+
     this.Reset = function ()
     {
         this.data.Reset(6);
+
+        for (var nn = 0; nn < 3; ++nn)
+            for (var n = 0; n < LARGE_COUNT_NUM; ++n)
+                this.anLargeCount[nn][n] = 0;
     }
 
     this.AddNum = function (num)
@@ -60,16 +72,17 @@ function CStats3C3R()
         for (var n = 0; n < 2; ++n)
         {
             var nCount = this.data.anValue[anNum3C3R[n]] - 1;
-            /*
+            
             if (nCount >= 11)
             {
                 var nIdx = nCount - 11;
-                if (nIdx >= 19)
-                    nIdx == 19;
+                if (nIdx >= (LARGE_COUNT_NUM - 1))
+                    nIdx == LARGE_COUNT_NUM - 1;
     
-                g_StatsInterval.anLargeCount[nIdx]++;
+                this.anLargeCount[2][nIdx]++; // total
+                this.anLargeCount[n][nIdx]++; // col or row
             }
-            */
+            
             this.data.anValue[anNum3C3R[n]] = 0;
         }
     }

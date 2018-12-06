@@ -1,7 +1,7 @@
 
-#tblKeyboard, #tblGameBoard { border: 1px solid #f8f8f8; }
+#tblKeyboard, #tblGameBoard { background-color: #f8f8f8; border: 0; }
+#tblKeyboard td, #tblGameBoard td { border: 0; }
 #tblKeyboard td, #tblGameBoard td, #tblQueue td { color: #eeeeee; }
-#tblKeyboard td, #tblGameBoard td { border: 1px solid #f8f8f8; }
 #tblKeyboard td.tdRed, #tblGameBoard td.tdRed, #tblQueue td.tdRed { background-color: white }
 #tblKeyboard td.tdBlack, #tblGameBoard td.tdBlack, #tblQueue td.tdBlack { background-color: white }
 #tblKeyboard td.tdGreen, #tblGameBoard td.tdGreen, #tblQueue td.tdGreen { background-color: white }

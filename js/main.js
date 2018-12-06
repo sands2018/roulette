@@ -77,8 +77,6 @@ function Show_RefreshTheme()
     ChangeTheme((g_status.ThemeID == 0)? "normal" : "color");
 
     //Show_3C3R();
-    Show_Queue();
-    Show_RefreshSysButtons();
 }
 
 function Show3C3RItem(n, nValue, nIdx)
@@ -357,7 +355,12 @@ function Calc_AddNum(num)
 {
     g_queue.AddNum(num);
     g_3C3R.AddNum(num);
+}
+
+function Calc_Sum()
+{
     g_columns.ReCalc(g_queue);
+    g_queue.CalcZeroList();
 }
 
 function Show_AddNum()
@@ -367,6 +370,7 @@ function Show_AddNum()
     Show_Columns();
     Show_StatsGroupsCount();
     Show_RefreshSysButtons();
+    Show_SumLists();
 }
 
 function PageInit_Data()
@@ -396,14 +400,19 @@ function OnPageInit()
 
     Show_Keyboard(true);
     Show_3C3R();
+    Show_Queue();
     Show_Columns();
     Show_RefreshColumnsButtons();
     Show_StatsGroupsCount();
     Show_RefreshSGButtons();
+    Show_RefreshSysButtons();
+
+    Show_RefreshStatsSumButton();
+
     Init_Theme();
     Show_RefreshTheme();
 
-    if (g_bDebug)
+    if (g_nDebug == 1)
         ChangeTheme("debug");
 }
 
@@ -433,6 +442,8 @@ function OnSysChangeTheme()
 {
     if (g_status.ThemeID > 1)
         return;
+
+    g_status.Escape = 0;
 
     g_status.ThemeID++;
     g_status.ThemeID = g_status.ThemeID % 2;
@@ -501,10 +512,10 @@ function OnShowKeyboard()
 
 function OnEscape()
 {
-    g_nEscapeStatus++;
-    g_nEscapeStatus = g_nEscapeStatus % 2;
+    g_status.Escape++;
+    g_status.Escape = g_status.Escape % 2;
 
-    Show_Covers();
+    ChangeTheme((g_status.Escape == 0) ? ((g_status.ThemeID == 0) ? "normal" : "color") : "grey");
 }
 
 function OnSeperate3C3RClick()
@@ -524,6 +535,7 @@ function SaveNumbers()
 function OnAddNum(num)
 {
     Calc_AddNum(num);
+    Calc_Sum();
     Show_AddNum();
     SaveNumbers();
 }
@@ -640,36 +652,82 @@ function Show_StatsGroupsCount()
     tdRow.innerHTML = strHtml;
 }
 
+function ResetData(anNum)
+{
+    PageInit_Data();
+
+    for (var n = 0; n < anNum.length; ++n)
+        Calc_AddNum(anNum[n]);
+
+    Calc_Sum();
+
+    Show_AddNum();
+}
+
+// bImport - true: import; false: retore
+function ResetDataFromNumString(strNum, bImport)
+{
+    var rtn = new CReturnArray();
+    NumStringToArray(strNum, rtn);
+
+    var strMsg = "";
+
+    if (rtn.rn < 0)
+    {
+        if (bImport)
+            strMsg = "要导入的数据不正确，请检查！";
+        else
+            strMsg = "保存的数据可能已经损坏";
+
+        alert(strMsg);
+        return false;
+    }
+    else if (rtn.rn == 0)
+    {
+        if (bImport)
+            strMsg = "请在输入框中输入要导入的数据！";
+        else
+            strMsg = "没有找到保存的数据";
+
+        alert(strMsg);
+        return false;
+    }
+
+    strMsg = "";
+    if (bImport)
+    {
+        if(g_queue.nIDX >= 0)
+            strMsg = "导入将清除当前数据！";
+
+        strMsg += "确定要导入吗？"
+
+        var confirmed = confirm(strMsg);
+        if (confirmed == 0)
+            return false;
+    }
+    else
+    {
+        /*
+        strMsg = "确定要恢复吗？";
+
+        var confirmed = confirm(strMsg);
+        if (confirmed == 0)
+            return false;
+        */
+    }
+
+
+    ResetData(rtn.anVal);
+    return true;
+}
+
 function OnSysRestore()
 {
     if (g_queue.nIDX >= 0)
         return;
 
     var strNum = ReadData(DATA_NUMBERS);
-    var rtn = new CReturnArray();
-    NumStringToArray(strNum, rtn);
-    if (rtn.rn < 0)
-        alert("保存的数据可能已经损坏数");
-    else if (rtn.rn == 0)
-        alert("没有找到保存的数据");
-    else
-    {
-        var confirmed = confirm("确定要恢复吗？");
-        if (confirmed == 0)
-            return;
-
-        PageInit_Data();
-
-        for (var n = 0; n < rtn.anVal.length; ++n)
-        {
-            g_queue.AddNum(rtn.anVal[n]);
-            g_3C3R.AddNum(rtn.anVal[n]);
-        }
-
-        g_columns.ReCalc(g_queue);
-
-        Show_AddNum();
-    }
+    ResetDataFromNumString(strNum, false);
 }
 
 function OnSysExport()
@@ -692,18 +750,16 @@ function OnSysExport()
 
 function OnSysImport()
 {
-    var tdTitle = document.getElementById("tdImportExportTitle");
+    var tdTitle = document.getElementById("tdImportTitle");
     var txt = document.getElementById("txtClipboard");
     var trSpecImport = document.getElementById("trSpecImport");
-    var trSpecExport = document.getElementById("trSpecExport");
     var tdBttnDoImport = document.getElementById("tdBttnDoImport");
 
     tdTitle.innerHTML = "导&nbsp;&nbsp;&nbsp;入";
     txt.value = "";
     trSpecImport.style.display = "";
-    trSpecExport.style.display = "none";
     tdBttnDoImport.style.display = "";
-    var div = document.getElementById("divImportExport");
+    var div = document.getElementById("divImport");
     div.style.display = "";
     txt.select();
 }
@@ -711,20 +767,142 @@ function OnSysImport()
 function OnImport()
 {
     var txt = document.getElementById("txtClipboard");
-    var strNumbers = txt.value;
-    if (strNumbers.length <= 0)
+    var strNum = txt.value;
+
+    if(ResetDataFromNumString(strNum, true))
+        OnImportExportOK();
+}
+
+function OnImportOK()
+{
+    var div = document.getElementById("divImport");
+    div.style.display = "none";
+}
+
+function OnDelNum()
+{
+    if (g_queue.nIDX < 0)
+        return;
+
+    if (g_queue.nIDX == 0)
     {
-        alert("请在输入框中输入要导入的数据!");
+        PageInit_Data();
+        Show_AddNum();
         return;
     }
 
-    //if (DoImport(strNumbers, false))
-        //OnImportExportOK();
+    var anNum = [];
+
+    for(var n = 0; n < g_queue.nIDX; ++ n)
+        anNum[n] = g_queue.anNum[n];
+
+    ResetData(anNum);
+    SaveNumbers();
+}
+
+function OnSysRestart()
+{
+    var confirmed = confirm("重置将清除当前所有数据！确定要重置吗？");
+    if (confirmed == 0)
+        return;
+
+    PageInit_Data();
+    Show_AddNum();
+}
+
+function Show_SumLists()
+{
+    var divStatsSum = document.getElementById("divStatsSum");
+    if (g_queue.nIDX < 0)
+    {
+        divStatsSum.style.display = "none"
+        divStatsSum.innerHTML = "";
+        return;
+    }
+
+    var strHtml = "";
+
+    var nTotal = g_queue.nIDX + 1;
+
+    strHtml = "<table cellpadding='0' cellspacing='0' id='tblStatsSum'>";
+    var bFirst = true;
+
+    for (var nn = 0; nn < 3; ++nn)
+    {
+        strHtml += "<tr>";
+
+        var str = "";
+        if (nn == 0)
+            str = "<td>组</td>";
+        else if (nn == 1)
+            str = "<td>行</td>";
+        else
+            str = "<td class='tdTotal'>" + nTotal.toString() + "</td>";
+
+        strHtml += str;
+        strHtml += "<td class='tdStatsSumListItem'>";
+        strHtml += "<div class='divStatsSumListItem' onclick='OnStatsSumListClick(" + nn.toString() + ")'>";
+        bFirst = true;
+        for (var n = 0; n < g_3C3R.anLargeCount[nn].length; ++n)
+        {
+            if (g_3C3R.anLargeCount[nn][n] > 0)
+            {
+                if (!bFirst)
+                    strHtml += ";&nbsp;";
+
+                bFirst = false;
+
+                var strNum = (n + 11).toString();
+                if (n == 19)
+                    strNum += "及以上";
+                strHtml += strNum + "(" + g_3C3R.anLargeCount[nn][n].toString() + ")";
+            }
+        }
+        strHtml += "</div></td></tr>";
+    }
+    strHtml += "<tr><td class='tdZero'>" + g_queue.nCountNoZero.toString() + "</td>";
+    strHtml += "<td class='tdStatsSumListItem'>";
+    strHtml += "<div class='divStatsSumListItem' onclick='OnStatsSumListClick(3)'>";
+    bFirst = true;
+    var strNum = "";
+    for (var n = g_queue.anZero.length - 1; n >= 0 ; --n)
+    {
+        if (!bFirst)
+            strHtml += ";&nbsp;";
+
+        bFirst = false;
+        if (g_queue.anZero[n] == 0)
+        {
+            strNum = "<span class='txtZero'>" + g_queue.anZero[n].toString() + "</span>";
+        }
+        else
+        {
+            strNum = g_queue.anZero[n].toString();
+        }
+
+        strHtml += strNum;
+    }
+    strHtml += "</div></td></tr>"
+    strHtml += "</table>";
+
+    divStatsSum.innerHTML = strHtml;
+    divStatsSum.style.display = ""
+    //OnStatsIntervalClick(false);
 }
 
 
-function OnImportExportOK()
+var astrTitleStatsSum = ["100", "200", "全部"];
+var astrValueStatsSum = [100, 200, 99999];
+
+var g_bttnStatsSum = new CBttnOptions("StatsSum", astrTitleStatsSum, astrValueStatsSum, 2, false);
+
+function Show_RefreshStatsSumButton()
 {
-    var div = document.getElementById("divImportExport");
-    div.style.display = "none";
+    var div = document.getElementById("divStatsSumBttns");
+    div.innerHTML = g_bttnStatsSum.GetHtml();
+}
+
+function OnBttnStatsSumClick(nIdx)
+{
+    g_bttnStatsSum.OnClick(nIdx);
 }
