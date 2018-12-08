@@ -153,7 +153,7 @@ function Calc_StatsGroupsCount(stats3C3R, queue)
 {
     stats3C3R.Reset(6);
 
-    var nCalcCount = STATS_GROUPS_COUNTS[g_status.SGCountIdx];
+    var nCalcCount = g_bttnStatsGroups.Value();
     var nCount = 0;
 
     for (var n = queue.nIDX; n >= 0; --n)

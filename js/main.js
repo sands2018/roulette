@@ -178,7 +178,7 @@ function GetColumnSpec(nIdx)
 
 function Show_Columns()
 {
-    var nMin = g_status.ColumnsCountBttn;
+    var nMin = g_bttnColumns.Value();
     var nColumnCount = g_columns.anStart.length;
     var nCount = 0;
 
@@ -404,10 +404,11 @@ function OnPageInit()
     Show_Columns();
     Show_RefreshColumnsButtons();
     Show_StatsGroupsCount();
-    Show_RefreshSGButtons();
+    Show_RefreshStatsGroupButtons();
     Show_RefreshSysButtons();
 
     Show_RefreshStatsSumButton();
+    Show_SumLists();
 
     Init_Theme();
     Show_RefreshTheme();
@@ -540,59 +541,6 @@ function OnAddNum(num)
     SaveNumbers();
 }
 
-function OnColumnsBttnClick(nMin)
-{
-    if (nMin == g_status.ColumnsCountBttn)
-        return;
-
-    g_status.ColumnsCountBttn = nMin;
-    WriteData(DATA_COLUMNSBUTTON, nMin.toString());
-
-    Show_Columns();
-    Show_RefreshColumnsButtons();
-}
-
-function Show_RefreshColumnsButtons()
-{
-    var anCount = [3, 4, 5, 6, 7];
-    for (var n = 0; n < anCount.length; ++n)
-    {
-        var td = document.getElementById("tdCBttn" + anCount[n].toString());
-
-        if (anCount[n] == g_status.ColumnsCountBttn)
-            td.className = "tdBttn tdSelBttn";
-        else
-            td.className = "tdBttn";
-    }
-}
-
-function OnSGCountBttnClick(nIdx)
-{
-    if (nIdx == g_status.SGCountBttnIdx)
-        return;
-
-    g_status.SGCountBttnIdx = nIdx;
-    WriteData(DATA_SGCOUNTIDX, nIdx.toString());
-
-    Show_StatsGroupsCount();
-    Show_RefreshSGButtons();
-}
-
-function Show_RefreshSGButtons()
-{
-    var nCount = STATS_GROUPS_COUNTS.length;
-    var strBkColor = "";
-
-    for (var n = 0; n < nCount; ++n)
-    {
-        var td = document.getElementById("tdSGCount" + n.toString());
-
-        if (n == g_status.SGCountBttnIdx)
-            td.className = "tdBttn tdSelBttn";
-        else
-            td.className = "tdBttn";
-    }
-}
 
 function TitleString_StatsGroupsCount(strTitle)
 {
@@ -813,10 +761,12 @@ function OnSysRestart()
 function Show_SumLists()
 {
     var divStatsSum = document.getElementById("divStatsSum");
+    divStatsSumLists = document.getElementById("divStatsSumLists");
+
     if (g_queue.nIDX < 0)
     {
         divStatsSum.style.display = "none"
-        divStatsSum.innerHTML = "";
+        divStatsSumLists.innerHTML = "";
         return;
     }
 
@@ -885,24 +835,56 @@ function Show_SumLists()
     strHtml += "</div></td></tr>"
     strHtml += "</table>";
 
-    divStatsSum.innerHTML = strHtml;
-    divStatsSum.style.display = ""
+    divStatsSumLists.innerHTML = strHtml;
+    divStatsSum.style.display = "";
     //OnStatsIntervalClick(false);
 }
 
 
-var astrTitleStatsSum = ["100", "200", "全部"];
-var astrValueStatsSum = [100, 200, 99999];
 
-var g_bttnStatsSum = new CBttnOptions("StatsSum", astrTitleStatsSum, astrValueStatsSum, 2, false);
+var astrValueColumns = [3, 4, 5, 6, 7];
+
+var g_bttnColumns = new CBttnOptions("Columns", astrValueColumns, null, 2, -1);
+
+function Show_RefreshColumnsButtons()
+{
+    g_bttnColumns.Show("divColumnsBttns");
+}
+
+function OnBttnColumnsClick(nIdx)
+{
+    g_bttnColumns.OnClick(nIdx);
+    Show_Columns();
+}
+
+
+var astrValueStatsGroups = [20, 40, 60, 80, 100, -1];
+
+var g_bttnStatsGroups = new CBttnOptions("StatsGroups", astrValueStatsGroups, null, 2, 0);
+
+function Show_RefreshStatsGroupButtons()
+{
+    g_bttnStatsGroups.Show("divStatsGroupsBttns");
+}
+
+function OnBttnStatsGroupsClick(nIdx)
+{
+    g_bttnStatsGroups.OnClick(nIdx);
+    Show_StatsGroupsCount();
+}
+
+
+var astrValueStatsSum = [100, 200, 300, -1];
+
+var g_bttnStatsSum = new CBttnOptions("StatsSum", astrValueStatsSum, null, 2, 150);
 
 function Show_RefreshStatsSumButton()
 {
-    var div = document.getElementById("divStatsSumBttns");
-    div.innerHTML = g_bttnStatsSum.GetHtml();
+    g_bttnStatsSum.Show("divStatsSumBttns");
 }
 
 function OnBttnStatsSumClick(nIdx)
 {
     g_bttnStatsSum.OnClick(nIdx);
 }
+

@@ -49,6 +49,7 @@ td.tdBttn { padding: 1px 20px; width: 100px; height: 60px }
 td.Empty { background-color: white; border: 0 }
 td.Space { width: 8px; font-size: 8px; padding: 0 }
 
+#divStatsGroups { margin-top: 10px; }
 #tblStatsGroups { width: 100%; }
 #tblStatsGroups td { text-align: left; padding: 2px 0 3px 12px; }
 
@@ -186,15 +187,7 @@ tr.trLost td, .tdLost { color: #7fc37f; }
                     <td id="tdColumnsT11"></td><td id="tdColumnsV11"></td>
                 </tr>
             </table>
-            <table cellpadding='0' cellspacing='10' border='0' id='tblColumnsButtons'>
-                <tr>
-                    <td id="tdCBttn3" class="tdBttn" onclick="OnColumnsBttnClick(3)">3</td>
-                    <td id="tdCBttn4" class="tdBttn" onclick="OnColumnsBttnClick(4)">4</td>
-                    <td id="tdCBttn5" class="tdBttn" onclick="OnColumnsBttnClick(5)">5</td>
-                    <td id="tdCBttn6" class="tdBttn" onclick="OnColumnsBttnClick(6)">6</td>
-                    <td id="tdCBttn7" class="tdBttn" onclick="OnColumnsBttnClick(7)">7</td>
-                </tr>
-            </table>
+            <div id="divColumnsBttns"></div>
         </div>
         <table cellpadding="0" cellspacing="5" border="0" id="tblQueue" onclick="OnSysExpand()">
             <tr id="trRow1">
@@ -242,19 +235,12 @@ tr.trLost td, .tdLost { color: #7fc37f; }
                     <td id="tdStatsGroupsRow"></td>
                 </tr>
             </table>
-            <table cellpadding='0' cellspacing='10' border='0' id='tblSGButtons'>
-                <tr>
-                    <td id="tdSGCount0" class="tdBttn" onclick="OnSGCountBttnClick(0)">20</td>
-                    <td id="tdSGCount1" class="tdBttn" onclick="OnSGCountBttnClick(1)">40</td>
-                    <td id="tdSGCount2" class="tdBttn" onclick="OnSGCountBttnClick(2)">60</td>
-                    <td id="tdSGCount3" class="tdBttn" onclick="OnSGCountBttnClick(3)">80</td>
-                    <td id="tdSGCount4" class="tdBttn" onclick="OnSGCountBttnClick(4)">100</td>
-                    <td id="tdSGCount5" class="tdBttn" onclick="OnSGCountBttnClick(5)">全部</td>
-                </tr>
-            </table>
+            <div id="divStatsGroupsBttns"></div>
         </div>
-        <div id="divStatsSum"></div>
-        <div id="divStatsSumBttns"></div>
+        <div id="divStatsSum">
+            <div id="divStatsSumLists"></div>
+            <div id="divStatsSumBttns"></div>
+        </div>
     </div>
 
     <div id="divBottom" style="position:fixed; bottom: 0px; z-index:3000; width: 100%;">

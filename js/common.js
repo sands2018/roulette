@@ -19,7 +19,6 @@ var g_s_c_sg_bk_active = "#EBE3CB";
 
 var QUEUE_MAX_COUNT = 100;
 var QUEUE_LINE_NUM_COUNT = 15;
-var STATS_GROUPS_COUNTS = [20, 40, 60, 80, 100, 99999];
 
 // ------------------------------------------------------------------
 
@@ -97,12 +96,13 @@ function CIndexedArray()
     }
 }
 
-function CBttnOptions(strName, astrTitle, anValue, nSelIdx, bFullSize)
+// nBttdnWidth: <0 not set; 0 full size; >0 button width;
+function CBttnOptions(strName, anValue, astrTitle, nSelIdx, nBttnWidth)
 {
     this.DATA_KEY = "BTTNS_" + strName + "_IDX";
     this.strName = strName;
-    this.bFullSize = bFullSize;
-    this.nCount = astrTitle.length;
+    this.nBttnWidth = nBttnWidth;
+    this.nCount = anValue.length;
 
     var strVal = ReadData(this.DATA_KEY, nSelIdx.toString());
     var nVal = parseInt(strVal);
@@ -110,13 +110,27 @@ function CBttnOptions(strName, astrTitle, anValue, nSelIdx, bFullSize)
         nVal = 0;
     this.nSelIdx = nVal;
 
-    this.astrTitle = [];
     this.anValue = [];
+    this.astrTitle = [];
 
     for(var n = 0; n < this.nCount; ++ n)
     {
-        this.astrTitle[n] = astrTitle[n];
-        this.anValue[n] = anValue[n];
+        if (anValue[n] < 0)
+            this.anValue[n] = 999999;
+        else
+            this.anValue[n] = anValue[n];
+
+        if (astrTitle != null)
+        {
+            this.astrTitle[n] = astrTitle[n];
+        }
+        else
+        {
+            if (anValue[n] < 0)
+                this.astrTitle[n] = "全部";
+            else
+                this.astrTitle[n] = anValue[n].toString();
+        }
     }
 
     this.Value = function()
@@ -144,10 +158,10 @@ function CBttnOptions(strName, astrTitle, anValue, nSelIdx, bFullSize)
         WriteData(this.DATA_KEY, nIdx);
     }
 
-    this.GetHtml = function()
+    this.Show = function(strContainerID)
     {
         var strStyle = "";
-        if (this.bFullSize)
+        if (this.nBttnWidth == 0)
             strStyle = "style='width: 100%' ";
 
         var strHtml = "<table cellpadding='0' cellspacing='10' border='0' " + strStyle + "id='tblBttn" + this.strName + "'><tr>";
@@ -158,6 +172,8 @@ function CBttnOptions(strName, astrTitle, anValue, nSelIdx, bFullSize)
                 strClass += " tdSelBttn";
 
             strHtml += "<td id='tdBttn" + this.strName + n.toString() + "' ";
+            if(this.nBttnWidth > 0)
+                strHtml += "style='width: " + this.nBttnWidth.toString() + "px' ";
             strHtml += "class='" + strClass + "' ";
             strHtml += "onclick='OnBttn" + this.strName + "Click(" + n.toString() + ")'";
             strHtml += ">" + this.astrTitle[n] + "</td>";
@@ -165,7 +181,8 @@ function CBttnOptions(strName, astrTitle, anValue, nSelIdx, bFullSize)
 
         strHtml += "</tr></table>";
 
-        return strHtml;
+        var div = document.getElementById(strContainerID);
+        div.innerHTML = strHtml;
     }
 }
 
@@ -182,26 +199,12 @@ function CSysStatus()
     this.KeyboardID = "K";
     this.Seperate3C3R = "F";
     this.QueueExpand = 0;
-    this.ColumnsCountBttn = 5;
-    this.SGCountBttnIdx = 1; // stats group
 
     this.Reset = function()
     {
         this.QueueExpand = 0;
         this.KeyboardID = ReadData(DATA_KEYBOARDID, "K");
         this.Seperate3C3R = ReadData(DATA_SEPERATE3C3R, "F");
-
-        var strVal = ReadData(DATA_COLUMNSBUTTON, "5");
-        var nVal = parseInt(strVal);
-        if ((nVal < 3) || (nVal > 7))
-            nVal = 5;
-        this.ColumnsCountBttn = nVal;
-
-        strVal = ReadData(DATA_SGCOUNTIDX, "1");
-        nVal = parseInt(strVal);
-        if ((nVal < 0) || (nVal >= STATS_GROUPS_COUNTS.length))
-            nVal = 1;
-        this.SGCountBttnIdx = nVal;
     }
 }
 
