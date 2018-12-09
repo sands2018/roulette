@@ -246,12 +246,12 @@ function CNumQueue()
         this.nCountNoZero = 0;
     }
 
-    this.CalcZeroList = function()
+    this.CalcZeroList = function(nStart)
     {
         if (this.anZero.length > 0)
             this.anZero.splice(0, this.anZero.length);
 
-        for(var n = 0; n <= this.nIDX; ++n)
+        for (var n = nStart; n <= this.nIDX; ++n)
         {
             if (this.anNum[n] == 0)
             {

@@ -360,7 +360,6 @@ function Calc_AddNum(num)
 function Calc_Sum()
 {
     g_columns.ReCalc(g_queue);
-    g_queue.CalcZeroList();
 }
 
 function Show_AddNum()
@@ -573,7 +572,7 @@ function Show_StatsGroupsCount()
             continue;
 
         if (!bFirst)
-            strHtml += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+            strHtml += "&nbsp;&nbsp;";
         bFirst = false;
 
         strHtml += TitleString_StatsGroupsCount(GetColRowSpec(nIdx)) + "&nbsp;";
@@ -591,7 +590,7 @@ function Show_StatsGroupsCount()
             continue;
 
         if (!bFirst)
-            strHtml += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+            strHtml += "&nbsp;&nbsp;";
         bFirst = false;
 
         strHtml += TitleString_StatsGroupsCount(GetColRowSpec(nIdx)) + "&nbsp;";
@@ -770,9 +769,26 @@ function Show_SumLists()
         return;
     }
 
+    // calculate large counts:
+
+    var nNumCount = g_bttnStatsSum.Value();
+    var nStart = 0;
+    if (nNumCount < (g_queue.nIDX + 1))
+        nStart = (g_queue.nIDX + 1) - nNumCount;
+ 
+    var data3C3R = new CStats3C3R();
+    data3C3R.Reset();
+
+    for (var n = nStart; n <= g_queue.nIDX; ++n)
+        data3C3R.AddNum(g_queue.anNum[n]);
+
+    g_queue.CalcZeroList(nStart);
+
+    // show:
+
     var strHtml = "";
 
-    var nTotal = g_queue.nIDX + 1;
+    var nTotal = g_queue.nIDX + 1 - nStart;
 
     strHtml = "<table cellpadding='0' cellspacing='0' id='tblStatsSum'>";
     var bFirst = true;
@@ -793,9 +809,9 @@ function Show_SumLists()
         strHtml += "<td class='tdStatsSumListItem'>";
         strHtml += "<div class='divStatsSumListItem' onclick='OnStatsSumListClick(" + nn.toString() + ")'>";
         bFirst = true;
-        for (var n = 0; n < g_3C3R.anLargeCount[nn].length; ++n)
+        for (var n = 0; n < data3C3R.anLargeCount[nn].length; ++n)
         {
-            if (g_3C3R.anLargeCount[nn][n] > 0)
+            if (data3C3R.anLargeCount[nn][n] > 0)
             {
                 if (!bFirst)
                     strHtml += ";&nbsp;";
@@ -805,7 +821,7 @@ function Show_SumLists()
                 var strNum = (n + 11).toString();
                 if (n == 19)
                     strNum += "及以上";
-                strHtml += strNum + "(" + g_3C3R.anLargeCount[nn][n].toString() + ")";
+                strHtml += strNum + "(" + data3C3R.anLargeCount[nn][n].toString() + ")";
             }
         }
         strHtml += "</div></td></tr>";
@@ -886,5 +902,6 @@ function Show_RefreshStatsSumButton()
 function OnBttnStatsSumClick(nIdx)
 {
     g_bttnStatsSum.OnClick(nIdx);
+    Show_SumLists();
 }
 
