@@ -1,10 +1,10 @@
 ﻿/* z-index:
-    0     - main div;
-    99   - number queue;
-    3001 - show gameboard/keyboard
-    3002 - gameboard;
-    3003 - keyboard
-    9999 - div import/export
+    0    - main div;
+    99   - 3C3R;
+    1000 - bottom div;
+    1001 - show gameboard/keyboard;
+    3999  - statistics;
+    9999 - div import;
 */
 
 // global variables: ----------------------------------------------------------
@@ -905,3 +905,14 @@ function OnBttnStatsSumClick(nIdx)
     Show_SumLists();
 }
 
+function OnShowStatistics()
+{
+    var div = document.getElementById("divStatistics");
+    div.style.display = "";
+}
+
+function OnHideStatistics()
+{
+    var div = document.getElementById("divStatistics");
+    div.style.display = "none";
+}

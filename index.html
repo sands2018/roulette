@@ -72,6 +72,9 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 #tblStatsSum .tdZero { font-family:Arial; font-size: 40px; color: #8fc38f; font-weight: bold; padding: 0px 18px }
 #tblStatsSum .txtZero { color: #83aa83 }
 
+#tblStatisticsTitleBar td { border: 1px solid #dfbc33; border-right: 0; font-size: 40px }
+#tblStatisticsTitleBar td:first-child { border-left: 0 }
+
 
 
 #divCover { font-size: 40px; }
@@ -85,8 +88,6 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 .ColumnNormal { background-color: white; }
 .ColumnHighlight { background-color: #f8ebd8; }
 
-#tblDivPopupTitleBar td { border: 1px solid #dfbc33; border-right: 0; font-size: 40px }
-#tblDivPopupTitleBar td:first-child { border-left: 0 }
 #tblStatsFinally, #tblStatsNumCount { width: 100%; border: 1px solid #dfbc33 }  
 #tblStatsFinally { border-left: 0; border-right: 0 }  
 #tblStatsNumCount { border-left: 0; border-right: 0; border-top: 0 }  
@@ -243,7 +244,19 @@ tr.trLost td, .tdLost { color: #7fc37f; }
         </div>
     </div>
 
-    <div id="divBottom" style="position:fixed; bottom: 0px; z-index:3000; width: 100%;">
+    <div style="position:fixed; z-index: 3999; right: 0px; top:0px; width: 100%; height: 100%; 
+        background-color: white; display: none;" id="divStatistics">
+        <table cellpadding="0" cellspacing="0" style="width: 100%;" id="tblStatisticsTitleBar">
+            <tr>
+                <td style="width: 91%; text-align: center" id="tdStatisticsTitle">&nbsp;</td>
+                <td style="width: 9%; height: 80px; font-family: Arial" onclick="OnHideStatistics()">x</td>
+            </tr>
+        </table>
+        <div id="divStatsMisc"></div>
+    </div>
+
+
+    <div id="divBottom" style="position:fixed; bottom: 0px; z-index: 1000; width: 100%;">
         <div class="kbspace1">&nbsp;</div>
         <div class="kbspace2">&nbsp;</div>
         <div style="background-color: white; width: 100%">
@@ -254,7 +267,7 @@ tr.trLost td, .tdLost { color: #7fc37f; }
                     <td id="tdBttnRestore" onclick="OnSysRestore()">恢复</td>
                     <td id="tdBttnExport" onclick="OnSysExport()">导出</td>
                     <td id="tdBttnImport" onclick="OnSysImport()">导入</td>
-                    <td id="tdBttnStatsFinally" onclick="OnShowStatsMisc()">统计</td>
+                    <td id="tdBttnStatsFinally" onclick="OnShowStatistics()">统计</td>
                 </tr>
             </table>
         </div>
@@ -320,10 +333,9 @@ tr.trLost td, .tdLost { color: #7fc37f; }
             </table>
         </div>
     </div>
-    <div id="divShowKeyboard" style="position:fixed; right: 0px; bottom: 0px; z-index:3001; width: 100px; height: 100px; display:none" onclick="OnShowKeyboard()"></div>
-    <div id="divImport" style="display: none;">
+    <div id="divShowKeyboard" style="position:fixed; right: 0px; bottom: 0px; z-index: 1001; width: 100px; height: 100px; display:none" onclick="OnShowKeyboard()"></div>
+    <div id="divImport" style="z-index:9999; display: none;">
         <table cellpadding="0" cellspacing="30" style="width: 100%" id="tblImport">
-            <tr><td>&nbsp;</td></tr>
             <tr><td id="tdImportTitle"></td></tr>
             <tr id="trSpecImport"><td class="tdSpec">请在下面编辑框内准备好需要导入的数据，然后按导入：</td></tr>
             <tr><td id="tdTxt"><textarea style="width: 100%; height: 600px" id="txtClipboard"></textarea></td></tr>
