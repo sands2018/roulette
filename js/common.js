@@ -43,6 +43,30 @@ function ReadData(key, strDefault)
     return strValue;
 }
 
+function DoSort(anValue, anIdx, bAsend)
+{
+    var nCount = anValue.length;
+
+    var bChanged = false;
+    do
+    {
+        bChanged = false;
+
+        for (var n = 0; n < nCount - 1; ++n)
+        {
+            if ((bAsend && (anValue[anIdx[n]] > anValue[anIdx[n + 1]]))
+                || (!bAsend && (anValue[anIdx[n]] < anValue[anIdx[n + 1]])))
+            {
+                tmp = anIdx[n];
+                anIdx[n] = anIdx[n + 1];
+                anIdx[n + 1] = tmp;
+
+                bChanged = true;
+            }
+        }
+    } while (bChanged);
+}
+
 function SwitchTrueFalse(strValue)
 {
     var str = "F";
@@ -323,4 +347,193 @@ function NumStringToArray(strNumbers, rtn)
     rtn.rn = 1;
 }
 
+function CStatsNumbers(nCol)
+{
+    var DATA_STATSNUM_COL = "STATSNUM_COL";
 
+    var nColRead = 0;
+    var strVal = ReadData(DATA_STATSNUM_COL, "");
+
+    this.nColSel = nCol;
+    this.anSort = [];
+
+    var bValid = false;
+
+    if (strVal.length >= 5)
+    {
+        var astrVal = strVal.split(",");
+        if (astrVal.length == 3)
+        {
+            bValid = true;
+
+            for (var n = 0; n < 3; ++n)
+            {
+                var nVal = parseInt(astrVal[n]);
+                if (n == 0)
+                {
+                    if ((nVal >= 0) && (nVal < 3))
+                    {
+                        nColRead = nVal;
+                    }
+                    else
+                    {
+                        bValid = false;
+                        break;
+                    }
+                }
+                else
+                {
+                    if ((nVal == 0) || (nVal == 1))
+                    {
+                        this.anSort[n - 1] = nVal;
+                    }
+                    else
+                    {
+                        bValid = false;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    var bWrite = false;
+
+    if (bValid)
+    {
+        if (this.nColSel > 0)
+        {
+            if (this.nColSel == nColRead)
+            {
+                this.anSort[this.nColSel - 1] = (this.anSort[this.nColSel - 1] + 1) % 2;
+                bWrite = true;
+            }
+        }
+
+        if (this.nColSel >= 0)
+        {
+            if (this.nColSel != nColRead)
+                bWrite = true;
+        }
+        else
+        {
+            this.nColSel = nColRead;
+        }
+    }
+    else
+    {
+        this.anSort[0] = 1;
+        this.anSort[1] = 1;
+
+        if (this.nColSel >= 0)
+        {
+            bWrite = true;
+        }
+        else
+        {
+            this.nColSel = 1;
+        }
+    }
+
+    if (bWrite)
+    {
+        strVal = this.nColSel.toString() + "," + this.anSort[0].toString() + "," + this.anSort[1].toString();
+        WriteData(DATA_STATSNUM_COL, strVal);
+    }
+
+    this.anDistance = [];
+    this.anFrequence = [];
+    this.anIdx = [];
+
+    this.Calc = function (queue, nCount, nBefore)
+    {
+        var strVal = ReadData(DATA_STATSNUM_COL, "2");
+
+        var abStop = [];
+
+        for (var n = 0; n <= (36+1); ++n)
+        {
+            this.anDistance[n] = 0;
+            this.anFrequence[n] = 0;
+            this.anIdx[n] = n;
+
+            abStop[n] = false;
+        }
+
+        // calc Distance: -----------------------
+        // distance is always from most recent num (that is, nBefore is useless for distance calcuiation)
+
+        var nMaxIdx = queue.nIDX;
+        var nMinIdx = queue.nIDX - nCount + 1;
+
+        if (nMinIdx < 0)
+            nMinIdx = 0;
+
+        for (var nn = nMaxIdx; nn >= nMinIdx ; --nn)
+        {
+            var bChanged = false;
+
+            for(var n = 0; n <= 36; ++ n)
+            {
+                if(!abStop[n])
+                {
+                    if (queue.anNum[nn] == n)
+                    {
+                        abStop[n] = true;
+                    }
+                    else
+                    {
+                        ++this.anDistance[n];
+                        bChanged = true;
+                    }
+                }
+            }
+
+            if (!bChanged)
+                break;
+        }
+
+        // calc Frequence: ----------------------
+
+        nMaxIdx = queue.nIDX - nBefore;
+        nMinIdx = queue.nIDX - nBefore - nCount + 1;
+
+        if (nMinIdx < 0)
+            nMinIdx = 0;
+        
+        for (var nn = nMaxIdx; nn >= nMinIdx ; --nn)
+            this.anFrequence[queue.anNum[nn]]++;
+
+        // calc average: ------------------------
+
+        var nTotalDistance = 0;
+        var nTotalFrequence = 0;
+
+        for (var n = 0; n <= 36; ++n)
+        {
+            nTotalDistance += this.anDistance[n];
+            nTotalFrequence += this.anFrequence[n];
+        }
+
+        if (nTotalDistance == 0)
+            this.anDistance[37] = 0;
+        else
+            this.anDistance[37] = nTotalDistance / 37;
+
+        if (nTotalFrequence == 0)
+            this.anFrequence[37] = 0;
+        else
+            this.anFrequence[37] = nTotalFrequence / 37;
+
+        // sort: --------------------------------
+
+        if (this.nColSel == 1)
+        {
+            DoSort(this.anDistance, this.anIdx, (this.anSort[0] == 0));
+        }
+        else if (this.nColSel == 2)
+        {
+            DoSort(this.anFrequence, this.anIdx, (this.anSort[1] == 0));
+        }
+    }
+}

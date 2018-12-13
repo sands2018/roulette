@@ -463,6 +463,7 @@ function OnSysExpand()
 
 function Show_Keyboard(bShow)
 {
+    /*
     var strDisplay = "";
 
     if (!bShow)
@@ -482,6 +483,18 @@ function Show_Keyboard(bShow)
 
     div = document.getElementById(strIDAnother);
     div.style.display = "none";
+    */
+
+    var strIDAnother = "divKeyboard";
+
+    if (g_status.KeyboardID == "K")
+        var strIDAnother = "divGameBoard";
+
+    var div = document.getElementById(strIDAnother);
+    div.style.display = "none";
+
+    div = document.getElementById("divBottom");
+    div.style.display = bShow ? "" : "none";;
 
     var divKB = document.getElementById("divShowKeyboard");
     divKB.style.display = bShow ? "none" : "";
@@ -697,12 +710,12 @@ function OnSysExport()
 
 function OnSysImport()
 {
-    var tdTitle = document.getElementById("tdImportTitle");
+    //var tdTitle = document.getElementById("tdImportTitle");
     var txt = document.getElementById("txtClipboard");
     var trSpecImport = document.getElementById("trSpecImport");
     var tdBttnDoImport = document.getElementById("tdBttnDoImport");
 
-    tdTitle.innerHTML = "导&nbsp;&nbsp;&nbsp;入";
+    //tdTitle.innerHTML = "导&nbsp;&nbsp;&nbsp;入";
     txt.value = "";
     trSpecImport.style.display = "";
     tdBttnDoImport.style.display = "";
@@ -905,9 +918,103 @@ function OnBttnStatsSumClick(nIdx)
     Show_SumLists();
 }
 
+function OnStatsNumClick(nCol)
+{
+    Show_StatsNumbers(nCol);
+}
+
+function GetStatsNumTdString(statsNum, nIdx, aStr)
+{
+    var strNumber = nIdx.toString();
+    if (nIdx == 0)
+        strNumber = "<span class='txtZero'>" + strNumber + "</span>";
+
+    if (nIdx != 37)
+    {
+        aStr[0] = strNumber;
+        aStr[1] = statsNum.anDistance[nIdx];
+        aStr[2] = statsNum.anFrequence[nIdx];
+    }
+    else
+    {
+        aStr[0] = "平均";
+        aStr[1] = Math.round(statsNum.anDistance[nIdx] * 100) / 100;
+        aStr[2] = Math.round(statsNum.anFrequence[nIdx] * 100) / 100;
+    }
+}
+
+function Show_StatsNumbers(nCol)
+{
+    var stats = new CStatsNumbers(nCol);
+    stats.Calc(g_queue, 99999, 0);
+
+
+    var strHtml = "<table cellpadding='0' cellspacing='1' border='0' style='width: 100%' id='tblStatsNumbers'>";
+
+    strHtml += "<tr>"
+    for (var n = 0; n < 2; ++n)
+    {
+        strHtml += "<td ";
+
+        if (n == 1)
+            strHtml += "class='tdStatsNumSecond' ";
+
+        strHtml += "onclick='OnStatsNumClick(0)'>号码</td>";
+        strHtml += "<td onclick='OnStatsNumClick(1)'>距离";
+        var str = "";
+        if (stats.nColSel == 1)
+        {
+            if (stats.anSort[0] == 0)
+                str = "&nbsp;&#8593;";
+            else
+                str = "&nbsp;&#8595;";
+        }
+        strHtml += str;
+        strHtml += "</td><td onclick='OnStatsNumClick(2)'>次数";
+        str = "";
+        if (stats.nColSel == 2)
+        {
+            if (stats.anSort[1] == 0)
+                str = "&nbsp;&#8593;";
+            else
+                str = "&nbsp;&#8595;";
+        }
+        strHtml += str;
+        strHtml += "</td>";
+    }
+    strHtml += "</tr>"
+
+    var aStr = [];
+
+    for (var n = 0; n <= 18; ++n)
+    {
+        var nIdx = stats.anIdx[n];
+        var nIdxNextCol = stats.anIdx[n + 19];
+
+        GetStatsNumTdString(stats, nIdx, aStr);
+
+        strHtml += "<tr><td class='tdStatsNumber'>" + aStr[0] + "</td>";
+        strHtml += "<td>" + aStr[1] + "</td>";
+        strHtml += "<td>" + aStr[2] + "</td>";
+
+        GetStatsNumTdString(stats, nIdxNextCol, aStr);
+
+        strHtml += "<td class='tdStatsNumber tdStatsNumSecond'>" + aStr[0] + "</td>";
+        strHtml += "<td>" + aStr[1] + "</td>";
+        strHtml += "<td>" + aStr[2] + "</td></tr>";
+    }
+
+    strHtml += "</table>";
+
+    var div = document.getElementById("divStatsNumbers");
+    div.innerHTML = strHtml;
+}
+
 function OnShowStatistics()
 {
-    var div = document.getElementById("divStatistics");
+    Show_StatsNumbers(-1);
+
+    div = document.getElementById("divStatistics");
     div.style.display = "";
 }
 

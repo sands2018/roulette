@@ -20,6 +20,9 @@ td { text-align: center; vertical-align: middle; cursor: pointer; font-size: 40p
     padding: 0; margin: 0; height: 20px; border: 1px solid white;
     background-color: white; filter: alpha(Opacity=100); -moz-opacity: 1; opacity: 1;
 }
+
+.txtZero { color: #799f79 }
+
 #tblKeyboard td, #tblGameBoard td { font-size: 50px; }
 #tblKeyboard td { width: 110px; height: 105px; }
 #tblGameBoard td { width: 95px; height: 95px; }
@@ -70,11 +73,15 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 #tblStatsSum .tdStatsSumListItem { text-align: left; }
 #tblStatsSum .tdTotal { font-family:Arial; font-size: 40px; color: #dd8877; font-weight: bold; padding: 0px 18px } 
 #tblStatsSum .tdZero { font-family:Arial; font-size: 40px; color: #8fc38f; font-weight: bold; padding: 0px 18px }
-#tblStatsSum .txtZero { color: #83aa83 }
 
-#tblStatisticsTitleBar td { border: 1px solid #dfbc33; border-right: 0; font-size: 40px }
+#tblStatisticsTitleBar td { border: 1px solid #cf8f28; border-right: 0; font-size: 40px }
 #tblStatisticsTitleBar td:first-child { border-left: 0 }
 
+#tblStatsNumbers td { border-bottom: 1px solid #bbbbbb; }
+#tblStatsNumbers tr:first-child td { padding: 8px 0; border-top: 0; border-bottom: 1px solid #cf8f28; }
+#tblStatsNumbers tr:last-child td { border-bottom: 1px solid #cf8f28; }
+#tblStatsNumbers .tdStatsNumSecond { border-left: 1px solid #cf8f28; }
+#tblStatsNumbers .tdStatsNumber { color: #8f5f38 } 
 
 
 #divCover { font-size: 40px; }
@@ -117,7 +124,6 @@ tr.trLost td, .tdLost { color: #7fc37f; }
 #divImport
 { 
     position:fixed; top: 0px; z-index:9999; width: 100%; height: 100%; 
-    background-color:white; 
 }
 #tdImportTitle { font-size: 36px; padding: 10px; background-color: #EEE8D3; }
 #txtClipboard { font-size: 36px; border: 0 } 
@@ -252,7 +258,7 @@ tr.trLost td, .tdLost { color: #7fc37f; }
                 <td style="width: 9%; height: 80px; font-family: Arial" onclick="OnHideStatistics()">x</td>
             </tr>
         </table>
-        <div id="divStatsMisc"></div>
+        <div id="divStatsNumbers"></div>
     </div>
 
 
@@ -334,22 +340,23 @@ tr.trLost td, .tdLost { color: #7fc37f; }
         </div>
     </div>
     <div id="divShowKeyboard" style="position:fixed; right: 0px; bottom: 0px; z-index: 1001; width: 100px; height: 100px; display:none" onclick="OnShowKeyboard()"></div>
-    <div id="divImport" style="z-index:9999; display: none;">
-        <table cellpadding="0" cellspacing="30" style="width: 100%" id="tblImport">
-            <tr><td id="tdImportTitle"></td></tr>
-            <tr id="trSpecImport"><td class="tdSpec">请在下面编辑框内准备好需要导入的数据，然后按导入：</td></tr>
-            <tr><td id="tdTxt"><textarea style="width: 100%; height: 600px" id="txtClipboard"></textarea></td></tr>
-            <tr>
-                <td style="text-align: center">
-                    <table cellpadding="0" cellspacing="20" border="0" style="margin: auto" id="tblPanelButtons">
-                        <tr>
-                            <td class="bttn bttnImport" id="tdBttnDoImport" onclick="OnImport()">导入</td>
-                            <td class="bttn bttnImport" onclick="OnImportOK()">退出</td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-        </table>
+    <div id="divImport" style="display: none; padding-top: 200px">
+        <div style="padding: 20px 0 10px 0; background-color: white; margin: 0 auto; width: 780px; border: 18px solid #e8e3df">
+            <table cellpadding="0" cellspacing="30" style="width: 700px; margin: 0 auto;" id="tblImport">
+                <tr id="trSpecImport"><td class="tdSpec">请在下面的编辑框内准备好数据，然后按导入：</td></tr>
+                <tr><td id="tdTxt"><textarea style="width: 100%; height: 200px" id="txtClipboard"></textarea></td></tr>
+                <tr>
+                    <td style="text-align: center">
+                        <table cellpadding="0" cellspacing="20" border="0" style="margin: auto" id="tblPanelButtons">
+                            <tr>
+                                <td class="bttn bttnImport" id="tdBttnDoImport" onclick="OnImport()">导入</td>
+                                <td class="bttn bttnImport" onclick="OnImportOK()">退出</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
     </div>
 </body>
 </html>
