@@ -730,7 +730,7 @@ function OnImport()
     var strNum = txt.value;
 
     if(ResetDataFromNumString(strNum, true))
-        OnImportExportOK();
+        OnImportOK();
 }
 
 function OnImportOK()
