@@ -1,67 +1,37 @@
-﻿/* z-index:
-    0    - main div;
-    99   - 3C3R;
-    1000 - bottom div;
-    1001 - show gameboard/keyboard;
-    3999  - statistics;
-    9999 - div import;
-*/
+﻿
 
-// global variables: ----------------------------------------------------------
+function Calc_StatsGroupsCount(stats3C3R, queue)
+{
+    stats3C3R.Reset(6);
 
-var g_queue = new CNumQueue();
-var g_status = new CSysStatus();
-var g_3C3R = new CStats3C3R();
-var g_columns = new CStatsColumns();
+    var nCalcCount = g_bttnStatsGroups.Value();
+    var nCount = 0;
 
+    for (var n = queue.nIDX; n >= 0; --n)
+    {
+        if (queue.anNum[n] == 0)
+            continue;
+
+        var numQ = queue.anNum[n];
+        var nCol = GetNumCol(numQ);
+        var nRow = GetNumRow(numQ);
+
+        stats3C3R.anValue[nCol]++;
+        stats3C3R.anValue[nRow + 3]++;
+
+        ++nCount;
+        if (nCount >= nCalcCount)
+            break;
+    }
+
+    stats3C3R.Sort(true);
+}
 
 function ChangeTheme(theme)
 {
     var csslink = document.getElementById("linkTheme");
     csslink.href = "css/" + theme + ".css";
 }
-
-
-function GetNumberClass(num)
-{
-    var strColor = g_astrNumberColor[num];
-
-    if (strColor == "r")
-    {
-        return "tdRed";
-    }
-    else if (strColor == "b")
-    {
-        return "tdBlack";
-    }
-    else
-    {
-        return "tdGreen";
-    }
-}
-
-function GetColRowSpec(nIdx3C3R)
-{
-    var strSpec;
-
-    if (nIdx3C3R < 3)
-    {
-        if (nIdx3C3R == 0)
-            strSpec = "一组";
-        else if (nIdx3C3R == 1)
-            strSpec = "二组";
-        else
-            strSpec = "三组";
-    }
-    else
-    {
-        strSpec = (nIdx3C3R - 3 + 1).toString() + "行";
-    }
-
-    return strSpec;
-}
-
-
 
 function Show_RefreshTheme()
 {
@@ -74,7 +44,7 @@ function Show_RefreshTheme()
     var bttn = document.getElementById("tdBttnTheme");
     bttn.innerHTML = strTitle;
 
-    ChangeTheme((g_status.ThemeID == 0)? "normal" : "color");
+    ChangeTheme((g_status.ThemeID == 0) ? "normal" : "color");
 
     //Show_3C3R();
 }
@@ -182,7 +152,7 @@ function Show_Columns()
     var nColumnCount = g_columns.anStart.length;
     var nCount = 0;
 
-    for(var n = 0; n < nColumnCount; ++ n)
+    for (var n = 0; n < nColumnCount; ++n)
     {
         if (g_columns.data.Value(n) < nMin)
             break;
@@ -203,32 +173,32 @@ function Show_Columns()
         tbl.style.display = "none";
         return;
     }
-    else 
+    else
     {
-        if(nCount <= 4)
+        if (nCount <= 4)
         {
             tr1.style.display = "none";
             tr2.style.display = "none";
         }
-        else if(nCount <= 8)
+        else if (nCount <= 8)
         {
             tr2.style.display = "none";
         }
     }
 
     var anActive = [];
-    for(var n = 0; n < nCount; ++ n)
+    for (var n = 0; n < nCount; ++n)
         anActive[n] = 1;
 
-    for(var n = 0; n < nCount - 1; ++n)
+    for (var n = 0; n < nCount - 1; ++n)
     {
         if (anActive[n] == 0)
             continue;
 
-        if((g_columns.data.anIdx[n] % 2) != 0)
+        if ((g_columns.data.anIdx[n] % 2) != 0)
             continue;
 
-        for(var nn = n + 1; nn < nCount; ++ nn)
+        for (var nn = n + 1; nn < nCount; ++nn)
         {
             var nMinIdx = Math.min(g_columns.data.anIdx[n], g_columns.data.anIdx[nn]);
             var nMaxIdx = Math.max(g_columns.data.anIdx[n], g_columns.data.anIdx[nn]);
@@ -242,7 +212,7 @@ function Show_Columns()
         }
     }
 
-    for(var n = 0; n < 12; ++ n)
+    for (var n = 0; n < 12; ++n)
     {
         var tdT = document.getElementById("tdColumnsT" + n.toString());
         var tdV = document.getElementById("tdColumnsV" + n.toString());
@@ -259,7 +229,7 @@ function Show_Columns()
             tdT.innerHTML = GetColumnSpec(g_columns.data.anIdx[n]);
             tdV.innerHTML = g_columns.data.Value(n).toString();
 
-            if(anActive[n] == 1)
+            if (anActive[n] == 1)
             {
                 tdT.className = "Title TActive";
                 tdV.className = "Value VActive";
@@ -271,6 +241,109 @@ function Show_Columns()
             }
         }
     }
+}
+
+function Show_FinishedLong()
+{
+    var MIN_LONG_COUNT = 10;
+
+    var abOccur = [];
+    abOccur[0] = [];
+    abOccur[1] = [];
+
+    var anCount = [];
+    anCount[0] = [];
+    anCount[1] = [];
+
+    var anIndex = [];
+
+    for (var n = 0; n < 6; ++n)
+    {
+        abOccur[0][n] = false;
+        abOccur[1][n] = false;
+        anCount[0][n] = 0;
+        anCount[1][n] = 0;
+        anIndex[n] = n;
+    }
+
+    var bHaveLong = false;
+
+    for (var n = g_queue.nIDX; n >= 0; --n)
+    {
+        var anIdx = [];
+        anIdx[0] = GetNumCol(g_queue.anNum[n]);
+        anIdx[1] = GetNumRow(g_queue.anNum[n]) + 3;
+
+        var bContinue = false;
+
+        for(var n1 = 0; n1 < 2; ++ n1)
+        {
+            if (abOccur[1][anIdx[n1]])
+                continue;
+
+            if (abOccur[0][anIdx[n1]])
+            {
+                abOccur[1][anIdx[n1]] = true;
+                continue;
+            }
+
+            abOccur[0][anIdx[n1]] = true;
+        }
+
+        for(var nn = 0; nn < 6; ++ nn)
+        {
+            if ((nn == anIdx[0]) || (nn == anIdx[1]))
+                continue;
+
+            if (abOccur[1][nn])
+                continue;
+
+            bContinue = true;
+
+            if (abOccur[0][nn])
+            {
+                anCount[1][nn]++;
+                if ((anCount[1][nn]) >= MIN_LONG_COUNT)
+                    bHaveLong = true;
+            }
+            else
+            {
+                anCount[0][nn]++;
+            }
+        }
+
+        if (!bContinue)
+            break;
+    }
+
+    var div = document.getElementById("divFinishedLong");
+
+    var strDisplay = "";
+    if (!bHaveLong)
+    {
+        strDisplay = "none";
+    }
+    else
+    {
+        DoSort(anCount[0], anIndex, true);
+
+        var strHtml = "刚结束：&nbsp;&nbsp;";
+
+        for (var n = 0; n < 6; ++n)
+        {
+            var nIdx = anIndex[n];
+            if (anCount[1][nIdx] >= MIN_LONG_COUNT)
+            {
+                strHtml += GetColRowSpec(nIdx) + "&nbsp;&nbsp;";
+                strHtml += "<span class='txtLongCount'>" + anCount[1][nIdx].toString() + "</span>&nbsp;&nbsp;";
+                strHtml += anCount[0][nIdx].toString() + ";&nbsp;&nbsp;&nbsp;&nbsp;";
+            }
+        }
+
+        div.innerHTML = strHtml;
+    }
+
+    div.style.display = strDisplay;
 }
 
 function Show_Queue()
@@ -367,6 +440,7 @@ function Show_AddNum()
     Show_Queue();
     Show_3C3R();
     Show_Columns();
+    Show_FinishedLong();
     Show_StatsGroupsCount();
     Show_RefreshSysButtons();
     Show_SumLists();
@@ -393,72 +467,6 @@ function Init_Theme()
     }
 }
 
-function OnPageInit()
-{
-    PageInit_Data();
-
-    Show_Keyboard(true);
-    Show_3C3R();
-    Show_Queue();
-    Show_Columns();
-    Show_RefreshColumnsButtons();
-    Show_StatsGroupsCount();
-    Show_RefreshStatsGroupButtons();
-    Show_RefreshSysButtons();
-
-    Show_RefreshStatsSumButton();
-    Show_SumLists();
-
-    Init_Theme();
-    Show_RefreshTheme();
-
-    if (g_nDebug == 1)
-        ChangeTheme("debug");
-}
-
-
-function OnSwitchInput(nIdx)
-{
-    var divK = document.getElementById("divKeyboard");
-    var divB = document.getElementById("divGameBoard");
-
-    if (nIdx == 0)
-    {
-        divK.style.display = "none";
-        divB.style.display = "";
-        g_status.KeyboardID = "B";
-    }
-    else
-    {
-        divB.style.display = "none";
-        divK.style.display = "";
-        g_status.KeyboardID = "K";
-    }
-
-    WriteData(DATA_KEYBOARDID, g_status.KeyboardID);
-}
-
-function OnSysChangeTheme()
-{
-    if (g_status.ThemeID > 1)
-        return;
-
-    g_status.Escape = 0;
-
-    g_status.ThemeID++;
-    g_status.ThemeID = g_status.ThemeID % 2;
-
-    Show_RefreshTheme();
-}
-
-function OnSysExpand()
-{
-    g_status.QueueExpand++;
-    g_status.QueueExpand = g_status.QueueExpand % 2;
-
-    Show_Queue();
-    Show_RefreshSysButtons();
-}
 
 
 function Show_Keyboard(bShow)
@@ -500,44 +508,6 @@ function Show_Keyboard(bShow)
     divKB.style.display = bShow ? "none" : "";
 }
 
-function OnShowKeyboardClick()
-{
-    if (g_nShowInputStatus == 1)
-    {
-        Show_Keyboard(false);
-    }
-    else
-    {
-        Show_Keyboard(true);
-    }
-
-}
-
-function OnHideKeyboard()
-{
-    Show_Keyboard(false);
-}
-
-function OnShowKeyboard()
-{
-    Show_Keyboard(true);
-}
-
-function OnEscape()
-{
-    g_status.Escape++;
-    g_status.Escape = g_status.Escape % 2;
-
-    ChangeTheme((g_status.Escape == 0) ? ((g_status.ThemeID == 0) ? "normal" : "color") : "grey");
-}
-
-function OnSeperate3C3RClick()
-{
-    g_status.Seperate3C3R = SwitchTrueFalse(g_status.Seperate3C3R);
-    WriteData(DATA_SEPERATE3C3R, g_status.Seperate3C3R);
-
-    Show_3C3R();
-}
 
 function SaveNumbers()
 {
@@ -545,13 +515,6 @@ function SaveNumbers()
     WriteData(DATA_NUMBERS, strNum);
 }
 
-function OnAddNum(num)
-{
-    Calc_AddNum(num);
-    Calc_Sum();
-    Show_AddNum();
-    SaveNumbers();
-}
 
 
 function TitleString_StatsGroupsCount(strTitle)
@@ -656,7 +619,7 @@ function ResetDataFromNumString(strNum, bImport)
     strMsg = "";
     if (bImport)
     {
-        if(g_queue.nIDX >= 0)
+        if (g_queue.nIDX >= 0)
             strMsg = "导入将清除当前数据！";
 
         strMsg += "确定要导入吗？"
@@ -681,99 +644,11 @@ function ResetDataFromNumString(strNum, bImport)
     return true;
 }
 
-function OnSysRestore()
-{
-    if (g_queue.nIDX >= 0)
-        return;
-
-    var strNum = ReadData(DATA_NUMBERS);
-    ResetDataFromNumString(strNum, false);
-}
-
-function OnSysExport()
-{
-    var clipboard = new ClipboardJS('#tdBttnExport');
-    var strData = NumArrayToString(g_queue);
-    $("#tdBttnExport").attr("data-clipboard-action", "copy");
-    $("#tdBttnExport").attr("data-clipboard-text", strData);
-
-    clipboard.on('success', function (e)
-    {
-        alert("数据已复制到粘贴板");
-    });
-
-    clipboard.on('error', function (e)
-    {
-        alert("数据复制失败");
-    });
-}
-
-function OnSysImport()
-{
-    //var tdTitle = document.getElementById("tdImportTitle");
-    var txt = document.getElementById("txtClipboard");
-    var trSpecImport = document.getElementById("trSpecImport");
-    var tdBttnDoImport = document.getElementById("tdBttnDoImport");
-
-    //tdTitle.innerHTML = "导&nbsp;&nbsp;&nbsp;入";
-    txt.value = "";
-    trSpecImport.style.display = "";
-    tdBttnDoImport.style.display = "";
-    var div = document.getElementById("divImport");
-    div.style.display = "";
-    txt.select();
-}
-
-function OnImport()
-{
-    var txt = document.getElementById("txtClipboard");
-    var strNum = txt.value;
-
-    if(ResetDataFromNumString(strNum, true))
-        OnImportOK();
-}
-
-function OnImportOK()
-{
-    var div = document.getElementById("divImport");
-    div.style.display = "none";
-}
-
-function OnDelNum()
-{
-    if (g_queue.nIDX < 0)
-        return;
-
-    if (g_queue.nIDX == 0)
-    {
-        PageInit_Data();
-        Show_AddNum();
-        return;
-    }
-
-    var anNum = [];
-
-    for(var n = 0; n < g_queue.nIDX; ++ n)
-        anNum[n] = g_queue.anNum[n];
-
-    ResetData(anNum);
-    SaveNumbers();
-}
-
-function OnSysRestart()
-{
-    var confirmed = confirm("重置将清除当前所有数据！确定要重置吗？");
-    if (confirmed == 0)
-        return;
-
-    PageInit_Data();
-    Show_AddNum();
-}
 
 function Show_SumLists()
 {
     var divStatsSum = document.getElementById("divStatsSum");
-    divStatsSumLists = document.getElementById("divStatsSumLists");
+    var divStatsSumLists = document.getElementById("divStatsSumLists");
 
     if (g_queue.nIDX < 0)
     {
@@ -788,7 +663,7 @@ function Show_SumLists()
     var nStart = 0;
     if (nNumCount < (g_queue.nIDX + 1))
         nStart = (g_queue.nIDX + 1) - nNumCount;
- 
+
     var data3C3R = new CStats3C3R();
     data3C3R.Reset();
 
@@ -866,62 +741,8 @@ function Show_SumLists()
 
     divStatsSumLists.innerHTML = strHtml;
     divStatsSum.style.display = "";
-    //OnStatsIntervalClick(false);
 }
 
-
-
-var astrValueColumns = [3, 4, 5, 6, 7];
-
-var g_bttnColumns = new CBttnOptions("Columns", astrValueColumns, null, 2, -1);
-
-function Show_RefreshColumnsButtons()
-{
-    g_bttnColumns.Show("divColumnsBttns");
-}
-
-function OnBttnColumnsClick(nIdx)
-{
-    g_bttnColumns.OnClick(nIdx);
-    Show_Columns();
-}
-
-
-var astrValueStatsGroups = [20, 40, 60, 80, 100, -1];
-
-var g_bttnStatsGroups = new CBttnOptions("StatsGroups", astrValueStatsGroups, null, 2, 0);
-
-function Show_RefreshStatsGroupButtons()
-{
-    g_bttnStatsGroups.Show("divStatsGroupsBttns");
-}
-
-function OnBttnStatsGroupsClick(nIdx)
-{
-    g_bttnStatsGroups.OnClick(nIdx);
-    Show_StatsGroupsCount();
-}
-
-
-var astrValueStatsSum = [100, 200, 300, -1];
-
-var g_bttnStatsSum = new CBttnOptions("StatsSum", astrValueStatsSum, null, 2, 150);
-
-function Show_RefreshStatsSumButton()
-{
-    g_bttnStatsSum.Show("divStatsSumBttns");
-}
-
-function OnBttnStatsSumClick(nIdx)
-{
-    g_bttnStatsSum.OnClick(nIdx);
-    Show_SumLists();
-}
-
-function OnStatsNumClick(nCol)
-{
-    Show_StatsNumbers(nCol);
-}
 
 function GetStatsNumTdString(statsNum, nIdx, aStr)
 {
@@ -1010,16 +831,3 @@ function Show_StatsNumbers(nCol)
     div.innerHTML = strHtml;
 }
 
-function OnShowStatistics()
-{
-    Show_StatsNumbers(-1);
-
-    div = document.getElementById("divStatistics");
-    div.style.display = "";
-}
-
-function OnHideStatistics()
-{
-    var div = document.getElementById("divStatistics");
-    div.style.display = "none";
-}

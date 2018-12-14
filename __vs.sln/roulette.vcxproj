@@ -117,8 +117,8 @@
     <None Include="..\css\normal.css" />
     <None Include="..\index.html" />
     <None Include="..\js\common.js" />
-    <None Include="..\js\main.js" />
-    <None Include="..\js\statistics.js" />
+    <None Include="..\js\message.js" />
+    <None Include="..\js\process.js" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

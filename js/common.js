@@ -1,4 +1,4 @@
-﻿var g_nDebug = 0;
+﻿var g_nDebug = 1;
 
 // styles: ----------------------------------------------------------------
 
@@ -75,6 +75,86 @@ function SwitchTrueFalse(strValue)
 
     return str;
 }
+
+// ------------------------------------------------------------------------
+
+function GetNumCol(num)
+{
+    return Math.floor((num - 1) / 12);
+}
+
+function GetNumRow(num)
+{
+    var nRow = num % 3;
+    if (nRow == 1)
+    {
+        nRow = 2;
+    }
+    else if (nRow == 2)
+    {
+        nRow = 1;
+    }
+
+    return nRow;
+}
+
+function GetNumColumn(num)
+{
+    var anCol = [];
+
+    anCol[0] = Math.floor((num - 1) / 6) * 2;
+
+    if ((num > 3) && (num < 34))
+        anCol[1] = Math.floor((num - 4) / 6) * 2 + 1;
+    else
+        anCol[1] = -1;
+
+    return anCol;
+}
+
+function GetNumberClass(num)
+{
+    var strColor = g_astrNumberColor[num];
+
+    if (strColor == "r")
+    {
+        return "tdRed";
+    }
+    else if (strColor == "b")
+    {
+        return "tdBlack";
+    }
+    else
+    {
+        return "tdGreen";
+    }
+}
+
+function GetColRowSpec(nIdx3C3R)
+{
+    var strSpec;
+
+    if (nIdx3C3R < 3)
+    {
+        if (nIdx3C3R == 0)
+            strSpec = "一组";
+        else if (nIdx3C3R == 1)
+            strSpec = "二组";
+        else
+            strSpec = "三组";
+    }
+    else
+    {
+        strSpec = (nIdx3C3R - 3 + 1).toString() + "行";
+    }
+
+    return strSpec;
+}
+
+
+
+// ------------------------------------------------------------------------
+
 
 function CIndexedArray()
 {
@@ -347,6 +427,120 @@ function NumStringToArray(strNumbers, rtn)
     rtn.rn = 1;
 }
 
+function CStats3C3R()
+{
+    this.data = new CIndexedArray();
+
+    var LARGE_COUNT_NUM = 20;
+    this.anLargeCount = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]];
+
+    this.anLargeCountCol = [];
+    this.anLargeCountRow = [];
+
+    this.Reset = function ()
+    {
+        this.data.Reset(6);
+
+        for (var nn = 0; nn < 3; ++nn)
+            for (var n = 0; n < LARGE_COUNT_NUM; ++n)
+                this.anLargeCount[nn][n] = 0;
+    }
+
+    this.AddNum = function (num)
+    {
+        if (num == 0) return;
+
+        for (var n = 0; n < 6; ++n)
+            this.data.anValue[n]++;
+
+        var nCol = GetNumCol(num);
+        var nRow = GetNumRow(num);
+
+        // process g_StatsInterval.anLargeCount: ----------
+
+        var anNum3C3R = [nCol, nRow + 3];
+
+        for (var n = 0; n < 2; ++n)
+        {
+            var nCount = this.data.anValue[anNum3C3R[n]] - 1;
+
+            if (nCount >= 11)
+            {
+                var nIdx = nCount - 11;
+                if (nIdx >= (LARGE_COUNT_NUM - 1))
+                    nIdx == LARGE_COUNT_NUM - 1;
+
+                this.anLargeCount[2][nIdx]++; // total
+                this.anLargeCount[n][nIdx]++; // col or row
+            }
+
+            this.data.anValue[anNum3C3R[n]] = 0;
+        }
+    }
+}
+
+function CStatsColumns()
+{
+    this.anStart = [1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31];
+
+    this.data = new CIndexedArray();
+
+    this.Reset = function ()
+    {
+        this.data.Reset(this.anStart.length);
+    }
+
+    // call this function when num queue changed:
+
+    this.ReCalc = function (queue)
+    {
+        var nColumnCount = this.anStart.length;
+
+        var anCounting = [];
+
+        for (var nn = 0; nn < nColumnCount; ++nn)
+            anCounting[nn] = 1;
+
+        this.Reset();
+
+        if (queue.nIDX < 0)
+            return;
+
+        for (var n = queue.nIDX; n >= 0; --n)
+        {
+            var bChanged = false;
+
+            if (queue.anNum[n] == 0)
+                continue;
+
+            var anColumn = GetNumColumn(queue.anNum[n]);
+
+            for (var nn = 0; nn < nColumnCount; ++nn)
+            {
+                if ((nn == anColumn[0]) || (nn == anColumn[1]))
+                {
+                    anCounting[nn] = 0;
+                }
+                else
+                {
+                    if (anCounting[nn] != 0)
+                    {
+                        this.data.anValue[nn]++;
+                        bChanged = true;
+                    }
+                }
+            }
+
+            if (!bChanged)
+                break;
+        }
+
+        this.data.Sort(false);
+    }
+}
+
 function CStatsNumbers(nCol)
 {
     var DATA_STATSNUM_COL = "STATSNUM_COL";
@@ -427,6 +621,9 @@ function CStatsNumbers(nCol)
 
         if (this.nColSel >= 0)
         {
+            if (this.nColSel > 0)
+                this.anSort[this.nColSel - 1] = 0;
+
             bWrite = true;
         }
         else
@@ -451,7 +648,7 @@ function CStatsNumbers(nCol)
 
         var abStop = [];
 
-        for (var n = 0; n <= (36+1); ++n)
+        for (var n = 0; n <= (36 + 1) ; ++n)
         {
             this.anDistance[n] = 0;
             this.anFrequence[n] = 0;
@@ -473,9 +670,9 @@ function CStatsNumbers(nCol)
         {
             var bChanged = false;
 
-            for(var n = 0; n <= 36; ++ n)
+            for (var n = 0; n <= 36; ++n)
             {
-                if(!abStop[n])
+                if (!abStop[n])
                 {
                     if (queue.anNum[nn] == n)
                     {
@@ -500,7 +697,7 @@ function CStatsNumbers(nCol)
 
         if (nMinIdx < 0)
             nMinIdx = 0;
-        
+
         for (var nn = nMaxIdx; nn >= nMinIdx ; --nn)
             this.anFrequence[queue.anNum[nn]]++;
 
@@ -537,3 +734,12 @@ function CStatsNumbers(nCol)
         }
     }
 }
+
+
+// global variables: ----------------------------------------------------------
+
+var g_queue = new CNumQueue();
+var g_status = new CSysStatus();
+var g_3C3R = new CStats3C3R();
+var g_columns = new CStatsColumns();
+

@@ -1,3 +1,4 @@
+.txtZero { color: #a3a3a3 }
 
 #tblKeyboard, #tblGameBoard { background-color: #dfdfdf; border: 0; }
 #tblKeyboard td, #tblGameBoard td { border: 0; }
@@ -30,3 +31,12 @@
 #tblStatsGroups td:first-child { border-right: 1px solid #d3d3d3; }
 .SGCTitle { color: #9f9f9f; }
 .SGCNumber { color: #9f9f9f; }
+
+#tblStatsSum { border: 1px solid #d3d3d3; border-bottom: 0; width: 100%; margin: 13px 0 8px 0 }
+#tblStatsSum td { color: #a3a3a3; border-bottom: 1px solid #d3d3d3; font-size: 36px; padding: 3px 8px; text-align: center; }
+#tblStatsSum td:first-child { border-right: 1px solid #d3d3d3; width: 100px; text-align: center; } 
+#tblStatsSum .tdTotal { font-family:Arial; font-size: 40px; color: #a3a3a3; font-weight: bold; padding: 0px 18px } 
+#tblStatsSum .tdZero { font-family:Arial; font-size: 40px; color: #a3a3a3; font-weight: bold; padding: 0px 18px }
+
+#divFinishedLong { color: #a3a3a3; }
+#divFinishedLong .txtLongCount { color: #a3a3a3; }
