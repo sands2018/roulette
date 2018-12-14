@@ -151,10 +151,7 @@ function GetColRowSpec(nIdx3C3R)
     return strSpec;
 }
 
-
-
 // ------------------------------------------------------------------------
-
 
 function CIndexedArray()
 {
@@ -163,26 +160,7 @@ function CIndexedArray()
 
     this.Sort = function (bAsend)
     {
-        var nCount = this.anValue.length;
-
-        var bChanged = false;
-        do
-        {
-            bChanged = false;
-
-            for (var n = 0; n < nCount - 1; ++n)
-            {
-                if ((bAsend && (this.anValue[this.anIdx[n]] > this.anValue[this.anIdx[n + 1]]))
-                    || (!bAsend && (this.anValue[this.anIdx[n]] < this.anValue[this.anIdx[n + 1]])))
-                {
-                    tmp = this.anIdx[n];
-                    this.anIdx[n] = this.anIdx[n + 1];
-                    this.anIdx[n + 1] = tmp;
-
-                    bChanged = true;
-                }
-            }
-        } while (bChanged);
+        DoSort(this.anValue, this.anIdx, bAsend);
     }
 
     this.Value = function (idx)
@@ -732,6 +710,200 @@ function CStatsNumbers(nCol)
         {
             DoSort(this.anFrequence, this.anIdx, (this.anSort[1] == 0));
         }
+    }
+}
+
+function CGameItem()
+{
+    this.nIdx = 1;
+    this.nBet3C3R = -1; // 0 ~ 2: columns; 3 ~ 5: rows
+    this.nDistance = 0;
+    this.nRound = 0;
+    this.nMoney = 0;
+    this.nStatus = 1;
+    this.nHit = 0;
+}
+
+function CGame(nAfter, anBet)
+{
+    this.nAfter = nAfter;
+    this.nRound = anBet.length;
+
+    this.anBet = [];
+    var strName = nAfter.toString() + "_";
+    for (var n = 0; n < anBet.length; ++n)
+    {
+        this.anBet[n] = anBet[n] * 10;
+        strName += anBet[n].toString();
+    }
+
+    this.strName = strName;
+
+    this.nCount = 0;
+    this.nMoney = 0;
+
+    this.nCountCompleted = 0;
+    this.nCountWon = 0;
+    this.nCountDrew = 0;
+    this.nCountLost = 0;
+    this.nCountHit = 0;
+
+    this.nBalance = 0;
+
+    this.aItem = [];
+
+    this.Add = function (item)
+    {
+        this.aItem[this.nCount] = item;
+        this.aItem[this.nCount].nIdx = this.nCount;
+        this.nCount++;
+    }
+
+    this.AfterItemEnds = function (item)
+    {
+        this.nCountCompleted++;
+
+        if (item.nMoney > 0)
+            this.nCountWon++;
+        else if (item.nMoney == 0)
+            this.nCountDrew++;
+        else
+            this.nCountLost++;
+
+        if (item.nHit == 1)
+            this.nCountHit++;
+
+        this.nBalance += item.nMoney;
+    }
+
+    this.AddNum = function (num)
+    {
+        // add distance for all item:
+
+        for (var n = 0; n < this.nCount; ++n)
+        {
+            this.aItem[n].nDistance++;
+        }
+
+        // number 0:
+
+        if (num == 0)
+        {
+            this.nMoney = this.nBalance;
+            for (var n = 0; n < this.nCount; ++n)
+            {
+                if (this.aItem[n].nStatus == 0)
+                    continue;
+
+                this.aItem[n].nMoney -= this.anBet[this.aItem[n].nRound - 1];
+                this.nMoney += this.aItem[n].nMoney;
+            }
+
+            return;
+        }
+
+        var nNumCol = GetNumCol(num);
+        var nNumRow = GetNumRow(num);
+
+        var anNum3C3R = [nNumCol, nNumRow + 3];
+
+        // whether hitted by column or row:
+
+        for (var nn = 0; nn < 2; ++nn)
+        {
+            for (var n = 0; n < this.nCount; ++n)
+            {
+                if (this.aItem[n].nStatus == 0)
+                    continue;
+
+                if (this.aItem[n].nBet3C3R == anNum3C3R[nn])
+                {
+                    this.aItem[n].nMoney += (this.anBet[this.aItem[n].nRound - 1] * 3);
+                    this.aItem[n].nStatus = 0;
+                    this.aItem[n].nHit = 1;
+
+                    this.AfterItemEnds(this.aItem[n]);
+                }
+            }
+        }
+
+        // increase round, see if it ends:
+
+        for (var n = 0; n < this.nCount; ++n)
+        {
+            if (this.aItem[n].nStatus == 0)
+                continue;
+
+            if (this.aItem[n].nRound == this.anBet.length)
+            {
+                this.aItem[n].nStatus = 0;
+                this.aItem[n].nHit = 0;
+
+                this.AfterItemEnds(this.aItem[n]);
+            }
+            else
+            {
+                this.aItem[n].nRound++;
+                this.aItem[n].nMoney -= this.anBet[this.aItem[n].nRound - 1];
+            }
+        }
+
+        // whether a new game start:
+
+        for (var n = 0; n < 6; ++n)
+        {
+            if (g_an3C3R[n] == g_aGameRule[this.nIdxRule].nSkip)
+            {
+                var item = new CGameItem();
+                item.nBet3C3R = n;
+                item.nDistance = 0;
+                item.nRound = 1;
+                item.nMoney = -this.anBet[0];
+                item.nStatus = 1;
+
+                this.Add(item);
+            }
+        }
+
+        // calculate realtime money:
+
+        this.nMoney = this.nBalance;
+        for (var n = 0; n < this.nCount; ++n)
+        {
+            if (this.aItem[n].nStatus == 0)
+                continue;
+
+            this.nMoney += this.aItem[n].nMoney;
+        }
+    }
+}
+
+function CGameList()
+{
+    this.aGame = [];
+    this.aGame[0]  = new CGame(3, [1, 2, 4]);
+    this.aGame[1]  = new CGame(4, [1, 2, 4]);
+    this.aGame[2]  = new CGame(5, [1, 2, 4]);
+    this.aGame[3]  = new CGame(6, [1, 2, 4]);
+    this.aGame[4]  = new CGame(5, [1, 2, 4, 8]);
+    this.aGame[5]  = new CGame(6, [1, 2, 4, 8]);
+    this.aGame[6]  = new CGame(7, [1, 2, 4, 8]);
+    this.aGame[7]  = new CGame(8, [1, 2, 4, 8]);
+    this.aGame[8]  = new CGame(5, [2, 3, 4, 6]);
+    this.aGame[9]  = new CGame(6, [2, 3, 4, 6]);
+    this.aGame[10] = new CGame(6, [1, 2, 3, 4]);
+    this.aGame[11] = new CGame(7, [1, 2, 3, 4]);
+    this.aGame[12] = new CGame(5, [1, 2, 3, 5]);
+    this.aGame[13] = new CGame(6, [1, 2, 3, 5]);
+    this.aGame[14] = new CGame(6, [1, 2, 3, 4, 5]);
+    this.aGame[15] = new CGame(7, [1, 2, 3, 4, 5]);
+    this.aGame[16] = new CGame(5, [1, 1, 1, 2, 2 ,3]);
+    this.aGame[17] = new CGame(6, [1, 1, 1, 2, 2, 3]);
+
+    this.AddNum = function(nNum)
+    {
+        for(var n = 0; n < this.aGame.length; ++ n)
+            this.aGame[n].AddNum(nNum);
     }
 }
 
