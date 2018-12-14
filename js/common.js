@@ -852,7 +852,7 @@ function CGame(nAfter, anBet)
 
         for (var n = 0; n < 6; ++n)
         {
-            if (g_an3C3R[n] == g_aGameRule[this.nIdxRule].nSkip)
+            if (g_an3C3R[n] == this.nAfter)
             {
                 var item = new CGameItem();
                 item.nBet3C3R = n;
