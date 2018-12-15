@@ -1,4 +1,4 @@
-﻿var g_nDebug = 1;
+﻿var g_nDebug = 0;
 
 // styles: ----------------------------------------------------------------
 
@@ -218,6 +218,11 @@ function CBttnOptions(strName, anValue, astrTitle, nSelIdx, nBttnWidth)
     this.Value = function()
     {
         return this.anValue[this.nSelIdx];
+    }
+
+    this.Title = function()
+    {
+        return this.astrTitle[this.nSelIdx];
     }
 
     this.OnClick = function(nIdx)
@@ -641,31 +646,34 @@ function CStatsNumbers(nCol)
         var nMaxIdx = queue.nIDX;
         var nMinIdx = queue.nIDX - nCount + 1;
 
-        if (nMinIdx < 0)
-            nMinIdx = 0;
-
-        for (var nn = nMaxIdx; nn >= nMinIdx ; --nn)
+        if (nMaxIdx >= 0)
         {
-            var bChanged = false;
+            if (nMinIdx < 0)
+                nMinIdx = 0;
 
-            for (var n = 0; n <= 36; ++n)
+            for (var nn = nMaxIdx; nn >= nMinIdx ; --nn)
             {
-                if (!abStop[n])
+                var bChanged = false;
+
+                for (var n = 0; n <= 36; ++n)
                 {
-                    if (queue.anNum[nn] == n)
+                    if (!abStop[n])
                     {
-                        abStop[n] = true;
-                    }
-                    else
-                    {
-                        ++this.anDistance[n];
-                        bChanged = true;
+                        if (queue.anNum[nn] == n)
+                        {
+                            abStop[n] = true;
+                        }
+                        else
+                        {
+                            ++this.anDistance[n];
+                            bChanged = true;
+                        }
                     }
                 }
-            }
 
-            if (!bChanged)
-                break;
+                if (!bChanged)
+                    break;
+            }
         }
 
         // calc Frequence: ----------------------
@@ -673,11 +681,14 @@ function CStatsNumbers(nCol)
         nMaxIdx = queue.nIDX - nBefore;
         nMinIdx = queue.nIDX - nBefore - nCount + 1;
 
-        if (nMinIdx < 0)
-            nMinIdx = 0;
+        if (nMaxIdx >= 0)
+        {
+            if (nMinIdx < 0)
+                nMinIdx = 0;
 
-        for (var nn = nMaxIdx; nn >= nMinIdx ; --nn)
-            this.anFrequence[queue.anNum[nn]]++;
+            for (var nn = nMaxIdx; nn >= nMinIdx ; --nn)
+                this.anFrequence[queue.anNum[nn]]++;
+        }
 
         // calc average: ------------------------
 
@@ -724,10 +735,12 @@ function CGameItem()
     this.nHit = 0;
 }
 
-function CGame(nAfter, anBet)
+// nACR: 0 - all; 1 - column; 2 - row
+function CGame(nAfter, anBet, nACR)
 {
     this.nAfter = nAfter;
     this.nRound = anBet.length;
+    this.nACR = nACR;
 
     this.anBet = [];
     var strName = nAfter.toString() + "_";
@@ -736,6 +749,13 @@ function CGame(nAfter, anBet)
         this.anBet[n] = anBet[n] * 10;
         strName += anBet[n].toString();
     }
+
+    if (nACR == 0)
+        strName = "全_" + strName;
+    else if (nACR == 1)
+        strName = "组_" + strName;
+    else if (nACR == 2)
+        strName = "行_" + strName;
 
     this.strName = strName;
 
@@ -776,7 +796,7 @@ function CGame(nAfter, anBet)
         this.nBalance += item.nMoney;
     }
 
-    this.AddNum = function (num)
+    this.AddNum = function (num, data3C3R)
     {
         // add distance for all item:
 
@@ -805,11 +825,18 @@ function CGame(nAfter, anBet)
         var nNumCol = GetNumCol(num);
         var nNumRow = GetNumRow(num);
 
-        var anNum3C3R = [nNumCol, nNumRow + 3];
+        var anNum3C3R = [];
+
+        if (this.nACR == 0)
+            anNum3C3R = [nNumCol, nNumRow + 3];
+        else if (this.nACR == 1)
+            anNum3C3R = [nNumCol];
+        else
+            anNum3C3R = [nNumRow + 3];
 
         // whether hitted by column or row:
 
-        for (var nn = 0; nn < 2; ++nn)
+        for (var nn = 0; nn < anNum3C3R.length; ++nn)
         {
             for (var n = 0; n < this.nCount; ++n)
             {
@@ -850,9 +877,16 @@ function CGame(nAfter, anBet)
 
         // whether a new game start:
 
-        for (var n = 0; n < 6; ++n)
+        var nStart = 0;
+        var nEnd = 5;
+        if (this.nACR == 1)
+            nEnd = 2;
+        else if (this.nACR == 2)
+            nStart = 3;
+
+        for (var n = nStart; n <= nEnd; ++n)
         {
-            if (g_an3C3R[n] == this.nAfter)
+            if (data3C3R.data.Value(n) == this.nAfter)
             {
                 var item = new CGameItem();
                 item.nBet3C3R = n;
@@ -878,32 +912,53 @@ function CGame(nAfter, anBet)
     }
 }
 
-function CGameList()
+function CStatsGames()
 {
     this.aGame = [];
-    this.aGame[0]  = new CGame(3, [1, 2, 4]);
-    this.aGame[1]  = new CGame(4, [1, 2, 4]);
-    this.aGame[2]  = new CGame(5, [1, 2, 4]);
-    this.aGame[3]  = new CGame(6, [1, 2, 4]);
-    this.aGame[4]  = new CGame(5, [1, 2, 4, 8]);
-    this.aGame[5]  = new CGame(6, [1, 2, 4, 8]);
-    this.aGame[6]  = new CGame(7, [1, 2, 4, 8]);
-    this.aGame[7]  = new CGame(8, [1, 2, 4, 8]);
-    this.aGame[8]  = new CGame(5, [2, 3, 4, 6]);
-    this.aGame[9]  = new CGame(6, [2, 3, 4, 6]);
-    this.aGame[10] = new CGame(6, [1, 2, 3, 4]);
-    this.aGame[11] = new CGame(7, [1, 2, 3, 4]);
-    this.aGame[12] = new CGame(5, [1, 2, 3, 5]);
-    this.aGame[13] = new CGame(6, [1, 2, 3, 5]);
-    this.aGame[14] = new CGame(6, [1, 2, 3, 4, 5]);
-    this.aGame[15] = new CGame(7, [1, 2, 3, 4, 5]);
-    this.aGame[16] = new CGame(5, [1, 1, 1, 2, 2 ,3]);
-    this.aGame[17] = new CGame(6, [1, 1, 1, 2, 2, 3]);
 
-    this.AddNum = function(nNum)
+    for (n = 0; n < 3; ++n)
     {
-        for(var n = 0; n < this.aGame.length; ++ n)
-            this.aGame[n].AddNum(nNum);
+        this.aGame[0 * 3 + n] = new CGame(3, [1, 2, 4], n);
+        this.aGame[1 * 3 + n] = new CGame(4, [1, 2, 4], n);
+        this.aGame[2 * 3 + n] = new CGame(5, [1, 2, 4], n);
+        this.aGame[3 * 3 + n] = new CGame(6, [1, 2, 4], n);
+        this.aGame[4 * 3 + n] = new CGame(5, [1, 2, 4, 8], n);
+        this.aGame[5 * 3 + n] = new CGame(6, [1, 2, 4, 8], n);
+        this.aGame[6 * 3 + n] = new CGame(7, [1, 2, 4, 8], n);
+        this.aGame[7 * 3 + n] = new CGame(8, [1, 2, 4, 8], n);
+        this.aGame[8 * 3 + n] = new CGame(5, [2, 3, 4, 6], n);
+        this.aGame[9 * 3 + n] = new CGame(6, [2, 3, 4, 6], n);
+        this.aGame[10 * 3 + n] = new CGame(6, [1, 2, 3, 4], n);
+        this.aGame[11 * 3 + n] = new CGame(7, [1, 2, 3, 4], n);
+        this.aGame[12 * 3 + n] = new CGame(5, [1, 2, 3, 5], n);
+        this.aGame[13 * 3 + n] = new CGame(6, [1, 2, 3, 5], n);
+        this.aGame[14 * 3 + n] = new CGame(6, [1, 2, 3, 4, 5], n);
+        this.aGame[15 * 3 + n] = new CGame(7, [1, 2, 3, 4, 5], n);
+        this.aGame[16 * 3 + n] = new CGame(5, [1, 1, 1, 2, 2, 3], n);
+        this.aGame[17 * 3 + n] = new CGame(6, [1, 1, 1, 2, 2, 3], n);
+    }
+
+    this.Calc = function(queue, nCount, nBefore)
+    {
+        var data3C3R = new CStats3C3R();
+        data3C3R.Reset();
+
+        var nMaxIdx = queue.nIDX - nBefore;
+        var nMinIdx = queue.nIDX - nBefore - nCount + 1;
+
+        if (nMaxIdx >= 0)
+        {
+            if (nMinIdx < 0)
+                nMinIdx = 0;
+
+            for (n = nMinIdx; n <= nMaxIdx; ++n)
+            {
+                data3C3R.AddNum(queue.anNum[n]);
+
+                for (var nn = 0; nn < this.aGame.length; ++nn)
+                    this.aGame[nn].AddNum(queue.anNum[n], data3C3R);
+            }
+        }
     }
 }
 
@@ -915,3 +970,11 @@ var g_status = new CSysStatus();
 var g_3C3R = new CStats3C3R();
 var g_columns = new CStatsColumns();
 
+var g_bttnColumns = new CBttnOptions("Columns", [3, 4, 5, 6, 7], null, 2, -1);
+var g_bttnStatsGroups = new CBttnOptions("StatsGroups", [20, 40, 60, 80, 100, -1], null, 2, 0);
+
+var astrValueStatsScope = [100, 200, 300, -1];
+var g_bttnStatsSum = new CBttnOptions("StatsSum", astrValueStatsScope, null, 2, 150);
+var g_bttnStatsScope = new CBttnOptions("StatsScope", astrValueStatsScope, null, 2, 150);
+
+var g_bttnStats = new CBttnOptions("Stats", [0, 1, 2], ["号码", "打法", "轮次"], 0, 0);

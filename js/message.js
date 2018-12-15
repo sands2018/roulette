@@ -173,8 +173,11 @@ function OnImport()
     var txt = document.getElementById("txtClipboard");
     var strNum = txt.value;
 
-    if(ResetDataFromNumString(strNum, true))
+    if (ResetDataFromNumString(strNum, true))
+    {
+        SaveNumbers();
         OnImportOK();
+    }
 }
 
 function OnImportOK()
@@ -214,9 +217,7 @@ function OnSysRestart()
     Show_AddNum();
 }
 
-var astrValueColumns = [3, 4, 5, 6, 7];
-
-var g_bttnColumns = new CBttnOptions("Columns", astrValueColumns, null, 2, -1);
+// ----------------------------------------------
 
 function Show_RefreshColumnsButtons()
 {
@@ -229,10 +230,7 @@ function OnBttnColumnsClick(nIdx)
     Show_Columns();
 }
 
-
-var astrValueStatsGroups = [20, 40, 60, 80, 100, -1];
-
-var g_bttnStatsGroups = new CBttnOptions("StatsGroups", astrValueStatsGroups, null, 2, 0);
+// ----------------------------------------------
 
 function Show_RefreshStatsGroupButtons()
 {
@@ -245,10 +243,7 @@ function OnBttnStatsGroupsClick(nIdx)
     Show_StatsGroupsCount();
 }
 
-
-var astrValueStatsSum = [100, 200, 300, -1];
-
-var g_bttnStatsSum = new CBttnOptions("StatsSum", astrValueStatsSum, null, 2, 150);
+// ----------------------------------------------
 
 function Show_RefreshStatsSumButton()
 {
@@ -261,14 +256,64 @@ function OnBttnStatsSumClick(nIdx)
     Show_SumLists();
 }
 
-function OnStatsNumClick(nCol)
+
+// ----------------------------------------------
+
+function Show_RefreshStatsScopeButton()
 {
-    Show_StatsNumbers(nCol);
+    g_bttnStatsScope.Show("divStatsScopeBttns");
+}
+
+function OnBttnStatsScopeClick(nIdx)
+{
+    g_bttnStatsScope.OnClick(nIdx);
+    Show_StatsNumbers(-1);
+    Show_StatsGames();
+}
+
+// ----------------------------------------------
+
+
+function Show_RefreshStatsButton()
+{
+    g_bttnStats.Show("divStatsBttns");
+}
+
+function OnBttnStatsClick(nIdx)
+{
+    g_bttnStats.OnClick(nIdx);
+    SwitchStats();
+}
+
+// ----------------------------------------------
+
+function SwitchStats()
+{
+    var astrDiv = ["Numbers", "Games", "Rounds"];
+    var nIdx = g_bttnStats.Value();
+
+    for (var n = 0; n < astrDiv.length; ++n)
+    {
+        var strDisplay = "";
+        if (n != g_bttnStats.Value())
+            strDisplay = "none";
+
+        var div = document.getElementById("divStats" + astrDiv[n]);
+        div.style.display = strDisplay;
+    }
+
+    var td = document.getElementById("tdStatsTitle");
+    td.innerHTML = g_bttnStats.Title() + "统计数据";
 }
 
 function OnShowStatistics()
 {
     Show_StatsNumbers(-1);
+    Show_StatsGames();
+
+    Show_RefreshStatsScopeButton();
+    Show_RefreshStatsButton();
+    SwitchStats();
 
     div = document.getElementById("divStatistics");
     div.style.display = "";
@@ -278,4 +323,9 @@ function OnHideStatistics()
 {
     var div = document.getElementById("divStatistics");
     div.style.display = "none";
+}
+
+function OnStatsNumClick(nCol)
+{
+    Show_StatsNumbers(nCol);
 }
