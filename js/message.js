@@ -306,6 +306,26 @@ function SwitchStats()
     td.innerHTML = g_bttnStats.Title() + "统计数据";
 }
 
+function SwitchWindow(bStats)
+{
+    var strDisplayMain = bStats? "none" : "";
+    var strDisplayStats = bStats? "" : "none";
+
+    var div = document.getElementById("divTop");
+    div.style.display = strDisplayMain;
+    div = document.getElementById("divMain");
+    div.style.display = strDisplayMain;
+    div = document.getElementById("divBottom");
+    div.style.display = strDisplayMain;
+
+    div = document.getElementById("divStatsTop");
+    div.style.display = strDisplayStats;
+    div = document.getElementById("divStatsMain");
+    div.style.display = strDisplayStats;
+    div = document.getElementById("divStatsBottom");
+    div.style.display = strDisplayStats;
+}
+
 function OnShowStatistics()
 {
     Show_StatsNumbers(-1);
@@ -315,14 +335,12 @@ function OnShowStatistics()
     Show_RefreshStatsButton();
     SwitchStats();
 
-    div = document.getElementById("divStatistics");
-    div.style.display = "";
+    SwitchWindow(true);
 }
 
 function OnHideStatistics()
 {
-    var div = document.getElementById("divStatistics");
-    div.style.display = "none";
+    SwitchWindow(false);
 }
 
 function OnStatsNumClick(nCol)

@@ -846,8 +846,8 @@ function Show_StatsGames()
     var games = new CStatsGames();
     games.Calc(g_queue, nCount, 0);
 
-    var strHtml = "<table cellpadding='0' cellspacing='0' class='tblGameSum'>";
-    strHtml += "<tr id='trGameSumTitle'><td>名称</td><td>完成</td><td>赢</td><td>平</td><td>输</td><td>结算</td><td>实时</td></tr>";
+    var strHtml = "<table cellpadding='0' cellspacing='0' id='tblStatsGames'>";
+    strHtml += "<tr><td>名称</td><td>完成</td><td>赢</td><td>平</td><td>输</td><td>结算</td><td>实时</td></tr>";
     for (var nn = 0; nn < games.aGame.length; ++nn)
     {
         strHtml += "<tr><td>";
