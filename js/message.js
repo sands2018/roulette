@@ -311,18 +311,10 @@ function SwitchWindow(bStats)
     var strDisplayMain = bStats? "none" : "";
     var strDisplayStats = bStats? "" : "none";
 
-    var div = document.getElementById("divTop");
-    div.style.display = strDisplayMain;
-    div = document.getElementById("divMain");
-    div.style.display = strDisplayMain;
-    div = document.getElementById("divBottom");
+    var div = document.getElementById("divMain");
     div.style.display = strDisplayMain;
 
-    div = document.getElementById("divStatsTop");
-    div.style.display = strDisplayStats;
-    div = document.getElementById("divStatsMain");
-    div.style.display = strDisplayStats;
-    div = document.getElementById("divStatsBottom");
+    div = document.getElementById("divStats");
     div.style.display = strDisplayStats;
 }
 

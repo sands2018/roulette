@@ -116,217 +116,186 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 
 </head>
 <body onload="OnPageInit()" style="padding: 0; margin :0; ">
-    <div id="divTop" style="position:fixed; z-index: 99; right: 0px; top:0px; width: 100%; background-color: white" onclick="OnSeperate3C3RClick()">
-        <div style="padding: 12px 8px">
-            <table cellpadding="0" cellspacing="0" border="0" id="tbl3C3R">
-                <tr>
-                    <td id="tdT3C3R0">第1组</td>
-                    <td id="td3C3R0">0</td>
-                    <td class="td3C3R_s">&nbsp;</td>
-                    <td id="tdT3C3R1">第2组</td>
-                    <td id="td3C3R1">0</td>
-                    <td class="td3C3R_s">&nbsp;</td>
-                    <td id="tdT3C3R2">第3组</td>
-                    <td id="td3C3R2">0</td>
-                    <td class="td3C3R_s">&nbsp;</td>
-                    <td id="tdT3C3R3">第1行</td>
-                    <td id="td3C3R3">0</td>
-                    <td class="td3C3R_s">&nbsp;</td>
-                    <td id="tdT3C3R4">第2行</td>
-                    <td id="td3C3R4">0</td>
-                    <td class="td3C3R_s">&nbsp;</td>
-                    <td id="tdT3C3R5">第3行</td>
-                    <td id="td3C3R5">0</td>
+    <div id="divMain">
+        <div id="divMainTop" style="position:fixed; z-index: 99; right: 0px; top:0px; width: 100%; background-color: white" onclick="OnSeperate3C3RClick()">
+            <div style="padding: 12px 8px">
+                <table cellpadding="0" cellspacing="0" border="0" id="tbl3C3R">
+                    <tr>
+                        <td id="tdT3C3R0">第1组</td><td id="td3C3R0">0</td><td class="td3C3R_s">&nbsp;</td>
+                        <td id="tdT3C3R1">第2组</td><td id="td3C3R1">0</td><td class="td3C3R_s">&nbsp;</td>
+                        <td id="tdT3C3R2">第3组</td><td id="td3C3R2">0</td><td class="td3C3R_s">&nbsp;</td>
+                        <td id="tdT3C3R3">第1行</td><td id="td3C3R3">0</td><td class="td3C3R_s">&nbsp;</td>
+                        <td id="tdT3C3R4">第2行</td><td id="td3C3R4">0</td><td class="td3C3R_s">&nbsp;</td>
+                        <td id="tdT3C3R5">第3行</td><td id="td3C3R5">0</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div id="divMainMiddle" style="position:absolute; z-index:0; top: 90px; padding: 0; margin: 0; width: 100%">
+            <div id="divColumns">
+                <div style="height: 8px" id="divBlank"></div>
+                <table cellpadding="0" cellspacing="2" border="0" id="tblColumns" style="width: 100%">
+                    <tr id="trColumns0">
+                        <td id="tdColumnsT0"></td><td id="tdColumnsV0"></td><td class="Space Empty">&nbsp;</td>
+                        <td id="tdColumnsT1"></td><td id="tdColumnsV1"></td><td class="Space Empty">&nbsp;</td>
+                        <td id="tdColumnsT2"></td><td id="tdColumnsV2"></td><td class="Space Empty">&nbsp;</td>
+                        <td id="tdColumnsT3"></td><td id="tdColumnsV3"></td>
+                    </tr>
+                    <tr id="trColumns1">
+                        <td id="tdColumnsT4"></td><td id="tdColumnsV4"></td><td class="Space Empty">&nbsp;</td>
+                        <td id="tdColumnsT5"></td><td id="tdColumnsV5"></td><td class="Space Empty">&nbsp;</td>
+                        <td id="tdColumnsT6"></td><td id="tdColumnsV6"></td><td class="Space Empty">&nbsp;</td>
+                        <td id="tdColumnsT7"></td><td id="tdColumnsV7"></td>
+                    </tr>
+                    <tr id="trColumns2">
+                        <td id="tdColumnsT8"></td><td id="tdColumnsV8"></td><td class="Space Empty">&nbsp;</td>
+                        <td id="tdColumnsT9"></td><td id="tdColumnsV9"></td><td class="Space Empty">&nbsp;</td>
+                        <td id="tdColumnsT10"></td><td id="tdColumnsV10"></td><td class="Space Empty">&nbsp;</td>
+                        <td id="tdColumnsT11"></td><td id="tdColumnsV11"></td>
+                    </tr>
+                </table>
+                <div id="divColumnsBttns"></div>
+            </div>
+
+            <div id="divFinishedLong" style="padding: 10px"></div>
+
+            <table cellpadding="0" cellspacing="5" border="0" id="tblQueue" onclick="OnSysExpand()">
+                <tr id="trRow1">
+                    <td id="td0" class="tdRed"></td><td id="td1"></td><td id="td2"></td><td id="td3"></td><td id="td4"></td>
+                    <td id="td5"></td><td id="td6"></td><td id="td7"></td><td id="td8"></td><td id="td9"></td>
+                    <td id="td10"></td><td id="td11"></td><td id="td12"></td><td id="td13"></td><td id="td14"></td>
+                </tr>
+                <tr id="trRow2">
+                    <td id="td15"></td><td id="td16"></td><td id="td17"></td><td id="td18"></td><td id="td19"></td>
+                    <td id="td20"></td><td id="td21"></td><td id="td22"></td><td id="td23"></td><td id="td24"></td>
+                    <td id="td25"></td><td id="td26"></td><td id="td27"></td><td id="td28"></td><td id="td29"></td>
+                </tr>
+                <tr id="trRow3">
+                    <td id="td30"></td><td id="td31"></td><td id="td32"></td><td id="td33"></td><td id="td34"></td>
+                    <td id="td35"></td><td id="td36"></td><td id="td37"></td><td id="td38"></td><td id="td39"></td>
+                    <td id="td40"></td><td id="td41"></td><td id="td42"></td><td id="td43"></td><td id="td44"></td>
+                </tr>
+                <tr id="trRow4">
+                    <td id="td45"></td><td id="td46"></td><td id="td47"></td><td id="td48"></td><td id="td49"></td>
+                    <td id="td50"></td><td id="td51"></td><td id="td52"></td><td id="td53"></td><td id="td54"></td>
+                    <td id="td55"></td><td id="td56"></td><td id="td57"></td><td id="td58"></td><td id="td59"></td>
+                </tr>
+                <tr id="trRow5">
+                    <td id="td60"></td><td id="td61"></td><td id="td62"></td><td id="td63"></td><td id="td64"></td>
+                    <td id="td65"></td><td id="td66"></td><td id="td67"></td><td id="td68"></td><td id="td69"></td>
+                    <td id="td70"></td><td id="td71"></td><td id="td72"></td><td id="td73"></td><td id="td74"></td>
+                </tr>
+                <tr id="trRow6">
+                    <td id="td75"></td><td id="td76"></td><td id="td77"></td><td id="td78"></td><td id="td79"></td>
+                    <td id="td80"></td><td id="td81"></td><td id="td82"></td><td id="td83"></td><td id="td84"></td>
+                    <td id="td85"></td><td id="td86"></td><td id="td87"></td><td id="td88"></td><td id="td89"></td>
+                </tr>
+                <tr id="trRow7">
+                    <td id="td90"></td><td id="td91"></td><td id="td92"></td><td id="td93"></td><td id="td94"></td>
+                    <td id="td95"></td><td id="td96"></td><td id="td97"></td><td id="td98"></td><td id="td99"></td>
+                    <td id="td100" colspan="5">&nbsp;</td>
                 </tr>
             </table>
-        </div>
-    </div>
 
-    <div id="divMain" style="position:absolute; z-index:0; top: 90px; padding: 0; margin: 0; width: 100%">
-        <div id="divColumns">
-            <div style="height: 8px" id="divBlank"></div>
-            <table cellpadding="0" cellspacing="2" border="0" id="tblColumns" style="width: 100%">
-                <tr id="trColumns0">
-                    <td id="tdColumnsT0"></td><td id="tdColumnsV0"></td><td class="Space Empty">&nbsp;</td>
-                    <td id="tdColumnsT1"></td><td id="tdColumnsV1"></td><td class="Space Empty">&nbsp;</td>
-                    <td id="tdColumnsT2"></td><td id="tdColumnsV2"></td><td class="Space Empty">&nbsp;</td>
-                    <td id="tdColumnsT3"></td><td id="tdColumnsV3"></td>
-                </tr>
-                <tr id="trColumns1">
-                    <td id="tdColumnsT4"></td><td id="tdColumnsV4"></td><td class="Space Empty">&nbsp;</td>
-                    <td id="tdColumnsT5"></td><td id="tdColumnsV5"></td><td class="Space Empty">&nbsp;</td>
-                    <td id="tdColumnsT6"></td><td id="tdColumnsV6"></td><td class="Space Empty">&nbsp;</td>
-                    <td id="tdColumnsT7"></td><td id="tdColumnsV7"></td>
-                </tr>
-                <tr id="trColumns2">
-                    <td id="tdColumnsT8"></td><td id="tdColumnsV8"></td><td class="Space Empty">&nbsp;</td>
-                    <td id="tdColumnsT9"></td><td id="tdColumnsV9"></td><td class="Space Empty">&nbsp;</td>
-                    <td id="tdColumnsT10"></td><td id="tdColumnsV10"></td><td class="Space Empty">&nbsp;</td>
-                    <td id="tdColumnsT11"></td><td id="tdColumnsV11"></td>
-                </tr>
-            </table>
-            <div id="divColumnsBttns"></div>
+            <div id="divStatsGroups">
+                <div style="height: 13px"></div>
+                <table cellpadding="0" cellspacing="0" id="tblStatsGroups">
+                    <tr>
+                        <td id="tdStatsGroupsCol" width="53%"></td>
+                        <td id="tdStatsGroupsRow"></td>
+                    </tr>
+                </table>
+                <div id="divStatsGroupsBttns"></div>
+            </div>
+            <div id="divStatsSum">
+                <div id="divStatsSumLists"></div>
+                <div id="divStatsSumBttns"></div>
+            </div>
         </div>
 
-        <div id="divFinishedLong" style="padding: 10px"></div>
-
-        <table cellpadding="0" cellspacing="5" border="0" id="tblQueue" onclick="OnSysExpand()">
-            <tr id="trRow1">
-                <td id="td0" class="tdRed"></td><td id="td1"></td><td id="td2"></td><td id="td3"></td><td id="td4"></td>
-                <td id="td5"></td><td id="td6"></td><td id="td7"></td><td id="td8"></td><td id="td9"></td>
-                <td id="td10"></td><td id="td11"></td><td id="td12"></td><td id="td13"></td><td id="td14"></td>
-            </tr>
-            <tr id="trRow2">
-                <td id="td15"></td><td id="td16"></td><td id="td17"></td><td id="td18"></td><td id="td19"></td>
-                <td id="td20"></td><td id="td21"></td><td id="td22"></td><td id="td23"></td><td id="td24"></td>
-                <td id="td25"></td><td id="td26"></td><td id="td27"></td><td id="td28"></td><td id="td29"></td>
-            </tr>
-            <tr id="trRow3">
-                <td id="td30"></td><td id="td31"></td><td id="td32"></td><td id="td33"></td><td id="td34"></td>
-                <td id="td35"></td><td id="td36"></td><td id="td37"></td><td id="td38"></td><td id="td39"></td>
-                <td id="td40"></td><td id="td41"></td><td id="td42"></td><td id="td43"></td><td id="td44"></td>
-            </tr>
-            <tr id="trRow4">
-                <td id="td45"></td><td id="td46"></td><td id="td47"></td><td id="td48"></td><td id="td49"></td>
-                <td id="td50"></td><td id="td51"></td><td id="td52"></td><td id="td53"></td><td id="td54"></td>
-                <td id="td55"></td><td id="td56"></td><td id="td57"></td><td id="td58"></td><td id="td59"></td>
-            </tr>
-            <tr id="trRow5">
-                <td id="td60"></td><td id="td61"></td><td id="td62"></td><td id="td63"></td><td id="td64"></td>
-                <td id="td65"></td><td id="td66"></td><td id="td67"></td><td id="td68"></td><td id="td69"></td>
-                <td id="td70"></td><td id="td71"></td><td id="td72"></td><td id="td73"></td><td id="td74"></td>
-            </tr>
-            <tr id="trRow6">
-                <td id="td75"></td><td id="td76"></td><td id="td77"></td><td id="td78"></td><td id="td79"></td>
-                <td id="td80"></td><td id="td81"></td><td id="td82"></td><td id="td83"></td><td id="td84"></td>
-                <td id="td85"></td><td id="td86"></td><td id="td87"></td><td id="td88"></td><td id="td89"></td>
-            </tr>
-            <tr id="trRow7">
-                <td id="td90"></td><td id="td91"></td><td id="td92"></td><td id="td93"></td><td id="td94"></td>
-                <td id="td95"></td><td id="td96"></td><td id="td97"></td><td id="td98"></td><td id="td99"></td>
-                <td id="td100" colspan="5">&nbsp;</td>
-            </tr>
-        </table>
-
-        <div id="divStatsGroups">
-            <div style="height: 13px"></div>
-            <table cellpadding="0" cellspacing="0" id="tblStatsGroups">
-                <tr>
-                    <td id="tdStatsGroupsCol" width="53%"></td>
-                    <td id="tdStatsGroupsRow"></td>
-                </tr>
-            </table>
-            <div id="divStatsGroupsBttns"></div>
+        <div id="divMainBottom" style="position:fixed; bottom: 0px; z-index: 1000; width: 100%;">
+            <div class="kbspace1">&nbsp;</div>
+            <div class="kbspace2">&nbsp;</div>
+            <div style="background-color: white; width: 100%">
+                <table cellpadding="0" cellspacing="10" border="0" style="width: 100%" id="tblSysButtons">
+                    <tr>
+                        <td id="tdBttnTheme" onclick="OnSysChangeTheme()">NA</td>
+                        <td id="tdBttnRestart" onclick="OnSysRestart()">重置</td>
+                        <td id="tdBttnRestore" onclick="OnSysRestore()">恢复</td>
+                        <td id="tdBttnExport" onclick="OnSysExport()">导出</td>
+                        <td id="tdBttnImport" onclick="OnSysImport()">导入</td>
+                        <td id="tdBttnStatsFinally" onclick="OnShowStatistics()">统计</td>
+                    </tr>
+                </table>
+            </div>
+            <div style="height: 28px"></div>
+            <div id="divKeyboard" style="width: 100%">
+                <table cellpadding="0" cellspacing="2" id="tblKeyboard">
+                    <tr>
+                        <td id="tdK1" onclick="OnAddNum(1)">1</td><td id="tdK2" onclick="OnAddNum(2)">2</td><td id="tdK3" onclick="OnAddNum(3)">3</td>
+                        <td id="tdK4" onclick="OnAddNum(4)">4</td><td id="tdK5" onclick="OnAddNum(5)">5</td><td id="tdK6" onclick="OnAddNum(6)">6</td>
+                        <td id="tdK7" onclick="OnAddNum(7)">7</td><td id="tdK8" onclick="OnAddNum(8)">8</td><td id="tdK9" onclick="OnAddNum(9)">9</td>
+                    </tr>
+                    <tr>
+                        <td id="tdK10" onclick="OnAddNum(10)">10</td><td id="tdK11" onclick="OnAddNum(11)">11</td><td id="tdK12" onclick="OnAddNum(12)">12</td>
+                        <td id="tdK13" onclick="OnAddNum(13)">13</td><td id="tdK14" onclick="OnAddNum(14)">14</td><td id="tdK15" onclick="OnAddNum(15)">15</td>
+                        <td id="tdK16" onclick="OnAddNum(16)">16</td><td id="tdK17" onclick="OnAddNum(17)">17</td><td id="tdK18" onclick="OnAddNum(18)">18</td>
+                    </tr>
+                    <tr>
+                        <td id="tdK19" onclick="OnAddNum(19)">19</td><td id="tdK20" onclick="OnAddNum(20)">20</td><td id="tdK21" onclick="OnAddNum(21)">21</td>
+                        <td id="tdK22" onclick="OnAddNum(22)">22</td><td id="tdK23" onclick="OnAddNum(23)">23</td><td id="tdK24" onclick="OnAddNum(24)">24</td>
+                        <td id="tdK25" onclick="OnAddNum(25)">25</td><td id="tdK26" onclick="OnAddNum(26)">26</td><td id="tdK27" onclick="OnAddNum(27)">27</td>
+                    </tr>
+                    <tr>
+                        <td id="tdK28" onclick="OnAddNum(28)">28</td><td id="tdK29" onclick="OnAddNum(29)">29</td><td id="tdK30" onclick="OnAddNum(30)">30</td>
+                        <td id="tdK31" onclick="OnAddNum(31)">31</td><td id="tdK32" onclick="OnAddNum(32)">32</td><td id="tdK33" onclick="OnAddNum(33)">33</td>
+                        <td id="tdK34" onclick="OnAddNum(34)">34</td><td id="tdK35" onclick="OnAddNum(35)">35</td><td id="tdK36" onclick="OnAddNum(36)">36</td>
+                    </tr>
+                    <tr>
+                        <td id="tdKEsc" onclick="OnEscape()" class="tdGreen">esc</td>
+                        <td id="tdK0" onclick="OnAddNum(0)" colspan="3">0</td>
+                        <td id="tdKDel" onclick="OnDelNum()" colspan="2" class="tdGreen">del</td>
+                        <td id="tdKSwitch" onclick="OnSwitchInput(0)" colspan="2" class="tdGreen">switch</td>
+                        <td id="tdKHide" onclick="OnHideKeyboard()" class="tdHide tdGreen">x</td>
+                    </tr>
+                </table>
+            </div>
+            <div id="divGameBoard" style="width: 100%">
+                <table cellpadding="0" cellspacing="2" id="tblGameBoard">
+                    <tr>
+                        <td id="tdB3" onclick="OnAddNum(3)">3</td><td id="tdB6" onclick="OnAddNum(6)">6</td><td id="tdB9" onclick="OnAddNum(9)">9</td>
+                        <td id="tdB12" onclick="OnAddNum(12)">12</td><td id="tdB15" onclick="OnAddNum(15)">15</td><td id="tdB18" onclick="OnAddNum(18)">18</td>
+                        <td id="tdB21" onclick="OnAddNum(21)">21</td><td id="tdB24" onclick="OnAddNum(24)">24</td><td id="tdB27" onclick="OnAddNum(27)">27</td>
+                        <td id="tdB30" onclick="OnAddNum(30)">30</td><td id="tdB33" onclick="OnAddNum(33)">33</td><td id="tdB36" onclick="OnAddNum(36)">36</td>
+                    </tr>
+                    <tr>
+                        <td id="tdB2" onclick="OnAddNum(2)">2</td><td id="tdB5" onclick="OnAddNum(5)">5</td><td id="tdB8" onclick="OnAddNum(8)">8</td>
+                        <td id="tdB11" onclick="OnAddNum(11)">11</td><td id="tdB14" onclick="OnAddNum(14)">14</td><td id="tdB17" onclick="OnAddNum(17)">17</td>
+                        <td id="tdB20" onclick="OnAddNum(20)">20</td><td id="tdB23" onclick="OnAddNum(23)">23</td><td id="tdB26" onclick="OnAddNum(26)">26</td>
+                        <td id="tdB29" onclick="OnAddNum(29)">29</td><td id="tdB32" onclick="OnAddNum(32)">32</td><td id="tdB35" onclick="OnAddNum(35)">35</td>
+                    </tr>
+                    <tr>
+                        <td id="tdB1" onclick="OnAddNum(1)">1</td><td id="tdB4" onclick="OnAddNum(4)">4</td><td id="tdB7" onclick="OnAddNum(7)">7</td>
+                        <td id="tdB10" onclick="OnAddNum(10)">10</td><td id="tdB13" onclick="OnAddNum(13)">13</td><td id="tdB16" onclick="OnAddNum(16)">16</td>
+                        <td id="tdB19" onclick="OnAddNum(19)">19</td><td id="tdB22" onclick="OnAddNum(22)">22</td><td id="tdB25" onclick="OnAddNum(25)">25</td>
+                        <td id="tdB28" onclick="OnAddNum(28)">28</td><td id="tdB31" onclick="OnAddNum(31)">31</td><td id="tdB34" onclick="OnAddNum(34)">34</td>
+                    </tr>
+                    <tr>
+                        <td id="tdBEsc" onclick="OnEscape()" colspan="2" class="tdGreen">esc</td>
+                        <td id="tdB0" onclick="OnAddNum(0)" colspan="4">0</td>
+                        <td id="tdBDel" onclick="OnDelNum()" colspan="2" class="tdGreen">del</td>
+                        <td id="tdBSwitch" onclick="OnSwitchInput(1)" colspan="3" class="tdGreen">switch</td>
+                        <td id="tdBHide" onclick="OnHideKeyboard()" class="tdHide tdGreen">x</td>
+                    </tr>
+                </table>
+            </div>
         </div>
-        <div id="divStatsSum">
-            <div id="divStatsSumLists"></div>
-            <div id="divStatsSumBttns"></div>
-        </div>
-    </div>
-
-    <div id="divStatsTop" style="z-index: 3999; position:fixed; right: 0px; top:0px; width: 100%; 
-        background-color: white; display: none;">
-        <table cellpadding="0" cellspacing="0" style="width: 100%;" id="tblStatisticsTitleBar">
-            <tr>
-                <td style="width: 91%; text-align: center" id="tdStatsTitle">统计数据</td>
-                <td style="width: 9%; height: 80px; font-family: Arial" onclick="OnHideStatistics()">x</td>
-            </tr>
-        </table>
-    </div>
-    <div id="divStatsMain" style="position:absolute; top: 0; z-index: 3990; width: 100%; height: 100%; 
-        background-color: white; display: none;">
-        <div style="height: 100px">&nbsp;</div>
-        <div id="divStatsNumbers"></div>
-        <div id="divStatsGames"></div>
-        <div id="divStatsRounds"></div>
-    </div>
-    <div id="divStatsBottom" style="position:fixed; bottom: 0px; z-index: 5999; width: 100%; 
-        background-color: white; display: none;">
-        <div style="height: 25px">&nbsp;</div>
-        <div id="divStatsScopeBttns"></div>
-        <div id="divStatsBttns"></div>
-        <div style="height: 10px">&nbsp;</div>
+        <div id="divShowKeyboard" style="position:fixed; right: 0px; bottom: 0px; z-index: 1001; 
+            width: 100px; height: 100px; display:none" onclick="OnShowKeyboard()"></div>
     </div>
 
 
-    <div id="divBottom" style="position:fixed; bottom: 0px; z-index: 1000; width: 100%;">
-        <div class="kbspace1">&nbsp;</div>
-        <div class="kbspace2">&nbsp;</div>
-        <div style="background-color: white; width: 100%">
-            <table cellpadding="0" cellspacing="10" border="0" style="width: 100%" id="tblSysButtons">
-                <tr>
-                    <td id="tdBttnTheme" onclick="OnSysChangeTheme()">NA</td>
-                    <td id="tdBttnRestart" onclick="OnSysRestart()">重置</td>
-                    <td id="tdBttnRestore" onclick="OnSysRestore()">恢复</td>
-                    <td id="tdBttnExport" onclick="OnSysExport()">导出</td>
-                    <td id="tdBttnImport" onclick="OnSysImport()">导入</td>
-                    <td id="tdBttnStatsFinally" onclick="OnShowStatistics()">统计</td>
-                </tr>
-            </table>
-        </div>
-        <div style="height: 28px"></div>
-        <div id="divKeyboard" style="width: 100%">
-            <table cellpadding="0" cellspacing="2" id="tblKeyboard">
-                <tr>
-                    <td id="tdK1" onclick="OnAddNum(1)">1</td><td id="tdK2" onclick="OnAddNum(2)">2</td><td id="tdK3" onclick="OnAddNum(3)">3</td>
-                    <td id="tdK4" onclick="OnAddNum(4)">4</td><td id="tdK5" onclick="OnAddNum(5)">5</td><td id="tdK6" onclick="OnAddNum(6)">6</td>
-                    <td id="tdK7" onclick="OnAddNum(7)">7</td><td id="tdK8" onclick="OnAddNum(8)">8</td><td id="tdK9" onclick="OnAddNum(9)">9</td>
-                </tr>
-                <tr>
-                    <td id="tdK10" onclick="OnAddNum(10)">10</td><td id="tdK11" onclick="OnAddNum(11)">11</td><td id="tdK12" onclick="OnAddNum(12)">12</td>
-                    <td id="tdK13" onclick="OnAddNum(13)">13</td><td id="tdK14" onclick="OnAddNum(14)">14</td><td id="tdK15" onclick="OnAddNum(15)">15</td>
-                    <td id="tdK16" onclick="OnAddNum(16)">16</td><td id="tdK17" onclick="OnAddNum(17)">17</td><td id="tdK18" onclick="OnAddNum(18)">18</td>
-                </tr>
-                <tr>
-                    <td id="tdK19" onclick="OnAddNum(19)">19</td><td id="tdK20" onclick="OnAddNum(20)">20</td><td id="tdK21" onclick="OnAddNum(21)">21</td>
-                    <td id="tdK22" onclick="OnAddNum(22)">22</td><td id="tdK23" onclick="OnAddNum(23)">23</td><td id="tdK24" onclick="OnAddNum(24)">24</td>
-                    <td id="tdK25" onclick="OnAddNum(25)">25</td><td id="tdK26" onclick="OnAddNum(26)">26</td><td id="tdK27" onclick="OnAddNum(27)">27</td>
-                </tr>
-                <tr>
-                    <td id="tdK28" onclick="OnAddNum(28)">28</td><td id="tdK29" onclick="OnAddNum(29)">29</td><td id="tdK30" onclick="OnAddNum(30)">30</td>
-                    <td id="tdK31" onclick="OnAddNum(31)">31</td><td id="tdK32" onclick="OnAddNum(32)">32</td><td id="tdK33" onclick="OnAddNum(33)">33</td>
-                    <td id="tdK34" onclick="OnAddNum(34)">34</td><td id="tdK35" onclick="OnAddNum(35)">35</td><td id="tdK36" onclick="OnAddNum(36)">36</td>
-                </tr>
-                <tr>
-                    <td id="tdKEsc" onclick="OnEscape()" class="tdGreen">esc</td>
-                    <td id="tdK0" onclick="OnAddNum(0)" colspan="3">0</td>
-                    <td id="tdKDel" onclick="OnDelNum()" colspan="2" class="tdGreen">del</td>
-                    <td id="tdKSwitch" onclick="OnSwitchInput(0)" colspan="2" class="tdGreen">switch</td>
-                    <td id="tdKHide" onclick="OnHideKeyboard()" class="tdHide tdGreen">x</td>
-                </tr>
-            </table>
-        </div>
-        <div id="divGameBoard" style="width: 100%">
-            <table cellpadding="0" cellspacing="2" id="tblGameBoard">
-                <tr>
-                    <td id="tdB3" onclick="OnAddNum(3)">3</td><td id="tdB6" onclick="OnAddNum(6)">6</td><td id="tdB9" onclick="OnAddNum(9)">9</td>
-                    <td id="tdB12" onclick="OnAddNum(12)">12</td><td id="tdB15" onclick="OnAddNum(15)">15</td><td id="tdB18" onclick="OnAddNum(18)">18</td>
-                    <td id="tdB21" onclick="OnAddNum(21)">21</td><td id="tdB24" onclick="OnAddNum(24)">24</td><td id="tdB27" onclick="OnAddNum(27)">27</td>
-                    <td id="tdB30" onclick="OnAddNum(30)">30</td><td id="tdB33" onclick="OnAddNum(33)">33</td><td id="tdB36" onclick="OnAddNum(36)">36</td>
-                </tr>
-                <tr>
-                    <td id="tdB2" onclick="OnAddNum(2)">2</td><td id="tdB5" onclick="OnAddNum(5)">5</td><td id="tdB8" onclick="OnAddNum(8)">8</td>
-                    <td id="tdB11" onclick="OnAddNum(11)">11</td><td id="tdB14" onclick="OnAddNum(14)">14</td><td id="tdB17" onclick="OnAddNum(17)">17</td>
-                    <td id="tdB20" onclick="OnAddNum(20)">20</td><td id="tdB23" onclick="OnAddNum(23)">23</td><td id="tdB26" onclick="OnAddNum(26)">26</td>
-                    <td id="tdB29" onclick="OnAddNum(29)">29</td><td id="tdB32" onclick="OnAddNum(32)">32</td><td id="tdB35" onclick="OnAddNum(35)">35</td>
-                </tr>
-                <tr>
-                    <td id="tdB1" onclick="OnAddNum(1)">1</td><td id="tdB4" onclick="OnAddNum(4)">4</td><td id="tdB7" onclick="OnAddNum(7)">7</td>
-                    <td id="tdB10" onclick="OnAddNum(10)">10</td><td id="tdB13" onclick="OnAddNum(13)">13</td><td id="tdB16" onclick="OnAddNum(16)">16</td>
-                    <td id="tdB19" onclick="OnAddNum(19)">19</td><td id="tdB22" onclick="OnAddNum(22)">22</td><td id="tdB25" onclick="OnAddNum(25)">25</td>
-                    <td id="tdB28" onclick="OnAddNum(28)">28</td><td id="tdB31" onclick="OnAddNum(31)">31</td><td id="tdB34" onclick="OnAddNum(34)">34</td>
-                </tr>
-                <tr>
-                    <td id="tdBEsc" onclick="OnEscape()" colspan="2" class="tdGreen">esc</td>
-                    <td id="tdB0" onclick="OnAddNum(0)" colspan="4">0</td>
-                    <td id="tdBDel" onclick="OnDelNum()" colspan="2" class="tdGreen">del</td>
-                    <td id="tdBSwitch" onclick="OnSwitchInput(1)" colspan="3" class="tdGreen">switch</td>
-                    <td id="tdBHide" onclick="OnHideKeyboard()" class="tdHide tdGreen">x</td>
-                </tr>
-            </table>
-        </div>
-    </div>
-    <div id="divShowKeyboard" style="position:fixed; right: 0px; bottom: 0px; z-index: 1001; width: 100px; height: 100px; display:none" onclick="OnShowKeyboard()"></div>
     <div id="divImport" style="display: none; padding-top: 200px">
         <div style="padding: 20px 0 10px 0; background-color: white; margin: 0 auto; width: 780px; border: 18px solid #e8e3df">
             <table cellpadding="0" cellspacing="30" style="width: 700px; margin: 0 auto;" id="tblImport">
@@ -343,6 +312,33 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
                     </td>
                 </tr>
             </table>
+        </div>
+    </div>
+
+
+    <div id="divStats" style="display: none; ">
+        <div id="divStatsTop" style="z-index: 3999; position:fixed; right: 0px; top:0px; width: 100%;
+            background-color: white;">
+            <table cellpadding="0" cellspacing="0" style="width: 100%;" id="tblStatisticsTitleBar">
+                <tr>
+                    <td style="width: 91%; text-align: center" id="tdStatsTitle">统计数据</td>
+                    <td style="width: 9%; height: 80px; font-family: Arial" onclick="OnHideStatistics()">x</td>
+                </tr>
+            </table>
+        </div>
+        <div id="divStatsMiddle" style="position:absolute; top: 0; z-index: 3990; width: 100%; height: 100%;
+            background-color: white;">
+            <div style="height: 100px">&nbsp;</div>
+            <div id="divStatsNumbers"></div>
+            <div id="divStatsGames"></div>
+            <div id="divStatsRounds"></div>
+        </div>
+        <div id="divStatsBottom" style="position:fixed; bottom: 0px; z-index: 5999; width: 100%;
+            background-color: white;">
+            <div style="height: 25px">&nbsp;</div>
+            <div id="divStatsScopeBttns"></div>
+            <div id="divStatsBttns"></div>
+            <div style="height: 10px">&nbsp;</div>
         </div>
     </div>
 </body>

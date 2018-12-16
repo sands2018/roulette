@@ -501,7 +501,7 @@ function Show_Keyboard(bShow)
     var div = document.getElementById(strIDAnother);
     div.style.display = "none";
 
-    div = document.getElementById("divBottom");
+    div = document.getElementById("divMainBottom");
     div.style.display = bShow ? "" : "none";;
 
     var divKB = document.getElementById("divShowKeyboard");
