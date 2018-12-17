@@ -938,7 +938,7 @@ function CStatsGames(nCol)
 {
     var DATA_STATSGAMES_COL = "STATSGAMES_COL";
 
-    CStatsView.call(this, 2, nCol, DATA_STATSGAMES_COL);
+    CStatsView.call(this, 3, nCol, DATA_STATSGAMES_COL);
 
     this.aGame = [];
     this.anIdx = [];
@@ -994,16 +994,32 @@ function CStatsGames(nCol)
 
         // sort: --------------------------------
 
-        if (this.nColSel != 0)
+        if (this.nColSel == 1) // win percentage
         {
             var anValue = [];
             for (var n = 0; n < this.aGame.length; ++n)
                 anValue[n] = this.aGame[n].nBalance;
 
-            if (this.nColSel == 1)
+            DoSort(anValue, this.anIdx, (this.anSort[1] == 0));
+
+            var afValue = [];
+            for (var n = 0; n < this.aGame.length; ++n)
             {
-                DoSort(anValue, this.anIdx, (this.anSort[1] == 0));
+                if (this.aGame[n].nCountCompleted <= 0)
+                    afValue[n] = 0;
+                else
+                    afValue[n] = this.aGame[n].nCountWon * 1.0 / this.aGame[n].nCountCompleted;
             }
+
+            DoSort(afValue, this.anIdx, (this.anSort[1] == 0));
+        }
+        else if (this.nColSel == 2) // balance
+        {
+            var anValue = [];
+            for (var n = 0; n < this.aGame.length; ++n)
+                anValue[n] = this.aGame[n].nBalance;
+
+            DoSort(anValue, this.anIdx, (this.anSort[2] == 0));
         }
     }
 }

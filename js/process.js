@@ -831,9 +831,12 @@ function Show_StatsGames(nCol)
     games.Calc(g_queue, nCount, 0);
 
     var strHtml = "<table cellpadding='0' cellspacing='0' id='tblStatsGames'>";
-    strHtml += "<tr><td onclick='OnStatsGamesClick(0)'>名称</td><td>完成</td><td>赢</td><td>平</td><td>输</td>";
-    strHtml += "<td onclick='OnStatsGamesClick(1)'>结算";
+    strHtml += "<tr><td onclick='OnStatsGamesClick(0)'>名称</td><td>完成</td>";
+    strHtml += "<td onclick='OnStatsGamesClick(1)'>赢";
     strHtml += games.SortMark(1);
+    strHtml += "</td><td>平</td><td>输</td>";
+    strHtml += "<td onclick='OnStatsGamesClick(2)'>结算";
+    strHtml += games.SortMark(2);
     strHtml += "</td><td>实时</td></tr>";
     for (var nn = 0; nn < games.aGame.length; ++nn)
     {
