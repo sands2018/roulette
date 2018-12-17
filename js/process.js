@@ -783,25 +783,9 @@ function Show_StatsNumbers(nCol)
 
         strHtml += "onclick='OnStatsNumClick(0)'>号码</td>";
         strHtml += "<td onclick='OnStatsNumClick(1)'>距离";
-        var str = "";
-        if (stats.nColSel == 1)
-        {
-            if (stats.anSort[1] == 0)
-                str = "&nbsp;&#8593;";
-            else
-                str = "&nbsp;&#8595;";
-        }
-        strHtml += str;
+        strHtml += stats.SortMark(1);
         strHtml += "</td><td onclick='OnStatsNumClick(2)'>次数";
-        str = "";
-        if (stats.nColSel == 2)
-        {
-            if (stats.anSort[2] == 0)
-                str = "&nbsp;&#8593;";
-            else
-                str = "&nbsp;&#8595;";
-        }
-        strHtml += str;
+        strHtml += stats.SortMark(2);
         strHtml += "</td>";
     }
     strHtml += "</tr>"
@@ -849,15 +833,7 @@ function Show_StatsGames(nCol)
     var strHtml = "<table cellpadding='0' cellspacing='0' id='tblStatsGames'>";
     strHtml += "<tr><td onclick='OnStatsGamesClick(0)'>名称</td><td>完成</td><td>赢</td><td>平</td><td>输</td>";
     strHtml += "<td onclick='OnStatsGamesClick(1)'>结算";
-    var str = "";
-    if (games.nColSel == 1)
-    {
-        if (games.anSort[1] == 0)
-            str = "&nbsp;&#8593;";
-        else
-            str = "&nbsp;&#8595;";
-    }
-    strHtml += str;
+    strHtml += games.SortMark(1);
     strHtml += "</td><td>实时</td></tr>";
     for (var nn = 0; nn < games.aGame.length; ++nn)
     {

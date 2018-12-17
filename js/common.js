@@ -623,6 +623,19 @@ function CStatsView(nSortColCount, nCol, dataKey)
 
         WriteData(dataKey, strVal);
     }
+
+    this.SortMark = function(nCol)
+    {
+        var str = "";
+        if (this.nColSel == nCol)
+        {
+            if (this.anSort[nCol] == 0)
+                str = "&nbsp;&#8593;";
+            else
+                str = "&nbsp;&#8595;";
+        }
+        return str;
+    }
 }
 
 function CStatsNumbers(nCol)
