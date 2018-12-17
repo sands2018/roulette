@@ -748,7 +748,7 @@ function GetStatsNumTdString(statsNum, nIdx, aStr)
 {
     var strNumber = nIdx.toString();
     if (nIdx == 0)
-        strNumber = "<span class='txtZero'>" + strNumber + "</span>";
+        strNumber = "<span class='txtStatsNumZero'>" + strNumber + "</span>";
 
     if (nIdx != 37)
     {
@@ -786,7 +786,7 @@ function Show_StatsNumbers(nCol)
         var str = "";
         if (stats.nColSel == 1)
         {
-            if (stats.anSort[0] == 0)
+            if (stats.anSort[1] == 0)
                 str = "&nbsp;&#8593;";
             else
                 str = "&nbsp;&#8595;";
@@ -796,7 +796,7 @@ function Show_StatsNumbers(nCol)
         str = "";
         if (stats.nColSel == 2)
         {
-            if (stats.anSort[1] == 0)
+            if (stats.anSort[2] == 0)
                 str = "&nbsp;&#8593;";
             else
                 str = "&nbsp;&#8595;";
@@ -832,7 +832,7 @@ function Show_StatsNumbers(nCol)
     div.innerHTML = strHtml;
 }
 
-function Show_StatsGames()
+function Show_StatsGames(nCol)
 {
     var divGames = document.getElementById("divStatsGames");
     if (g_queue.nIDX < 0)
@@ -843,27 +843,38 @@ function Show_StatsGames()
 
     var nCount = g_bttnStatsScope.Value();
 
-    var games = new CStatsGames();
+    var games = new CStatsGames(nCol);
     games.Calc(g_queue, nCount, 0);
 
     var strHtml = "<table cellpadding='0' cellspacing='0' id='tblStatsGames'>";
-    strHtml += "<tr><td>名称</td><td>完成</td><td>赢</td><td>平</td><td>输</td><td>结算</td><td>实时</td></tr>";
+    strHtml += "<tr><td onclick='OnStatsGamesClick(0)'>名称</td><td>完成</td><td>赢</td><td>平</td><td>输</td>";
+    strHtml += "<td onclick='OnStatsGamesClick(1)'>结算";
+    var str = "";
+    if (games.nColSel == 1)
+    {
+        if (games.anSort[1] == 0)
+            str = "&nbsp;&#8593;";
+        else
+            str = "&nbsp;&#8595;";
+    }
+    strHtml += str;
+    strHtml += "</td><td>实时</td></tr>";
     for (var nn = 0; nn < games.aGame.length; ++nn)
     {
         strHtml += "<tr><td>";
-        strHtml += games.aGame[nn].strName;
+        strHtml += games.aGame[games.anIdx[nn]].strName;
         strHtml += "</td><td>"
-        strHtml += games.aGame[nn].nCountCompleted.toString();
+        strHtml += games.aGame[games.anIdx[nn]].nCountCompleted.toString();
         strHtml += "</td><td class='tdWon'>"
-        strHtml += games.aGame[nn].nCountWon.toString();
+        strHtml += games.aGame[games.anIdx[nn]].nCountWon.toString();
         strHtml += "</td><td class='tdDrew'>"
-        strHtml += games.aGame[nn].nCountDrew.toString();
+        strHtml += games.aGame[games.anIdx[nn]].nCountDrew.toString();
         strHtml += "</td><td class='tdLost'>"
-        strHtml += games.aGame[nn].nCountLost.toString();
+        strHtml += games.aGame[games.anIdx[nn]].nCountLost.toString();
         strHtml += "</td><td>"
-        strHtml += games.aGame[nn].nBalance.toString();
+        strHtml += games.aGame[games.anIdx[nn]].nBalance.toString();
         strHtml += "</td><td>"
-        strHtml += games.aGame[nn].nMoney.toString();
+        strHtml += games.aGame[games.anIdx[nn]].nMoney.toString();
         strHtml += "</td></tr>";
     }
     strHtml += "</table>";

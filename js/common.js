@@ -1,4 +1,4 @@
-﻿var g_nDebug = 0;
+﻿var g_nDebug = 1;
 
 // styles: ----------------------------------------------------------------
 
@@ -319,9 +319,6 @@ function CNumQueue()
         }
 
         this.anNum[this.nIDX] = nNum;
-
-        if (nNum != 0)
-            this.nCountNoZero++;
     }
 
     this.Reset = function()
@@ -335,6 +332,8 @@ function CNumQueue()
 
     this.CalcZeroList = function(nStart)
     {
+        this.nCountNoZero = 0;
+
         if (this.anZero.length > 0)
             this.anZero.splice(0, this.anZero.length);
 
@@ -346,6 +345,8 @@ function CNumQueue()
             }
             else
             {
+                this.nCountNoZero++;
+
                 var nLen = this.anZero.length;
                 if(nLen == 0)
                 {
@@ -524,31 +525,29 @@ function CStatsColumns()
     }
 }
 
-function CStatsNumbers(nCol)
+function CStatsView(nSortColCount, nCol, dataKey)
 {
-    var DATA_STATSNUM_COL = "STATSNUM_COL";
-
     var nColRead = 0;
-    var strVal = ReadData(DATA_STATSNUM_COL, "");
+    var strVal = ReadData(dataKey, "");
 
     this.nColSel = nCol;
     this.anSort = [];
 
     var bValid = false;
 
-    if (strVal.length >= 5)
+    if (strVal.length >= (nSortColCount * 2 + 1))
     {
         var astrVal = strVal.split(",");
-        if (astrVal.length == 3)
+        if (astrVal.length == (nSortColCount + 1))
         {
             bValid = true;
 
-            for (var n = 0; n < 3; ++n)
+            for (var n = 0; n < (nSortColCount + 1); ++n)
             {
                 var nVal = parseInt(astrVal[n]);
                 if (n == 0)
                 {
-                    if ((nVal >= 0) && (nVal < 3))
+                    if ((nVal >= 0) && (nVal < nSortColCount))
                     {
                         nColRead = nVal;
                     }
@@ -582,7 +581,7 @@ function CStatsNumbers(nCol)
         {
             if (this.nColSel == nColRead)
             {
-                this.anSort[this.nColSel - 1] = (this.anSort[this.nColSel - 1] + 1) % 2;
+                this.anSort[this.nColSel] = (this.anSort[this.nColSel] + 1) % 2;
                 bWrite = true;
             }
         }
@@ -599,13 +598,13 @@ function CStatsNumbers(nCol)
     }
     else
     {
-        this.anSort[0] = 1;
-        this.anSort[1] = 1;
+        for (var n = 0; n < nSortColCount; ++ n)
+            this.anSort[n] = 1;
 
         if (this.nColSel >= 0)
         {
             if (this.nColSel > 0)
-                this.anSort[this.nColSel - 1] = 0;
+                this.anSort[this.nColSel] = 0;
 
             bWrite = true;
         }
@@ -617,9 +616,20 @@ function CStatsNumbers(nCol)
 
     if (bWrite)
     {
-        strVal = this.nColSel.toString() + "," + this.anSort[0].toString() + "," + this.anSort[1].toString();
-        WriteData(DATA_STATSNUM_COL, strVal);
+        strVal = this.nColSel.toString();
+
+        for (var n = 0; n < nSortColCount; ++n)
+            strVal += "," + this.anSort[n].toString();
+
+        WriteData(dataKey, strVal);
     }
+}
+
+function CStatsNumbers(nCol)
+{
+    var DATA_STATSNUM_COL = "STATSNUM_COL";
+
+    CStatsView.call(this, 3, nCol, DATA_STATSNUM_COL);
 
     this.anDistance = [];
     this.anFrequence = [];
@@ -627,8 +637,6 @@ function CStatsNumbers(nCol)
 
     this.Calc = function (queue, nCount, nBefore)
     {
-        var strVal = ReadData(DATA_STATSNUM_COL, "2");
-
         var abStop = [];
 
         for (var n = 0; n <= (36 + 1) ; ++n)
@@ -715,14 +723,15 @@ function CStatsNumbers(nCol)
 
         if (this.nColSel == 1)
         {
-            DoSort(this.anDistance, this.anIdx, (this.anSort[0] == 0));
+            DoSort(this.anDistance, this.anIdx, (this.anSort[1] == 0));
         }
         else if (this.nColSel == 2)
         {
-            DoSort(this.anFrequence, this.anIdx, (this.anSort[1] == 0));
+            DoSort(this.anFrequence, this.anIdx, (this.anSort[2] == 0));
         }
     }
 }
+
 
 function CGameItem()
 {
@@ -912,11 +921,16 @@ function CGame(nAfter, anBet, nACR)
     }
 }
 
-function CStatsGames()
+function CStatsGames(nCol)
 {
-    this.aGame = [];
+    var DATA_STATSGAMES_COL = "STATSGAMES_COL";
 
-    for (n = 0; n < 3; ++n)
+    CStatsView.call(this, 2, nCol, DATA_STATSGAMES_COL);
+
+    this.aGame = [];
+    this.anIdx = [];
+
+    for (var n = 0; n < 3; ++n)
     {
         this.aGame[0 * 3 + n] = new CGame(3, [1, 2, 4], n);
         this.aGame[1 * 3 + n] = new CGame(4, [1, 2, 4], n);
@@ -940,6 +954,11 @@ function CStatsGames()
 
     this.Calc = function(queue, nCount, nBefore)
     {
+        var anIdx = [];
+
+        for (var n = 0; n < this.aGame.length; ++n)
+            this.anIdx[n] = n;
+
         var data3C3R = new CStats3C3R();
         data3C3R.Reset();
 
@@ -957,6 +976,20 @@ function CStatsGames()
 
                 for (var nn = 0; nn < this.aGame.length; ++nn)
                     this.aGame[nn].AddNum(queue.anNum[n], data3C3R);
+            }
+        }
+
+        // sort: --------------------------------
+
+        if (this.nColSel != 0)
+        {
+            var anValue = [];
+            for (var n = 0; n < this.aGame.length; ++n)
+                anValue[n] = this.aGame[n].nBalance;
+
+            if (this.nColSel == 1)
+            {
+                DoSort(anValue, this.anIdx, (this.anSort[1] == 0));
             }
         }
     }

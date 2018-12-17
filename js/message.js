@@ -268,7 +268,7 @@ function OnBttnStatsScopeClick(nIdx)
 {
     g_bttnStatsScope.OnClick(nIdx);
     Show_StatsNumbers(-1);
-    Show_StatsGames();
+    Show_StatsGames(-1);
 }
 
 // ----------------------------------------------
@@ -321,7 +321,7 @@ function SwitchWindow(bStats)
 function OnShowStatistics()
 {
     Show_StatsNumbers(-1);
-    Show_StatsGames();
+    Show_StatsGames(-1);
 
     Show_RefreshStatsScopeButton();
     Show_RefreshStatsButton();
@@ -338,4 +338,9 @@ function OnHideStatistics()
 function OnStatsNumClick(nCol)
 {
     Show_StatsNumbers(nCol);
+}
+
+function OnStatsGamesClick(nCol)
+{
+    Show_StatsGames(nCol);
 }
