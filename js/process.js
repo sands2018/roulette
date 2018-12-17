@@ -695,7 +695,8 @@ function Show_SumLists()
 
         strHtml += str;
         strHtml += "<td class='tdStatsSumListItem'>";
-        strHtml += "<div class='divStatsSumListItem' onclick='OnStatsSumListClick(" + nn.toString() + ")'>";
+        strHtml += "<div id='divStatsSumListItem" + nn.toString();
+        strHtml += "' class='divStatsSumListItem' onclick='OnStatsSumListClick(" + nn.toString() + ")'>";
         bFirst = true;
         for (var n = 0; n < data3C3R.anLargeCount[nn].length; ++n)
         {
@@ -716,7 +717,7 @@ function Show_SumLists()
     }
     strHtml += "<tr><td class='tdZero'>" + g_queue.nCountNoZero.toString() + "</td>";
     strHtml += "<td class='tdStatsSumListItem'>";
-    strHtml += "<div class='divStatsSumListItem' onclick='OnStatsSumListClick(3)'>";
+    strHtml += "<div id='divStatsSumListItem3' class='divStatsSumListItem' onclick='OnStatsSumListClick(3)'>";
     bFirst = true;
     var strNum = "";
     for (var n = g_queue.anZero.length - 1; n >= 0 ; --n)

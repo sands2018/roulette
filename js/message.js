@@ -168,6 +168,43 @@ function OnSysImport()
     txt.select();
 }
 
+function OnStatsSumListClick(nID)
+{
+    var C_EXPAND_HEIGHT = 150;
+    var C_COLLAPSE_HEIGHT = 48;
+
+    var nHeight = C_EXPAND_HEIGHT;
+
+    for (var n = 0; n < g_status.anStatsSumExpand.length; ++n)
+    {
+        if (n == nID)
+        {
+            if (g_status.anStatsSumExpand[n] == 0)
+                g_status.anStatsSumExpand[n] = 1;
+            else
+                g_status.anStatsSumExpand[n] = 0;
+        }
+        else
+        {
+            g_status.anStatsSumExpand[n] = 0;
+        }
+
+        if (g_status.anStatsSumExpand[n] == 1)
+        {
+            nHeight = C_EXPAND_HEIGHT;
+            //g_StatsInterval.nExpand = 0;
+        }
+        else
+        {
+            nHeight = C_COLLAPSE_HEIGHT;
+        }
+
+        var div = document.getElementById("divStatsSumListItem" + n.toString());
+        div.style.height = nHeight;
+    }
+}
+
+
 function OnImport()
 {
     var txt = document.getElementById("txtClipboard");

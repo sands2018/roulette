@@ -286,12 +286,16 @@ function CSysStatus()
     this.KeyboardID = "K";
     this.Seperate3C3R = "F";
     this.QueueExpand = 0;
+    this.anStatsSumExpand = [0, 0, 0, 0];
 
     this.Reset = function()
     {
         this.QueueExpand = 0;
         this.KeyboardID = ReadData(DATA_KEYBOARDID, "K");
         this.Seperate3C3R = ReadData(DATA_SEPERATE3C3R, "F");
+
+        for (var n = 0; n < 4; ++n)
+            this.anStatsSumExpand[n] = 0;
     }
 }
 
@@ -524,6 +528,7 @@ function CStatsColumns()
         this.data.Sort(false);
     }
 }
+
 
 function CStatsView(nSortColCount, nCol, dataKey)
 {
@@ -1020,6 +1025,45 @@ function CStatsGames(nCol)
                 anValue[n] = this.aGame[n].nBalance;
 
             DoSort(anValue, this.anIdx, (this.anSort[2] == 0));
+        }
+    }
+}
+
+function CStatsRounds()
+{
+    this.anRound = [4, 5, 6, 7, 8, 9];
+
+    this.anFailedRound = [4, 6];
+    this.anFailed = [];
+    this.anFailed[0] = [0, 0, 0, 0, 0, 0];
+    this.anFailed[1] = [0, 0, 0, 0, 0, 0];
+
+    this.AddNum = function (num, bReal)
+    {
+        // 0:
+        if (num == 0)
+        {
+            return;
+        }
+
+        var nCount = this.anRound.length;
+
+        for (var nn = 0; nn < 6; ++nn)
+        {
+            // whether hit end:
+
+            for (var n = 0; n < nCount; ++n)
+            {
+                var nRound = this.anFailedRound.length;
+
+                for (var r = 0; r < nRound; ++r)
+                {
+                    if ((g_an3C3R[nn] == (this.anRound[n] + this.anFailedRound[r])))
+                    {
+                        this.anFailed[r][n]++;
+                    }
+                }
+            }
         }
     }
 }
