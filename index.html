@@ -110,8 +110,10 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 #tblStatsRoundSum { border-left: 0; border-right: 0; border-top: 0 }  
 #tblStatsRoundSum td { padding: 0 10px; font-size: 40px }
 #tblStatsRoundSum td.tdSFTitle, #tblStatsNumCount td.tdSFTitle { color: #ab8b30; border-left: 1px solid #dfbc33 }
-#tblStatsRoundSum td:first-child { border-left: 0 }
-#tblStatsRoundSum td.tdSFPercent { color: #888888 }
+#tblStatsRoundSum td:first-child { border-left: 0; }
+#tblStatsRoundSum td.tdSRSPercent, #tblStatsRoundSum td.tdSRSAbove { color: #888888; }
+#tblStatsRoundSum td:first-child, #tblStatsRoundSum td.tdSRSAbove { border-right: 1px solid #dfbc33; }
+#tblStatsRoundSum td:last-child { border-right: 0; }
 
 
 </style>

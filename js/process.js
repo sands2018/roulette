@@ -767,10 +767,10 @@ function GetStatsNumTdString(statsNum, nIdx, aStr)
 
 function Show_StatsNumbers(nCol)
 {
-    var nCount = g_bttnStatsScope.Value();
+    var nScope = g_bttnStatsScope.Value();
 
     var stats = new CStatsNumbers(nCol);
-    stats.Calc(g_queue, nCount, 0);
+    stats.Calc(g_queue, nScope, 0);
 
     var strHtml = "<table cellpadding='0' cellspacing='1' border='0' style='width: 100%' id='tblStatsNumbers'>";
 
@@ -826,10 +826,10 @@ function Show_StatsGames(nCol)
         return;
     }
 
-    var nCount = g_bttnStatsScope.Value();
+    var nScope = g_bttnStatsScope.Value();
 
     var games = new CStatsGames(nCol);
-    games.Calc(g_queue, nCount, 0);
+    games.Calc(g_queue, nScope, 0);
 
     var strHtml = "<table cellpadding='0' cellspacing='0' id='tblStatsGames'>";
     strHtml += "<tr><td onclick='OnStatsGamesClick(0)'>名称</td><td>完成</td>";
@@ -863,22 +863,35 @@ function Show_StatsGames(nCol)
 
 function Show_StatsRoundSum()
 {
-    var MAX_COUNT = 30;
+    var MAX_COUNT = 20;
+
+    var nTotal = 0;
 
     var anCount = [];
     var anCountAbove = [];
-    var nCount30Above = 0;
-    var nTotal = 0;
+    var anCountMaxAbove = [];
+
+    for (var nn = 0; nn < 3; ++nn)
+    {
+        anCount[nn] = [];
+        anCountAbove[nn] = [];
+        anCountMaxAbove[nn] = 0;
+    }
 
     var an3C3RPrevIdx = [];
 
     for (var nn = 0; nn < 6; ++nn)
         an3C3RPrevIdx[nn] = -1;
 
-    for (var nn = 0; nn < MAX_COUNT; ++nn)
-        anCount[nn] = 0;
+    for (var nn = 0; nn < 3; ++nn)
+        for (var n = 0; n < MAX_COUNT; ++n)
+            anCount[nn][n] = 0;
 
-    for (var n = 0; n <= g_queue.nIDX; ++n)
+    var nScope = g_bttnStatsScope.Value();
+    var nStart = g_queue.nIDX - nScope + 1;
+    if (nStart < 0) nStart = 0;
+
+    for (var n = nStart; n <= g_queue.nIDX; ++n)
     {
         if (g_queue.anNum[n] == 0)
             continue;
@@ -890,59 +903,69 @@ function Show_StatsRoundSum()
 
         var nGap = n - an3C3RPrevIdx[nCol] - 1;
         if (nGap < MAX_COUNT)
-            anCount[nGap]++;
+        {
+            anCount[0][nGap]++;
+            anCount[2][nGap]++;
+        }
         else
-            nCount30Above++;
-
+        {
+            anCountMaxAbove[0]++;
+            anCountMaxAbove[2]++;
+        }
         an3C3RPrevIdx[nCol] = n;
 
         nGap = n - an3C3RPrevIdx[nRow + 3] - 1;
         if (nGap < MAX_COUNT)
-            anCount[nGap]++;
+        {
+            anCount[1][nGap]++;
+            anCount[2][nGap]++;
+        }
         else
-            nCount30Above++;
+        {
+            anCountMaxAbove[1]++;
+            anCountMaxAbove[2]++;
+        }
         an3C3RPrevIdx[nRow + 3] = n;
     }
 
-    anCountAbove[MAX_COUNT - 1] = anCount[MAX_COUNT - 1] + nCount30Above;
+    for (var nn = 0; nn < 3; ++nn)
+    {
+        anCountAbove[nn][MAX_COUNT - 1] = anCount[nn][MAX_COUNT - 1] + anCountMaxAbove[nn];
 
-    for (var n = MAX_COUNT - 2; n >= 0; --n)
-        anCountAbove[n] = anCount[n] + anCountAbove[n + 1];
+        for (var n = MAX_COUNT - 2; n >= 0; --n)
+            anCountAbove[nn][n] = anCount[nn][n] + anCountAbove[nn][n + 1];
+    }
 
-    var BIG_COL_COUNT = 2;
-    var EACH_COL_COUNT = MAX_COUNT / BIG_COL_COUNT;
-
-    var strHtml = "<table cellpadding='0' cellspacing='0' id='tblStatsRoundSum'><tr>";
+    var strHtml = "<table cellpadding='0' cellspacing='0' id='tblStatsRoundSum'>";
     for (var n = 0; n < MAX_COUNT; ++n)
     {
-        if ((n != 0) && ((n % BIG_COL_COUNT) == 0))
-            strHtml += "</tr><tr>";
+        strHtml += "<tr>";
 
-        var nIdx = EACH_COL_COUNT * (n % BIG_COL_COUNT) + Math.floor(n / BIG_COL_COUNT);
+        var strNum = (n + 1).toString();
+        if ((n + 1) == MAX_COUNT)
+            strNum += "+";
 
-        strHtml += "<td class='tdSFTitle'>" + (nIdx + 1).toString() + ((nIdx == (MAX_COUNT - 1)) ? "+" : "") + "</td>";
+        strHtml += "<td class='tdSFTitle'>" + strNum + "</td>";
 
-        var nCount = anCount[nIdx];
-        if (nIdx == (MAX_COUNT - 1))
-            nCount += nCount30Above;
+        for (var nn = 0; nn < 3; ++nn)
+        {
+            var nCount = anCount[nn][n];
+            if (n == (MAX_COUNT - 1))
+                nCount += anCountMaxAbove[nn];
 
-        strHtml += "<td>" + nCount.toString() + "</td>";
+            strHtml += "<td>" + nCount.toString() + "</td>";
 
-        var strPercent = "0";
-        if (nTotal > 0)
-            strPercent = (anCount[nIdx] * 50 / nTotal).toFixed(1).toString();
+            var strPercent = "0";
+            if (nTotal > 0)
+                strPercent = (anCount[nn][n] * ((nn == 2)? 50 : 100) / nTotal).toFixed(1).toString();
 
-        strHtml += "<td class='tdSFPercent'>" + strPercent + "%</td>";
+            strHtml += "<td class='tdSRSPercent'>" + strPercent + "%</td>";
 
-        strHtml += "<td>" + anCountAbove[nIdx].toString() + "</td>";
-
-        strPercent = "0";
-        if (nTotal > 0)
-            strPercent = (anCountAbove[nIdx] * 50 / nTotal).toFixed(1).toString();
-
-        strHtml += "<td class='tdSFPercent'>" + strPercent + "%</td>";
+            strHtml += "<td class='tdSRSAbove'>" + anCountAbove[nn][n].toString() + "</td>";
+        }
+        strHtml += "</tr>";
     }
-    strHtml += "</tr></table>";
+    strHtml += "</table>";
 
     var div = document.getElementById("divStatsRoundSum");
     div.innerHTML = strHtml;
