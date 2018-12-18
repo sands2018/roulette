@@ -170,7 +170,7 @@ function OnSysImport()
 
 function OnStatsSumListClick(nID)
 {
-    var C_EXPAND_HEIGHT = 150;
+    var C_EXPAND_HEIGHT = 144;
     var C_COLLAPSE_HEIGHT = 48;
 
     var nHeight = C_EXPAND_HEIGHT;
@@ -190,14 +190,9 @@ function OnStatsSumListClick(nID)
         }
 
         if (g_status.anStatsSumExpand[n] == 1)
-        {
-            nHeight = C_EXPAND_HEIGHT;
-            //g_StatsInterval.nExpand = 0;
-        }
+            nHeight = C_EXPAND_HEIGHT + ((n == 3) ? 2 * (C_COLLAPSE_HEIGHT - 2) : 0);
         else
-        {
             nHeight = C_COLLAPSE_HEIGHT;
-        }
 
         var div = document.getElementById("divStatsSumListItem" + n.toString());
         div.style.height = nHeight;

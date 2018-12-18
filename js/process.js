@@ -681,6 +681,8 @@ function Show_SumLists()
     strHtml = "<table cellpadding='0' cellspacing='0' id='tblStatsSum'>";
     var bFirst = true;
 
+    var fWidth = 0;
+
     for (var nn = 0; nn < 3; ++nn)
     {
         strHtml += "<tr>";
@@ -698,19 +700,36 @@ function Show_SumLists()
         strHtml += "<div id='divStatsSumListItem" + nn.toString();
         strHtml += "' class='divStatsSumListItem' onclick='OnStatsSumListClick(" + nn.toString() + ")'>";
         bFirst = true;
+        fWidth = 0;
+
         for (var n = 0; n < data3C3R.anLargeCount[nn].length; ++n)
         {
             if (data3C3R.anLargeCount[nn][n] > 0)
             {
                 if (!bFirst)
+                {
                     strHtml += ";&nbsp;";
+                    fWidth += 1.5;
+
+                    if (fWidth >= 34)
+                    {
+                        strHtml += "<br>";
+                        fWidth = 0;
+                    }
+                }
 
                 bFirst = false;
 
                 var strNum = (n + 11).toString();
+                fWidth += 2;
+
                 if (n == 19)
+                {
                     strNum += "及以上";
+                    fWidth += 6;
+                }
                 strHtml += strNum + "(" + data3C3R.anLargeCount[nn][n].toString() + ")";
+                fWidth += ((data3C3R.anLargeCount[nn][n] > 9) ? 3 : 2);
             }
         }
         strHtml += "</div></td></tr>";
@@ -720,19 +739,32 @@ function Show_SumLists()
     strHtml += "<div id='divStatsSumListItem3' class='divStatsSumListItem' onclick='OnStatsSumListClick(3)'>";
     bFirst = true;
     var strNum = "";
+
+    fWidth = 0;
     for (var n = g_queue.anZero.length - 1; n >= 0 ; --n)
     {
         if (!bFirst)
+        {
             strHtml += ";&nbsp;";
+            fWidth += 1.5;
+
+            if (fWidth >= 44)
+            {
+                strHtml += "<br>";
+                fWidth = 0;
+            }
+        }
 
         bFirst = false;
         if (g_queue.anZero[n] == 0)
         {
-            strNum = "<span class='txtZero'>" + g_queue.anZero[n].toString() + "</span>";
+            strNum = "<span class='txtZero'>0</span>";
+            fWidth += 1;
         }
         else
         {
             strNum = g_queue.anZero[n].toString();
+            fWidth += ((g_queue.anZero[n] > 99) ? 3 : ((g_queue.anZero[n] > 9) ? 2 : 1));
         }
 
         strHtml += strNum;
