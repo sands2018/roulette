@@ -306,6 +306,7 @@ function OnBttnStatsScopeClick(nIdx)
     g_bttnStatsScope.OnClick(nIdx);
     Show_StatsNumbers(-1);
     Show_StatsGames(-1);
+    Show_StatsRoundSum();
 }
 
 // ----------------------------------------------
@@ -326,7 +327,8 @@ function OnBttnStatsClick(nIdx)
 
 function SwitchStats()
 {
-    var astrDiv = ["Numbers", "Games", "Rounds"];
+    var astrDiv = ["Numbers", "Games", "RoundBet", "RoundSum"];
+    var astrTitle = ["号码统计数据", "打法统计数据", "轮次参考数据", "轮次汇总数据"];
     var nIdx = g_bttnStats.Value();
 
     for (var n = 0; n < astrDiv.length; ++n)
@@ -340,7 +342,7 @@ function SwitchStats()
     }
 
     var td = document.getElementById("tdStatsTitle");
-    td.innerHTML = g_bttnStats.Title() + "统计数据";
+    td.innerHTML = astrTitle[nIdx];
 }
 
 function SwitchWindow(bStats)

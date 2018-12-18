@@ -868,14 +868,16 @@ function Show_StatsRoundSum()
     var nTotal = 0;
 
     var anCount = [];
-    var anCountAbove = [];
-    var anCountMaxAbove = [];
+    var anCountAfter = [];
+    var anCountBefore = [];
+    var anCountMaxAfter = [];
 
     for (var nn = 0; nn < 3; ++nn)
     {
         anCount[nn] = [];
-        anCountAbove[nn] = [];
-        anCountMaxAbove[nn] = 0;
+        anCountAfter[nn] = [];
+        anCountBefore[nn] = [];
+        anCountMaxAfter[nn] = 0;
     }
 
     var an3C3RPrevIdx = [];
@@ -909,8 +911,8 @@ function Show_StatsRoundSum()
         }
         else
         {
-            anCountMaxAbove[0]++;
-            anCountMaxAbove[2]++;
+            anCountMaxAfter[0]++;
+            anCountMaxAfter[2]++;
         }
         an3C3RPrevIdx[nCol] = n;
 
@@ -922,46 +924,47 @@ function Show_StatsRoundSum()
         }
         else
         {
-            anCountMaxAbove[1]++;
-            anCountMaxAbove[2]++;
+            anCountMaxAfter[1]++;
+            anCountMaxAfter[2]++;
         }
         an3C3RPrevIdx[nRow + 3] = n;
     }
 
     for (var nn = 0; nn < 3; ++nn)
     {
-        anCountAbove[nn][MAX_COUNT - 1] = anCount[nn][MAX_COUNT - 1] + anCountMaxAbove[nn];
+        anCountAfter[nn][MAX_COUNT - 1] = anCountMaxAfter[nn];
 
         for (var n = MAX_COUNT - 2; n >= 0; --n)
-            anCountAbove[nn][n] = anCount[nn][n] + anCountAbove[nn][n + 1];
+            anCountAfter[nn][n] = anCount[nn][n + 1] + anCountAfter[nn][n + 1];
+
+        anCountBefore[nn][0] = 0;
+
+        for (var n = 1; n < MAX_COUNT; ++n)
+            anCountBefore[nn][n] = anCount[nn][n - 1] + anCountBefore[nn][n - 1];
     }
 
     var strHtml = "<table cellpadding='0' cellspacing='0' id='tblStatsRoundSum'>";
+
+    strHtml += "<tr id='trSRSTitle1'><td></td>";
+    strHtml += "<td colspan='3' class='tdSRSColumn'>组</td>";
+    strHtml += "<td colspan='3' class='tdSRSColumn'>行</td>";
+    strHtml += "<td colspan='3'>全部</td>";
+    strHtml += "</tr>";
+
+    strHtml += "<tr id='trSRSTitle2'><td></td>";
+    for (var nn = 0; nn < 3; ++nn)
+        strHtml += "<td>前</td><td>本轮</td><td class='tdSRSColumn'>后</td>";
+    strHtml += "</tr>";
+
     for (var n = 0; n < MAX_COUNT; ++n)
     {
         strHtml += "<tr>";
-
-        var strNum = (n + 1).toString();
-        if ((n + 1) == MAX_COUNT)
-            strNum += "+";
-
-        strHtml += "<td class='tdSFTitle'>" + strNum + "</td>";
-
+        strHtml += "<td class='tdSFTitle'>" + (n + 1).toString() + "</td>";
         for (var nn = 0; nn < 3; ++nn)
         {
-            var nCount = anCount[nn][n];
-            if (n == (MAX_COUNT - 1))
-                nCount += anCountMaxAbove[nn];
-
-            strHtml += "<td>" + nCount.toString() + "</td>";
-
-            var strPercent = "0";
-            if (nTotal > 0)
-                strPercent = (anCount[nn][n] * ((nn == 2)? 50 : 100) / nTotal).toFixed(1).toString();
-
-            strHtml += "<td class='tdSRSPercent'>" + strPercent + "%</td>";
-
-            strHtml += "<td class='tdSRSAbove'>" + anCountAbove[nn][n].toString() + "</td>";
+            strHtml += "<td>" + anCountBefore[nn][n].toString() + "</td>";
+            strHtml += "<td>" + anCount[nn][n].toString() + "</td>";
+            strHtml += "<td class='tdSRSColumn'>" + anCountAfter[nn][n].toString() + "</td>";
         }
         strHtml += "</tr>";
     }

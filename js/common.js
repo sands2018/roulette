@@ -1173,4 +1173,4 @@ var astrValueStatsScope = [100, 200, 300, -1];
 var g_bttnStatsSum = new CBttnOptions("StatsSum", astrValueStatsScope, null, 2, 150);
 var g_bttnStatsScope = new CBttnOptions("StatsScope", astrValueStatsScope, null, 2, 150);
 
-var g_bttnStats = new CBttnOptions("Stats", [0, 1, 2], ["号码", "打法", "轮次"], 0, 0);
+var g_bttnStats = new CBttnOptions("Stats", [0, 1, 2, 3], ["号码", "打法", "轮次参考", "轮次汇总"], 0, 0);

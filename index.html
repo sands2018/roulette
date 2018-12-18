@@ -91,8 +91,8 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 .bttnImport { width: 280px; height: 70px }
 #txtClipboard { font-size: 36px; border: 0 } 
 #tblImport .tdSpec { font-size: 36px; text-align: left; padding: 8px 0 3px 0; }
-#tblImport #tdTxt { border: 1px solid #AA8833; }
-#tblPanelButtons td { border: 1px solid #AA8833; }
+#tblImport #tdTxt { border: 1px solid #aa8833; }
+#tblPanelButtons td { border: 1px solid #aa8833; }
 
 #tblStatsGames { width: 100%; border-top: 1px solid #8f8f8f; border-bottom: 1px solid #8f8f8f; }
 #tblStatsGames td { font-size: 36px; padding: 0 20px; }
@@ -105,16 +105,17 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 
 .txtStatsNumZero { color: #799f79 }
 
-#tblStatsRoundSum, #tblStatsNumCount { width: 100%; border: 1px solid #dfbc33 }  
+#tblStatsRoundSum, #tblStatsNumCount { width: 100%; border: 1px solid #cf8f28 }  
 #tblStatsRoundSum { border-left: 0; border-right: 0 }  
 #tblStatsRoundSum { border-left: 0; border-right: 0; border-top: 0 }  
-#tblStatsRoundSum td { padding: 0 10px; font-size: 40px }
-#tblStatsRoundSum td.tdSFTitle, #tblStatsNumCount td.tdSFTitle { color: #ab8b30; border-left: 1px solid #dfbc33 }
+#tblStatsRoundSum td { padding: 0 10px; font-size: 40px; border-bottom: 1px solid #8f8f8f; }
+#tblStatsRoundSum tr:last-child td { border-bottom: 0; }
+#tblStatsRoundSum td.tdSFTitle, #tblStatsNumCount td.tdSFTitle { color: #ab8b30; border-left: 1px solid #cf8f28 }
 #tblStatsRoundSum td:first-child { border-left: 0; }
-#tblStatsRoundSum td.tdSRSPercent, #tblStatsRoundSum td.tdSRSAbove { color: #888888; }
-#tblStatsRoundSum td:first-child, #tblStatsRoundSum td.tdSRSAbove { border-right: 1px solid #dfbc33; }
+#tblStatsRoundSum td:first-child, #tblStatsRoundSum td.tdSRSColumn { border-right: 1px solid #cf8f28; }
 #tblStatsRoundSum td:last-child { border-right: 0; }
-
+#tblStatsRoundSum #trSRSTitle1 td { border-top: 1px solid #cf8f28; border-bottom: 0; padding: 8px 0; }
+#tblStatsRoundSum #trSRSTitle2 td { border-top: 1px solid #cf8f28; border-bottom: 1px solid #cf8f28; padding: 8px 0; }
 
 </style>
 
@@ -344,9 +345,8 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
             <div style="height: 100px">&nbsp;</div>
             <div id="divStatsNumbers"></div>
             <div id="divStatsGames"></div>
-            <div id="divStatsRounds">
-                <div id="divStatsRoundSum"></div>
-            </div>
+            <div id="divStatsRoundBet"></div>
+            <div id="divStatsRoundSum"></div>
         </div>
         <div id="divStatsBottom" style="position:fixed; bottom: 0px; z-index: 5999; width: 100%;
             background-color: white;">
