@@ -301,6 +301,7 @@ function OnBttnStatsScopeClick(nIdx)
     g_bttnStatsScope.OnClick(nIdx);
     Show_StatsNumbers(-1);
     Show_StatsGames(-1);
+    Show_StatsRoundBet();
     Show_StatsRoundSum();
 }
 
@@ -356,6 +357,7 @@ function OnShowStatistics()
 {
     Show_StatsNumbers(-1);
     Show_StatsGames(-1);
+    Show_StatsRoundBet();
     Show_StatsRoundSum();
 
     Show_RefreshStatsScopeButton();

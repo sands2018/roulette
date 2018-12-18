@@ -893,6 +893,72 @@ function Show_StatsGames(nCol)
     divGames.innerHTML = strHtml;
 }
 
+
+function Show_StatsRoundBet()
+{
+    var strHtml = "";
+
+    var nScope = g_bttnStatsScope.Value();
+    var nBefore = 0;
+
+    var data3C3R = new CStats3C3R();
+    data3C3R.Reset();
+
+    var nMaxIdx = g_queue.nIDX - nBefore;
+    var nMinIdx = g_queue.nIDX - nBefore - nScope + 1;
+
+    if (nMaxIdx >= 0)
+    {
+        var stats = new CStatsRoundBet();
+
+        if (nMinIdx < 0)
+            nMinIdx = 0;
+
+        for (n = nMinIdx; n <= nMaxIdx; ++n)
+        {
+            data3C3R.AddNum(g_queue.anNum[n]);
+            stats.AddNum(g_queue.anNum[n], data3C3R);
+        }
+
+        strHtml = "<table cellpadding='0' cellspacing='0' id='tblStatsRoundBet'>";
+        strHtml += "<tr onclick='OnShowStatsMisc()'><td>轮次</td><td>不出</td><td>概率</td>";
+        for (var nn = 0; nn < stats.anFailedRound.length; ++nn)
+        {
+            strHtml += "<td>F" + stats.anFailedRound[nn].toString() + "</td><td>概率</td>";
+        }
+        strHtml += "</tr>";
+
+        var nTotal = nMaxIdx - nMinIdx + 1;
+
+        for (var n = 0; n < stats.anRound.length; ++n)
+        {
+            strHtml += "<tr id='trStatsIntv" + n.toString() + "' onclick='OnStatsIntervalClick(true)'><td>" + stats.anRound[n].toString() + "</td>";
+            strHtml += "<td>" + stats.anNotYetCount[n].toString() + "</td>";
+
+            var percent1 = stats.anNotYetCount[n] * 100 / nTotal;
+            strHtml += "<td>" + percent1.toFixed(1) + "%</td>";
+
+
+            for (var nn = 0; nn < stats.anFailedRound.length; ++nn)
+            {
+                strHtml += "<td>" + stats.anFailed[nn][n].toString() + "</td>";
+
+                var percent2 = 0;
+                if (stats.anNotYetCount[n] > 0)
+                    percent2 = stats.anFailed[nn][n] * 100 / stats.anNotYetCount[n];
+                strHtml += "<td>" + percent2.toFixed(1) + "%</td>";
+            }
+
+            strHtml += "</tr>";
+        }
+        strHtml += "</table>";
+    }
+
+    var div = document.getElementById("divStatsRoundBet");
+    div.innerHTML = strHtml;
+}
+
+
 function Show_StatsRoundSum()
 {
     var MAX_COUNT = 20;
@@ -983,7 +1049,7 @@ function Show_StatsRoundSum()
     strHtml += "<td colspan='3'>全部</td>";
     strHtml += "</tr>";
 
-    strHtml += "<tr id='trSRSTitle2'><td></td>";
+    strHtml += "<tr id='trSRSTitle2'><td>轮次</td>";
     for (var nn = 0; nn < 3; ++nn)
         strHtml += "<td>前</td><td>本轮</td><td class='tdSRSColumn'>后</td>";
     strHtml += "</tr>";

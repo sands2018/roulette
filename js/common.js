@@ -653,7 +653,7 @@ function CStatsNumbers(nCol)
     this.anFrequence = [];
     this.anIdx = [];
 
-    this.Calc = function (queue, nCount, nBefore)
+    this.Calc = function (queue, nScope, nBefore)
     {
         var abStop = [];
 
@@ -670,7 +670,7 @@ function CStatsNumbers(nCol)
         // distance is always from most recent num (that is, nBefore is useless for distance calcuiation)
 
         var nMaxIdx = queue.nIDX;
-        var nMinIdx = queue.nIDX - nCount + 1;
+        var nMinIdx = queue.nIDX - nScope + 1;
 
         if (nMaxIdx >= 0)
         {
@@ -705,7 +705,7 @@ function CStatsNumbers(nCol)
         // calc Frequence: ----------------------
 
         nMaxIdx = queue.nIDX - nBefore;
-        nMinIdx = queue.nIDX - nBefore - nCount + 1;
+        nMinIdx = queue.nIDX - nBefore - nScope + 1;
 
         if (nMaxIdx >= 0)
         {
@@ -970,7 +970,7 @@ function CStatsGames(nCol)
         this.aGame[17 * 3 + n] = new CGame(6, [1, 1, 1, 2, 2, 3], n);
     }
 
-    this.Calc = function(queue, nCount, nBefore)
+    this.Calc = function (queue, nScope, nBefore)
     {
         var anIdx = [];
 
@@ -981,7 +981,7 @@ function CStatsGames(nCol)
         data3C3R.Reset();
 
         var nMaxIdx = queue.nIDX - nBefore;
-        var nMinIdx = queue.nIDX - nBefore - nCount + 1;
+        var nMinIdx = queue.nIDX - nBefore - nScope + 1;
 
         if (nMaxIdx >= 0)
         {
@@ -1029,16 +1029,17 @@ function CStatsGames(nCol)
     }
 }
 
-function CStatsRounds()
+function CStatsRoundBet()
 {
-    this.anRound = [4, 5, 6, 7, 8, 9];
+    this.anRound = [3, 4, 5, 6, 7, 8, 9];
 
     this.anFailedRound = [4, 6];
     this.anFailed = [];
-    this.anFailed[0] = [0, 0, 0, 0, 0, 0];
-    this.anFailed[1] = [0, 0, 0, 0, 0, 0];
+    this.anFailed[0] = [0, 0, 0, 0, 0, 0, 0];
+    this.anFailed[1] = [0, 0, 0, 0, 0, 0, 0];
+    this.anNotYetCount = [0, 0, 0, 0, 0, 0, 0];
 
-    this.AddNum = function (num, bReal)
+    this.AddNum = function (num, data3C3R)
     {
         // 0:
         if (num == 0)
@@ -1050,6 +1051,16 @@ function CStatsRounds()
 
         for (var nn = 0; nn < 6; ++nn)
         {
+            // whether hit start:
+
+            for (var n = 0; n < nCount; ++n)
+            {
+                if (data3C3R.data.anValue[nn] == this.anRound[n])
+                {
+                    this.anNotYetCount[n]++;
+                }
+            }
+
             // whether hit end:
 
             for (var n = 0; n < nCount; ++n)
@@ -1058,7 +1069,7 @@ function CStatsRounds()
 
                 for (var r = 0; r < nRound; ++r)
                 {
-                    if ((g_an3C3R[nn] == (this.anRound[n] + this.anFailedRound[r])))
+                    if ((data3C3R.data.anValue[nn] == (this.anRound[n] + this.anFailedRound[r])))
                     {
                         this.anFailed[r][n]++;
                     }
