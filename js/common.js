@@ -1069,6 +1069,96 @@ function CStatsRounds()
 }
 
 
+function CStatsRoundSum()
+{
+    this.Show = function (queue, strDiv)
+    {
+        var MAX_COUNT = 30;
+
+        var anCount = [];
+        var anCountAbove = [];
+        var nCount30Above = 0;
+        var nTotal = 0;
+
+        var an3C3RPrevIdx = [];
+
+        for (var nn = 0; nn < 6; ++nn)
+            an3C3RPrevIdx[nn] = -1;
+
+        for (var nn = 0; nn < MAX_COUNT; ++nn)
+            anCount[nn] = 0;
+
+        for (var n = 0; n <= queue.nIDX; ++n)
+        {
+            if (queue.anNum[n] == 0)
+                continue;
+
+            nTotal++;
+
+            var nCol = GetNumCol(queue.anNum[n]);
+            var nRow = GetNumRow(queue.anNum[n]);
+
+            var nGap = n - an3C3RPrevIdx[nCol] - 1;
+            if (nGap < MAX_COUNT)
+                anCount[nGap]++;
+            else
+                nCount30Above++;
+
+            an3C3RPrevIdx[nCol] = n;
+
+            nGap = n - an3C3RPrevIdx[nRow + 3] - 1;
+            if (nGap < MAX_COUNT)
+                anCount[nGap]++;
+            else
+                nCount30Above++;
+            an3C3RPrevIdx[nRow + 3] = n;
+        }
+
+        anCountAbove[MAX_COUNT - 1] = anCount[MAX_COUNT - 1] + nCount30Above;
+
+        for (var n = MAX_COUNT - 2; n >= 0; --n)
+            anCountAbove[n] = anCount[n] + anCountAbove[n + 1];
+
+        var BIG_COL_COUNT = 2;
+        var EACH_COL_COUNT = MAX_COUNT / BIG_COL_COUNT;
+
+        strHtml += "<table cellpadding='0' cellspacing='0' id='tblStatsFinally'><tr>";
+        for (var n = 0; n < MAX_COUNT; ++n)
+        {
+            if ((n != 0) && ((n % BIG_COL_COUNT) == 0))
+                strHtml += "</tr><tr>";
+
+            var nIdx = EACH_COL_COUNT * (n % BIG_COL_COUNT) + Math.floor(n / BIG_COL_COUNT);
+
+            strHtml += "<td class='tdSFTitle'>" + (nIdx + 1).toString() + ((nIdx == (MAX_COUNT - 1)) ? "+" : "") + "</td>";
+
+            var nCount = anCount[nIdx];
+            if (nIdx == (MAX_COUNT - 1))
+                nCount += nCount30Above;
+
+            strHtml += "<td>" + nCount.toString() + "</td>";
+
+            var strPercent = "0";
+            if (nTotal > 0)
+                strPercent = (anCount[nIdx] * 50 / nTotal).toFixed(1).toString();
+
+            strHtml += "<td class='tdSFPercent'>" + strPercent + "%</td>";
+
+            strHtml += "<td>" + anCountAbove[nIdx].toString() + "</td>";
+
+            strPercent = "0";
+            if (nTotal > 0)
+                strPercent = (anCountAbove[nIdx] * 50 / nTotal).toFixed(1).toString();
+
+            strHtml += "<td class='tdSFPercent'>" + strPercent + "%</td>";
+        }
+        strHtml += "</tr></table>";
+
+        var div = document.getElementById(strDiv);
+        div.innerHTML = strHtml;
+    }
+}
+
 // global variables: ----------------------------------------------------------
 
 var g_queue = new CNumQueue();

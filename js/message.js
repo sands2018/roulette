@@ -359,6 +359,7 @@ function OnShowStatistics()
 {
     Show_StatsNumbers(-1);
     Show_StatsGames(-1);
+    Show_StatsRoundSum();
 
     Show_RefreshStatsScopeButton();
     Show_RefreshStatsButton();
