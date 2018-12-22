@@ -291,22 +291,6 @@ function OnBttnStatsSumClick(nIdx)
 
 // ----------------------------------------------
 
-function Show_RefreshStatsScopeButton()
-{
-    g_bttnStatsScope.Show("divStatsScopeBttns");
-}
-
-function OnBttnStatsScopeClick(nIdx)
-{
-    g_bttnStatsScope.OnClick(nIdx);
-    Show_StatsNumbers(-1);
-    Show_StatsGames(-1);
-    Show_StatsRoundBet();
-    Show_StatsRoundSum();
-}
-
-// ----------------------------------------------
-
 
 function Show_RefreshStatsButton()
 {
@@ -319,12 +303,41 @@ function OnBttnStatsClick(nIdx)
     SwitchStats();
 }
 
+
+// ----------------------------------------------
+
+function Show_RefreshStatsScopeButton()
+{
+    g_bttnStatsScope.Show("divStatsScopeBttns");
+}
+
+function OnBttnStatsScopeClick(nIdx)
+{
+    g_bttnStatsScope.OnClick(nIdx);
+    Show_StatsNumbers(-1);
+    Show_StatsGames(-1);
+    Show_StatsRounds();
+    Show_StatsMisc();
+}
+
+// ----------------------------------------------
+
+function Show_RefreshStatsLongsButton()
+{
+    g_bttnStatsLongs.Show("divStatsLongsBttns");
+}
+
+function OnBttnStatsLongsClick(nIdx)
+{
+    g_bttnStatsLongs.OnClick(nIdx);
+}
+
 // ----------------------------------------------
 
 function SwitchStats()
 {
-    var astrDiv = ["Numbers", "Games", "RoundBet", "RoundSum"];
-    var astrTitle = ["号码统计数据", "打法统计数据", "轮次参考数据", "轮次汇总数据"];
+    var astrDiv = ["Numbers", "Games", "Rounds", "Misc"];
+    var astrTitle = ["号码统计数据", "打法统计数据", "轮次汇总数据", "其它统计数据"];
     var nIdx = g_bttnStats.Value();
 
     for (var n = 0; n < astrDiv.length; ++n)
@@ -357,10 +370,11 @@ function OnShowStatistics()
 {
     Show_StatsNumbers(-1);
     Show_StatsGames(-1);
-    Show_StatsRoundBet();
-    Show_StatsRoundSum();
+    Show_StatsRounds();
+    Show_StatsMisc();
 
     Show_RefreshStatsScopeButton();
+    Show_RefreshStatsLongsButton();
     Show_RefreshStatsButton();
     SwitchStats();
 
