@@ -127,6 +127,8 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 #tblStatsRoundSum td:last-child { border-right: 0; }
 #trSRSTitle1 td, #trSRSTitle2 td { color: #aa8833; border-top: 1px solid #cf8f28; border-bottom: 1px solid #cf8f28; padding: 6px 0; }
 #trSRSTitle1 td { border-bottom: 0; }
+.divStatsTitle { font-size: 40px; color: #aa8833; padding: 18px 18px 13px 18px }
+#divStatsMisc div:first-child div:first-child { padding-top: 0px }   
 
 </style>
 
@@ -358,8 +360,12 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
             <div id="divStatsGames"></div>
             <div id="divStatsRounds"></div>
             <div id="divStatsMisc">
-                <div id="divStatsRoundBet"></div>
+                <div id="divStatsRoundBet">
+                    <div class="divStatsTitle">轮次参考数据：</div>
+                    <div id="divStatsRoundBetC"></div>
+                </div>
                 <div id="divStatsLongs">
+                    <div class="divStatsTitle">长套结束统计数据：</div>
                     <div id="divStatsLongsBttns"></div>
                 </div>
             </div>

@@ -1067,6 +1067,6 @@ function Show_StatsMisc()
         strHtml += "</table>";
     }
 
-    var div = document.getElementById("divStatsRoundBet");
+    var div = document.getElementById("divStatsRoundBetC");
     div.innerHTML = strHtml;
 }
