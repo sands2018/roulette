@@ -322,6 +322,19 @@ function OnBttnStatsScopeClick(nIdx)
 
 // ----------------------------------------------
 
+function Show_RefreshStatsLongsBetButton()
+{
+    g_bttnStatsLongsBet.Show("divStatsLongsBetBttns");
+}
+
+function OnBttnStatsLongsBetClick(nIdx)
+{
+    g_bttnStatsLongsBet.OnClick(nIdx);
+    Show_StatsLongs();
+}
+
+// ----------------------------------------------
+
 function Show_RefreshStatsLongsButton()
 {
     g_bttnStatsLongs.Show("divStatsLongsBttns");
@@ -330,6 +343,7 @@ function Show_RefreshStatsLongsButton()
 function OnBttnStatsLongsClick(nIdx)
 {
     g_bttnStatsLongs.OnClick(nIdx);
+    Show_StatsLongs();
 }
 
 // ----------------------------------------------
@@ -375,6 +389,7 @@ function OnShowStatistics()
 
     Show_RefreshStatsScopeButton();
     Show_RefreshStatsLongsButton();
+    Show_RefreshStatsLongsBetButton();
     Show_RefreshStatsButton();
     SwitchStats();
 

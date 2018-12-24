@@ -128,7 +128,14 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 #trSRSTitle1 td, #trSRSTitle2 td { color: #aa8833; border-top: 1px solid #cf8f28; border-bottom: 1px solid #cf8f28; padding: 6px 0; }
 #trSRSTitle1 td { border-bottom: 0; }
 .divStatsTitle { font-size: 40px; color: #aa8833; padding: 18px 18px 13px 18px }
-#divStatsMisc div:first-child div:first-child { padding-top: 0px }   
+#divStatsMisc div:first-child div:first-child { padding-top: 0px }
+
+#tblStatsLongs td { border: 1px solid #cf8f28; border-bottom: 0; border-left: 0; width: 12.5% }
+#tblStatsLongs tr:first-child td { color: #aa8833; }
+#tblStatsLongs td:last-child { border-right: 0; }
+#tblStatsLongs tr:last-child td { border-bottom: 1px solid #cf8f28; border-top: 0 }
+#tblStatsLongs #tdSLT  { border-bottom: 1px solid #cf8f28 }
+
 
 </style>
 
@@ -366,7 +373,9 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
                 </div>
                 <div id="divStatsLongs">
                     <div class="divStatsTitle">长套结束统计数据：</div>
-                    <div id="divStatsLongsBttns"></div>
+                    <div id="divStatsLongsC"></div>
+                    <div id="divStatsLongsBetBttns" style="padding-top: 10px"></div>
+                    <div id="divStatsLongsBttns" style="padding-top: 10px"></div>
                 </div>
             </div>
         </div>

@@ -1007,7 +1007,7 @@ function Show_StatsRounds()
     div.innerHTML = strHtml;
 }
 
-function Show_StatsMisc()
+function Show_StatsRoundBet()
 {
     var strHtml = "";
 
@@ -1069,4 +1069,101 @@ function Show_StatsMisc()
 
     var div = document.getElementById("divStatsRoundBetC");
     div.innerHTML = strHtml;
+}
+
+function Show_StatsLongs()
+{
+    var nBetCount = g_bttnStatsLongsBet.Value();
+    var nRound = g_bttnStatsLongs.Value();
+
+    var data3C3R = new CStats3C3R();
+    data3C3R.Reset();
+
+    var aLongs = [];
+    var anOccurCount = [0, 0, 0, 0, 0, 0];
+    var nTotalCount = 0;
+    var nNotOccurCount = 0;
+
+    for (var nn = 0; nn < 6; ++nn)
+        aLongs[nn] = new CStatsLongItem();
+
+    for (var n = 0; n <= g_queue.nIDX; ++n)
+    {
+        var num = g_queue.anNum[n];
+
+        data3C3R.AddNum(num);
+
+        if (num == 0)
+            continue;
+
+        var nCol = GetNumCol(num);
+        var nRow = GetNumRow(num);
+
+        for(var nn = 0; nn < 6; ++ nn)
+        {
+            if (aLongs[nn].bActive)
+            {
+                if((nn == nCol) || (nn == (nRow + 3)))
+                    aLongs[nn].abOccur[aLongs[nn].nRound] = true;
+
+                aLongs[nn].nRound++;
+
+                if (aLongs[nn].nRound >= nBetCount)
+                {
+                    ++nTotalCount;
+
+                    var bNotOccur = true;
+
+                    for (var i = 0; i < nBetCount; ++i)
+                    {
+                        if (aLongs[nn].abOccur[i])
+                        {
+                            anOccurCount[i]++
+                            bNotOccur = false;
+                        }
+                    }
+
+                    if (bNotOccur)
+                        nNotOccurCount++;
+
+                    aLongs[nn].Reset();
+                }
+            }
+            else
+            {
+                if (data3C3R.data.anValue[nn] >= nRound)
+                    aLongs[nn].bActive = true;
+            }
+        }
+    }
+
+
+
+    var strHtml = "<table cellpadding='0' cellspacing='0' style='width: 100%' id='tblStatsLongs'>";
+
+    strHtml += "<tr><td>&nbsp;</td>";
+    for (var n = 0; n < nBetCount; ++n)
+        strHtml += "<td>" + (n + 1).toString() + "</td>";
+    strHtml += "<td>NOT</td></tr>";
+
+    strHtml += "<tr><td id='tdSLT' rowspan='2'>" + nTotalCount.toString() + "</td>";
+    for (var n = 0; n < nBetCount; ++n)
+        strHtml += "<td>" + anOccurCount[n].toString() + "</td>";
+    strHtml += "<td>" + nNotOccurCount.toString() + "</td></tr>";
+
+    strHtml += "<tr>";
+    for (var n = 0; n < nBetCount; ++n)
+        strHtml += "<td>" + "&nbsp;" + "</td>";
+    strHtml += "<td>&nbsp;</td></tr>";
+
+    strHtml += "</table>";
+
+    var div = document.getElementById("divStatsLongsC");
+    div.innerHTML = strHtml;
+}
+
+function Show_StatsMisc()
+{
+    Show_StatsRoundBet();
+    Show_StatsLongs();
 }

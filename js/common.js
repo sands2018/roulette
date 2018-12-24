@@ -1,4 +1,4 @@
-﻿var g_nDebug = 0;
+﻿var g_nDebug = 1;
 
 // styles: ----------------------------------------------------------------
 
@@ -1170,6 +1170,21 @@ function CStatsRoundSum()
     }
 }
 
+function CStatsLongItem()
+{
+    this.bActive = false;
+    this.nRound = 0;
+    this.abOccur = [false, false, false, false, false, false];
+
+    this.Reset = function()
+    {
+        this.bActive = false;
+        this.nRound = 0;
+        for (var n = 0; n < 6; ++n)
+            this.abOccur[n] = false;
+    }
+}
+
 // global variables: ----------------------------------------------------------
 
 var g_queue = new CNumQueue();
@@ -1183,6 +1198,7 @@ var g_bttnStatsGroups = new CBttnOptions("StatsGroups", [20, 40, 60, 80, 100, -1
 var astrValueStatsScope = [100, 200, 300, -1];
 var g_bttnStatsSum = new CBttnOptions("StatsSum", astrValueStatsScope, null, 2, 150);
 var g_bttnStatsScope = new CBttnOptions("StatsScope", astrValueStatsScope, null, 2, 150);
+var g_bttnStatsLongsBet = new CBttnOptions("StatsLongsBet", [4, 5, 6], null, 2, 150);
 var g_bttnStatsLongs = new CBttnOptions("StatsLongs", [10, 11, 12, 13], null, 2, 150);
 
 var g_bttnStats = new CBttnOptions("Stats", [0, 1, 2, 3], ["号码", "打法", "轮次", "其它"], 0, 0);
