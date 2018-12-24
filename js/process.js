@@ -1091,8 +1091,6 @@ function Show_StatsLongs()
     {
         var num = g_queue.anNum[n];
 
-        data3C3R.AddNum(num);
-
         if (num == 0)
             continue;
 
@@ -1110,8 +1108,6 @@ function Show_StatsLongs()
 
                 if (aLongs[nn].nRound >= nBetCount)
                 {
-                    ++nTotalCount;
-
                     var bNotOccur = true;
 
                     for (var i = 0; i < nBetCount; ++i)
@@ -1132,9 +1128,17 @@ function Show_StatsLongs()
             else
             {
                 if (data3C3R.data.anValue[nn] >= nRound)
-                    aLongs[nn].bActive = true;
+                {
+                    if ((nn == nCol) || (nn == (nRow + 3)))
+                    {
+                        aLongs[nn].bActive = true;
+                        ++nTotalCount;
+                    }
+                }
             }
         }
+
+        data3C3R.AddNum(num);
     }
 
 
