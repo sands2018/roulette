@@ -1079,11 +1079,11 @@ function Show_StatsLongs()
     var data3C3R = new CStats3C3R();
     data3C3R.Reset();
 
-    var aLongs = [];
-    var anOccurCount = [0, 0, 0, 0, 0, 0];
     var nTotalCount = 0;
+    var anOccurCount = [0, 0, 0, 0, 0, 0];
     var nNotOccurCount = 0;
 
+    var aLongs = [];
     for (var nn = 0; nn < 6; ++nn)
         aLongs[nn] = new CStatsLongItem();
 
@@ -1101,28 +1101,20 @@ function Show_StatsLongs()
         {
             if (aLongs[nn].bActive)
             {
-                if((nn == nCol) || (nn == (nRow + 3)))
-                    aLongs[nn].abOccur[aLongs[nn].nRound] = true;
-
-                aLongs[nn].nRound++;
-
-                if (aLongs[nn].nRound >= nBetCount)
+                if ((nn == nCol) || (nn == (nRow + 3)))
                 {
-                    var bNotOccur = true;
-
-                    for (var i = 0; i < nBetCount; ++i)
-                    {
-                        if (aLongs[nn].abOccur[i])
-                        {
-                            anOccurCount[i]++
-                            bNotOccur = false;
-                        }
-                    }
-
-                    if (bNotOccur)
-                        nNotOccurCount++;
-
+                    anOccurCount[aLongs[nn].nRoundAfter]++
                     aLongs[nn].Reset();
+                    break;
+                }
+
+                aLongs[nn].nRoundAfter++;
+
+                if (aLongs[nn].nRoundAfter >= nBetCount)
+                {
+                    nNotOccurCount++;
+                    aLongs[nn].Reset();
+                    break;
                 }
             }
             else
@@ -1131,6 +1123,7 @@ function Show_StatsLongs()
                 {
                     if ((nn == nCol) || (nn == (nRow + 3)))
                     {
+                        aLongs[nn].nRoundBefore = data3C3R.data.anValue[nn]; // not used currently
                         aLongs[nn].bActive = true;
                         ++nTotalCount;
                     }
@@ -1141,11 +1134,9 @@ function Show_StatsLongs()
         data3C3R.AddNum(num);
     }
 
-
-
     var strHtml = "<table cellpadding='0' cellspacing='0' style='width: 100%' id='tblStatsLongs'>";
 
-    strHtml += "<tr><td>&nbsp;</td>";
+    strHtml += "<tr><td>次数</td>";
     for (var n = 0; n < nBetCount; ++n)
         strHtml += "<td>" + (n + 1).toString() + "</td>";
     strHtml += "<td>NOT</td></tr>";
@@ -1156,9 +1147,25 @@ function Show_StatsLongs()
     strHtml += "<td>" + nNotOccurCount.toString() + "</td></tr>";
 
     strHtml += "<tr>";
+
+    var strPercent;
+
     for (var n = 0; n < nBetCount; ++n)
-        strHtml += "<td>" + "&nbsp;" + "</td>";
-    strHtml += "<td>&nbsp;</td></tr>";
+    {
+        if (nTotalCount > 0)
+            strPercent = (anOccurCount[n] * 100 / nTotalCount).toFixed(1).toString();
+        else
+            strPercent = "0";
+
+        strHtml += "<td>" + strPercent + "%</td>";
+    }
+
+    if (nTotalCount > 0)
+        strPercent = (nNotOccurCount * 100 / nTotalCount).toFixed(1).toString();
+    else
+        strPercent = "0";
+
+    strHtml += "<td>" + strPercent + "%</td></tr>";
 
     strHtml += "</table>";
 
