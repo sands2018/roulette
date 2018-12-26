@@ -809,7 +809,7 @@ function CNumberMaxDistances()
         {
             var nNum = queue.anNum[n];
             var nIdx = n - nMinIdx;
-            var nDistance = nIdx - anPrev[nNum];
+            var nDistance = nIdx - anPrev[nNum] - 1;
             anPrev[nNum] = nIdx;
 
             if (nDistance > this.anValue[nNum])
@@ -820,7 +820,7 @@ function CNumberMaxDistances()
 
         for (var nn = 0; nn <= 36; ++nn)
         {
-            var nDistance = (nMaxIdx + 1 - nMinIdx) - anPrev[nn];
+            var nDistance = (nMaxIdx + 1) - nMinIdx - anPrev[nn] - 1;
             if (nDistance > this.anValue[nn])
                 this.anValue[nn] = nDistance;
 
