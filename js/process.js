@@ -853,13 +853,13 @@ function Show_StatsNumbers(nCol)
 
     strHtml = "";
     var bFirst = true;
-    for(var n = 0; n < 3; ++ n)
+    for(var n = 0; n < 5; ++ n)
     {
         if(maxdistances.anMaxNum[n] < 0)
             break;
 
         if (!bFirst)
-            strHtml += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+            strHtml += "&nbsp;&nbsp;&nbsp;&nbsp;";
 
         var strClass = "tdStatsNumber";
         if (maxdistances.anMaxNum[n] == 0)
