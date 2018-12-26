@@ -845,7 +845,32 @@ function Show_StatsNumbers(nCol)
 
     strHtml += "</table>";
 
-    var div = document.getElementById("divStatsNumbers");
+    var div = document.getElementById("divStatsNumbersC");
+    div.innerHTML = strHtml;
+
+    var maxdistances = new CNumberMaxDistances();
+    maxdistances.Calc(g_queue, nScope, 0);
+
+    strHtml = "";
+    var bFirst = true;
+    for(var n = 0; n < 3; ++ n)
+    {
+        if(maxdistances.anMaxNum[n] < 0)
+            break;
+
+        if (!bFirst)
+            strHtml += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+
+        var strClass = "tdStatsNumber";
+        if (maxdistances.anMaxNum[n] == 0)
+            strClass = "txtStatsNumZero";
+
+        strHtml += "<span class='" + strClass + "'>" + maxdistances.anMaxNum[n].toString() + "</span>&nbsp;:&nbsp;&nbsp;";
+        strHtml += maxdistances.anMax[n].toString();
+        bFirst = false;
+    }
+
+    div = document.getElementById("divMaxDistanceTop3");
     div.innerHTML = strHtml;
 }
 

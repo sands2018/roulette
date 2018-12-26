@@ -750,6 +750,86 @@ function CStatsNumbers(nCol)
     }
 }
 
+function CNumberMaxDistances()
+{
+    CIndexedArray.call(this);
+
+    this.anMax = [];
+    this.anMaxNum = [];
+
+    this.CalcMax_Add = function (nDistance, nNum)
+    {
+        for(var nn = 0; nn < 10; ++ nn)
+        {
+            if(this.anMax[nn] < nDistance)
+            {
+                if (nn < 9)
+                {
+                    for (var n = 9; n > nn; --n)
+                    {
+                        this.anMax[n] = this.anMax[n - 1];
+                        this.anMaxNum[n] = this.anMaxNum[n - 1];
+                    }
+                }
+
+                this.anMax[nn] = nDistance;
+                this.anMaxNum[nn] = nNum;
+
+                break;
+            }
+        }
+    }
+
+    this.Calc = function (queue, nScope, nBefore)
+    {
+        for (var nn = 0; nn < 10; ++nn)
+        {
+            this.anMax[nn] = 0;
+            this.anMaxNum[nn] = -1;
+        }
+
+        var anPrev = [];
+
+        for (var nn = 0; nn <= 36; ++nn)
+        {
+            this.anValue[nn] = -1;
+            this.anIdx[nn] = nn;
+            anPrev[nn] = -1;
+        }
+
+        var nMaxIdx = queue.nIDX - nBefore;
+        if (nMaxIdx < 0)
+            return;
+
+        var nMinIdx = nMaxIdx - nScope + 1;
+        if (nMinIdx < 0)
+            nMinIdx = 0;
+
+        for (var n = nMinIdx; n <= nMaxIdx; ++n)
+        {
+            var nNum = queue.anNum[n];
+            var nIdx = n - nMinIdx;
+            var nDistance = nIdx - anPrev[nNum];
+            anPrev[nNum] = nIdx;
+
+            if (nDistance > this.anValue[nNum])
+                this.anValue[nNum] = nDistance;
+
+            this.CalcMax_Add(nDistance, nNum);
+        }
+
+        for (var nn = 0; nn <= 36; ++nn)
+        {
+            var nDistance = (nMaxIdx + 1 - nMinIdx) - anPrev[nn];
+            if (nDistance > this.anValue[nn])
+                this.anValue[nn] = nDistance;
+
+            this.CalcMax_Add(nDistance, nn);
+        }
+
+        this.Sort(false);
+    }
+}
 
 function CGameItem()
 {

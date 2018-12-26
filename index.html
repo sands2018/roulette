@@ -5,7 +5,9 @@
 
 <style>
 
-td { text-align: center; vertical-align: middle; cursor: pointer; font-size: 40px }
+td { text-align: center; vertical-align: middle; cursor: pointer; font-size: 40px; }
+div { font-size: 40px; }
+
 .kbspace1
 {
     padding: 0; margin: 0; border: 0; height: 50px;
@@ -80,7 +82,7 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 #tblStatsNumbers tr:first-child td { padding: 8px 0; border-top: 1px solid #cf8f28; border-bottom: 1px solid #cf8f28; }
 #tblStatsNumbers tr:last-child td { border-bottom: 1px solid #cf8f28; }
 #tblStatsNumbers .tdStatsNumSecond { border-left: 1px solid #cf8f28; }
-#tblStatsNumbers .tdStatsNumber { color: #8f5f38 } 
+.tdStatsNumber { color: #8f5f38 } 
 
 #divFinishedLong { font-size: 40px }
 
@@ -137,6 +139,7 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 #tblStatsLongs #tdSLT  { border-bottom: 1px solid #cf8f28 }
 #tblStatsLongsBttns { width: 100%; padding-top: 10px; }
 #tblStatsLongsBttns .tdSLBttnsT { text-align: left; color: #aa8833; padding-left: 10px }
+#divMaxDistanceTop3 { padding: 0 18px; }
 
 </style>
 
@@ -364,7 +367,11 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
         <div id="divStatsMiddle" style="position:absolute; top: 0; z-index: 3990; width: 100%; height: 100%;
             background-color: white;">
             <div style="height: 100px">&nbsp;</div>
-            <div id="divStatsNumbers"></div>
+            <div id="divStatsNumbers">
+                <div id="divStatsNumbersC"></div>
+                <div class="divStatsTitle">最大距离前三名：</div>
+                <div id="divMaxDistanceTop3"></div>
+            </div>
             <div id="divStatsGames"></div>
             <div id="divStatsRounds"></div>
             <div id="divStatsMisc">
