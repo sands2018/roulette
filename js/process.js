@@ -870,7 +870,7 @@ function Show_StatsNumbers(nCol)
         bFirst = false;
     }
 
-    div = document.getElementById("divMaxDistanceTop3");
+    div = document.getElementById("divMaxDistanceTops");
     div.innerHTML = strHtml;
 }
 
