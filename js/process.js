@@ -859,13 +859,13 @@ function Show_StatsNumbers(nCol)
             break;
 
         if (!bFirst)
-            strHtml += "&nbsp;&nbsp;&nbsp;&nbsp;";
+            strHtml += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 
         var strClass = "tdStatsNumber";
         if (maxdistances.anMaxNum[n] == 0)
             strClass = "txtStatsNumZero";
 
-        strHtml += "<span class='" + strClass + "'>" + maxdistances.anMaxNum[n].toString() + "</span>&nbsp;:&nbsp;&nbsp;";
+        strHtml += "<span class='" + strClass + "'>" + maxdistances.anMaxNum[n].toString() + "</span>&nbsp;:&nbsp;";
         strHtml += maxdistances.anMax[n].toString();
         bFirst = false;
     }
