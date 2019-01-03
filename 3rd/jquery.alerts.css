@@ -18,7 +18,7 @@
 	min-width: 300px; /* Dialog will be no smaller than this */
 	max-width: 600px; /* Dialog will wrap after this width */
 	background-color: #FFFFFF;
-	border: solid 1px #aa8833;
+	border: 12px solid #e8e3d3;
 	color: #000000;
 }
 
@@ -48,8 +48,7 @@
 }
 
 #popup_panel {
-	text-align: center;
-	margin: 1em 0em 0em 0em;
+	margin: 1em 0 0.2em 0;
 }
 
 #popup_prompt {
@@ -64,4 +63,12 @@
 	border: solid 1px #aa8833;
 	color: #aa8833;
 	background-color: white;
+}
+
+#popup_container .jalert_bttn {
+	font-size: 40px;
+	border: solid 1px #aa8833;
+	color: #aa8833;
+	background-color: white;
+    padding: 8px 50px 13px 50px;
 }
