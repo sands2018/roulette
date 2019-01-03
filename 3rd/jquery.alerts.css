@@ -17,12 +17,9 @@
 	font-size: 40px;
 	min-width: 300px; /* Dialog will be no smaller than this */
 	max-width: 600px; /* Dialog will wrap after this width */
-	background: #FFFFFF;
+	background-color: #FFFFFF;
 	border: solid 1px #aa8833;
 	color: #000000;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	border-radius: 5px;
 }
 
 #popup_content {
