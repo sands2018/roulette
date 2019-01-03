@@ -26,6 +26,15 @@
     <None Include="..\js\process.js">
       <Filter>js</Filter>
     </None>
+    <None Include="..\3rd\jquery.alerts.css">
+      <Filter>3rd</Filter>
+    </None>
+    <None Include="..\3rd\jquery.alerts.js">
+      <Filter>3rd</Filter>
+    </None>
+    <None Include="..\3rd\jquery-3.3.1.min.js">
+      <Filter>3rd</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="js">

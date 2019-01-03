@@ -55,19 +55,6 @@ function OnSwitchInput(nIdx)
     WriteData(DATA_KEYBOARDID, g_status.KeyboardID);
 }
 
-function OnSysChangeTheme()
-{
-    if (g_status.ThemeID > 1)
-        return;
-
-    g_status.Escape = 0;
-
-    g_status.ThemeID++;
-    g_status.ThemeID = g_status.ThemeID % 2;
-
-    Show_RefreshTheme();
-}
-
 function OnSysExpand()
 {
     g_status.QueueExpand++;
@@ -123,49 +110,6 @@ function OnAddNum(num)
     Calc_Sum();
     Show_AddNum();
     SaveNumbers();
-}
-
-function OnSysRestore()
-{
-    if (g_queue.nIDX >= 0)
-        return;
-
-    var strNum = ReadData(DATA_NUMBERS);
-    ResetDataFromNumString(strNum, false);
-}
-
-function OnSysExport()
-{
-    var clipboard = new ClipboardJS('#tdBttnExport');
-    var strData = NumArrayToString(g_queue);
-    $("#tdBttnExport").attr("data-clipboard-action", "copy");
-    $("#tdBttnExport").attr("data-clipboard-text", strData);
-
-    clipboard.on('success', function (e)
-    {
-        alert("数据已复制到粘贴板");
-    });
-
-    clipboard.on('error', function (e)
-    {
-        alert("数据复制失败");
-    });
-}
-
-function OnSysImport()
-{
-    //var tdTitle = document.getElementById("tdImportTitle");
-    var txt = document.getElementById("txtClipboard");
-    var trSpecImport = document.getElementById("trSpecImport");
-    var tdBttnDoImport = document.getElementById("tdBttnDoImport");
-
-    //tdTitle.innerHTML = "导&nbsp;&nbsp;&nbsp;入";
-    txt.value = "";
-    trSpecImport.style.display = "";
-    tdBttnDoImport.style.display = "";
-    var div = document.getElementById("divImport");
-    div.style.display = "";
-    txt.select();
 }
 
 function OnStatsSumListClick(nID)
@@ -237,16 +181,6 @@ function OnDelNum()
 
     ResetData(anNum);
     SaveNumbers();
-}
-
-function OnSysRestart()
-{
-    var confirmed = confirm("重置将清除当前所有数据！确定要重置吗？");
-    if (confirmed == 0)
-        return;
-
-    PageInit_Data();
-    Show_AddNum();
 }
 
 // ----------------------------------------------
@@ -380,22 +314,6 @@ function SwitchWindow(bStats)
     div.style.display = strDisplayStats;
 }
 
-function OnShowStatistics()
-{
-    Show_StatsNumbers(-1);
-    Show_StatsGames(-1);
-    Show_StatsRounds();
-    Show_StatsMisc();
-
-    Show_RefreshStatsScopeButton();
-    Show_RefreshStatsLongsButton();
-    Show_RefreshStatsLongsBetButton();
-    Show_RefreshStatsButton();
-    SwitchStats();
-
-    SwitchWindow(true);
-}
-
 function OnHideStatistics()
 {
     SwitchWindow(false);
@@ -410,3 +328,97 @@ function OnStatsGamesClick(nCol)
 {
     Show_StatsGames(nCol);
 }
+
+
+$(document).ready(function ()
+{
+    // sys change theme:
+    $("#tdBttnTheme").click(function ()
+    {
+        if (g_status.ThemeID > 1)
+            return;
+
+        g_status.Escape = 0;
+
+        g_status.ThemeID++;
+        g_status.ThemeID = g_status.ThemeID % 2;
+
+        Show_RefreshTheme();
+    });
+
+    // sys restart:
+    $("#tdBttnRestart").click(function ()
+    {
+        jConfirm('重置将清除当前所有数据！确定要重置吗？', '请确认', function (rb)
+        {
+            if(rb)
+            {
+                PageInit_Data();
+                Show_AddNum();
+            }
+        });
+    });
+
+    // sys restore:
+    $("#tdBttnRestore").click(function ()
+    {
+        if (g_queue.nIDX >= 0)
+            return;
+
+        var strNum = ReadData(DATA_NUMBERS);
+        ResetDataFromNumString(strNum, false);
+    });
+
+    // sys export:
+    $("#tdBttnExport").click(function ()
+    {
+        var clipboard = new ClipboardJS('#tdBttnExport');
+        var strData = NumArrayToString(g_queue);
+        $("#tdBttnExport").attr("data-clipboard-action", "copy");
+        $("#tdBttnExport").attr("data-clipboard-text", strData);
+
+        clipboard.on('success', function (e)
+        {
+            jAlert("数据已复制到粘贴板", "导出数据");
+        });
+
+        clipboard.on('error', function (e)
+        {
+            jAlert("数据复制失败", "导出数据");
+        });
+    });
+
+    // sys import:
+    $("#tdBttnImport").click(function ()
+    {
+        //var tdTitle = document.getElementById("tdImportTitle");
+        var txt = document.getElementById("txtClipboard");
+        var trSpecImport = document.getElementById("trSpecImport");
+        var tdBttnDoImport = document.getElementById("tdBttnDoImport");
+
+        //tdTitle.innerHTML = "导&nbsp;&nbsp;&nbsp;入";
+        txt.value = "";
+        trSpecImport.style.display = "";
+        tdBttnDoImport.style.display = "";
+        var div = document.getElementById("divImport");
+        div.style.display = "";
+        txt.select();
+    });
+
+    // sys statistics:
+    $("#tdBttnStatistics").click(function ()
+    {
+        Show_StatsNumbers(-1);
+        Show_StatsGames(-1);
+        Show_StatsRounds();
+        Show_StatsMisc();
+
+        Show_RefreshStatsScopeButton();
+        Show_RefreshStatsLongsButton();
+        Show_RefreshStatsLongsBetButton();
+        Show_RefreshStatsButton();
+        SwitchStats();
+
+        SwitchWindow(true);
+    });
+});

@@ -398,7 +398,7 @@ function Show_Queue()
 
 function Show_RefreshSysButtons()
 {
-    var astrIDBttn = ["tdBttnTheme", "tdBttnRestart", "tdBttnRestore", "tdBttnExport", "tdBttnImport", "tdBttnStatsFinally"];
+    var astrIDBttn = ["tdBttnTheme", "tdBttnRestart", "tdBttnRestore", "tdBttnExport", "tdBttnImport", "tdBttnStatistics"];
     var abEnabled = [];
 
     for (var n = 0; n < astrIDBttn.length; ++n)
@@ -602,7 +602,7 @@ function ResetDataFromNumString(strNum, bImport)
         else
             strMsg = "保存的数据可能已经损坏";
 
-        alert(strMsg);
+        jAlert(strMsg, "导入数据");
         return false;
     }
     else if (rtn.rn == 0)
@@ -612,7 +612,7 @@ function ResetDataFromNumString(strNum, bImport)
         else
             strMsg = "没有找到保存的数据";
 
-        alert(strMsg);
+        jAlert(strMsg, "导入数据");
         return false;
     }
 
@@ -1203,3 +1203,4 @@ function Show_StatsMisc()
     Show_StatsRoundBet();
     Show_StatsLongs();
 }
+
