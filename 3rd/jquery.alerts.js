@@ -141,8 +141,8 @@
 					});
 				break;
 				case 'prompt':
-//					$("#popup_message").append('<br /><input type="text" size="30" id="popup_prompt" />').after('<div id="popup_panel"><input type="button" value="' + $.alerts.okButton + '" id="popup_ok" /> <input type="button" value="' + $.alerts.cancelButton + '" id="popup_cancel" /></div>');
-				    $("#popup_message").append('<br /><input type="text" size="30" id="popup_prompt" />').after('<div id="popup_panel"><table cellspacing="0" cellpadding="0" border="0" style="width: 100%"><tr><td>&nbsp;</td><td id="popup_ok" class="jalert_bttn">' + $.alerts.okButton + '</td><td style="width: 20px">&nbsp;</td><td id="popup_cancel" class="jalert_bttn">' + $.alerts.cancelButton + '</td><td>&nbsp;</td></tr></table></div>');
+				    $("#popup_message").after('<input type="text" size="30" id="popup_prompt" /><div id="popup_panel"><input type="button" value="' + $.alerts.okButton + '" id="popup_ok" /> <input type="button" value="' + $.alerts.cancelButton + '" id="popup_cancel" /></div>');
+//				    $("#popup_message").append('<br /><input type="text" size="30" id="popup_prompt" />').after('<div id="popup_panel"><table cellspacing="0" cellpadding="0" border="0" style="width: 100%"><tr><td>&nbsp;</td><td id="popup_ok" class="jalert_bttn">' + $.alerts.okButton + '</td><td style="width: 20px">&nbsp;</td><td id="popup_cancel" class="jalert_bttn">' + $.alerts.cancelButton + '</td><td>&nbsp;</td></tr></table></div>');
 					$("#popup_prompt").width( $("#popup_message").width() );
 					$("#popup_ok").click( function() {
 						var val = $("#popup_prompt").val();

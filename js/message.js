@@ -453,6 +453,10 @@ $(document).ready(function ()
     $("#tdBttnSave").click(function ()
     {
         ShowHide_MoreSysButtons(false);
+        jPrompt("请输入所要保存当前数据的名称：", "test value", "保存当前数据", function (strResult)
+        {
+            var str = strResult;
+        });
     });
 
     $("#tdBttnOpen").click(function ()
