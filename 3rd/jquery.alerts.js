@@ -31,7 +31,7 @@
 		
 		// These properties can be read/written by accessing $.alerts.propertyName from your scripts at any time
 		
-		verticalOffset: -75,                // vertical offset of the dialog from center screen, in pixels
+		verticalOffset: -150,                // vertical offset of the dialog from center screen, in pixels
 		horizontalOffset: 0,                // horizontal offset of the dialog from center screen, in pixels/
 		repositionOnResize: true,           // re-centers the dialog on window resize
 		overlayOpacity: .01,                // transparency level of overlay
@@ -94,7 +94,7 @@
 
 			$("#popup_container").css({
 				position: pos,
-				zIndex: 99999,
+				zIndex: 999999,
 				padding: 0,
 				margin: 0
 			});
@@ -141,9 +141,9 @@
 					});
 				break;
 				case 'prompt':
-				    $("#popup_message").after('<input type="text" size="30" id="popup_prompt" /><div id="popup_panel"><input type="button" value="' + $.alerts.okButton + '" id="popup_ok" /> <input type="button" value="' + $.alerts.cancelButton + '" id="popup_cancel" /></div>');
-//				    $("#popup_message").append('<br /><input type="text" size="30" id="popup_prompt" />').after('<div id="popup_panel"><table cellspacing="0" cellpadding="0" border="0" style="width: 100%"><tr><td>&nbsp;</td><td id="popup_ok" class="jalert_bttn">' + $.alerts.okButton + '</td><td style="width: 20px">&nbsp;</td><td id="popup_cancel" class="jalert_bttn">' + $.alerts.cancelButton + '</td><td>&nbsp;</td></tr></table></div>');
-					$("#popup_prompt").width( $("#popup_message").width() );
+//				    $("#popup_message").after('<input type="text" size="30" id="popup_prompt" /><div id="popup_panel"><input type="button" value="' + $.alerts.okButton + '" id="popup_ok" /> <input type="button" value="' + $.alerts.cancelButton + '" id="popup_cancel" /></div>');
+				    $("#popup_message").after('<input type="text" size="30" id="popup_prompt" /><div id="popup_panel"><table cellspacing="0" cellpadding="0" border="0" style="width: 100%"><tr><td>&nbsp;</td><td id="popup_ok" class="jalert_bttn">' + $.alerts.okButton + '</td><td style="width: 20px">&nbsp;</td><td id="popup_cancel" class="jalert_bttn">' + $.alerts.cancelButton + '</td><td>&nbsp;</td></tr></table></div>');
+					$("#popup_prompt").width( $("#popup_message").width() - 50 );
 					$("#popup_ok").click( function() {
 						var val = $("#popup_prompt").val();
 						$.alerts._hide();
