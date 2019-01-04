@@ -398,7 +398,9 @@ function Show_Queue()
 
 function Show_RefreshSysButtons()
 {
-    var astrIDBttn = ["tdBttnTheme", "tdBttnRestart", "tdBttnRestore", "tdBttnExport", "tdBttnImport", "tdBttnStatistics"];
+    var astrIDBttn = ["tdBttnTheme", "tdBttnRestart", "tdBttnRestore", "tdBttnExport", "tdBttnImport",
+        "tdBttnSave", "tdBttnOpen", "tdBttnStatistics", "tdBttnManage", "tdBttnMore"];
+
     var abEnabled = [];
 
     for (var n = 0; n < astrIDBttn.length; ++n)
@@ -410,7 +412,8 @@ function Show_RefreshSysButtons()
     {
         abEnabled[1] = false; // restart
         abEnabled[3] = false; // export
-        abEnabled[5] = false; // stats finally
+        abEnabled[5] = false; // save
+        abEnabled[7] = false; // statistics
     }
     else
     {

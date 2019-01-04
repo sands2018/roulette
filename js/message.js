@@ -36,6 +36,8 @@ function OnPageInit()
 
 function OnSwitchInput(nIdx)
 {
+    ShowHide_MoreSysButtons(false);
+
     var divK = document.getElementById("divKeyboard");
     var divB = document.getElementById("divGameBoard");
 
@@ -57,6 +59,8 @@ function OnSwitchInput(nIdx)
 
 function OnSysExpand()
 {
+    ShowHide_MoreSysButtons(false);
+
     g_status.QueueExpand++;
     g_status.QueueExpand = g_status.QueueExpand % 2;
 
@@ -67,6 +71,8 @@ function OnSysExpand()
 
 function OnShowKeyboardClick()
 {
+    ShowHide_MoreSysButtons(false);
+
     if (g_nShowInputStatus == 1)
     {
         Show_Keyboard(false);
@@ -80,16 +86,20 @@ function OnShowKeyboardClick()
 
 function OnHideKeyboard()
 {
+    ShowHide_MoreSysButtons(false);
     Show_Keyboard(false);
 }
 
 function OnShowKeyboard()
 {
+    ShowHide_MoreSysButtons(false);
     Show_Keyboard(true);
 }
 
 function OnEscape()
 {
+    ShowHide_MoreSysButtons(false);
+
     g_status.Escape++;
     g_status.Escape = g_status.Escape % 2;
 
@@ -98,6 +108,8 @@ function OnEscape()
 
 function OnSeperate3C3RClick()
 {
+    ShowHide_MoreSysButtons(false);
+
     g_status.Seperate3C3R = SwitchTrueFalse(g_status.Seperate3C3R);
     WriteData(DATA_SEPERATE3C3R, g_status.Seperate3C3R);
 
@@ -106,6 +118,8 @@ function OnSeperate3C3RClick()
 
 function OnAddNum(num)
 {
+    ShowHide_MoreSysButtons(false);
+
     Calc_AddNum(num);
     Calc_Sum();
     Show_AddNum();
@@ -164,6 +178,8 @@ function OnImportOK()
 
 function OnDelNum()
 {
+    ShowHide_MoreSysButtons(false);
+
     if (g_queue.nIDX < 0)
         return;
 
@@ -335,6 +351,8 @@ $(document).ready(function ()
     // sys change theme:
     $("#tdBttnTheme").click(function ()
     {
+        ShowHide_MoreSysButtons(false);
+
         if (g_status.ThemeID > 1)
             return;
 
@@ -349,6 +367,8 @@ $(document).ready(function ()
     // sys restart:
     $("#tdBttnRestart").click(function ()
     {
+        ShowHide_MoreSysButtons(false);
+
         jConfirm('重置将清除当前所有数据！确定要重置吗？', '请确认', function (rb)
         {
             if(rb)
@@ -362,6 +382,8 @@ $(document).ready(function ()
     // sys restore:
     $("#tdBttnRestore").click(function ()
     {
+        ShowHide_MoreSysButtons(false);
+
         if (g_queue.nIDX >= 0)
             return;
 
@@ -372,6 +394,8 @@ $(document).ready(function ()
     // sys export:
     $("#tdBttnExport").click(function ()
     {
+        ShowHide_MoreSysButtons(false);
+
         var clipboard = new ClipboardJS('#tdBttnExport');
         var strData = NumArrayToString(g_queue);
         $("#tdBttnExport").attr("data-clipboard-action", "copy");
@@ -391,6 +415,8 @@ $(document).ready(function ()
     // sys import:
     $("#tdBttnImport").click(function ()
     {
+        ShowHide_MoreSysButtons(false);
+
         //var tdTitle = document.getElementById("tdImportTitle");
         var txt = document.getElementById("txtClipboard");
         var trSpecImport = document.getElementById("trSpecImport");
@@ -408,6 +434,8 @@ $(document).ready(function ()
     // sys statistics:
     $("#tdBttnStatistics").click(function ()
     {
+        ShowHide_MoreSysButtons(false);
+
         Show_StatsNumbers(-1);
         Show_StatsGames(-1);
         Show_StatsRounds();
@@ -420,5 +448,25 @@ $(document).ready(function ()
         SwitchStats();
 
         SwitchWindow(true);
+    });
+
+    $("#tdBttnSave").click(function ()
+    {
+        ShowHide_MoreSysButtons(false);
+    });
+
+    $("#tdBttnOpen").click(function ()
+    {
+        ShowHide_MoreSysButtons(false);
+    });
+
+    $("#tdBttnManage").click(function ()
+    {
+        ShowHide_MoreSysButtons(false);
+    });
+
+    $("#tdBttnMore").click(function ()
+    {
+        ShowHide_MoreSysButtons(true);
     });
 });
