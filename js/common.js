@@ -40,8 +40,21 @@ function ReadData(key, strDefault)
     var strValue = storage[key];
     if (!strValue || (strValue == ""))
         strValue = strDefault;
+
     return strValue;
 }
+
+function DeleteData(key)
+{
+    if (!window.localStorage)
+        return;
+
+    var storage = window.localStorage;
+    storage.removeItem(key);
+}
+
+
+
 
 function DoSort(anValue, anIdx, bAsend)
 {
