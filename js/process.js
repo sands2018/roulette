@@ -624,21 +624,27 @@ function ResetDataFromNumString(strNum, bImport)
     {
         if (g_queue.nIDX >= 0)
             strMsg = "导入将清除当前数据！";
+        else
+            strMsg = "系统将使用导入的数据，";
 
         strMsg += "确定要导入吗？"
 
-        var confirmed = confirm(strMsg);
-        if (confirmed == 0)
-            return false;
+        jConfirm(strMsg, '请确认', function (rb)
+        {
+            if (!rb)
+                return false;
+        });
     }
     else
     {
         /*
         strMsg = "确定要恢复吗？";
 
-        var confirmed = confirm(strMsg);
-        if (confirmed == 0)
-            return false;
+        jConfirm(strMsg, '请确认', function (rb)
+        {
+            if (!rb)
+                return false;
+        });
         */
     }
 
