@@ -145,9 +145,15 @@
 				    $("#popup_message").after('<input type="text" size="30" id="popup_prompt" /><div id="popup_panel"><table cellspacing="0" cellpadding="0" border="0" style="width: 100%"><tr><td>&nbsp;</td><td id="popup_ok" class="jalert_bttn">' + $.alerts.okButton + '</td><td style="width: 20px">&nbsp;</td><td id="popup_cancel" class="jalert_bttn">' + $.alerts.cancelButton + '</td><td>&nbsp;</td></tr></table></div>');
 					$("#popup_prompt").width( $("#popup_message").width() - 50 );
 					$("#popup_ok").click( function() {
-						var val = $("#popup_prompt").val();
-						$.alerts._hide();
-						if( callback ) callback( val );
+					    var val = $.trim($("#popup_prompt").val());
+					    if (val.length == 0)
+					        return;
+					    var bHide = true;
+					    if (callback)
+					        if(!callback(val))
+					            bHide = false;
+                        if(bHide)
+                           $.alerts._hide();
 					});
 					$("#popup_cancel").click( function() {
 						$.alerts._hide();

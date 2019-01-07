@@ -460,9 +460,13 @@ $(document).ready(function ()
     {
         ShowHide_MoreSysButtons(false);
         var strDate = new Date().format("yyyyMMdd-HHmm");
-        jPrompt("请输入所要保存当前数据的名称：", strDate, "保存当前数据", function (strResult)
+        jPrompt("请输入所要保存当前数据的名称：", strDate, "保存当前数据", function (strFileName)
         {
-            var str = strResult;
+            if(strFileName != null)
+            {
+            }
+
+            return true;
         });
     });
 
@@ -474,6 +478,7 @@ $(document).ready(function ()
 //        var ff = JSON.parse(str);
 
 //        var strDate = new Date().format("yyyy-MM-dd HH:mm:ss");
+        var str = $.trim("   test string  ");
         var n = 0;
     });
 
