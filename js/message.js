@@ -1,10 +1,12 @@
 ﻿/* z-index:
-    0    - main div;
-    99   - 3C3R;
-    1000 - bottom div;
-    1001 - show gameboard/keyboard;
-    3999  - statistics;
-    9999 - div import;
+    0  - main middle;
+    5  - main top;
+    9  - main bottom;
+    10 - show gameboard/keyboard;
+    30 - statistics middle;
+    35 - statistics top;
+    39 - statistics bottom;
+    90 - import;
 */
 
 
@@ -157,17 +159,21 @@ function OnStatsSumListClick(nID)
     }
 }
 
+function AfterResetData(rb)
+{
+    if (rb)
+    {
+        SaveNumbers();
+        OnImportOK();
+    }
+}
 
 function OnImport()
 {
     var txt = document.getElementById("txtClipboard");
     var strNum = txt.value;
 
-    if (ResetDataFromNumString(strNum, true))
-    {
-        SaveNumbers();
-        OnImportOK();
-    }
+    ResetDataFromNumString(strNum, true, AfterResetData);
 }
 
 function OnImportOK()
@@ -388,7 +394,7 @@ $(document).ready(function ()
             return;
 
         var strNum = ReadData(DATA_NUMBERS);
-        ResetDataFromNumString(strNum, false);
+        ResetDataFromNumString(strNum, false, null);
     });
 
     // sys export:
@@ -453,7 +459,8 @@ $(document).ready(function ()
     $("#tdBttnSave").click(function ()
     {
         ShowHide_MoreSysButtons(false);
-        jPrompt("请输入所要保存当前数据的名称：", "test value", "保存当前数据", function (strResult)
+        var strDate = new Date().format("yyyyMMdd-HHmm");
+        jPrompt("请输入所要保存当前数据的名称：", strDate, "保存当前数据", function (strResult)
         {
             var str = strResult;
         });
@@ -462,6 +469,12 @@ $(document).ready(function ()
     $("#tdBttnOpen").click(function ()
     {
         ShowHide_MoreSysButtons(false);
+
+//        var str = JSON.stringify(files);
+//        var ff = JSON.parse(str);
+
+//        var strDate = new Date().format("yyyy-MM-dd HH:mm:ss");
+        var n = 0;
     });
 
     $("#tdBttnManage").click(function ()

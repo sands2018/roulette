@@ -591,7 +591,7 @@ function ResetData(anNum)
 }
 
 // bImport - true: import; false: retore
-function ResetDataFromNumString(strNum, bImport)
+function ResetDataFromNumString(strNum, bImport, AfterResetData)
 {
     var rtn = new CReturnArray();
     NumStringToArray(strNum, rtn);
@@ -606,7 +606,7 @@ function ResetDataFromNumString(strNum, bImport)
             strMsg = "保存的数据可能已经损坏";
 
         jAlert(strMsg, "导入数据");
-        return false;
+        return;
     }
     else if (rtn.rn == 0)
     {
@@ -616,7 +616,7 @@ function ResetDataFromNumString(strNum, bImport)
             strMsg = "没有找到保存的数据";
 
         jAlert(strMsg, "导入数据");
-        return false;
+        return;
     }
 
     strMsg = "";
@@ -628,29 +628,22 @@ function ResetDataFromNumString(strNum, bImport)
             strMsg = "系统将使用导入的数据，";
 
         strMsg += "确定要导入吗？"
-
-        jConfirm(strMsg, '请确认', function (rb)
-        {
-            if (!rb)
-                return false;
-        });
     }
     else
     {
         /*
         strMsg = "确定要恢复吗？";
-
-        jConfirm(strMsg, '请确认', function (rb)
-        {
-            if (!rb)
-                return false;
-        });
         */
     }
 
+    jConfirm(strMsg, '请确认', function (rb)
+    {
+        if (rb)
+            ResetData(rtn.anVal);
 
-    ResetData(rtn.anVal);
-    return true;
+        if (AfterResetData != null)
+            AfterResetData(rb);
+    });
 }
 
 

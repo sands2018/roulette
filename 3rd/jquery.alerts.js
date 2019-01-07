@@ -94,7 +94,7 @@
 
 			$("#popup_container").css({
 				position: pos,
-				zIndex: 999999,
+				zIndex: 99999,
 				padding: 0,
 				margin: 0
 			});

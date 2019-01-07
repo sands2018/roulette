@@ -2,7 +2,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <link id="linkTheme" rel="stylesheet" href="css/normal.css" rel="external nofollow" />
-<link href="3rd/jquery.alerts.css?v=2" rel="stylesheet" media="screen" type="text/css" />
+<link rel="stylesheet" type="text/css" href="3rd/jquery.alerts.css?v=2" />
+<link rel="stylesheet" type="text/css" href="3rd/easyui/themes/metro/easyui.css">
+<link rel="stylesheet" type="text/css" href="3rd/easyui/themes/icon.css">
 
 <style>
 
@@ -102,7 +104,7 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 
 #divColumns { margin-bottom: 8px; font-size: 40px; padding: 0 10px; }  
 #divFinishedLong { margin-bottom: 18px }
-#divImport { position:fixed; top: 0px; z-index:9999; width: 100%; height: 100%; }
+#divImport { position:fixed; top: 0px; z-index:90; width: 100%; height: 100%; }
 .bttnImport { width: 280px; height: 70px; color: #aa8833 }
 #txtClipboard { font-size: 36px; border: 0 } 
 #tblImport .tdSpec { font-size: 36px; text-align: left; padding: 8px 0 3px 0; }
@@ -153,7 +155,7 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 
 <script type="text/javascript" src="3rd/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="3rd/clipboard.min.js"></script>
-<script type="text/javascript" src="3rd/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="3rd/easyui/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="3rd/jquery.alerts.js"></script>
 <script type="text/javascript" src="js/common.js?v=2"></script>
 <script type="text/javascript" src="js/process.js?v=2"></script>
@@ -165,7 +167,7 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 </head>
 <body onload="OnPageInit()" style="padding: 0; margin :0; ">
     <div id="divMain" style="width: 100%">
-        <div id="divMainTop" style="position:fixed; z-index: 99; right: 0px; top:0px; width: 100%; background-color: white" onclick="OnSeperate3C3RClick()">
+        <div id="divMainTop" style="position:fixed; z-index: 5; right: 0px; top:0px; width: 100%; background-color: white" onclick="OnSeperate3C3RClick()">
             <div style="padding: 12px 8px">
                 <table cellpadding="0" cellspacing="0" border="0" id="tbl3C3R">
                     <tr>
@@ -262,7 +264,7 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
             </div>
         </div>
 
-        <div id="divMainBottom" style="position:fixed; bottom: 0px; z-index: 1000; width: 100%;">
+        <div id="divMainBottom" style="position:fixed; bottom: 0px; z-index: 9; width: 100%;">
             <div class="kbspace1">&nbsp;</div>
             <div class="kbspace2">&nbsp;</div>
             <div style="background-color: white; width: 100%">
@@ -348,7 +350,7 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
                 </table>
             </div>
         </div>
-        <div id="divShowKeyboard" style="position:fixed; right: 0px; bottom: 0px; z-index: 1001; 
+        <div id="divShowKeyboard" style="position:fixed; right: 0px; bottom: 0px; z-index: 10; 
             width: 100px; height: 100px; display:none" onclick="OnShowKeyboard()"></div>
     </div>
 
@@ -374,7 +376,7 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 
 
     <div id="divStats" style="display: none; ">
-        <div id="divStatsTop" style="z-index: 3999; position:fixed; right: 0px; top:0px; width: 100%;
+        <div id="divStatsTop" style="z-index: 35; position:fixed; right: 0px; top:0px; width: 100%;
             background-color: white;">
             <table cellpadding="0" cellspacing="0" style="width: 100%;" id="tblStatisticsTitleBar">
                 <tr>
@@ -383,7 +385,7 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
                 </tr>
             </table>
         </div>
-        <div id="divStatsMiddle" style="position:absolute; top: 0; z-index: 3990; width: 100%; height: 100%;
+        <div id="divStatsMiddle" style="position:absolute; top: 0; z-index: 30; width: 100%; height: 100%;
             background-color: white;">
             <div style="height: 100px">&nbsp;</div>
             <div id="divStatsNumbers">
@@ -414,7 +416,7 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
                 </div>
             </div>
         </div>
-        <div id="divStatsBottom" style="position:fixed; bottom: 0px; z-index: 5999; width: 100%;
+        <div id="divStatsBottom" style="position:fixed; bottom: 0px; z-index: 39; width: 100%;
             background-color: white;">
             <div style="height: 25px">&nbsp;</div>
             <div id="divStatsScopeBttns"></div>

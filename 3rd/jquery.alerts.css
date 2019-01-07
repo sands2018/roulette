@@ -52,6 +52,7 @@
 }
 
 #popup_prompt {
+	border: solid 1px #aa8833;
 	font-size: 40px;
 	margin: .5em 0em;
 }
@@ -71,5 +72,6 @@
 	border: solid 1px #aa8833;
 	color: #aa8833;
 	background-color: white;
-    padding: 8px 50px 13px 50px;
+    white-space: nowrap;
+    padding: 8px 40px 13px 40px;
 }

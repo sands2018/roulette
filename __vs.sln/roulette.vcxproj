@@ -114,6 +114,7 @@
     <None Include="..\3rd\jquery-3.3.1.min.js" />
     <None Include="..\3rd\jquery.alerts.css" />
     <None Include="..\3rd\jquery.alerts.js" />
+    <None Include="..\3rd\jquery.easyui.min.js" />
     <None Include="..\css\color.css" />
     <None Include="..\css\debug.css" />
     <None Include="..\css\grey.css" />
