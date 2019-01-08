@@ -459,15 +459,47 @@ $(document).ready(function ()
     $("#tdBttnSave").click(function ()
     {
         ShowHide_MoreSysButtons(false);
-        var strDate = new Date().format("yyyyMMdd-HHmm");
-        jPrompt("请输入所要保存当前数据的名称：", strDate, "保存当前数据", function (strFileName)
-        {
-            if(strFileName != null)
-            {
-            }
+        var rb = false;
 
-            return true;
-        });
+        while (!rb)
+        {
+            var strDate = new Date().format("yyyyMMdd-HHmm");
+
+            jPrompt("请输入所要保存当前数据的名称：", strDate, "保存当前数据", function (strFileName)
+            {
+                if(strFileName != null)
+                {
+                    rb = true;
+
+                    // var rn = SaveFile(strFileName);
+                    var rn = -1;
+                    var strMsg = "";
+                    var strTitle = "";
+                    if (rn > 0)
+                    {
+                        strTitle = "保存成功";
+                        strMsg = "保存\"" + strFileName + "\"成功";
+                    }
+                    else
+                    {
+                        strTitle = "保存失败";
+
+                        if (rn == -1)
+                        {
+                            rb = false;
+                            strMsg = "\"" + strFileName + "\"已经存在！";
+                        }
+                        else
+                        {
+                            strMsg = "保存的数据超过" + MAX_FILE_COUNT.toString() + "项，请先删除一些数据再保存！";
+                        }
+                    }
+
+                    jAlert(strMsg, strTitle);
+                }
+            });
+
+        }
     });
 
     $("#tdBttnOpen").click(function ()
@@ -476,8 +508,8 @@ $(document).ready(function ()
 
 //        var str = JSON.stringify(files);
 //        var ff = JSON.parse(str);
-
-//        var strDate = new Date().format("yyyy-MM-dd HH:mm:ss");
+        var tm = new Date();
+        var strDate = tm.format("yyyy-MM-dd HH:mm:ss");
         var str = $.trim("   test string  ");
         var n = 0;
     });

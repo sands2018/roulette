@@ -1206,3 +1206,85 @@ function Show_StatsMisc()
     Show_StatsLongs();
 }
 
+// return value:
+// 1: success
+// -1: name already exists
+// -2: too many files
+function SaveFile(strFileName)
+{
+    var strIndex = ReadData(DATA_FILE_INDEX, "");
+    var fl = new CRouletteFiles();
+    if (strIndex.length != 0)
+    {
+        fl = JSON.parse(strIndex);
+    }
+
+    var nCount = fl.files.length;
+    if (nCount > MAX_FILE_COUNT)
+        return -2;
+
+    var bFound = false;
+    for (var n = 0; n < nCount; ++n)
+    {
+        if(fl.files[n].n.toLowerCase() == strFileName.toLowerCase())
+        {
+            bFound = true;
+            break;
+        }
+    }
+    if (bFound)
+        return -1;
+
+    var strNum = NumArrayToString(g_queue);
+    var tm = new Date();
+    var strDataKey = DATA_FILE_PREFIX + tm.format("yyyyMMddHHmmss");
+    var file = new CRouletteFileInfo();
+    file.n = strFileName;
+    file.p = strDataKey;
+    file.t = tm.format("yyyy-MM-dd HH:mm");
+    fl.files.push(file);
+    strIndex = JSON.stringify(fl);
+
+    WriteData(strDataKey, strNum);
+    WriteData(DATA_FILE_INDEX, strIndex);
+
+    return 1;
+}
+
+function DoSaveFile(strFileName)
+{
+    var rb = false;
+
+    if (strFileName != null)
+    {
+        rb = true;
+
+        // var rn = SaveFile(strFileName);
+        var rn = -1;
+        var strMsg = "";
+        var strTitle = "";
+        if (rn > 0)
+        {
+            strTitle = "保存成功";
+            strMsg = "保存\"" + strFileName + "\"成功";
+        }
+        else
+        {
+            strTitle = "保存失败";
+
+            if (rn == -1)
+            {
+                rb = false;
+                strMsg = "\"" + strFileName + "\"已经存在！";
+            }
+            else
+            {
+                strMsg = "保存的数据超过" + MAX_FILE_COUNT.toString() + "项，请先删除一些数据再保存！";
+            }
+        }
+
+        jAlert(strMsg, strTitle);
+    }
+
+    return rb;
+}

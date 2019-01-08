@@ -1347,3 +1347,7 @@ var g_bttnStatsLongsBet = new CBttnOptions("StatsLongsBet", [4, 5, 6], null, 2, 
 var g_bttnStatsLongs = new CBttnOptions("StatsLongs", [10, 11, 12, 13], ["10+", "11+", "12+", "13+"], 2, 120);
 
 var g_bttnStats = new CBttnOptions("Stats", [0, 1, 2, 3], ["号码", "打法", "轮次", "其它"], 0, 0);
+
+var MAX_FILE_COUNT = 200;
+var DATA_FILE_INDEX = "FILE_INDEX_DATA";
+var DATA_FILE_PREFIX = "F_";
