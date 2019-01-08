@@ -461,45 +461,51 @@ $(document).ready(function ()
         ShowHide_MoreSysButtons(false);
         var rb = false;
 
-        while (!rb)
+        var strFileNameInit = new Date().format("yyyyMMdd-HHmm");
+
+        $.messager.prompt('保存当前数据', '请输入所要保存当前数据的名称', function (r)
         {
-            var strDate = new Date().format("yyyyMMdd-HHmm");
-
-            jPrompt("请输入所要保存当前数据的名称：", strDate, "保存当前数据", function (strFileName)
+            if (r)
             {
-                if(strFileName != null)
-                {
-                    rb = true;
+                alert('you type: ' + r);
+            }
+        });
+        /*
+        jPrompt("请输入所要保存当前数据的名称：", strFileNameInit, "保存当前数据", function (strFileName)
+        {
+            if(strFileName != null)
+            {
+                rb = true;
 
-                    // var rn = SaveFile(strFileName);
-                    var rn = -1;
-                    var strMsg = "";
-                    var strTitle = "";
-                    if (rn > 0)
+                // var rn = SaveFile(strFileName);
+                var rn = -1;
+                var strMsg = "";
+                var strTitle = "";
+                if (rn > 0)
+                {
+                    strTitle = "保存成功";
+                    strMsg = "保存\"" + strFileName + "\"成功";
+                }
+                else
+                {
+                    strTitle = "保存失败";
+
+                    if (rn == -1)
                     {
-                        strTitle = "保存成功";
-                        strMsg = "保存\"" + strFileName + "\"成功";
+                        rb = false;
+                        strFileNameInit = strFileName;
+                        strMsg = "\"" + strFileName + "\"已经存在！";
                     }
                     else
                     {
-                        strTitle = "保存失败";
-
-                        if (rn == -1)
-                        {
-                            rb = false;
-                            strMsg = "\"" + strFileName + "\"已经存在！";
-                        }
-                        else
-                        {
-                            strMsg = "保存的数据超过" + MAX_FILE_COUNT.toString() + "项，请先删除一些数据再保存！";
-                        }
+                        strMsg = "保存的数据超过" + MAX_FILE_COUNT.toString() + "项，请先删除一些数据再保存！";
                     }
-
-                    jAlert(strMsg, strTitle);
                 }
-            });
 
-        }
+                jAlert(strMsg, strTitle);
+            }
+        });
+        */
     });
 
     $("#tdBttnOpen").click(function ()
