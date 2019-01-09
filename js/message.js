@@ -459,24 +459,11 @@ $(document).ready(function ()
     $("#tdBttnSave").click(function ()
     {
         ShowHide_MoreSysButtons(false);
-        var rb = false;
-
-        var strFileNameInit = new Date().format("yyyyMMdd-HHmm");
-
-        $.messager.prompt('保存当前数据', '请输入所要保存当前数据的名称', function (r)
+        $.messager.prompt('保存当前数据', '请输入所要保存当前数据的名称', function (strFileName)
         {
-            if (r)
+            var rb = true;
+            if (strFileName != null)
             {
-                alert('you type: ' + r);
-            }
-        });
-        /*
-        jPrompt("请输入所要保存当前数据的名称：", strFileNameInit, "保存当前数据", function (strFileName)
-        {
-            if(strFileName != null)
-            {
-                rb = true;
-
                 // var rn = SaveFile(strFileName);
                 var rn = -1;
                 var strMsg = "";
@@ -504,6 +491,15 @@ $(document).ready(function ()
 
                 jAlert(strMsg, strTitle);
             }
+
+            return rb;
+        });
+        var strFileNameInit = new Date().format("yyyyMMdd-HHmm");
+        $(".messager-input").val(strFileNameInit);
+
+        /*
+        jPrompt("请输入所要保存当前数据的名称：", strFileNameInit, "保存当前数据", function (strFileName)
+        {
         });
         */
     });
