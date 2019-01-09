@@ -437,16 +437,18 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
                 </tr>
             </table>
         </div>
-        <div style="width: 100%; height: 50px">&nbsp;</div>
-        <table id="dgFiles" class="easyui-datagrid" title="Basic DataGrid" style="width:100%;height:750px"
-               data-options="singleSelect:true,collapsible:true">
-            <thead>
-                <tr>
-                    <th data-options="field:'n',width:60%">名称</th>
-                    <th data-options="field:'t',width:40%,align:'center'">时间</th>
-                </tr>
-            </thead>
-        </table>
+        <div style="width: 100%; height: 90px">&nbsp;</div>
+
+        <div style="height: 70%">
+            <table id="dgFiles" data-options="header:'#hh',singleSelect:true,border:false,fit:true,fitColumns:true,scrollbarSize:100">
+                <thead>
+                    <tr>
+                        <th data-options="field:'n',width:400">名称</th>
+                        <th data-options="field:'t',width:300">时间</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
     </div>
 </body>
 </html>
