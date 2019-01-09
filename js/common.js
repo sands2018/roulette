@@ -1327,7 +1327,8 @@ function CRouletteFileInfo()
 
 function CRouletteFiles()
 {
-    this.files = [];
+    this.total = 0;
+    this.rows = [];
 }
 
 // global variables: ----------------------------------------------------------

@@ -1213,20 +1213,20 @@ function Show_StatsMisc()
 function SaveFile(strFileName)
 {
     var strIndex = ReadData(DATA_FILE_INDEX, "");
-    var fl = new CRouletteFiles();
+    var files = new CRouletteFiles();
     if (strIndex.length != 0)
     {
-        fl = JSON.parse(strIndex);
+        files = JSON.parse(strIndex);
     }
 
-    var nCount = fl.files.length;
+    var nCount = files.rows.length;
     if (nCount > MAX_FILE_COUNT)
         return -2;
 
     var bFound = false;
     for (var n = 0; n < nCount; ++n)
     {
-        if(fl.files[n].n.toLowerCase() == strFileName.toLowerCase())
+        if (files.rows[n].n.toLowerCase() == strFileName.toLowerCase())
         {
             bFound = true;
             break;
@@ -1242,8 +1242,9 @@ function SaveFile(strFileName)
     file.n = strFileName;
     file.p = strDataKey;
     file.t = tm.format("yyyy-MM-dd HH:mm");
-    fl.files.push(file);
-    strIndex = JSON.stringify(fl);
+    files.rows.push(file);
+    files.total = files.rows.length();
+    strIndex = JSON.stringify(files);
 
     WriteData(strDataKey, strNum);
     WriteData(DATA_FILE_INDEX, strIndex);
@@ -1287,4 +1288,10 @@ function DoSaveFile(strFileName)
     }
 
     return rb;
+}
+
+function SetFilesTitle(strTitle)
+{
+    var td = document.getElementById("tdFilesTitle");
+    td.innerHTML = strTitle;
 }

@@ -6,6 +6,7 @@
     30 - statistics middle;
     35 - statistics top;
     39 - statistics bottom;
+    50 - file
     90 - import;
 */
 
@@ -324,21 +325,18 @@ function SwitchStats()
     td.innerHTML = astrTitle[nIdx];
 }
 
-function SwitchWindow(bStats)
+function SwitchWindow(strHideDivID, strShowDivID)
 {
-    var strDisplayMain = bStats? "none" : "";
-    var strDisplayStats = bStats? "" : "none";
+    var div = document.getElementById(strHideDivID);
+    div.style.display = "none";
 
-    var div = document.getElementById("divMain");
-    div.style.display = strDisplayMain;
-
-    div = document.getElementById("divStats");
-    div.style.display = strDisplayStats;
+    div = document.getElementById(strShowDivID);
+    div.style.display = "";
 }
 
-function OnHideStatistics()
+function OnHideStats()
 {
-    SwitchWindow(false);
+    SwitchWindow("divStats", "divMain");
 }
 
 function OnStatsNumClick(nCol)
@@ -351,6 +349,10 @@ function OnStatsGamesClick(nCol)
     Show_StatsGames(nCol);
 }
 
+function OnHideFiles()
+{
+    SwitchWindow("divFiles", "divMain");
+}
 
 $(document).ready(function ()
 {
@@ -453,12 +455,13 @@ $(document).ready(function ()
         Show_RefreshStatsButton();
         SwitchStats();
 
-        SwitchWindow(true);
+        SwitchWindow("divMain", "divStats");
     });
 
     $("#tdBttnSave").click(function ()
     {
         ShowHide_MoreSysButtons(false);
+        $.messager.defaults = { ok: "确定", cancel: "取消", width: 700, top: 230 };
         $.messager.prompt('保存当前数据', '请输入所要保存当前数据的名称', function (strFileName)
         {
             var rb = true;
@@ -495,7 +498,11 @@ $(document).ready(function ()
             return rb;
         });
         var strFileNameInit = new Date().format("yyyyMMdd-HHmm");
-        $(".messager-input").val(strFileNameInit);
+        var input = $(".messager-input");
+        input.val(strFileNameInit);
+        input.select();
+        input.focus();
+
 
         /*
         jPrompt("请输入所要保存当前数据的名称：", strFileNameInit, "保存当前数据", function (strFileName)
@@ -519,6 +526,11 @@ $(document).ready(function ()
     $("#tdBttnManage").click(function ()
     {
         ShowHide_MoreSysButtons(false);
+        SetFilesTitle("管理保存的数据");
+        SwitchWindow("divMain", "divFiles");
+
+       //var obj = { "total": 2, "rows": [{ id: "1", name: "一" }, { id: "2", name: "二" }] };
+       //$('#dg').datagrid('loadData', obj);
     });
 
     $("#tdBttnMore").click(function ()

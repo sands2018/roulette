@@ -84,9 +84,9 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 #tblStatsSum .tdStatsSumListItem { text-align: left; }
 #divStatsSumLists { width: 100% }
 
-#tblStatisticsTitleBar td { border: 1px solid #cf8f28; border-right: 0; font-size: 40px; background-color: #f3efe3 }
-#tblStatisticsTitleBar td:first-child { border-left: 0 }
-#tdStatsTitle { color: #aa8833; padding: 3px 0 5px 0; }
+#tblStatsTitleBar td, #tblFilesTitleBar td { border: 1px solid #cf8f28; border-right: 0; font-size: 40px; background-color: #f3efe3 }
+#tblStatsTitleBar td:first-child, #tblFilesTitleBar td:first-child { border-left: 0 }
+#tdStatsTitle, #tdFilesTitle { color: #aa8833; padding: 3px 0 5px 0; }
 
 #tblStatsNumbers td { border-bottom: 1px solid #bbbbbb; }
 #tblStatsNumbers tr:first-child td { padding: 8px 0; border-top: 1px solid #cf8f28; border-bottom: 1px solid #cf8f28; }
@@ -379,10 +379,10 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
     <div id="divStats" style="display: none; ">
         <div id="divStatsTop" style="z-index: 35; position:fixed; right: 0px; top:0px; width: 100%;
             background-color: white;">
-            <table cellpadding="0" cellspacing="0" style="width: 100%;" id="tblStatisticsTitleBar">
+            <table cellpadding="0" cellspacing="0" style="width: 100%;" id="tblStatsTitleBar">
                 <tr>
                     <td style="width: 91%; text-align: center" id="tdStatsTitle">统计数据</td>
-                    <td style="width: 9%; height: 80px; font-family: Arial" onclick="OnHideStatistics()">x</td>
+                    <td style="width: 9%; height: 80px; font-family: Arial" onclick="OnHideStats()">x</td>
                 </tr>
             </table>
         </div>
@@ -424,6 +424,29 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
             <div id="divStatsBttns"></div>
             <div style="height: 10px">&nbsp;</div>
         </div>
+    </div>
+
+    <div id="divFiles" style="position:absolute; top: 0; z-index: 50; width: 100%; height: 100%;
+            background-color: white; display: none">
+        <div id="divFilesTop" style="z-index: 35; position:fixed; right: 0px; top:0px; width: 100%;
+            background-color: white;">
+            <table cellpadding="0" cellspacing="0" style="width: 100%;" id="tblFilesTitleBar">
+                <tr>
+                    <td style="width: 91%; text-align: center" id="tdFilesTitle">统计数据</td>
+                    <td style="width: 9%; height: 80px; font-family: Arial" onclick="OnHideFiles()">x</td>
+                </tr>
+            </table>
+        </div>
+        <div style="width: 100%; height: 50px">&nbsp;</div>
+        <table id="dgFiles" class="easyui-datagrid" title="Basic DataGrid" style="width:100%;height:750px"
+               data-options="singleSelect:true,collapsible:true">
+            <thead>
+                <tr>
+                    <th data-options="field:'n',width:60%">名称</th>
+                    <th data-options="field:'t',width:40%,align:'center'">时间</th>
+                </tr>
+            </thead>
+        </table>
     </div>
 </body>
 </html>
