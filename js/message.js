@@ -357,6 +357,7 @@ function OnHideFiles()
     SwitchWindow("divFiles", "divMain");
 }
 
+
 $(document).ready(function ()
 {
     // sys change theme:
@@ -518,28 +519,87 @@ $(document).ready(function ()
     {
         ShowHide_MoreSysButtons(false);
 
+        OpenFilesDialog(false);
+
+        var files = {
+            'total': 20, 'rows': [
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file2', 't': '2019-01-07' }
+            ]
+        };
+
+        $(function ()
+        {
+            $('#dgFiles').datagrid({
+                data: files,
+                singleSelect: true,
+                onClickRow: function (nIdxRow)
+                {
+                    var rows = $('#dgFiles').datagrid('getSelections');
+                    UpdateFilesButtonStatus(false, rows.length);
+                }
+            });
+        });
+
 //        var str = JSON.stringify(files);
 //        var ff = JSON.parse(str);
-        var tm = new Date();
-        var strDate = tm.format("yyyy-MM-dd HH:mm:ss");
-        var str = $.trim("   test string  ");
-        var n = 0;
+//        var tm = new Date();
+//        var strDate = tm.format("yyyy-MM-dd HH:mm:ss");
+//        var str = $.trim("   test string  ");
     });
 
     $("#tdBttnManage").click(function ()
     {
         ShowHide_MoreSysButtons(false);
-        SetFilesTitle("管理保存的数据");
-        SwitchWindow("divMain", "divFiles");
 
-        var div = document.getElementById("divFilesTop");
-        var n1 = div.offsetHeight;
-        div = document.getElementById("divFilesBottom");
-        var n2 = div.offsetTop;
-
-        div = document.getElementById("divFilesMain");
-        div.style.top = n1 + 1;
-        div.style.height = n2 - n1 - 1;
+        OpenFilesDialog(true);
 
         var files = {
             'total': 20, 'rows': [
@@ -608,13 +668,15 @@ $(document).ready(function ()
         $(function ()
         {
             $('#dgFiles').datagrid({
-                data: files
+                data: files,
+                singleSelect: false,
+                onClickRow: function (nIdxRow)
+                {
+                    var rows = $('#dgFiles').datagrid('getSelections');
+                    UpdateFilesButtonStatus(true, rows.length);
+                }
             });
-
-            //$('#dgFiles').datagrid('reload')
         });
-
-        
     });
 
     $("#tdBttnMore").click(function ()

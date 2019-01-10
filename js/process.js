@@ -1295,3 +1295,61 @@ function SetFilesTitle(strTitle)
     var td = document.getElementById("tdFilesTitle");
     td.innerHTML = strTitle;
 }
+
+function UpdateFilesButtonStatus(bManage, nSelCount)
+{
+    var astrIDBttn = ["tdBttnFileRename", "tdBttnFileDelete", "tdBttnFileOpen", "tdBttnFileExit"];
+    var abEnabled = [true, true, true, true];
+    var astrDisplay = ["", "", "", ""];
+
+    if (nSelCount == 0)
+    {
+        abEnabled[0] = false;
+        abEnabled[1] = false;
+        abEnabled[2] = false;
+    }
+    else if (nSelCount > 1)
+    {
+        abEnabled[0] = false;
+        abEnabled[1] = true;
+        abEnabled[2] = false;
+    }
+
+    if (bManage)
+    {
+        astrDisplay[2] = "none";
+    }
+    else
+    {
+        astrDisplay[0] = "none";
+        astrDisplay[1] = "none";
+    }
+
+    for (var n = 0; n < astrIDBttn.length; ++n)
+    {
+        var bttn = document.getElementById(astrIDBttn[n]);
+        bttn.className = abEnabled[n] ? "tdSBEnabled" : "tdSBDisabled";
+        bttn.style.display = astrDisplay[n];
+    }
+}
+
+function OpenFilesDialog(bManage)
+{
+    if(bManage)
+        SetFilesTitle("管理保存的数据");
+    else
+        SetFilesTitle("打开保存的数据");
+
+    SwitchWindow("divMain", "divFiles");
+
+    var div = document.getElementById("divFilesTop");
+    var n1 = div.offsetHeight;
+    div = document.getElementById("divFilesBottom");
+    var n2 = div.offsetTop;
+
+    div = document.getElementById("divFilesMain");
+    div.style.top = n1 + 1;
+    div.style.height = n2 - n1 - 1;
+
+    UpdateFilesButtonStatus(bManage, 0);
+}

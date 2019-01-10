@@ -151,6 +151,9 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 #tblStatsLongsBttns .tdSLBttnsT { text-align: left; color: #aa8833; padding-left: 10px }
 #divMaxDistanceTops { padding: 0 18px; }
 
+#divFilesBottom { border-top: 1px solid #aa8833 }
+#tblFilesButtons td { width: 200px; padding: 3px 10px 5px 10px } 
+
 </style>
 
 <script type="text/javascript" src="3rd/jquery-3.3.1.min.js"></script>
@@ -454,7 +457,15 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
         </div>
 
         <div id="divFilesBottom" style="z-index: 59; position: fixed; right: 0px; bottom:0px; width: 100%; height: 120px;
-            background-color: white;">
+            background-color: white; margin: 0 auto; padding: 20px">
+            <table cellpadding="0" cellspacing="10" border="0" id="tblFilesButtons" style="width: 700px; margin: 0 auto; ">
+                <tr>
+                    <td id="tdBttnFileRename">重命名</td>
+                    <td id="tdBttnFileDelete">删除</td>
+                    <td id="tdBttnFileOpen">打开</td>
+                    <td id="tdBttnFileExit" onclick="OnHideFiles()">退出</td>
+                </tr>
+            </table>
         </div>
     </div>
 </body>
