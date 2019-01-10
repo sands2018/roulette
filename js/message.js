@@ -595,6 +595,7 @@ $(document).ready(function ()
             ]
         };
 
+        /*
         var strHtml = "<table cellspacing='0' cellpadding='0' id='tblFiles'>";
         for(var n = 0; n < files.rows.length; ++ n)
         {
@@ -603,6 +604,16 @@ $(document).ready(function ()
         }
         strHtml += "</table>";
         div.innerHTML = strHtml;
+        */
+        $(function ()
+        {
+            $('#dgFiles').datagrid({
+                data: files
+            });
+
+            //$('#dgFiles').datagrid('reload')
+        });
+
         
     });
 
