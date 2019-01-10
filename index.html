@@ -84,7 +84,7 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 #tblStatsSum .tdStatsSumListItem { text-align: left; }
 #divStatsSumLists { width: 100% }
 
-#tblStatsTitleBar td, #tblFilesTitleBar td { border: 1px solid #cf8f28; border-right: 0; font-size: 40px; background-color: #f3efe3 }
+#tblStatsTitleBar td, #tblFilesTitleBar td { border: 1px solid #aa8833; border-right: 0; font-size: 40px; background-color: #f3efe3 }
 #tblStatsTitleBar td:first-child, #tblFilesTitleBar td:first-child { border-left: 0 }
 #tdStatsTitle, #tdFilesTitle { color: #aa8833; padding: 3px 0 5px 0; }
 
@@ -151,8 +151,13 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 #tblStatsLongsBttns .tdSLBttnsT { text-align: left; color: #aa8833; padding-left: 10px }
 #divMaxDistanceTops { padding: 0 18px; }
 
-#divFilesBottom { border-top: 1px solid #aa8833 }
+#divFilesBottomMain { border-top: 1px solid #aa8833; background-color: #f8f7f5; }
 #tblFilesButtons td { width: 200px; padding: 3px 10px 5px 10px } 
+
+#tblFilesButtons .tdSBEnabled { color: #aa8833; background-color: white; border: 1px solid #aa8833 }
+#tblFilesButtons .tdSBDisabled { color: #bbbbbb; background-color: white; border: 1px solid #bbbbbb }
+
+.datagrid-btable td { text-align: left; }
 
 </style>
 
@@ -431,8 +436,7 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 
     <div id="divFiles" style="position:absolute; top: 0; z-index: 50; width: 100%; height: 100%;
             background-color: white; display: none">
-        <div id="divFilesTop" style="z-index: 55; position: fixed; right: 0px; top:0px; width: 100%;
-            background-color: white;">
+        <div id="divFilesTop" style="z-index: 55; position: fixed; right: 0px; top:0px; width: 100%;">
             <table cellpadding="0" cellspacing="0" style="width: 100%;" id="tblFilesTitleBar">
                 <tr>
                     <td style="width: 91%; text-align: center" id="tdFilesTitle">统计数据</td>
@@ -443,29 +447,28 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
         <div style="width: 100%; height: 90px">&nbsp;</div>
 
         <div id="divFilesMain" style="z-index: 51; position: fixed; width: 100%; background-color: white;">
-            <table id="dgFiles" data-options="header:'#hh',singleSelect:true,border:false,fit:true,fitColumns:true,scrollbarSize:100">
+            <table id="dgFiles" data-options="header:'#hh',singleSelect:true,border:false,fit:true,fitColumns:true,scrollbarSize:30">
                 <thead>
                     <tr>
-                        <th data-options="field:'n',width:400">名称</th>
+                        <th data-options="field:'n',width:430">名称</th>
                         <th data-options="field:'t',width:300">时间</th>
                     </tr>
                 </thead>
             </table>
         </div>
-        <div id="divFilesMain1" style="z-index: 51; position: fixed; width: 100%; overflow: auto; display:none;
-            background-color: white;">
-        </div>
 
-        <div id="divFilesBottom" style="z-index: 59; position: fixed; right: 0px; bottom:0px; width: 100%; height: 120px;
-            background-color: white; margin: 0 auto; padding: 20px">
-            <table cellpadding="0" cellspacing="10" border="0" id="tblFilesButtons" style="width: 700px; margin: 0 auto; ">
-                <tr>
-                    <td id="tdBttnFileRename">重命名</td>
-                    <td id="tdBttnFileDelete">删除</td>
-                    <td id="tdBttnFileOpen">打开</td>
-                    <td id="tdBttnFileExit" onclick="OnHideFiles()">退出</td>
-                </tr>
-            </table>
+        <div id="divFilesBottom" style="z-index: 59; position: fixed; right: 0px; bottom:0px; width: 100%; height: auto;">
+            <div style="background-color: white; height: 10px">&nbsp;</div>
+            <div id="divFilesBottomMain" style="width: 100%; height: auto; margin: 0 auto; ">
+                <table cellpadding="0" cellspacing="25" border="0" id="tblFilesButtons" style="margin: 0 auto; ">
+                    <tr>
+                        <td id="tdBttnFileRename">重命名</td>
+                        <td id="tdBttnFileDelete">删除</td>
+                        <td id="tdBttnFileOpen">打开</td>
+                        <td id="tdBttnFileExit" onclick="OnHideFiles()">退出</td>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
 </body>

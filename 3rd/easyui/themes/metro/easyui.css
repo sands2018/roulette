@@ -1701,10 +1701,10 @@
 .datagrid-header td,
 .datagrid-body td,
 .datagrid-footer td {
-  border-width: 0 1px 1px 0;
-  border-style: dotted;
+  border-width: 0 1px 0 0;
+  border-style: solid;
   margin: 0;
-  padding: 0;
+  padding: 0 20px;
 }
 .datagrid-cell,
 .datagrid-cell-group,
@@ -1716,8 +1716,8 @@
   word-wrap: normal;
   overflow: hidden;
   height: 60px;
-  line-height: 60px;
-  font-size: 40px;
+  line-height: 55px;
+  font-size: 36px;
 }
 .datagrid-header .datagrid-cell {
   height: auto;
@@ -1836,7 +1836,7 @@
 }
 .datagrid-header,
 .datagrid-td-rownumber {
-  background-color: #ffffff;
+  background-color: #f8f7f5;
 }
 .datagrid-cell-rownumber {
   color: #444;
@@ -1858,7 +1858,7 @@
 .datagrid-toolbar,
 .datagrid-pager,
 .datagrid-footer-inner {
-  border-color: #ddd;
+  border-color: #aa8833;
 }
 .datagrid-header td,
 .datagrid-body td,
@@ -1876,12 +1876,12 @@
 }
 .datagrid-row-over,
 .datagrid-header td.datagrid-header-over {
-  background: #E6E6E6;
+  background: white;
   color: #444;
   cursor: default;
 }
 .datagrid-row-selected {
-  background: #CCE6FF;
+  background: #f5efdf;
   color: #000;
 }
 .datagrid-row-editing .textbox,

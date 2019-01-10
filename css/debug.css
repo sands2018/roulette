@@ -15,8 +15,8 @@
 #tbl3C3R td.td3C3RT6 { color: #eeeeee; background-color: white }
 #tbl3C3R td.td3C3RV6 { color: #eeeeee; background-color: white }
 
-td.tdSBEnabled { color: #e8e8e8; background-color: white; border: 1px solid #e8e8e8 }
-td.tdSBDisabled { color: #f8f8f8; background-color: white; border: 1px solid #f8f8f8 }
+#tblSysButtons .tdSBEnabled { color: #e8e8e8; background-color: white; border: 1px solid #e8e8e8 }
+#tblSysButtons .tdSBDisabled { color: #f8f8f8; background-color: white; border: 1px solid #f8f8f8 }
 
 #tblColumns td.TActive { color: #cfcfcf; background-color: #f8f8f8; }
 #tblColumns td.TInactive { color: #e8e8e8; background-color: #ffffff; }
