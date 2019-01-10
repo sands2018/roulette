@@ -6,7 +6,10 @@
     30 - statistics middle;
     35 - statistics top;
     39 - statistics bottom;
-    50 - file
+    50 - file;
+    51 - file main;
+    55 - file top;
+    59 - file bottom;
     90 - import;
 */
 
@@ -529,6 +532,15 @@ $(document).ready(function ()
         SetFilesTitle("管理保存的数据");
         SwitchWindow("divMain", "divFiles");
 
+        var div = document.getElementById("divFilesTop");
+        var n1 = div.offsetHeight;
+        div = document.getElementById("divFilesBottom");
+        var n2 = div.offsetTop;
+
+        div = document.getElementById("divFilesMain");
+        div.style.top = n1 + 1;
+        div.style.height = n2 - n1 - 1;
+
         var files = {
             'total': 20, 'rows': [
                 { 'n': 'file1', 't': '2019-01-07' },
@@ -553,15 +565,45 @@ $(document).ready(function ()
                 { 'n': 'file1', 't': '2019-01-07' },
                 { 'n': 'file1', 't': '2019-01-07' },
                 { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
+                { 'n': 'file1', 't': '2019-01-07' },
                 { 'n': 'file2', 't': '2019-01-07' }
             ]
-        }
-        $(function ()
+        };
+
+        var strHtml = "<table cellspacing='0' cellpadding='0' id='tblFiles'>";
+        for(var n = 0; n < files.rows.length; ++ n)
         {
-            $('#dgFiles').datagrid({
-                data: files
-            });
-        });
+            strHtml += "<tr><td>" + files.rows[n].n + "</td>";
+            strHtml += "<td>" + files.rows[n].t + "</td></tr>";
+        }
+        strHtml += "</table>";
+        div.innerHTML = strHtml;
+        
     });
 
     $("#tdBttnMore").click(function ()
