@@ -1352,6 +1352,14 @@ function CSysFiles()
         }
     }
 
+    this.CheckName = function(strFileName)
+    {
+        var strName = $.trim(strFileName);
+        var nLen = strName.length;
+        if (nLen <= 0)
+            return -1;
+    }
+
     // return value:
     // 1: success
     // -1: name already exists
