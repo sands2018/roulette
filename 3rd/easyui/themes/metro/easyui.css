@@ -115,7 +115,7 @@
 }
 .panel-header,
 .panel-body {
-  border-color: #ddd;
+  border-bottom: 1px solid #aa8833;
 }
 .panel-header {
   background-color: #ffffff;
@@ -127,8 +127,8 @@
 }
 .panel-title {
   font-size: 40px;
-  font-weight: bold;
-  color: #777;
+  font-weight: normal;
+  color: #aa8833;
   height: 60px;
   line-height: 60px;
 }
@@ -356,13 +356,14 @@
 }
 .window {
   overflow: hidden;
-  padding: 5px;
   border-width: 1px;
   border-style: solid;
 }
 .window .window-header {
-  background: transparent;
-  padding: 0px 0px 6px 0px;
+  background-color: #f3efe3;
+  padding: 6px 24px 12px 0px;
+  text-align: center;
+  font-weight: normal;
 }
 .window .window-body {
   border: 0;
@@ -560,7 +561,7 @@
   text-align: right;
 }
 .dialog-button .l-btn {
-  margin-left: 5px;
+  margin: 0 10px;
 }
 .dialog-toolbar,
 .dialog-button {
@@ -572,7 +573,7 @@
   border-color: #ddd #ddd #ddd #ddd;
 }
 .dialog-button {
-  border-color: #ddd #ddd #ddd #ddd;
+  border: 0;
 }
 .window-thinborder .dialog-toolbar {
   border-left: transparent;
@@ -592,12 +593,13 @@
   display: inline-block;
   overflow: hidden;
   margin: 0;
-  padding: 0;
+  padding: 7px;
   cursor: pointer;
   outline: none;
   text-align: center;
   vertical-align: middle;
-  line-height: normal;
+  height: 75px;
+  line-height: 75px;
 }
 .l-btn-plain {
   border-width: 0;
@@ -721,10 +723,10 @@
   width: 32px;
 }
 .l-btn {
-  color: #777;
+  color: #aa8833;
   background: #ffffff;
   background-repeat: repeat-x;
-  border: 1px solid #dddddd;
+  border: 1px solid #aa8833;
   background: -webkit-linear-gradient(top,#ffffff 0,#ffffff 100%);
   background: -moz-linear-gradient(top,#ffffff 0,#ffffff 100%);
   background: -o-linear-gradient(top,#ffffff 0,#ffffff 100%);
@@ -2880,12 +2882,12 @@
   border-width: 0 0 0 1px;
 }
 .messager-body {
-  padding: 30px 64px 30px 40px;
+  padding: 40px 64px 30px 40px;
   overflow: auto;
 }
 .messager-button {
   text-align: center;
-  padding: 5px;
+  padding: 20px 24px 35px 0;
 }
 .messager-button .l-btn {
   width: 200px;
@@ -2918,7 +2920,7 @@
   width: 100%;
   padding: 4px 0;
   outline-style: none;
-  border: 1px solid #ddd;
+  border: 1px solid #aa8833;
   font-size: 40px;
 }
 .window-thinborder .messager-button {

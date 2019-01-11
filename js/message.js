@@ -466,7 +466,7 @@ $(document).ready(function ()
     {
         ShowHide_MoreSysButtons(false);
         $.messager.defaults = { ok: "确定", cancel: "取消", width: 700, top: 230 };
-        $.messager.prompt('保存当前数据', '请输入所要保存当前数据的名称', function (strFileName)
+        $.messager.prompt('保存当前数据', '请输入当前数据的名称：', function (strFileName)
         {
             var rb = true;
             if (strFileName != null)
@@ -558,8 +558,8 @@ $(document).ready(function ()
         if (rows.length != 1)
             return;
 
-        $.messager.defaults = { ok: "确定", cancel: "取消", width: 700, top: 230 };
-        $.messager.prompt('重命名当前数据', '请输入数据的新名称', function (strFileName)
+        $.messager.defaults = { ok: "确定", cancel: "取消", width: 700, top: 230, closable: false };
+        $.messager.prompt('重命名数据', '请输入该数据的新名称：', function (strFileName)
         {
             var rb = true;
             var strNameOld = rows[0].n;
