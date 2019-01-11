@@ -471,7 +471,7 @@ $(document).ready(function ()
             var rb = true;
             if (strFileName != null)
             {
-                // var rn = SaveFile(strFileName);
+                // var rn = g_files.Save(strFileName);
                 var rn = -1;
                 var strMsg = "";
                 var strTitle = "";
@@ -551,4 +551,25 @@ $(document).ready(function ()
     {
         ShowHide_MoreSysButtons(true);
     });
+
+    $("#tdBttnFileRename").click(function ()
+    {
+        var rows = $('#dgFiles').datagrid('getSelections');
+        if (rows.length != 1)
+            return;
+
+        $.messager.defaults = { ok: "确定", cancel: "取消", width: 700, top: 230 };
+        $.messager.prompt('重命名当前数据', '请输入数据的新名称', function (strFileName)
+        {
+            var rb = true;
+            var strNameOld = rows[0].n;
+            return rb;
+        });
+
+        var input = $(".messager-input");
+        input.val(rows[0].n);
+        input.select();
+        input.focus();
+    });
+    
 });

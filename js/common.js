@@ -20,6 +20,9 @@ var g_s_c_sg_bk_active = "#EBE3CB";
 var QUEUE_MAX_COUNT = 100;
 var QUEUE_LINE_NUM_COUNT = 15;
 
+var MAX_FILE_COUNT = 200;
+var DATA_FILE_INDEX = "FILE_INDEX_DATA";
+var DATA_FILE_PREFIX = "F_";
 // ------------------------------------------------------------------
 
 function WriteData(key, value)
@@ -1331,12 +1334,73 @@ function CRouletteFiles()
     this.rows = [];
 }
 
+function CSysFiles()
+{
+    this.fs = new CRouletteFiles();
+    this.bLoaded = false;
+
+    this.Load = function ()
+    {
+        if (!this.bLoaded)
+        {
+            var strIndex = ReadData(DATA_FILE_INDEX, "");
+            if (strIndex.length != 0)
+            {
+                this.fs = JSON.parse(strIndex);
+            }
+            this.bLoaded = true;
+        }
+    }
+
+    // return value:
+    // 1: success
+    // -1: name already exists
+    // -2: too many files
+    this.Save = function (strFileName)
+    {
+        this.Load();
+
+        var nCount = this.fs.rows.length;
+        if (nCount > MAX_FILE_COUNT)
+            return -2;
+
+        var bFound = false;
+        for (var n = 0; n < nCount; ++n)
+        {
+            if (this.fs.rows[n].n.toLowerCase() == strFileName.toLowerCase())
+            {
+                bFound = true;
+                break;
+            }
+        }
+        if (bFound)
+            return -1;
+
+        var strNum = NumArrayToString(g_queue);
+        var tm = new Date();
+        var strDataKey = DATA_FILE_PREFIX + tm.format("yyyyMMddHHmmss");
+        var file = new CRouletteFileInfo();
+        file.n = strFileName;
+        file.p = strDataKey;
+        file.t = tm.format("yyyy-MM-dd HH:mm");
+        this.fs.rows.push(file);
+        this.fs.total = this.fs.rows.length();
+        strIndex = JSON.stringify(this.fs);
+
+        WriteData(strDataKey, strNum);
+        WriteData(DATA_FILE_INDEX, strIndex);
+
+        return 1;
+    }
+}
+
 // global variables: ----------------------------------------------------------
 
 var g_queue = new CNumQueue();
 var g_status = new CSysStatus();
 var g_3C3R = new CStats3C3R();
 var g_columns = new CStatsColumns();
+var g_files = new CSysFiles();
 
 var g_bttnColumns = new CBttnOptions("Columns", [3, 4, 5, 6, 7], null, 2, -1);
 var g_bttnStatsGroups = new CBttnOptions("StatsGroups", [20, 40, 60, 80, 100, -1], null, 2, 0);
@@ -1348,7 +1412,3 @@ var g_bttnStatsLongsBet = new CBttnOptions("StatsLongsBet", [4, 5, 6], null, 2, 
 var g_bttnStatsLongs = new CBttnOptions("StatsLongs", [10, 11, 12, 13], ["10+", "11+", "12+", "13+"], 2, 120);
 
 var g_bttnStats = new CBttnOptions("Stats", [0, 1, 2, 3], ["号码", "打法", "轮次", "其它"], 0, 0);
-
-var MAX_FILE_COUNT = 200;
-var DATA_FILE_INDEX = "FILE_INDEX_DATA";
-var DATA_FILE_PREFIX = "F_";
