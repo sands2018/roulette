@@ -552,6 +552,8 @@ $(document).ready(function ()
         ShowHide_MoreSysButtons(true);
     });
 
+    // files operations: ------------------------------------------------------
+
     $("#tdBttnFileRename").click(function ()
     {
         var rows = $('#dgFiles').datagrid('getSelections');
@@ -572,4 +574,27 @@ $(document).ready(function ()
         input.focus();
     });
     
+    $("#tdBttnFileDelete").click(function ()
+    {
+        var rows = $('#dgFiles').datagrid('getSelections');
+        if (rows.length < 1)
+            return;
+
+        jConfirm('确定要删除当前选中的数据吗？', '请确认', function (rb)
+        {
+            if (rb)
+            {
+            }
+        });
+    });
+
+    $("#tdBttnFileOpen").click(function ()
+    {
+        var rows = $('#dgFiles').datagrid('getSelections');
+        if (rows.length != 1)
+            return;
+
+        var strNum = ReadData(rows[0].p);
+        ResetDataFromNumString(strNum, false, null);
+    });
 });
