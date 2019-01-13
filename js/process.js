@@ -593,7 +593,7 @@ function ResetData(anNum)
 // bImport - true: import; false: retore
 function ResetDataFromNumString(strNum, bImport, AfterResetData)
 {
-    if ((isNaN(strNum)) || (strNum == null))
+    if ((strNum == undefined) || (strNum == null))
     {
         jAlert("没有找到要导入的数据", "导入数据");
         return;
