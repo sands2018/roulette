@@ -23,6 +23,48 @@ var QUEUE_LINE_NUM_COUNT = 15;
 var MAX_FILE_COUNT = 200;
 var DATA_FILE_INDEX = "FILE_INDEX_DATA";
 var DATA_FILE_PREFIX = "F_";
+
+// extensions: ------------------------------------------------------
+
+String.prototype.gblen = function ()
+{
+    var len = 0;
+    for (var i = 0; i < this.length; i++)
+    {
+        if (this.charCodeAt(i) > 127 || this.charCodeAt(i) == 94)
+        {
+            len += 2;
+        } else
+        {
+            len++;
+        }
+    }
+    return len;
+}
+
+Date.prototype.format = function (fmt)
+{ //author: meizz   
+    var o =
+    {
+        "M+": this.getMonth() + 1,               //月份   
+        "d+": this.getDate(),                    //日   
+        "H+": this.getHours(),                   //小时   
+        "h+": this.getHours() % 12,              //小时   
+        "m+": this.getMinutes(),                 //分   
+        "s+": this.getSeconds(),                 //秒   
+        "q+": Math.floor((this.getMonth() + 3) / 3), //季度   
+        "S": this.getMilliseconds()              //毫秒   
+    };
+    if (/(y+)/.test(fmt))
+        fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+        if (new RegExp("(" + k + ")").test(fmt))
+            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    return fmt;
+}
+
+
+
 // ------------------------------------------------------------------
 
 function WriteData(key, value)
@@ -1300,27 +1342,6 @@ function CStatsLongItem()
     }
 }
 
-Date.prototype.format = function (fmt)
-{ //author: meizz   
-    var o =
-    {
-        "M+": this.getMonth() + 1,               //月份   
-        "d+": this.getDate(),                    //日   
-        "H+": this.getHours(),                   //小时   
-        "h+": this.getHours() % 12,              //小时   
-        "m+": this.getMinutes(),                 //分   
-        "s+": this.getSeconds(),                 //秒   
-        "q+": Math.floor((this.getMonth() + 3) / 3), //季度   
-        "S": this.getMilliseconds()              //毫秒   
-    };
-    if (/(y+)/.test(fmt))
-        fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-    for (var k in o)
-        if (new RegExp("(" + k + ")").test(fmt))
-            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-    return fmt;
-}
-
 function CRouletteFileInfo()
 {
     this.n = ""; // name 
@@ -1352,12 +1373,34 @@ function CSysFiles()
         }
     }
 
+    // return value:
+    // 1: ok
+    // 0: illegal char found
+    // -1: length is 0
+    // -2: too many chars
     this.CheckName = function(strFileName)
     {
         var strName = $.trim(strFileName);
-        var nLen = strName.length;
+        var nLen = strName.gblen();
         if (nLen <= 0)
             return -1;
+        if (nLen > 24)
+            return -2;
+
+        var rn = 1;
+
+        for(var n = 0; n < strName.length; ++ n)
+        {
+            var c = charCodeAt(n);
+            if(!(((c >= 'A') && (c <= 'Z')) || ((c >= 'a') && (c <= 'z')) || ((c >= '0') && (c <= '9'))
+                || (c == '-') || (c == '_')|| (c > 255)))
+            {
+                rn = 0;
+                break;
+            }
+        }
+
+        return rn;
     }
 
     // return value:
