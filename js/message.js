@@ -548,6 +548,25 @@ $(document).ready(function ()
         {
             var rb = true;
             var strNameOld = rows[0].n;
+
+            var rn = g_files.Rename(strOldName, strFileName);
+
+            var strMsg = "";
+            var strTitle = "";
+            if (rn > 0)
+            {
+                strTitle = "重命名成功";
+                strMsg = "\"" + strOldName + "\"重命名为\"" + strFileName + "\"成功";
+            }
+            else
+            {
+                strTitle = "重命名失败";
+                strMsg = g_files.ErrorMessage(rn);
+                rb = false;
+            }
+
+            jAlert(strMsg, strTitle);
+
             return rb;
         });
 

@@ -17,6 +17,7 @@
 	font-size: 40px;
 	min-width: 300px; /* Dialog will be no smaller than this */
 	max-width: 600px; /* Dialog will wrap after this width */
+    width: 800px;
 	background-color: #FFFFFF;
 	border: 12px solid #e8e3d3;
 	color: #000000;
