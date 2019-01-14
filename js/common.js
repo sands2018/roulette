@@ -1373,29 +1373,46 @@ function CSysFiles()
         }
     }
 
+    this.ErrorMessage = function (rn)
+    {
+        var strMsg = "";
+        if(rn == -101)
+            strMsg = "名称不能为空";
+        else if (rn == -102)
+            strMsg = "名称不能超过24个字符（1个中文占2个字符）";
+        else if (rn == -103)
+            strMsg = "名称只能包含英文字母、数字、减号、下划线、中文";
+        else if (rn == -11)
+            strMsg = "该名称已经存在，请重新输入";
+        else if (rn == -12)
+            strMsg = "最多只能保存200条数据，请先删除再来保存";
+
+        return strMsg;
+    }
+
     // return value:
     // 1: ok
-    // 0: illegal char found
-    // -1: length is 0
-    // -2: too many chars
-    this.CheckName = function(strFileName)
+    // -101: length is 0
+    // -102: too many chars
+    // -103: illegal char found
+    this.CheckName = function (strFileName)
     {
         var strName = $.trim(strFileName);
         var nLen = strName.gblen();
         if (nLen <= 0)
-            return -1;
+            return -101;
         if (nLen > 24)
-            return -2;
+            return -102;
 
         var rn = 1;
 
         for(var n = 0; n < strName.length; ++ n)
         {
-            var c = charCodeAt(n);
-            if(!(((c >= 'A') && (c <= 'Z')) || ((c >= 'a') && (c <= 'z')) || ((c >= '0') && (c <= '9'))
-                || (c == '-') || (c == '_')|| (c > 255)))
+            var ch = strName[n];
+            if (!(((ch >= 'A') && (ch <= 'Z')) || ((ch >= 'a') && (ch <= 'z')) || ((ch >= '0') && (ch <= '9'))
+                || (ch == '-') || (ch == '_') || (strName.charCodeAt(n) > 255)))
             {
-                rn = 0;
+                rn = -103;
                 break;
             }
         }
@@ -1405,15 +1422,22 @@ function CSysFiles()
 
     // return value:
     // 1: success
-    // -1: name already exists
-    // -2: too many files
+    // -101: name length is 0
+    // -102: name too many chars
+    // -103: name illegal char found
+    // -11: name already exists
+    // -12: too many files
     this.Save = function (strFileName)
     {
+        var rn = this.CheckName(strFileName);
+        if (rn < 0)
+            return rn;
+
         this.Load();
 
         var nCount = this.fs.rows.length;
         if (nCount > MAX_FILE_COUNT)
-            return -2;
+            return -12;
 
         var bFound = false;
         for (var n = 0; n < nCount; ++n)
@@ -1425,7 +1449,7 @@ function CSysFiles()
             }
         }
         if (bFound)
-            return -1;
+            return -11;
 
         var strNum = NumArrayToString(g_queue);
         var tm = new Date();
@@ -1435,7 +1459,7 @@ function CSysFiles()
         file.p = strDataKey;
         file.t = tm.format("yyyy-MM-dd HH:mm");
         this.fs.rows.push(file);
-        this.fs.total = this.fs.rows.length();
+        this.fs.total = this.fs.rows.length;
         strIndex = JSON.stringify(this.fs);
 
         WriteData(strDataKey, strNum);

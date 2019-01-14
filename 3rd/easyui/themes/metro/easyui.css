@@ -1865,13 +1865,17 @@
 .datagrid-header td,
 .datagrid-body td,
 .datagrid-footer td {
-  border-color: #ddd;
+  border-color: #bbb;
 }
 .datagrid-htable,
 .datagrid-btable,
 .datagrid-ftable {
   color: #444;
   border-collapse: separate;
+}
+.datagrid-btable
+{
+  border-bottom: 1px solid #bbb;
 }
 .datagrid-row-alt {
   background: #f5f5f5;

@@ -637,9 +637,7 @@ function ResetDataFromNumString(strNum, bImport, AfterResetData)
     }
     else
     {
-        /*
         strMsg = "确定要恢复吗？";
-        */
     }
 
     jConfirm(strMsg, '请确认', function (rb)
@@ -1276,60 +1274,12 @@ function OpenFilesDialog(bManage)
 
     UpdateFilesButtonStatus(bManage, 0);
 
-    var files = {
-        'total': 20, 'rows': [
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' },
-            { 'n': 'file1', 't': '2019-01-07', 'p': 'file1-link' }
-        ]
-    };
+    g_files.Load();
 
     $(function ()
     {
         $('#dgFiles').datagrid({
-            data: files,
+            data: g_files.fs,
             singleSelect: !bManage,
             onClickRow: function (nIdxRow)
             {

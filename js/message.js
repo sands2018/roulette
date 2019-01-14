@@ -471,8 +471,7 @@ $(document).ready(function ()
             var rb = true;
             if (strFileName != null)
             {
-                // var rn = g_files.Save(strFileName);
-                var rn = -1;
+                var rn = g_files.Save(strFileName);
                 var strMsg = "";
                 var strTitle = "";
                 if (rn > 0)
@@ -483,17 +482,8 @@ $(document).ready(function ()
                 else
                 {
                     strTitle = "保存失败";
-
-                    if (rn == -1)
-                    {
-                        rb = false;
-                        strFileNameInit = strFileName;
-                        strMsg = "\"" + strFileName + "\"已经存在！";
-                    }
-                    else
-                    {
-                        strMsg = "保存的数据超过" + MAX_FILE_COUNT.toString() + "项，请先删除一些数据再保存！";
-                    }
+                    strMsg = g_files.ErrorMessage(rn);
+                    rb = false;
                 }
 
                 jAlert(strMsg, strTitle);
@@ -506,13 +496,6 @@ $(document).ready(function ()
         input.val(strFileNameInit);
         input.select();
         input.focus();
-
-
-        /*
-        jPrompt("请输入所要保存当前数据的名称：", strFileNameInit, "保存当前数据", function (strFileName)
-        {
-        });
-        */
     });
 
     $("#tdBttnOpen").click(function ()
