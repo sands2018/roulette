@@ -236,23 +236,6 @@ function CIndexedArray()
     }
 }
 
-function ShowHide_MoreSysButtons(bSwitch)
-{
-    var tr1 = document.getElementById("trBttnMore");
-    var tr2 = document.getElementById("trBttnEmpty");
-
-    var strDisplay = "none";
-
-    if (bSwitch)
-    {
-        if (tr1.style.display != "")
-            strDisplay = "";
-    }
-
-    tr1.style.display = strDisplay;
-    tr2.style.display = strDisplay;
-}
-
 
 // nBttdnWidth: <0 not set; 0 full size; >0 button width;
 function CBttnOptions(strName, anValue, astrTitle, nSelIdx, nBttnWidth)
@@ -303,8 +286,6 @@ function CBttnOptions(strName, anValue, astrTitle, nSelIdx, nBttnWidth)
 
     this.OnClick = function(nIdx)
     {
-        ShowHide_MoreSysButtons(false);
-
         if (this.nSelIdx == nIdx)
             return;
         

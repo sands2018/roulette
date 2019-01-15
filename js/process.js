@@ -398,8 +398,8 @@ function Show_Queue()
 
 function Show_RefreshSysButtons()
 {
-    var astrIDBttn = ["tdBttnTheme", "tdBttnRestart", "tdBttnRestore", "tdBttnExport", "tdBttnImport",
-        "tdBttnSave", "tdBttnOpen", "tdBttnStatistics", "tdBttnManage", "tdBttnMore"];
+    var astrIDBttn = ["tdBttnTheme", "tdBttnRestore", "tdBttnImport", "tdBttnManage", "tdBttnStatsGames",
+        "tdBttnRestart", "tdBttnExport", "tdBttnSave", "tdBttnStatistics"];
 
     var abEnabled = [];
 
@@ -410,14 +410,15 @@ function Show_RefreshSysButtons()
 
     if (g_queue.nIDX < 0)
     {
-        abEnabled[1] = false; // restart
-        abEnabled[3] = false; // export
-        abEnabled[5] = false; // save
-        abEnabled[7] = false; // statistics
+        abEnabled[4] = false; // stats games
+        abEnabled[5] = false; // restart
+        abEnabled[6] = false; // export
+        abEnabled[7] = false; // save
+        abEnabled[8] = false; // statistics
     }
     else
     {
-        abEnabled[2] = false; // restore
+        abEnabled[1] = false; // restore
     }
 
     for (var n = 0; n < astrIDBttn.length; ++n)
@@ -1227,11 +1228,10 @@ function SetFilesTitle(strTitle)
     td.innerHTML = strTitle;
 }
 
-function UpdateFilesButtonStatus(bManage, nSelCount)
+function UpdateFilesButtonStatus(nSelCount)
 {
-    var astrIDBttn = ["tdBttnFileRename", "tdBttnFileDelete", "tdBttnFileOpen", "tdBttnFileExit"];
+    var astrIDBttn = ["tdBttnFileOpen", "tdBttnFileRename", "tdBttnFileDelete", "tdBttnFileExit"];
     var abEnabled = [true, true, true, true];
-    var astrDisplay = ["", "", "", ""];
 
     if (nSelCount == 0)
     {
@@ -1242,35 +1242,20 @@ function UpdateFilesButtonStatus(bManage, nSelCount)
     else if (nSelCount > 1)
     {
         abEnabled[0] = false;
-        abEnabled[1] = true;
-        abEnabled[2] = false;
-    }
-
-    if (bManage)
-    {
-        astrDisplay[2] = "none";
-    }
-    else
-    {
-        astrDisplay[0] = "none";
-        astrDisplay[1] = "none";
+        abEnabled[1] = false;
+        abEnabled[2] = true;
     }
 
     for (var n = 0; n < astrIDBttn.length; ++n)
     {
         var bttn = document.getElementById(astrIDBttn[n]);
         bttn.className = abEnabled[n] ? "tdSBEnabled" : "tdSBDisabled";
-        bttn.style.display = astrDisplay[n];
     }
 }
 
-function OpenFilesDialog(bManage)
+function OpenFilesDialog()
 {
-    if(bManage)
-        SetFilesTitle("管理保存的数据");
-    else
-        SetFilesTitle("打开保存的数据");
-
+    SetFilesTitle("保存的数据");
     SwitchWindow("divMain", "divFiles");
 
     var div = document.getElementById("divFilesTop");
@@ -1282,7 +1267,7 @@ function OpenFilesDialog(bManage)
     div.style.top = n1 + 1;
     div.style.height = n2 - n1 - 1;
 
-    UpdateFilesButtonStatus(bManage, 0);
+    UpdateFilesButtonStatus(0);
 
     g_files.Load();
 
@@ -1290,11 +1275,11 @@ function OpenFilesDialog(bManage)
     {
         $('#dgFiles').datagrid({
             data: g_files.fs,
-            singleSelect: !bManage,
+            singleSelect: false,
             onClickRow: function (nIdxRow)
             {
                 var rows = $('#dgFiles').datagrid('getSelections');
-                UpdateFilesButtonStatus(bManage, rows.length);
+                UpdateFilesButtonStatus(rows.length);
             }
         });
     });
