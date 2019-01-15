@@ -591,11 +591,12 @@ function ResetData(anNum)
 }
 
 // bImport - true: import; false: retore
-function ResetDataFromNumString(strNum, bImport, AfterResetData)
+function ResetDataFromNumString(strNum, strAction, AfterResetData)
 {
+    var strMsgTitle = (strAction == "import") ? "导入数据" : ((strAction == "restore") ? "恢复数据" : "打开数据");
     if ((strNum == undefined) || (strNum == null))
     {
-        jAlert("没有找到要导入的数据", "导入数据");
+        jAlert("没有找到要导入的数据", strMsgTitle);
         return;
     }
 
@@ -606,27 +607,27 @@ function ResetDataFromNumString(strNum, bImport, AfterResetData)
 
     if (rtn.rn < 0)
     {
-        if (bImport)
+        if (strAction == "import")
             strMsg = "要导入的数据不正确，请检查！";
         else
             strMsg = "保存的数据可能已经损坏";
 
-        jAlert(strMsg, "导入数据");
+        jAlert(strMsg, strMsgTitle);
         return;
     }
     else if (rtn.rn == 0)
     {
-        if (bImport)
+        if (strAction == "import")
             strMsg = "请在输入框中输入要导入的数据！";
         else
             strMsg = "没有找到保存的数据";
 
-        jAlert(strMsg, "导入数据");
+        jAlert(strMsg, strMsgTitle);
         return;
     }
 
     strMsg = "";
-    if (bImport)
+    if (strAction == "import")
     {
         if (g_queue.nIDX >= 0)
             strMsg = "导入将清除当前数据！";
@@ -635,9 +636,18 @@ function ResetDataFromNumString(strNum, bImport, AfterResetData)
 
         strMsg += "确定要导入吗？"
     }
-    else
+    else if (strAction == "restore")
     {
         strMsg = "确定要恢复吗？";
+    }
+    else
+    {
+        if (g_queue.nIDX >= 0)
+            strMsg = "打开将清除当前数据！";
+        else
+            strMsg = "系统将使用打开的数据，";
+
+        strMsg += "确定要打开吗？"
     }
 
     jConfirm(strMsg, '请确认', function (rb)
@@ -1289,3 +1299,72 @@ function OpenFilesDialog(bManage)
         });
     });
 }
+
+function SwitchWindow(strHideDivID, strShowDivID)
+{
+    var div = document.getElementById(strHideDivID);
+    div.style.display = "none";
+
+    div = document.getElementById(strShowDivID);
+    div.style.display = "";
+}
+
+
+function OnImportOK()
+{
+    var div = document.getElementById("divImport");
+    div.style.display = "none";
+}
+
+function OnHideFiles()
+{
+    SwitchWindow("divFiles", "divMain");
+}
+
+function FormatTimeCol(value, row, index)
+{
+    var tm = new Date(value);
+    return tm.format("yyyy-MM-dd HH:mm");
+}
+
+function AfterSaveFile(strFileName, rn)
+{
+    var rb = true;
+    var strMsg = "";
+    var strTitle = "";
+    if (rn > 0)
+    {
+        strTitle = "保存成功";
+        strMsg = "保存\"" + strFileName + "\"成功";
+    }
+    else
+    {
+        strTitle = "保存失败";
+        strMsg = g_files.ErrorMessage(rn);
+        rb = false;
+    }
+    jAlert(strMsg, strTitle);
+
+    return rb;
+}
+
+function AfterImportData(rb)
+{
+    if (rb)
+    {
+        SaveNumbers();
+        OnImportOK();
+    }
+}
+
+
+function AfterOpenData(rb)
+{
+    if (rb)
+    {
+        SaveNumbers();
+        OnHideFiles();
+    }
+}
+
+

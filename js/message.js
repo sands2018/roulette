@@ -163,27 +163,12 @@ function OnStatsSumListClick(nID)
     }
 }
 
-function AfterResetData(rb)
-{
-    if (rb)
-    {
-        SaveNumbers();
-        OnImportOK();
-    }
-}
-
 function OnImport()
 {
     var txt = document.getElementById("txtClipboard");
     var strNum = txt.value;
 
-    ResetDataFromNumString(strNum, true, AfterResetData);
-}
-
-function OnImportOK()
-{
-    var div = document.getElementById("divImport");
-    div.style.display = "none";
+    ResetDataFromNumString(strNum, "import", AfterImportData);
 }
 
 function OnDelNum()
@@ -328,15 +313,6 @@ function SwitchStats()
     td.innerHTML = astrTitle[nIdx];
 }
 
-function SwitchWindow(strHideDivID, strShowDivID)
-{
-    var div = document.getElementById(strHideDivID);
-    div.style.display = "none";
-
-    div = document.getElementById(strShowDivID);
-    div.style.display = "";
-}
-
 function OnHideStats()
 {
     SwitchWindow("divStats", "divMain");
@@ -350,11 +326,6 @@ function OnStatsNumClick(nCol)
 function OnStatsGamesClick(nCol)
 {
     Show_StatsGames(nCol);
-}
-
-function OnHideFiles()
-{
-    SwitchWindow("divFiles", "divMain");
 }
 
 
@@ -400,7 +371,7 @@ $(document).ready(function ()
             return;
 
         var strNum = ReadData(DATA_NUMBERS);
-        ResetDataFromNumString(strNum, false, null);
+        ResetDataFromNumString(strNum, "restore", null);
     });
 
     // sys export:
@@ -471,22 +442,26 @@ $(document).ready(function ()
             var rb = true;
             if (strFileName != null)
             {
-                var rn = g_files.Save(strFileName);
-                var strMsg = "";
-                var strTitle = "";
-                if (rn > 0)
+                var rn = g_files.Save(strFileName, false);
+                if (rn == -111)
                 {
-                    strTitle = "保存成功";
-                    strMsg = "保存\"" + strFileName + "\"成功";
+                    jConfirm('该名称的数据已存在，是否需要覆盖？', '请确认', function (bConfirmed)
+                    {
+                        if (bConfirmed)
+                        {
+                            rn = g_files.Save(strFileName, true);
+                            rb = AfterSaveFile(strFileName, rn);
+                            if (rb)
+                                $(".messager-body").window('close');
+                        }
+                    });
+
+                    rb = false;
                 }
                 else
                 {
-                    strTitle = "保存失败";
-                    strMsg = g_files.ErrorMessage(rn);
-                    rb = false;
+                    rb = AfterSaveFile(strFileName, rn);
                 }
-
-                jAlert(strMsg, strTitle);
             }
 
             return rb;
@@ -517,17 +492,6 @@ $(document).ready(function ()
         ShowHide_MoreSysButtons(false);
 
         OpenFilesDialog(true);
-
-        /*
-        var strHtml = "<table cellspacing='0' cellpadding='0' id='tblFiles'>";
-        for(var n = 0; n < files.rows.length; ++ n)
-        {
-            strHtml += "<tr><td>" + files.rows[n].n + "</td>";
-            strHtml += "<td>" + files.rows[n].t + "</td></tr>";
-        }
-        strHtml += "</table>";
-        div.innerHTML = strHtml;
-        */
     });
 
     $("#tdBttnMore").click(function ()
@@ -547,26 +511,32 @@ $(document).ready(function ()
         $.messager.prompt('重命名数据', '请输入该数据的新名称：', function (strFileName)
         {
             var rb = true;
-            var strNameOld = rows[0].n;
-
-            var rn = g_files.Rename(strOldName, strFileName);
-
-            var strMsg = "";
-            var strTitle = "";
-            if (rn > 0)
+            if (strFileName != null)
             {
-                strTitle = "重命名成功";
-                strMsg = "\"" + strOldName + "\"重命名为\"" + strFileName + "\"成功";
-            }
-            else
-            {
-                strTitle = "重命名失败";
-                strMsg = g_files.ErrorMessage(rn);
-                rb = false;
-            }
+                var strOldName = rows[0].n;
 
-            jAlert(strMsg, strTitle);
+                var rn = g_files.Rename(strOldName, strFileName);
 
+                var strMsg = "";
+                var strTitle = "";
+                if (rn > 0)
+                {
+                    strTitle = "重命名成功";
+                    strMsg = "\"" + strOldName + "\"重命名为\"" + strFileName + "\"成功";
+
+                    $('#dgFiles').datagrid({data: g_files.fs});
+                    $('#dgFiles').datagrid('reload');
+                }
+                else
+                {
+                    strTitle = "重命名失败";
+                    strMsg = g_files.ErrorMessage(rn);
+                    rb = false;
+                }
+
+                jAlert(strMsg, strTitle);
+
+            }
             return rb;
         });
 
@@ -586,6 +556,10 @@ $(document).ready(function ()
         {
             if (rb)
             {
+                g_files.Delete(rows);
+
+                $('#dgFiles').datagrid({ data: g_files.fs });
+                $('#dgFiles').datagrid('reload');
             }
         });
     });
@@ -597,6 +571,6 @@ $(document).ready(function ()
             return;
 
         var strNum = ReadData(rows[0].p);
-        ResetDataFromNumString(strNum, false, null);
+        ResetDataFromNumString(strNum, "open", AfterOpenData);
     });
 });

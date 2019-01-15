@@ -1444,31 +1444,62 @@ function CSysFiles()
     // -103: name illegal char found
     // -111: name already exists
     // -11: too many files
-    this.Save = function (strFileName)
+    this.Save = function (strFileName, bOverWrite)
     {
         var rn = this.CheckName(strFileName);
-        if (rn < 0)
+        var bDoOverWrite = (bOverWrite && (rn == -111));
+
+        if ((rn < 0) && !bDoOverWrite)
             return rn;
 
         this.Load();
 
-        var nCount = this.fs.rows.length;
-        if (nCount > MAX_FILE_COUNT)
-            return -11;
+        if (!bDoOverWrite)
+        {
+            var nCount = this.fs.rows.length;
+            if (nCount > MAX_FILE_COUNT)
+                return -11;
+        }
 
         var strNum = NumArrayToString(g_queue);
         var tm = new Date();
-        var strDataKey = DATA_FILE_PREFIX + tm.format("yyyyMMddHHmmss");
-        var file = new CRouletteFileInfo();
-        file.n = strFileName;
-        file.p = strDataKey;
-        file.t = tm.format("yyyy-MM-dd HH:mm");
-        this.fs.rows.push(file);
-        this.fs.total = this.fs.rows.length;
-        var strIndex = JSON.stringify(this.fs);
 
-        WriteData(strDataKey, strNum);
-        WriteData(DATA_FILE_INDEX, strIndex);
+        if (!bDoOverWrite)
+        {
+            var strDataKey = DATA_FILE_PREFIX + tm.format("yyyyMMddHHmmss");
+            var file = new CRouletteFileInfo();
+            file.n = strFileName;
+            file.p = strDataKey;
+            //file.t = tm.format("yyyy-MM-dd HH:mm");
+            file.t = tm.getTime();
+            this.fs.rows.push(file);
+            this.fs.total = this.fs.rows.length;
+            var strIndex = JSON.stringify(this.fs);
+
+            WriteData(strDataKey, strNum);
+            WriteData(DATA_FILE_INDEX, strIndex);
+        }
+        else
+        {
+            var nIdx = -1;
+            for (var n = 0; n < this.fs.rows.length; ++n)
+            {
+                if (this.fs.rows[n].n.toLowerCase() == strFileName.toLowerCase())
+                {
+                    nIdx = n;
+                    break;
+                }
+            }
+
+            if (nIdx >= 0)
+            {
+                this.fs.rows[n].t = tm.getTime();
+                var strIndex = JSON.stringify(this.fs);
+
+                WriteData(strDataKey, strNum);
+                WriteData(this.fs.rows[n].p, strNum);
+            }
+        }
 
         return 1;
     }
@@ -1483,7 +1514,7 @@ function CSysFiles()
     // -22: data not match (actually, this should not happen)
     this.Rename = function (strOldName, strNewName)
     {
-        if (tstrOldName.toLowerCase() == strNewName.toLowerCase())
+        if (strOldName.toLowerCase() == strNewName.toLowerCase())
             return -21;
 
         var strName = $.trim(strNewName);
@@ -1510,6 +1541,25 @@ function CSysFiles()
         }
 
         return bFound ? 1 : -22;
+    }
+
+    this.Delete = function(rows)
+    {
+        for (var n1 = 0; n1 < rows.length; ++n1)
+        {
+            for (var n2 = this.fs.rows.length - 1; n2 >= 0; --n2)
+            {
+                if (this.fs.rows[n2].n == rows[n1].n)
+                {
+                    this.fs.rows.splice(n2, 1);
+                    this.fs.total--;
+                    DeleteData(rows[n1].p);
+                }
+            }
+        }
+
+        var strIndex = JSON.stringify(this.fs);
+        WriteData(DATA_FILE_INDEX, strIndex);
     }
 }
 
