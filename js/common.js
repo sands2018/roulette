@@ -1448,6 +1448,7 @@ function CSysFiles()
         }
 
         var strNum = NumArrayToString(g_queue);
+        var nNumCount = g_queue.nIDX + 1;
         var tm = new Date();
 
         if (!bDoOverWrite)
@@ -1456,7 +1457,7 @@ function CSysFiles()
             var file = new CRouletteFileInfo();
             file.n = strFileName;
             file.p = strDataKey;
-            file.c = g_queue.nIDX + 1;
+            file.c = nNumCount;
             //file.t = tm.format("yyyy-MM-dd HH:mm");
             file.t = tm.getTime();
             this.fs.rows.push(file);
@@ -1480,7 +1481,7 @@ function CSysFiles()
 
             if (nIdx >= 0)
             {
-                this.fs.rows[nIdx].c = g_queue.nIDX + 1;
+                this.fs.rows[nIdx].c = nNumCount;
                 this.fs.rows[nIdx].t = tm.getTime();
                 var strIndex = JSON.stringify(this.fs);
 
