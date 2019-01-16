@@ -931,7 +931,7 @@ function Show_StatsGames(nCol)
         strHtml += games.aGame[games.anIdx[nn]].nMoney.toString();
         strHtml += "</td></tr>";
     }
-    strHtml += "</table>";
+    strHtml += "</table><div style=\"height: 220px\">&nbsp;</div>";
     divGames.innerHTML = strHtml;
 }
 
