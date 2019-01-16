@@ -1276,6 +1276,7 @@ function OpenFilesDialog()
         $('#dgFiles').datagrid({
             data: g_files.fs,
             singleSelect: false,
+            remoteSort: false,
             onClickRow: function (nIdxRow)
             {
                 var rows = $('#dgFiles').datagrid('getSelections');
