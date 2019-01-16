@@ -1102,19 +1102,23 @@ function CStatsGames(nCol)
         this.aGame[9 * 3 + n] = new CGame(5, [1, 2, 3, 5], n);
         this.aGame[10 * 3 + n] = new CGame(5, [1, 2, 3, 4, 5], n);
         this.aGame[11 * 3 + n] = new CGame(5, [1, 1, 1, 2, 2, 3], n);
-        this.aGame[12 * 3 + n] = new CGame(6, [1, 2, 4], n);
-        this.aGame[13 * 3 + n] = new CGame(6, [1, 2, 4, 8], n);
-        this.aGame[14 * 3 + n] = new CGame(6, [2, 3, 4, 6], n);
-        this.aGame[15 * 3 + n] = new CGame(6, [1, 2, 3, 5], n);
-        this.aGame[16 * 3 + n] = new CGame(6, [1, 2, 3, 4, 5], n);
-        this.aGame[17 * 3 + n] = new CGame(6, [1, 1, 1, 2, 2, 3], n);
-        this.aGame[18 * 3 + n] = new CGame(7, [1, 2, 4, 8], n);
-        this.aGame[19 * 3 + n] = new CGame(7, [2, 3, 4, 6], n);
-        this.aGame[20 * 3 + n] = new CGame(7, [1, 2, 3, 5], n);
-        this.aGame[21 * 3 + n] = new CGame(7, [1, 2, 3, 4, 5], n);
-        this.aGame[22 * 3 + n] = new CGame(7, [1, 1, 1, 2, 2, 3], n);
-        this.aGame[23 * 3 + n] = new CGame(8, [1, 2, 4, 8], n);
-        this.aGame[24 * 3 + n] = new CGame(8, [1, 1, 1, 2, 2, 3], n);
+        this.aGame[12 * 3 + n] = new CGame(5, [1, 2, 3, 4, 6, 9], n);
+        this.aGame[13 * 3 + n] = new CGame(6, [1, 2, 4], n);
+        this.aGame[14 * 3 + n] = new CGame(6, [1, 2, 4, 8], n);
+        this.aGame[15 * 3 + n] = new CGame(6, [2, 3, 4, 6], n);
+        this.aGame[16 * 3 + n] = new CGame(6, [1, 2, 3, 5], n);
+        this.aGame[17 * 3 + n] = new CGame(6, [1, 2, 3, 4, 5], n);
+        this.aGame[18 * 3 + n] = new CGame(6, [1, 1, 1, 2, 2, 3], n);
+        this.aGame[19 * 3 + n] = new CGame(6, [1, 2, 3, 4, 6, 9], n);
+        this.aGame[20 * 3 + n] = new CGame(7, [1, 2, 4, 8], n);
+        this.aGame[21 * 3 + n] = new CGame(7, [2, 3, 4, 6], n);
+        this.aGame[22 * 3 + n] = new CGame(7, [1, 2, 3, 5], n);
+        this.aGame[23 * 3 + n] = new CGame(7, [1, 2, 3, 4, 5], n);
+        this.aGame[24 * 3 + n] = new CGame(7, [1, 1, 1, 2, 2, 3], n);
+        this.aGame[25 * 3 + n] = new CGame(7, [1, 2, 3, 4, 6, 9], n);
+        this.aGame[26 * 3 + n] = new CGame(8, [1, 2, 4, 8], n);
+        this.aGame[27 * 3 + n] = new CGame(8, [1, 1, 1, 2, 2, 3], n);
+        this.aGame[28 * 3 + n] = new CGame(8, [1, 2, 3, 4, 6, 9], n);
     }
 
     this.Calc = function (queue, nScope, nBefore)
