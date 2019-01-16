@@ -1144,8 +1144,15 @@ function CStatsGames(nCol)
         }
 
         // sort: --------------------------------
+        if (this.nColSel == 0) // id
+        {
+            var anValue = [];
+            for (var n = 0; n < this.aGame.length; ++n)
+                anValue[n] = n;
 
-        if (this.nColSel == 1) // win percentage
+            DoSort(anValue, this.anIdx, true);
+        }
+        else if (this.nColSel == 1) // win percentage
         {
             var anValue = [];
             for (var n = 0; n < this.aGame.length; ++n)
