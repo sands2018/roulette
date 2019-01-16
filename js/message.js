@@ -279,14 +279,14 @@ function OnBttnStatsLongsClick(nIdx)
 
 function SwitchStats()
 {
-    var astrDiv = ["Numbers", "Games", "Rounds", "Misc"];
-    var astrTitle = ["号码统计数据", "打法统计数据", "轮次汇总数据", "其它统计数据"];
+    var astrDiv = ["Games", "Numbers", "Rounds", "Misc"];
+    var astrTitle = ["打法统计数据", "号码统计数据", "轮次汇总数据", "其它统计数据"];
     var nIdx = g_bttnStats.Value();
 
     for (var n = 0; n < astrDiv.length; ++n)
     {
         var strDisplay = "";
-        if (n != g_bttnStats.Value())
+        if (n != g_bttnStats.nSelIdx)
             strDisplay = "none";
 
         var div = document.getElementById("divStats" + astrDiv[n]);
@@ -310,6 +310,48 @@ function OnStatsNumClick(nCol)
 function OnStatsGamesClick(nCol)
 {
     Show_StatsGames(nCol);
+}
+
+function OnShowHideMoreButtons()
+{
+    var tr1 = document.getElementById("trBttnMore");
+    var tr2 = document.getElementById("trBttnEmpty");
+
+    var strDisplay = "";
+    if (tr1.style.display == "")
+        strDisplay = "none";
+
+    tr1.style.display = strDisplay;
+    tr2.style.display = strDisplay;
+}
+
+function OpenStatistics(bGames)
+{
+    Show_StatsGames(-1);
+    Show_StatsNumbers(-1);
+    Show_StatsRounds();
+    Show_StatsMisc();
+
+    if (bGames)
+    {
+        if (g_bttnStats.nSelIdx != 0)
+            g_status.StatsIdx = g_bttnStats.nSelIdx;
+
+        g_bttnStats.nSelIdx = 0;
+    }
+    else if (g_bttnStats.nSelIdx == 0)
+    {
+        g_bttnStats.nSelIdx = g_status.StatsIdx;
+    }
+
+    Show_RefreshStatsScopeButton();
+    Show_RefreshStatsLongsButton();
+    Show_RefreshStatsLongsBetButton();
+    Show_RefreshStatsButton();
+
+    SwitchStats();
+
+    SwitchWindow("divMain", "divStats");
 }
 
 
@@ -391,18 +433,13 @@ $(document).ready(function ()
     // sys statistics:
     $("#tdBttnStatistics").click(function ()
     {
-        Show_StatsNumbers(-1);
-        Show_StatsGames(-1);
-        Show_StatsRounds();
-        Show_StatsMisc();
+        OpenStatistics(false);
+    });
 
-        Show_RefreshStatsScopeButton();
-        Show_RefreshStatsLongsButton();
-        Show_RefreshStatsLongsBetButton();
-        Show_RefreshStatsButton();
-        SwitchStats();
-
-        SwitchWindow("divMain", "divStats");
+    // stats games:
+    $("#tdBttnStatsGames").click(function ()
+    {
+        OpenStatistics(true);
     });
 
     $("#tdBttnSave").click(function ()

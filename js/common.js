@@ -346,6 +346,7 @@ function CSysStatus()
     this.Seperate3C3R = "F";
     this.QueueExpand = 0;
     this.anStatsSumExpand = [0, 0, 0, 0];
+    this.StatsIdx = 3;
 
     this.Reset = function()
     {
@@ -1330,7 +1331,8 @@ function CRouletteFileInfo()
 {
     this.n = ""; // name 
     this.p = ""; // data key value (pointer)
-    this.t = ""; // time
+    this.c = 0;  // number count
+    this.t = 0;  // time (in ms)
 }
 
 function CRouletteFiles()
@@ -1454,6 +1456,7 @@ function CSysFiles()
             var file = new CRouletteFileInfo();
             file.n = strFileName;
             file.p = strDataKey;
+            file.c = g_queue.nIDX + 1;
             //file.t = tm.format("yyyy-MM-dd HH:mm");
             file.t = tm.getTime();
             this.fs.rows.push(file);
@@ -1564,4 +1567,4 @@ var g_bttnStatsScope = new CBttnOptions("StatsScope", astrValueStatsScope, null,
 var g_bttnStatsLongsBet = new CBttnOptions("StatsLongsBet", [4, 5, 6], null, 2, 120);
 var g_bttnStatsLongs = new CBttnOptions("StatsLongs", [10, 11, 12, 13], ["10+", "11+", "12+", "13+"], 2, 120);
 
-var g_bttnStats = new CBttnOptions("Stats", [0, 1, 2, 3], ["号码", "打法", "轮次", "其它"], 0, 0);
+var g_bttnStats = new CBttnOptions("Stats", [0, 1, 2, 3], ["打法", "号码", "轮次", "其它"], 0, 0);
