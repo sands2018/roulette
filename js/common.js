@@ -1463,8 +1463,8 @@ function CSysFiles()
             this.fs.total = this.fs.rows.length;
             var strIndex = JSON.stringify(this.fs);
 
-            WriteData(strDataKey, strNum);
             WriteData(DATA_FILE_INDEX, strIndex);
+            WriteData(strDataKey, strNum);
         }
         else
         {
@@ -1480,11 +1480,12 @@ function CSysFiles()
 
             if (nIdx >= 0)
             {
-                this.fs.rows[n].t = tm.getTime();
+                this.fs.rows[nIdx].c = g_queue.nIDX + 1;
+                this.fs.rows[nIdx].t = tm.getTime();
                 var strIndex = JSON.stringify(this.fs);
 
-                WriteData(strDataKey, strNum);
-                WriteData(this.fs.rows[n].p, strNum);
+                WriteData(DATA_FILE_INDEX, strIndex);
+                WriteData(this.fs.rows[nIdx].p, strNum);
             }
         }
 
