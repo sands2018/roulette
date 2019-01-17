@@ -898,17 +898,20 @@ function Show_StatsGames(nCol, bMain)
     var strDivID = "";
     var strTD = "";
     var strIsMain = "";
+    var strAppendHeight = "";
 
     if (bMain)
     {
         strDivID = "divMainStatsGames";
         strTD = " onclick='OnMainSwitchStats(false)'"
         strIsMain = "true";
+        strAppendHeight = "500";
     }
     else
     {
         strDivID = "divStatsGames";
         strIsMain = "false";
+        strAppendHeight = "220";
     }
 
 
@@ -951,7 +954,7 @@ function Show_StatsGames(nCol, bMain)
         strHtml += games.aGame[games.anIdx[nn]].nMoney.toString();
         strHtml += "</td></tr>";
     }
-    strHtml += "</table><div style=\"height: 220px\">&nbsp;</div>";
+    strHtml += "</table><div style=\"height: "+ strAppendHeight + "px\">&nbsp;</div>";
     divGames.innerHTML = strHtml;
 }
 
