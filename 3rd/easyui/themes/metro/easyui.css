@@ -1813,24 +1813,24 @@
 }
 .datagrid-sort .datagrid-sort-icon {
   display: inline;
-  padding: 0 13px 0 0;
-  background: url('images/datagrid_icons.png') no-repeat -64px center;
+  padding: 0 44px 0 0;
+  background: url('images/datagrid_icons_large.png') no-repeat -160px center;
 }
 .datagrid-sort-desc .datagrid-sort-icon {
   display: inline;
-  padding: 0 13px 0 0;
-  background: url('images/datagrid_icons.png') no-repeat -16px center;
+  padding: 0 44px 0 0;
+  background: url('images/datagrid_icons_large.png') no-repeat -40px center;
 }
 .datagrid-sort-asc .datagrid-sort-icon {
   display: inline;
-  padding: 0 13px 0 0;
-  background: url('images/datagrid_icons.png') no-repeat 0px center;
+  padding: 0 44px 0 0;
+  background: url('images/datagrid_icons_large.png') no-repeat 0px center;
 }
 .datagrid-row-collapse {
-  background: url('images/datagrid_icons.png') no-repeat -48px center;
+  background: url('images/datagrid_icons_large.png') no-repeat -120px center;
 }
 .datagrid-row-expand {
-  background: url('images/datagrid_icons.png') no-repeat -32px center;
+  background: url('images/datagrid_icons_large.png') no-repeat -80px center;
 }
 .datagrid-mask-msg {
   background: #fff url('images/loading.gif') no-repeat scroll 5px center;
