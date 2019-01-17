@@ -31,6 +31,7 @@ function OnPageInit()
 
     Show_RefreshStatsSumButton();
     Show_SumLists();
+    Show_StatsGames(-1, true);
 
     Init_Theme();
     Show_RefreshTheme();
@@ -244,7 +245,8 @@ function OnBttnStatsScopeClick(nIdx)
 {
     g_bttnStatsScope.OnClick(nIdx);
     Show_StatsNumbers(-1);
-    Show_StatsGames(-1);
+    Show_StatsGames(-1, false);
+    Show_StatsGames(-1, true);
     Show_StatsRounds();
     Show_StatsMisc();
 }
@@ -307,9 +309,9 @@ function OnStatsNumClick(nCol)
     Show_StatsNumbers(nCol);
 }
 
-function OnStatsGamesClick(nCol)
+function OnStatsGamesClick(nCol, bMain)
 {
-    Show_StatsGames(nCol);
+    Show_StatsGames(nCol, bMain);
 }
 
 function OnShowHideMoreButtons()
@@ -327,7 +329,7 @@ function OnShowHideMoreButtons()
 
 function OpenStatistics(bGames)
 {
-    Show_StatsGames(-1);
+    Show_StatsGames(-1, false);
     Show_StatsNumbers(-1);
     Show_StatsRounds();
     Show_StatsMisc();
@@ -354,6 +356,22 @@ function OpenStatistics(bGames)
     SwitchWindow("divMain", "divStats");
 }
 
+function OnMainSwitchStats(bShowGames)
+{
+    var strDisplay1 = "";
+    var strDisplay2 = "";
+
+    if (bShowGames)
+        strDisplay2 = "none";
+    else
+        strDisplay1 = "none";
+
+    var div1 = document.getElementById("divMainStatsGames");
+    var div2 = document.getElementById("divMainStatsSum");
+
+    div1.style.display = strDisplay1;
+    div2.style.display = strDisplay2;
+}
 
 $(document).ready(function ()
 {

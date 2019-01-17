@@ -448,6 +448,7 @@ function Show_AddNum()
     Show_StatsGroupsCount();
     Show_RefreshSysButtons();
     Show_SumLists();
+    Show_StatsGames(-1, true);
 }
 
 function PageInit_Data()
@@ -664,12 +665,12 @@ function ResetDataFromNumString(strNum, strAction, AfterResetData)
 
 function Show_SumLists()
 {
-    var divStatsSum = document.getElementById("divStatsSum");
+    var divStatsSum = document.getElementById("divMainStatsSum");
     var divStatsSumLists = document.getElementById("divStatsSumLists");
 
     if (g_queue.nIDX < 0)
     {
-        divStatsSum.style.display = "none"
+        //divStatsSum.style.display = "none"
         divStatsSumLists.innerHTML = "";
         return;
     }
@@ -699,6 +700,7 @@ function Show_SumLists()
     var bFirst = true;
 
     var fWidth = 0;
+    var strTD = " onclick='OnMainSwitchStats(true)'";
 
     for (var nn = 0; nn < 3; ++nn)
     {
@@ -706,11 +708,11 @@ function Show_SumLists()
 
         var str = "";
         if (nn == 0)
-            str = "<td>组</td>";
+            str = "<td" + strTD + ">组</td>";
         else if (nn == 1)
-            str = "<td>行</td>";
+            str = "<td" + strTD + ">行</td>";
         else
-            str = "<td class='tdTotal'>" + nTotal.toString() + "</td>";
+            str = "<td class='tdTotal'" + strTD + ">" + nTotal.toString() + "</td>";
 
         strHtml += str;
         strHtml += "<td class='tdStatsSumListItem'>";
@@ -751,7 +753,7 @@ function Show_SumLists()
         }
         strHtml += "</div></td></tr>";
     }
-    strHtml += "<tr><td class='tdZero'>" + g_queue.nCountNoZero.toString() + "</td>";
+    strHtml += "<tr><td class='tdZero'" + strTD + ">" + g_queue.nCountNoZero.toString() + "</td>";
     strHtml += "<td class='tdStatsSumListItem'>";
     strHtml += "<div id='divStatsSumListItem3' class='divStatsSumListItem' onclick='OnStatsSumListClick(3)'>";
     bFirst = true;
@@ -790,7 +792,7 @@ function Show_SumLists()
     strHtml += "</table>";
 
     divStatsSumLists.innerHTML = strHtml;
-    divStatsSum.style.display = "";
+    //divStatsSum.style.display = "";
 }
 
 
@@ -891,9 +893,27 @@ function Show_StatsNumbers(nCol)
     div.innerHTML = strHtml;
 }
 
-function Show_StatsGames(nCol)
+function Show_StatsGames(nCol, bMain)
 {
-    var divGames = document.getElementById("divStatsGames");
+    var strDivID = "";
+    var strTD = "";
+    var strIsMain = "";
+
+    if (bMain)
+    {
+        strDivID = "divMainStatsGames";
+        strTD = " onclick='OnMainSwitchStats(false)'"
+        strIsMain = "true";
+    }
+    else
+    {
+        strDivID = "divStatsGames";
+        strIsMain = "false";
+    }
+
+
+
+    var divGames = document.getElementById(strDivID);
     if (g_queue.nIDX < 0)
     {
         divGames.innerHTML = "";
@@ -906,16 +926,16 @@ function Show_StatsGames(nCol)
     games.Calc(g_queue, nScope, 0);
 
     var strHtml = "<table cellpadding='0' cellspacing='0' id='tblStatsGames'>";
-    strHtml += "<tr><td onclick='OnStatsGamesClick(0)'>名称</td><td>完成</td>";
-    strHtml += "<td onclick='OnStatsGamesClick(1)'>赢";
+    strHtml += "<tr><td onclick='OnStatsGamesClick(0, " + strIsMain + ")'>名称</td><td>完成</td>";
+    strHtml += "<td onclick='OnStatsGamesClick(1, " + strIsMain + ")'>赢";
     strHtml += games.SortMark(1);
     strHtml += "</td><td>平</td><td>输</td>";
-    strHtml += "<td onclick='OnStatsGamesClick(2)'>结算";
+    strHtml += "<td onclick='OnStatsGamesClick(2, " + strIsMain + ")'>结算";
     strHtml += games.SortMark(2);
     strHtml += "</td><td>实时</td></tr>";
     for (var nn = 0; nn < games.aGame.length; ++nn)
     {
-        strHtml += "<tr><td>";
+        strHtml += "<tr><td" + strTD + ">";
         strHtml += games.aGame[games.anIdx[nn]].strName;
         strHtml += "</td><td>"
         strHtml += games.aGame[games.anIdx[nn]].nCountCompleted.toString();
