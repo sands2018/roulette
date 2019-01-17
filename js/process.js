@@ -399,7 +399,7 @@ function Show_Queue()
 function Show_RefreshSysButtons()
 {
     var astrIDBttn = ["tdBttnTheme", "tdBttnRestore", "tdBttnImport", "tdBttnManage", "tdBttnStatsGames",
-        "tdBttnRestart", "tdBttnExport", "tdBttnSave", "tdBttnStatistics"];
+        "tdBttnRestart", "tdBttnExport", "tdBttnSave", "tdBttnStatistics", "tdBttnMore"];
 
     var abEnabled = [];
 
@@ -895,28 +895,26 @@ function Show_StatsNumbers(nCol)
 
 function Show_StatsGames(nCol, bMain)
 {
-    var strDivID = "";
+    var strCtrlID = "";
     var strTD = "";
     var strIsMain = "";
     var strAppendHeight = "";
 
     if (bMain)
     {
-        strDivID = "divMainStatsGames";
+        strCtrlID = "MainStatsGames";
         strTD = " onclick='OnMainSwitchStats(false)'"
         strIsMain = "true";
-        strAppendHeight = "500";
+        strAppendHeight = "650";
     }
     else
     {
-        strDivID = "divStatsGames";
+        strCtrlID = "StatsGames";
         strIsMain = "false";
         strAppendHeight = "220";
     }
 
-
-
-    var divGames = document.getElementById(strDivID);
+    var divGames = document.getElementById("div" + strCtrlID);
     if (g_queue.nIDX < 0)
     {
         divGames.innerHTML = "";
@@ -928,12 +926,12 @@ function Show_StatsGames(nCol, bMain)
     var games = new CStatsGames(nCol);
     games.Calc(g_queue, nScope, 0);
 
-    var strHtml = "<table cellpadding='0' cellspacing='0' id='tblStatsGames'>";
-    strHtml += "<tr><td onclick='OnStatsGamesClick(0, " + strIsMain + ")'>名称</td><td>完成</td>";
-    strHtml += "<td onclick='OnStatsGamesClick(1, " + strIsMain + ")'>赢";
+    var strHtml = "<table cellpadding='0' cellspacing='0' id='tbl" + strCtrlID + "'>";
+    strHtml += "<tr><td onclick='OnStatsGamesClick(0)'>名称</td><td>完成</td>";
+    strHtml += "<td onclick='OnStatsGamesClick(1)'>赢";
     strHtml += games.SortMark(1);
     strHtml += "</td><td>平</td><td>输</td>";
-    strHtml += "<td onclick='OnStatsGamesClick(2, " + strIsMain + ")'>结算";
+    strHtml += "<td onclick='OnStatsGamesClick(2)'>结算";
     strHtml += games.SortMark(2);
     strHtml += "</td><td>实时</td></tr>";
     for (var nn = 0; nn < games.aGame.length; ++nn)

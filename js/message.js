@@ -309,9 +309,10 @@ function OnStatsNumClick(nCol)
     Show_StatsNumbers(nCol);
 }
 
-function OnStatsGamesClick(nCol, bMain)
+function OnStatsGamesClick(nCol)
 {
-    Show_StatsGames(nCol, bMain);
+    Show_StatsGames(nCol, true);
+    Show_StatsGames(-1, false);
 }
 
 function OnShowHideMoreButtons()

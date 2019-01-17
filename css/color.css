@@ -37,4 +37,14 @@
 #tblStatsSum .tdTotal { font-family:Arial; font-size: 40px; color: #dd8877; font-weight: bold; padding: 0px 18px } 
 #tblStatsSum .tdZero { font-family:Arial; font-size: 40px; color: #8fc38f; font-weight: bold; padding: 0px 18px }
 
+#tblMainStatsGames { border-top: 1px solid #8f8f8f; border-bottom: 1px solid #8f8f8f; }
+#tblMainStatsGames td { color: black; }
+#tblMainStatsGames tr:first-child td { border-bottom: 1px solid #8f8f8f; }
+#tblMainStatsGames tr:last-child td { border-bottom: 1px solid #8f8f8f; }
+
+#tblMainStatsGames .tdWon { color: #c37f7f; }
+#tblMainStatsGames .tdDrew { color: #939393; }
+#tblMainStatsGames .tdLost { color: #7fc37f; }
+
+
 #divFinishedLong .txtLongCount { color: #aa3322; }

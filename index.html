@@ -111,14 +111,18 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 #tblImport #tdTxt { border: 1px solid #aa8833; }
 #tblPanelButtons td { border: 1px solid #aa8833; }
 
-#tblStatsGames { width: 100%; border-top: 1px solid #8f8f8f; border-bottom: 1px solid #8f8f8f; }
-#tblStatsGames td { font-size: 36px; padding: 0 20px; }
-#tblStatsGames tr:first-child td { padding: 8px 20px; border-bottom: 1px solid #8f8f8f; }
+#tblMainStatsGames, #tblStatsGames { width: 100%; }
+#tblMainStatsGames td, #tblStatsGames td { font-size: 36px; padding: 0 20px; }
+#tblMainStatsGames tr:first-child td, #tblStatsGames tr:first-child td { padding: 8px 20px; }
+
+#tblStatsGames { border-top: 1px solid #8f8f8f; border-bottom: 1px solid #8f8f8f; }
+#tblStatsGames td { color: black; }
+#tblStatsGames tr:first-child td { border-bottom: 1px solid #8f8f8f; }
 #tblStatsGames tr:last-child td { border-bottom: 1px solid #8f8f8f; }
 
-.tdWon { color: #c37f7f; }
-.tdDrew { color: #939393; }
-.tdLost { color: #7fc37f; }
+#tblStatsGames .tdWon { color: #c37f7f; }
+#tblStatsGames .tdDrew { color: #939393; }
+#tblStatsGames .tdLost { color: #7fc37f; }
 
 .txtStatsNumZero { color: #799f79 }
 
@@ -294,7 +298,7 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
                         <td colspan="5">&nbsp;</td>
                     </tr>
                     <tr>
-                        <td onclick="OnShowHideMoreButtons()">&nbsp;</td>
+                        <td id="tdBttnMore" onclick="OnShowHideMoreButtons()">更多...</td>
                         <td id="tdBttnRestart">重置</td>
                         <td id="tdBttnExport">导出</td>
                         <td id="tdBttnSave">保存</td>
