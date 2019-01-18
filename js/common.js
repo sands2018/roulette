@@ -1113,9 +1113,8 @@ function CStatsGames(nCol)
 
     for (var nn = 1; nn <= 8; ++nn)
     {
-        if(n <= 5)
-            for (var n = 0; n < anBet3.length; ++ n)
-                anGameRule.push(new CGameRule(nn, anBet3[n]));
+        for (var n = 0; n < anBet3.length; ++ n)
+            anGameRule.push(new CGameRule(nn, anBet3[n]));
 
         for (var n = 0; n < anBet4.length; ++n)
             anGameRule.push(new CGameRule(nn, anBet4[n]));
