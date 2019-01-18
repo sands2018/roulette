@@ -3313,14 +3313,14 @@
 }
 .checkbox {
   position: relative;
-  border: 5px solid #cfaf5f;
+  border: 5px solid #9fcf5f;
   -moz-border-radius: 0px 0px 0px 0px;
   -webkit-border-radius: 0px 0px 0px 0px;
   border-radius: 0px 0px 0px 0px;
 }
 .checkbox-checked {
   border: 0;
-  background: #cfaf5f;
+  background: #9fcf5f;
 }
 .checkbox-inner {
   position: absolute;

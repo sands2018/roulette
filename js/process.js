@@ -398,8 +398,8 @@ function Show_Queue()
 
 function Show_RefreshSysButtons()
 {
-    var astrIDBttn = ["tdBttnTheme", "tdBttnRestore", "tdBttnImport", "tdBttnManage", "tdBttnStatsGames",
-        "tdBttnRestart", "tdBttnExport", "tdBttnSave", "tdBttnStatistics", "tdBttnMore"];
+    var astrIDBttn = ["tdBttnTheme", "tdBttnRestart", "tdBttnRestore", "tdBttnImport", "tdBttnExport", "tdBttnSave",
+        "tdBttnStatsGames", "tdBttnStatsNumbers", "tdBttnStatistics", "tdBttnManage", "tdBttnConfig", "tdBttnMore"];
 
     var abEnabled = [];
 
@@ -410,15 +410,16 @@ function Show_RefreshSysButtons()
 
     if (g_queue.nIDX < 0)
     {
-        abEnabled[4] = false; // stats games
-        abEnabled[5] = false; // restart
-        abEnabled[6] = false; // export
-        abEnabled[7] = false; // save
+        abEnabled[1] = false; // restart
+        abEnabled[4] = false; // export
+        abEnabled[5] = false; // save
+        abEnabled[6] = false; // stats games
+        abEnabled[7] = false; // stats numbers
         abEnabled[8] = false; // statistics
     }
     else
     {
-        abEnabled[1] = false; // restore
+        abEnabled[2] = false; // restore
     }
 
     for (var n = 0; n < astrIDBttn.length; ++n)

@@ -106,15 +106,17 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 #divFinishedLong { margin-bottom: 18px }
 
 .divDialog { border: 18px solid #e8e3d3; }
+.bttnDialog { width: 230px; height: 70px; line-height: 70px; color: #aa8833; border: 1px solid #aa8833; }
 
 #divImport { position: fixed; top: 0px; z-index:90; width: 100%; height: 100%; }
-.bttnImport { width: 280px; height: 70px; color: #aa8833; border: 1px solid #aa8833; }
-
 #divConfig { position: fixed; top: 0px; z-index:91; width: 100%; height: 100%; }
+#divDialogTitle { width: 100%; height: 80px; text-align: center; padding: 10px; border-bottom: 1px solid #aa8833; color: #aa8833; background-color: #f3efe3; }
 
 #txtClipboard { font-size: 36px; border: 0 } 
 #tblImport .tdSpec { font-size: 36px; text-align: left; padding: 8px 0 3px 0; }
 #tblImport #tdTxt { border: 1px solid #aa8833; }
+
+#tblConfig .tdSpec { font-size: 40px; text-align: left; padding: 8px 0 3px 0; }
 
 #tblMainStatsGames, #tblStatsGames { width: 100%; }
 #tblMainStatsGames td, #tblStatsGames td { font-size: 36px; padding: 0 20px; }
@@ -295,15 +297,17 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
                     <tr id="trBttnMore">
                         <td id="tdBttnTheme">NA</td>
                         <td id="tdBttnRestart">重置</td>
+                        <td id="tdBttnConfig">配置</td>
                         <td id="tdBttnImport">导入</td>
-                        <td id="tdBttnRestore">恢复</td>
                         <td id="tdBttnManage">数据</td>
+                        <td id="tdBttnStatsNumbers">号码</td>
                     </tr>
                     <tr id="trBttnEmpty">
                         <td colspan="5">&nbsp;</td>
                     </tr>
                     <tr>
                         <td id="tdBttnMore" onclick="OnShowHideMoreButtons()">更多...</td>
+                        <td id="tdBttnRestore">恢复</td>
                         <td id="tdBttnSave">保存</td>
                         <td id="tdBttnExport">导出</td>
                         <td id="tdBttnStatistics">统计</td>
@@ -387,8 +391,8 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
                     <td style="text-align: center">
                         <table cellpadding="0" cellspacing="20" border="0" style="margin: auto">
                             <tr>
-                                <td class="bttnImport" id="tdBttnDoImport" onclick="OnImport()">导入</td>
-                                <td class="bttnImport" onclick="OnImportOK()">退出</td>
+                                <td class="bttnDialog" id="tdBttnDoImport" onclick="OnImport()">导入</td>
+                                <td class="bttnDialog" onclick="OnImportOK()">退出</td>
                             </tr>
                         </table>
                     </td>
@@ -398,25 +402,30 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
     </div>
 
     <div id="divConfig" style="display: none; padding-top: 200px">
-        <div class="divDialog" style="padding: 20px 0 10px 0; background-color: white; margin: 0 auto; width: 780px;">
-            <table cellpadding="0" cellspacing="30" style="width: 700px; margin: 0 auto;" id="tblImport">
-                <tr><td class="tdSpec">打法选项：</td></tr>
-                <tr>
-                    <td>
-                        <input class="easyui-checkbox" name="fruit" value="Orange" label="Orange:">
-                    </td>
-                </tr>
-                <tr>
-                    <td style="text-align: center">
-                        <table cellpadding="0" cellspacing="20" border="0" style="margin: auto">
-                            <tr>
-                                <td class="bttnImport" onclick="OnSaveConfig()">保存</td>
-                                <td class="bttnImport" onclick="OnQuitConfig()">退出</td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
+        <div class="divDialog" style="background-color: white; margin: 0 auto; width: 780px;">
+            <div id="divDialogTitle">打法配置</div>
+            <div style="padding: 20px 0 10px 0;">
+                <table cellpadding="0" cellspacing="30" style="width: 700px; margin: 0 auto;" id="tblConfig">
+                    <tr><td class="tdSpec">打法选项：</td></tr>
+                    <tr>
+                        <td>
+                            <input class="easyui-checkbox" name="GameRule" value="1" checked="checked" label="1,2,4,8"><br>
+                            <input class="easyui-checkbox" name="GameRule" value="2" label="2,3,5,6"><br>
+                            <input class="easyui-checkbox" name="GameRule" value="3" label="1,2,3,5"><br>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center">
+                            <table cellpadding="0" cellspacing="20" border="0" style="margin: auto">
+                                <tr>
+                                    <td class="bttnDialog" onclick="OnSaveConfig()">保存</td>
+                                    <td class="bttnDialog" onclick="OnQuitConfig()">退出</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -464,18 +473,7 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
         <div id="divStatsBottom" style="position: fixed; bottom: 0px; z-index: 39; width: 100%;
             background-color: white;">
             <div style="height: 25px">&nbsp;</div>
-            
-            
-            <table cellpadding="0" cellspacing="10" border="0" style="width: 100%">
-                <tr>
-                    <td style="width: 84%"><div id="divStatsScopeBttns"></div></td>
-                    <td style="width: 16%">
-                        <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; height: 60px">
-                            <tr><td id="tdBttnStatsGamesConfig" onclick="OnConfig()">配置</td></tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
+            <div id="divStatsScopeBttns"></div>
             <table cellpadding="0" cellspacing="10" border="0" style="width: 100%">
                 <tr>
                     <td style="width: 81%"><div id="divStatsBttns"></div></td>

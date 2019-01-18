@@ -329,21 +329,31 @@ function OnShowHideMoreButtons()
     tr2.style.display = strDisplay;
 }
 
-function OpenStatistics(bGames)
+function OpenStatistics(strID)
 {
+    if (g_queue.nIDX < 0)
+        return;
+
     Show_StatsGames(-1, false);
     Show_StatsNumbers(-1);
     Show_StatsRounds();
     Show_StatsMisc();
 
-    if (bGames)
+    if (strID == "g") // games
     {
-        if (g_bttnStats.nSelIdx != 0)
+        if ((g_bttnStats.nSelIdx != 0) && (g_bttnStats.nSelIdx != 1))
             g_status.StatsIdx = g_bttnStats.nSelIdx;
 
         g_bttnStats.nSelIdx = 0;
     }
-    else if (g_bttnStats.nSelIdx == 0)
+    else if (strID == "n") // numbers
+    {
+        if ((g_bttnStats.nSelIdx != 0) && (g_bttnStats.nSelIdx != 1))
+            g_status.StatsIdx = g_bttnStats.nSelIdx;
+
+        g_bttnStats.nSelIdx = 1;
+    }
+    else if ((g_bttnStats.nSelIdx == 0) || (g_bttnStats.nSelIdx == 1))
     {
         g_bttnStats.nSelIdx = g_status.StatsIdx;
     }
@@ -375,12 +385,6 @@ function OnMainSwitchStats(bShowGames)
     div2.style.display = strDisplay2;
 }
 
-function OnConfig()
-{
-    var div = document.getElementById("divConfig");
-    div.style.display = "";
-}
-
 function OnQuitConfig()
 {
     var div = document.getElementById("divConfig");
@@ -389,7 +393,14 @@ function OnQuitConfig()
 
 function OnSaveConfig()
 {
-
+    var ids = $('input:checkbox[name="GameRule"]:checked');
+    var str = "";
+    for (var n = 0; n < ids.length; ++n)
+    {
+        str += ids[n].value;
+        str += ",";
+    }
+    alert(str);
 }
 
 $(document).ready(function ()
@@ -411,6 +422,9 @@ $(document).ready(function ()
     // sys restart:
     $("#tdBttnRestart").click(function ()
     {
+        if (g_queue.nIDX < 0)
+            return;
+
         jConfirm('重置将清除当前所有数据！确定要重置吗？', '请确认', function (rb)
         {
             if(rb)
@@ -470,17 +484,26 @@ $(document).ready(function ()
     // sys statistics:
     $("#tdBttnStatistics").click(function ()
     {
-        OpenStatistics(false);
+        OpenStatistics("s");
     });
 
     // stats games:
     $("#tdBttnStatsGames").click(function ()
     {
-        OpenStatistics(true);
+        OpenStatistics("g");
+    });
+
+    // stats numbers:
+    $("#tdBttnStatsNumbers").click(function ()
+    {
+        OpenStatistics("n");
     });
 
     $("#tdBttnSave").click(function ()
     {
+        if (g_queue.nIDX < 0)
+            return;
+
         $.messager.defaults = { ok: "确定", cancel: "取消", width: 700, top: 230 };
         $.messager.prompt('保存当前数据', '请输入当前数据的名称：', function (strFileName)
         {
@@ -521,6 +544,12 @@ $(document).ready(function ()
     $("#tdBttnManage").click(function ()
     {
         OpenFilesDialog();
+    });
+
+    $("#tdBttnConfig").click(function ()
+    {
+        var div = document.getElementById("divConfig");
+        div.style.display = "";
     });
 
     // files operations: ------------------------------------------------------

@@ -24,6 +24,38 @@ var MAX_FILE_COUNT = 200;
 var DATA_FILE_INDEX = "FILE_INDEX_DATA";
 var DATA_FILE_PREFIX = "F_";
 
+// basic: -----------------------------------------------------------
+
+function CBets()
+{
+    this.total = 0;
+    this.rows = [];
+}
+
+function CGameBets()
+{
+    this.bets = new CBets();
+
+    this.Default = function ()
+    {
+        this.bets.total = 8;
+        this.bets.rows = [
+            [1, 2, 4],
+            [1, 2, 4, 8],
+            [2, 3, 4, 6],
+            [1, 2, 3, 5],
+            [1, 1, 2, 3, 5],
+            [1, 2, 4, 6, 9],
+            [1, 1, 1, 2, 2, 3],
+            [1, 2, 3, 4, 6, 9]
+        ];
+    }
+
+    this.Default();
+}
+
+var g_gamebets = new CGameBets();
+
 // extensions: ------------------------------------------------------
 
 String.prototype.gblen = function ()
@@ -1086,48 +1118,23 @@ function CGame(gamerule, nACR)
     }
 }
 
+
 function CStatsGames(nCol)
 {
     var DATA_STATSGAMES_COL = "STATSGAMES_COL";
 
     CStatsView.call(this, 3, nCol, DATA_STATSGAMES_COL);
 
-    var anBet3 = [];
-    var anBet4 = [];
-    var anBet5 = [];
-    var anBet6 = [];
-
-    anBet3.push([1, 2, 4]);
-
-    anBet4.push([1, 2, 4, 8]);
-    anBet4.push([2, 3, 4, 6]);
-    anBet4.push([1, 2, 3, 5]);
-
-    anBet5.push([1, 1, 2, 3, 5]);
-    anBet5.push([1, 2, 4, 6, 9]);
-
-    anBet6.push([1, 1, 1, 2, 2, 3]);
-    anBet6.push([1, 2, 3, 4, 6, 9]);
+    this.aGame = [];
+    this.anIdx = [];
 
     var anGameRule = [];
 
     for (var nn = 1; nn <= 8; ++nn)
     {
-        for (var n = 0; n < anBet3.length; ++ n)
-            anGameRule.push(new CGameRule(nn, anBet3[n]));
-
-        for (var n = 0; n < anBet4.length; ++n)
-            anGameRule.push(new CGameRule(nn, anBet4[n]));
-
-        for (var n = 0; n < anBet5.length; ++n)
-            anGameRule.push(new CGameRule(nn, anBet5[n]));
-
-        for (var n = 0; n < anBet6.length; ++n)
-            anGameRule.push(new CGameRule(nn, anBet6[n]));
+        for (var n = 0; n < g_gamebets.bets.rows.length; ++n)
+            anGameRule.push(new CGameRule(nn, g_gamebets.bets.rows[n]));
     }
-
-    this.aGame = [];
-    this.anIdx = [];
 
     for (var nn = 0; nn < anGameRule.length; ++nn)
     {
