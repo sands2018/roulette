@@ -876,9 +876,9 @@
 }
 .textbox-label {
   display: inline-block;
-  width: 80px;
-  height: 30px;
-  line-height: 30px;
+  width: 300px;
+  height: 50px;
+  line-height: 50px;
   vertical-align: middle;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -887,7 +887,7 @@
   padding-right: 5px;
 }
 .textbox-label-after {
-  padding-left: 5px;
+  padding-left: 20px;
   padding-right: 0;
 }
 .textbox-label-top {
@@ -3313,14 +3313,14 @@
 }
 .checkbox {
   position: relative;
-  border: 2px solid #99cdff;
+  border: 5px solid #cfaf5f;
   -moz-border-radius: 0px 0px 0px 0px;
   -webkit-border-radius: 0px 0px 0px 0px;
   border-radius: 0px 0px 0px 0px;
 }
 .checkbox-checked {
   border: 0;
-  background: #99cdff;
+  background: #cfaf5f;
 }
 .checkbox-inner {
   position: absolute;

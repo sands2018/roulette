@@ -11,6 +11,7 @@
     55 - file top;
     59 - file bottom;
     90 - import;
+    91 - games statistics config;
 */
 
 
@@ -374,6 +375,23 @@ function OnMainSwitchStats(bShowGames)
     div2.style.display = strDisplay2;
 }
 
+function OnConfig()
+{
+    var div = document.getElementById("divConfig");
+    div.style.display = "";
+}
+
+function OnQuitConfig()
+{
+    var div = document.getElementById("divConfig");
+    div.style.display = "none";
+}
+
+function OnSaveConfig()
+{
+
+}
+
 $(document).ready(function ()
 {
     // sys change theme:
@@ -437,13 +455,13 @@ $(document).ready(function ()
     {
         //var tdTitle = document.getElementById("tdImportTitle");
         var txt = document.getElementById("txtClipboard");
-        var trSpecImport = document.getElementById("trSpecImport");
-        var tdBttnDoImport = document.getElementById("tdBttnDoImport");
+        //var trSpecImport = document.getElementById("trSpecImport");
+        //var tdBttnDoImport = document.getElementById("tdBttnDoImport");
 
         //tdTitle.innerHTML = "导&nbsp;&nbsp;&nbsp;入";
         txt.value = "";
-        trSpecImport.style.display = "";
-        tdBttnDoImport.style.display = "";
+        //trSpecImport.style.display = "";
+        //tdBttnDoImport.style.display = "";
         var div = document.getElementById("divImport");
         div.style.display = "";
         txt.select();
