@@ -902,19 +902,26 @@ function CGameItem()
     this.nHit = 0;
 }
 
-// nACR: 0 - all; 1 - column; 2 - row
-function CGame(nAfter, anBet, nACR)
+
+function CGameRule(nAfter, anBet)
 {
     this.nAfter = nAfter;
-    this.nRound = anBet.length;
+    this.anBet = anBet;
+}
+
+// nACR: 0 - all; 1 - column; 2 - row
+function CGame(gamerule, nACR)
+{
+    this.nAfter = gamerule.nAfter;
+    this.nRound = gamerule.anBet.length;
     this.nACR = nACR;
 
     this.anBet = [];
-    var strName = nAfter.toString() + "_";
-    for (var n = 0; n < anBet.length; ++n)
+    var strName = gamerule.nAfter.toString() + "_";
+    for (var n = 0; n < gamerule.anBet.length; ++n)
     {
-        this.anBet[n] = anBet[n] * 10;
-        strName += anBet[n].toString();
+        this.anBet[n] = gamerule.anBet[n] * 10;
+        strName += gamerule.anBet[n].toString();
     }
 
     if (nACR == 0)
@@ -1085,40 +1092,49 @@ function CStatsGames(nCol)
 
     CStatsView.call(this, 3, nCol, DATA_STATSGAMES_COL);
 
+    var anBet3 = [];
+    var anBet4 = [];
+    var anBet5 = [];
+    var anBet6 = [];
+
+    anBet3.push([1, 2, 4]);
+
+    anBet4.push([1, 2, 4, 8]);
+    anBet4.push([2, 3, 4, 6]);
+    anBet4.push([1, 2, 3, 5]);
+
+    anBet5.push([1, 2, 3, 4, 6]);
+    anBet5.push([1, 2, 4, 6, 9]);
+
+    anBet6.push([1, 1, 1, 2, 2, 3]);
+    anBet6.push([1, 2, 3, 4, 6, 9]);
+
+    var anGameRule = [];
+
+    for (var nn = 1; nn <= 8; ++nn)
+    {
+        for (var n = 0; n < anBet3.length; ++ n)
+            anGameRule.push(new CGameRule(nn, anBet3[n]));
+
+        for (var n = 0; n < anBet4.length; ++n)
+            anGameRule.push(new CGameRule(nn, anBet4[n]));
+
+        for (var n = 0; n < anBet5.length; ++n)
+            anGameRule.push(new CGameRule(nn, anBet5[n]));
+
+        for (var n = 0; n < anBet6.length; ++n)
+            anGameRule.push(new CGameRule(nn, anBet6[n]));
+    }
+
     this.aGame = [];
     this.anIdx = [];
 
-    for (var n = 0; n < 3; ++n)
+    for (var nn = 0; nn < anGameRule.length; ++nn)
     {
-        this.aGame[0 * 3 + n] = new CGame(1, [1, 2, 4, 8], n);
-        this.aGame[1 * 3 + n] = new CGame(2, [1, 2, 4, 8], n);
-        this.aGame[2 * 3 + n] = new CGame(3, [1, 2, 4], n);
-        this.aGame[3 * 3 + n] = new CGame(3, [1, 2, 4, 8], n);
-        this.aGame[4 * 3 + n] = new CGame(4, [1, 2, 4], n);
-        this.aGame[5 * 3 + n] = new CGame(4, [1, 2, 4, 8], n);
-        this.aGame[6 * 3 + n] = new CGame(5, [1, 2, 4], n);
-        this.aGame[7 * 3 + n] = new CGame(5, [1, 2, 4, 8], n);
-        this.aGame[8 * 3 + n] = new CGame(5, [2, 3, 4, 6], n);
-        this.aGame[9 * 3 + n] = new CGame(5, [1, 2, 3, 5], n);
-        this.aGame[10 * 3 + n] = new CGame(5, [1, 2, 3, 4, 5], n);
-        this.aGame[11 * 3 + n] = new CGame(5, [1, 1, 1, 2, 2, 3], n);
-        this.aGame[12 * 3 + n] = new CGame(5, [1, 2, 3, 4, 6, 9], n);
-        this.aGame[13 * 3 + n] = new CGame(6, [1, 2, 4], n);
-        this.aGame[14 * 3 + n] = new CGame(6, [1, 2, 4, 8], n);
-        this.aGame[15 * 3 + n] = new CGame(6, [2, 3, 4, 6], n);
-        this.aGame[16 * 3 + n] = new CGame(6, [1, 2, 3, 5], n);
-        this.aGame[17 * 3 + n] = new CGame(6, [1, 2, 3, 4, 5], n);
-        this.aGame[18 * 3 + n] = new CGame(6, [1, 1, 1, 2, 2, 3], n);
-        this.aGame[19 * 3 + n] = new CGame(6, [1, 2, 3, 4, 6, 9], n);
-        this.aGame[20 * 3 + n] = new CGame(7, [1, 2, 4, 8], n);
-        this.aGame[21 * 3 + n] = new CGame(7, [2, 3, 4, 6], n);
-        this.aGame[22 * 3 + n] = new CGame(7, [1, 2, 3, 5], n);
-        this.aGame[23 * 3 + n] = new CGame(7, [1, 2, 3, 4, 5], n);
-        this.aGame[24 * 3 + n] = new CGame(7, [1, 1, 1, 2, 2, 3], n);
-        this.aGame[25 * 3 + n] = new CGame(7, [1, 2, 3, 4, 6, 9], n);
-        this.aGame[26 * 3 + n] = new CGame(8, [1, 2, 4, 8], n);
-        this.aGame[27 * 3 + n] = new CGame(8, [1, 1, 1, 2, 2, 3], n);
-        this.aGame[28 * 3 + n] = new CGame(8, [1, 2, 3, 4, 6, 9], n);
+        for (var n = 0; n < 3; ++n)
+        {
+            this.aGame[nn * 3 + n] = new CGame(anGameRule[nn], n);
+        }
     }
 
     this.Calc = function (queue, nScope, nBefore)
