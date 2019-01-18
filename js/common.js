@@ -1101,12 +1101,12 @@ function CStatsGames(nCol)
 
     anBet4.push([1, 2, 4, 8]);
     anBet4.push([2, 3, 4, 6]);
-//    anBet4.push([1, 2, 3, 5]);
+    anBet4.push([1, 2, 3, 5]);
 
-//    anBet5.push([1, 2, 3, 4, 6]);
+    anBet5.push([1, 1, 2, 3, 5]);
     anBet5.push([1, 2, 4, 6, 9]);
 
-//    anBet6.push([1, 1, 1, 2, 2, 3]);
+    anBet6.push([1, 1, 1, 2, 2, 3]);
     anBet6.push([1, 2, 3, 4, 6, 9]);
 
     var anGameRule = [];
