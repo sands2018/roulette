@@ -429,9 +429,34 @@ function OnConfigOK()
 
 function OnConfigManage()
 {
-    jAlert("本功能还在建设中，暂时不可用", "请等待");
+    $(function ()
+    {
+        $('#dgBetsManage').datagrid({
+            data: g_gamebets.bets,
+            singleSelect: false,
+        });
+    });
+
+    var div = document.getElementById("divBetsManage");
+    div.style.display = "";
 }
 
+
+function OnBetsManageAdd()
+{
+
+}
+
+function OnBetsManageDel()
+{
+
+}
+
+function OnBetsManageOK()
+{
+    var div = document.getElementById("divBetsManage");
+    div.style.display = "none";
+}
 
 $(document).ready(function ()
 {
