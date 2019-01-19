@@ -26,20 +26,74 @@ var DATA_FILE_PREFIX = "F_";
 
 // basic: -----------------------------------------------------------
 
-function CBets()
+function WriteData(key, value)
+{
+    if (!window.localStorage)
+        return;
+
+    var storage = window.localStorage;
+    storage[key] = value;
+}
+
+function ReadData(key, strDefault)
+{
+    if (!window.localStorage)
+        return strDefault;
+
+    var storage = window.localStorage;
+    var strValue = storage[key];
+    if (!strValue || (strValue == ""))
+        strValue = strDefault;
+
+    return strValue;
+}
+
+function DeleteData(key)
+{
+    if (!window.localStorage)
+        return;
+
+    var storage = window.localStorage;
+    storage.removeItem(key);
+}
+
+
+function CGridData()
 {
     this.total = 0;
     this.rows = [];
 }
 
+function CValue(val)
+{
+    this.v = val;
+}
+
 function CGameBets()
 {
-    this.bets = new CBets();
+    this.bets = new CGridData();
+    this.rnds = new CGridData();
+    this.betsels = new CGridData();
+    this.rndsels = new CGridData();
 
-    this.Default = function ()
+    this.DefaultBetSels = function ()
     {
-        this.bets.total = 8;
-        this.bets.rows = [
+        this.betsels.total = this.bets.total;
+        for (var n = 0; n < this.bets.rows.length; ++n)
+            this.betsels.rows[n] = this.bets.rows[n];
+    }
+
+    this.DefaultRndSels = function ()
+    {
+        for (var n = 0; n < this.rnds.rows.length; ++n)
+            this.rndsels.rows[n] = this.rnds.rows[n];
+
+        this.rndsels.total = this.rnds.total;
+    }
+
+    this.DefaultBets = function ()
+    {
+        var aBet = [
             [1, 2, 4],
             [1, 2, 4, 8],
             [2, 3, 4, 6],
@@ -49,12 +103,134 @@ function CGameBets()
             [1, 1, 1, 2, 2, 3],
             [1, 2, 3, 4, 6, 9]
         ];
+
+        for (var n = 0; n < aBet.length; ++n)
+            this.bets.rows[n] = new CValue(aBet[n]);
+
+        this.bets.total = this.bets.rows.length;
     }
 
-    this.Default();
+    this.DefaultRnds = function ()
+    {
+        for (var n = 0; n < 8; ++n)
+            this.rnds.rows[n] = new CValue(n + 1);
+
+        this.rnds.total = this.rnds.rows.length;
+    }
+
+    var DATA_BETS = "DATA_BETS";
+    var DATA_BET_SELS = "DATA_BET_SELS";
+    var DATA_RND_SELS = "DATA_RND_SELS";
+
+    this.SaveBets = function ()
+    {
+        var strData = JSON.stringify(this.bets);
+        WriteData(DATA_BETS, strData);
+    }
+
+    this.SaveBetSels = function ()
+    {
+        var strData = JSON.stringify(this.betsels);
+        WriteData(DATA_BET_SELS, strData);
+    }
+
+    this.SaveRndSels = function ()
+    {
+        var strData = JSON.stringify(this.rndsels);
+        WriteData(DATA_RND_SELS, strData);
+    }
+
+    this.Load = function()
+    {
+        var strData = ReadData(DATA_BETS);
+        if ((strData == null) || (strData.length == 0))
+            this.DefaultBets();
+        else
+            this.bets = JSON.parse(strData);
+
+        this.DefaultRnds();
+
+        strData = ReadData(DATA_BET_SELS);
+        if ((strData == null) || (strData.length == 0))
+            this.DefaultBetSels();
+        else
+            this.betsels = JSON.parse(strData);
+
+        strData = ReadData(DATA_RND_SELS);
+        if ((strData == null) || (strData.length == 0))
+            this.DefaultRndSels();
+        else
+            this.rndsels = JSON.parse(strData);
+    }
+
+    this.GetDataString = function(aData)
+    {
+        var strData = "";
+
+        var bFirst = true;
+        for (var i = 0; i < aData.length; ++i)
+        {
+            if (!bFirst)
+                strData += ",";
+            bFirst = false;
+
+            strData += aData[i].toString();
+        }
+
+        return strData;
+    }
+
+    this.GetBetString = function(n)
+    {
+        return this.GetDataString(this.bets.rows[n].v);
+    }
+
+    this.GetBetSelString = function(n)
+    {
+        return this.GetDataString(this.betsels.rows[n].v);
+    }
+
+    this.BetSelected = function (val)
+    {
+        var strVal = this.GetDataString(val);
+
+        var bChecked = false;
+
+        for(var n = 0; n < this.betsels.rows.length; ++ n)
+        {
+            if (this.GetBetSelString(n) == strVal)
+            {
+                bChecked = true;
+                break;
+            }
+        }
+
+        return bChecked;
+    }
+
+    this.RndSelected = function (nVal)
+    {
+        var strVal = nVal.toString();
+
+        var bChecked = false;
+
+        for (var n = 0; n < this.rndsels.rows.length; ++n)
+        {
+            if (this.rndsels.rows[n].v.toString() == strVal)
+            {
+                bChecked = true;
+                break;
+            }
+        }
+
+        return bChecked;
+    }
+
+    this.Load();
 }
 
 var g_gamebets = new CGameBets();
+
 
 // extensions: ------------------------------------------------------
 
@@ -96,42 +272,7 @@ Date.prototype.format = function (fmt)
 }
 
 
-
 // ------------------------------------------------------------------
-
-function WriteData(key, value)
-{
-    if (!window.localStorage)
-        return;
-
-    var storage = window.localStorage;
-    storage[key] = value;
-}
-
-function ReadData(key, strDefault)
-{
-    if (!window.localStorage)
-        return strDefault;
-
-    var storage = window.localStorage;
-    var strValue = storage[key];
-    if (!strValue || (strValue == ""))
-        strValue = strDefault;
-
-    return strValue;
-}
-
-function DeleteData(key)
-{
-    if (!window.localStorage)
-        return;
-
-    var storage = window.localStorage;
-    storage.removeItem(key);
-}
-
-
-
 
 function DoSort(anValue, anIdx, bAsend)
 {
@@ -1130,10 +1271,10 @@ function CStatsGames(nCol)
 
     var anGameRule = [];
 
-    for (var nn = 1; nn <= 8; ++nn)
+    for (var nn = 0; nn < g_gamebets.rndsels.rows.length; ++nn)
     {
-        for (var n = 0; n < g_gamebets.bets.rows.length; ++n)
-            anGameRule.push(new CGameRule(nn, g_gamebets.bets.rows[n]));
+        for (var n = 0; n < g_gamebets.betsels.rows.length; ++n)
+            anGameRule.push(new CGameRule(g_gamebets.rndsels.rows[nn].v, g_gamebets.betsels.rows[n].v));
     }
 
     for (var nn = 0; nn < anGameRule.length; ++nn)
@@ -1373,15 +1514,9 @@ function CRouletteFileInfo()
     this.t = 0;  // time (in ms)
 }
 
-function CRouletteFiles()
-{
-    this.total = 0;
-    this.rows = [];
-}
-
 function CSysFiles()
 {
-    this.fs = new CRouletteFiles();
+    this.fs = new CGridData();
     this.bLoaded = false;
 
     this.Load = function ()

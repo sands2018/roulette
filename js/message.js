@@ -385,23 +385,53 @@ function OnMainSwitchStats(bShowGames)
     div2.style.display = strDisplay2;
 }
 
-function OnQuitConfig()
+function OnConfigCancel()
 {
     var div = document.getElementById("divConfig");
     div.style.display = "none";
 }
 
-function OnSaveConfig()
+function OnConfigOK()
 {
-    var ids = $('input:checkbox[name="GameRule"]:checked');
-    var str = "";
-    for (var n = 0; n < ids.length; ++n)
+    var selBets = $('#dgGameBets').datagrid('getChecked');
+    if (selBets.length <= 0)
     {
-        str += ids[n].value;
-        str += ",";
+        jAlert("至少要选择一个打法！", "打法配置");
+        return;
     }
-    alert(str);
+
+    var selRnds = $('#dgGameRnds').datagrid('getChecked');
+    if (selRnds.length <= 0)
+    {
+        jAlert("至少要选择一个轮次！", "打法配置");
+        return;
+    }
+
+    g_gamebets.betsels.rows.splice(0, g_gamebets.betsels.rows.length);
+    g_gamebets.betsels.total = selBets.length;
+    for (var n = 0; n < selBets.length; ++n)
+        g_gamebets.betsels.rows[n] = new CValue(selBets[n].v);
+    g_gamebets.SaveBetSels();
+
+    g_gamebets.rndsels.rows.splice(0, g_gamebets.rndsels.rows.length);
+    g_gamebets.rndsels.total = selRnds.length;
+    for (var n = 0; n < selRnds.length; ++n)
+        g_gamebets.rndsels.rows[n] = new CValue(selRnds[n].v);
+    g_gamebets.SaveRndSels();
+
+    Show_StatsGames(-1, false);
+    Show_StatsGames(-1, true);
+
+    var div = document.getElementById("divConfig");
+    div.style.display = "none";
 }
+
+
+function OnConfigManage()
+{
+    jAlert("本功能还在建设中，暂时不可用", "请等待");
+}
+
 
 $(document).ready(function ()
 {
@@ -548,6 +578,41 @@ $(document).ready(function ()
 
     $("#tdBttnConfig").click(function ()
     {
+        $(function ()
+        {
+            $('#dgGameBets').datagrid({
+                data: g_gamebets.bets,
+                singleSelect: false,
+                onLoadSuccess: function (data)
+                {
+                    if (data)
+                    {
+                        $.each(data.rows, function (index, item)
+                        {
+                            if(g_gamebets.BetSelected(item.v))
+                                $('#dgGameBets').datagrid('checkRow', index);
+                        });
+                    }
+                },
+            });
+
+            $('#dgGameRnds').datagrid({
+                data: g_gamebets.rnds,
+                singleSelect: false,
+                onLoadSuccess: function (data)
+                {
+                    if (data)
+                    {
+                        $.each(data.rows, function (index, item)
+                        {
+                            if (g_gamebets.RndSelected(item.v))
+                                $('#dgGameRnds').datagrid('checkRow', index);
+                        });
+                    }
+                },
+            });
+        });
+
         var div = document.getElementById("divConfig");
         div.style.display = "";
     });

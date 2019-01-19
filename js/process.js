@@ -1337,6 +1337,16 @@ function FormatTimeCol(value, row, index)
     return tm.format("yyyy-MM-dd HH:mm");
 }
 
+function FormatBetCol(value, row, index)
+{
+    return g_gamebets.GetDataString(value);
+}
+
+function FormatRndCol(value, row, index)
+{
+    return value.toString();
+}
+
 function AfterSaveFile(strFileName, rn)
 {
     var rb = true;

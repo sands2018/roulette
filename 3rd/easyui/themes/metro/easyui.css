@@ -1688,7 +1688,7 @@
 .datagrid-header {
   overflow: hidden;
   cursor: default;
-  border-width: 0 0 1px 0;
+  border-width: 0 0 0 0;
   border-style: solid;
 }
 .datagrid-header-inner {
@@ -1702,7 +1702,7 @@
 .datagrid-header td,
 .datagrid-body td,
 .datagrid-footer td {
-  border-width: 0 1px 0 0;
+  border-width: 0 0 0 0;
   border-style: solid;
   margin: 0;
   padding: 0 20px;
@@ -1763,9 +1763,9 @@
 }
 .datagrid-header-check,
 .datagrid-cell-check {
-  padding: 0;
-  width: 27px;
-  height: 18px;
+  padding: 7px;
+  width: 50px;
+  height: 50px;
   font-size: 1px;
   text-align: center;
   overflow: hidden;
@@ -1774,8 +1774,8 @@
 .datagrid-cell-check input {
   margin: 0;
   padding: 0;
-  width: 15px;
-  height: 18px;
+  width: 36px;
+  height: 36px;
 }
 .datagrid-resize-proxy {
   position: absolute;
@@ -1871,10 +1871,6 @@
 .datagrid-ftable {
   color: #444;
   border-collapse: separate;
-}
-.datagrid-btable
-{
-  border-bottom: 1px solid #bbb;
 }
 .datagrid-row-alt {
   background: #f5f5f5;
@@ -3342,6 +3338,7 @@
   height: 1px;
   left: -999px;
 }
+
 .sidemenu .tree-hit {
   background-image: none;
 }
