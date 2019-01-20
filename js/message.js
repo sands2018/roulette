@@ -437,14 +437,12 @@ function OnConfigManage()
             showHeader: false,
             onClickRow: function (nIdxRow)
             {
-                var rows = $('#dgBetsManage').datagrid('getSelections');
-                var bttn = document.getElementById("tdBttnBetsManageDel");
-                bttn.className = "bttnDialog " +
-                    (((rows.length < 1) || (rows.length >= g_gamebets.bets.rows.length)) ?
-                    "tdSBDisabled" : "tdSBEnabled");
+                UpdateConfigManageButtonStatus();
             }
         });
     });
+
+    UpdateConfigManageButtonStatus();
 
     var div = document.getElementById("divBetsManage");
     div.style.display = "";
@@ -469,6 +467,11 @@ function OnBetsManageAdd()
             else
             {
                 rb = AfterSaveBet(rn);
+                if (rb)
+                {
+                    $('#dgBetsManage').datagrid({ data: g_gamebets.bets });
+                    $('#dgBetsManage').datagrid('reload');
+                }
             }
         }
 
@@ -479,10 +482,6 @@ function OnBetsManageAdd()
     var input = $(".messager-input");
     input.select();
     input.focus();
-    /*
-    $('#dgBetsManage').datagrid({ data: g_gamebets.bets });
-    $('#dgBetsManage').datagrid('reload');
-    */
 }
 
 function OnBetsManageDel()
@@ -527,6 +526,8 @@ function OnBetsManageOK()
 {
     $('#dgGameBets').datagrid({ data: g_gamebets.bets });
     $('#dgGameBets').datagrid('reload');
+    Show_StatsGames(-1, false);
+    Show_StatsGames(-1, true);
 
     var div = document.getElementById("divBetsManage");
     div.style.display = "none";

@@ -1275,6 +1275,19 @@ function UpdateFilesButtonStatus(nSelCount)
     }
 }
 
+function UpdateConfigManageButtonStatus()
+{
+    $(function ()
+    {
+        var rows = $('#dgBetsManage').datagrid('getSelections');
+        var bttn = document.getElementById("tdBttnBetsManageDel");
+        bttn.className = "bttnDialog " +
+            (((rows.length < 1) || (rows.length >= g_gamebets.bets.rows.length)) ?
+            "tdSBDisabled" : "tdSBEnabled");
+    });
+}
+
+
 function OpenFilesDialog()
 {
     SetFilesTitle("保存的数据");
