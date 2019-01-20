@@ -434,6 +434,15 @@ function OnConfigManage()
         $('#dgBetsManage').datagrid({
             data: g_gamebets.bets,
             singleSelect: false,
+            showHeader: false,
+            onClickRow: function (nIdxRow)
+            {
+                var rows = $('#dgBetsManage').datagrid('getSelections');
+                var bttn = document.getElementById("tdBttnBetsManageDel");
+                bttn.className = "bttnDialog " +
+                    (((rows.length < 1) || (rows.length >= g_gamebets.bets.rows.length)) ?
+                    "tdSBDisabled" : "tdSBEnabled");
+            }
         });
     });
 
@@ -444,16 +453,81 @@ function OnConfigManage()
 
 function OnBetsManageAdd()
 {
+    $.messager.defaults = { ok: "确定", cancel: "取消", width: 700, top: 430 };
+    $.messager.prompt('添加打法', '请输入新打法：', function (strBet)
+    {
+        var rb = true;
+        
+        if (strBet != null)
+        {
+            var rn = g_gamebets.AddBet(strBet);
+            if (rn == -111)
+            {
+                jAlert('该打法已存在', '不能添加');
+                rb = false;
+            }
+            else
+            {
+                rb = AfterSaveBet(rn);
+            }
+        }
 
+        return rb;
+    });
+    $('.messager-input').attr('maxlength', 20);
+
+    var input = $(".messager-input");
+    input.select();
+    input.focus();
+    /*
+    $('#dgBetsManage').datagrid({ data: g_gamebets.bets });
+    $('#dgBetsManage').datagrid('reload');
+    */
 }
 
 function OnBetsManageDel()
 {
+    var rows = $('#dgBetsManage').datagrid('getSelections');
+    if ((rows.length < 1) || (rows.length >= g_gamebets.bets.rows.length))
+        return;
 
+    jConfirm('确定要删除当前选中的打法吗？', '请确认', function (rb)
+    {
+        if (rb)
+        {
+            var rn = g_gamebets.DeleteBets(rows);
+
+            if (rn == 1)
+            {
+                $('#dgBetsManage').datagrid({ data: g_gamebets.bets });
+                $('#dgBetsManage').datagrid('reload');
+            }
+        }
+    });
+}
+
+function OnBetsManageRestoreDefault()
+{
+    jConfirm('确定要重新加入默认打法吗？', '请确认', function (rb)
+    {
+        if (rb)
+        {
+            var rn = g_gamebets.RestoreDefaultBets();
+
+            if (rn == 1)
+            {
+                $('#dgBetsManage').datagrid({ data: g_gamebets.bets });
+                $('#dgBetsManage').datagrid('reload');
+            }
+        }
+    });
 }
 
 function OnBetsManageOK()
 {
+    $('#dgGameBets').datagrid({ data: g_gamebets.bets });
+    $('#dgGameBets').datagrid('reload');
+
     var div = document.getElementById("divBetsManage");
     div.style.display = "none";
 }
@@ -589,8 +663,10 @@ $(document).ready(function ()
 
             return rb;
         });
+
         var strFileNameInit = new Date().format("yyyyMMdd-HHmm");
         var input = $(".messager-input");
+        input.attr('maxlength', 20);
         input.val(strFileNameInit);
         input.select();
         input.focus();
@@ -684,6 +760,7 @@ $(document).ready(function ()
         });
 
         var input = $(".messager-input");
+        input.attr('maxlength', 20);
         input.val(rows[0].n);
         input.select();
         input.focus();

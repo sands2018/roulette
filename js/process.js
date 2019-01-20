@@ -1339,7 +1339,7 @@ function FormatTimeCol(value, row, index)
 
 function FormatBetCol(value, row, index)
 {
-    return g_gamebets.GetDataString(value);
+    return GetArrayDataString(value);
 }
 
 function FormatRndCol(value, row, index)
@@ -1364,6 +1364,21 @@ function AfterSaveFile(strFileName, rn)
         rb = false;
     }
     jAlert(strMsg, strTitle);
+
+    return rb;
+}
+
+
+function AfterSaveBet(rn)
+{
+    var rb = true;
+
+    if(rn <= 0)
+    {
+        var strMsg = g_gamebets.ErrorMessage(rn);
+        jAlert(strMsg, "添加失败");
+        rb = false;
+    }
 
     return rb;
 }

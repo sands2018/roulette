@@ -57,6 +57,36 @@ function DeleteData(key)
     storage.removeItem(key);
 }
 
+function CReturnArray()
+{
+    this.anVal = [];
+    this.rn = 0;
+}
+
+function NumberStringToArray(strNumbers, nMin, nMax, rtn)
+{
+    var astrNum = strNumbers.split(",");
+    if ((strNumbers.length <= 0) || (astrNum.length <= 0))
+    {
+        rtn.rn = 0;
+        return;
+    }
+
+    var anNum = [];
+    for (var n = 0; n < astrNum.length; ++n)
+    {
+        var nNum = parseInt(astrNum[n]);
+        if (isNaN(nNum) || (nNum < nMin) || (nNum > nMax))
+        {
+            rtn.rn = -1;
+            return;
+        }
+
+        rtn.anVal[n] = nNum;
+    }
+
+    rtn.rn = 1;
+}
 
 function CGridData()
 {
@@ -69,12 +99,41 @@ function CValue(val)
     this.v = val;
 }
 
+function GetArrayDataString(aData)
+{
+    var strData = "";
+
+    var bFirst = true;
+    for (var i = 0; i < aData.length; ++i)
+    {
+        if (!bFirst)
+            strData += ",";
+        bFirst = false;
+
+        strData += aData[i].toString();
+    }
+
+    return strData;
+}
+
+
 function CGameBets()
 {
     this.bets = new CGridData();
     this.rnds = new CGridData();
     this.betsels = new CGridData();
     this.rndsels = new CGridData();
+
+    var aBetDefault = [
+        [1, 2, 4],
+        [1, 2, 4, 8],
+        [2, 3, 4, 6],
+        [1, 2, 3, 5],
+        [1, 1, 2, 3, 5],
+        [1, 2, 4, 6, 9],
+        [1, 1, 1, 2, 2, 3],
+        [1, 2, 3, 4, 6, 9]
+    ];
 
     this.DefaultBetSels = function ()
     {
@@ -93,19 +152,8 @@ function CGameBets()
 
     this.DefaultBets = function ()
     {
-        var aBet = [
-            [1, 2, 4],
-            [1, 2, 4, 8],
-            [2, 3, 4, 6],
-            [1, 2, 3, 5],
-            [1, 1, 2, 3, 5],
-            [1, 2, 4, 6, 9],
-            [1, 1, 1, 2, 2, 3],
-            [1, 2, 3, 4, 6, 9]
-        ];
-
         for (var n = 0; n < aBet.length; ++n)
-            this.bets.rows[n] = new CValue(aBet[n]);
+            this.bets.rows[n] = new CValue(aBetDefault[n]);
 
         this.bets.total = this.bets.rows.length;
     }
@@ -163,36 +211,19 @@ function CGameBets()
             this.rndsels = JSON.parse(strData);
     }
 
-    this.GetDataString = function(aData)
-    {
-        var strData = "";
-
-        var bFirst = true;
-        for (var i = 0; i < aData.length; ++i)
-        {
-            if (!bFirst)
-                strData += ",";
-            bFirst = false;
-
-            strData += aData[i].toString();
-        }
-
-        return strData;
-    }
-
     this.GetBetString = function(n)
     {
-        return this.GetDataString(this.bets.rows[n].v);
+        return GetArrayDataString(this.bets.rows[n].v);
     }
 
     this.GetBetSelString = function(n)
     {
-        return this.GetDataString(this.betsels.rows[n].v);
+        return GetArrayDataString(this.betsels.rows[n].v);
     }
 
     this.BetSelected = function (val)
     {
-        var strVal = this.GetDataString(val);
+        var strVal = GetArrayDataString(val);
 
         var bChecked = false;
 
@@ -224,6 +255,66 @@ function CGameBets()
         }
 
         return bChecked;
+    }
+
+    // return value:
+    // 1: success
+    // -101: bet string illegal
+    // -102: too many bet rounds
+    // -111: bet already exists
+    // -11: too many bets
+    this.AddBet = function(strBet)
+    {
+        if (this.bets.rows.length >= 20)
+            return -11;
+
+        var rtn = new CReturnArray();
+        NumberStringToArray(strBet, 0, 999, rtn);
+
+        if (rtn.rn != 1)
+            return -101;
+
+        if (rtn.anVal.length > 10)
+            return -102;
+
+        var rn = 1;
+        return rn;
+    }
+
+    // return value:
+    // 1: success
+    // 0: delete no bet or all bets will not be processed
+    this.DeleteBets = function (rows)
+    {
+        if ((rows.length <= 0) || (rows.length >= this.bets.rows.length)) // actually, this should not happen
+            return 0;
+
+        var rn = 1;
+        return rn;
+    }
+
+    // return value:
+    // 1: success
+    // 0: all default bets already exist
+    this.RestoreDefaultBets = function ()
+    {
+        var rn = 1;
+        return rn;
+    }
+
+    this.ErrorMessage = function (rn)
+    {
+        var strMsg = "";
+        if (rn == -101)
+            strMsg = "输入的打法不合法";
+        else if (rn == -102)
+            strMsg = "押注不能超过10轮";
+        else if (rn == -111)
+            strMsg = "这个打法已经有了";
+        else if (rn == -11)
+            strMsg = "最多只能保存20种打法，请先删除再来添加";
+
+        return strMsg;
     }
 
     this.Load();
@@ -617,36 +708,12 @@ function NumArrayToString(queue)
     return strExport;
 }
 
-function CReturnArray()
-{
-    this.anVal = [];
-    this.rn = 0;
-}
 
 function NumStringToArray(strNumbers, rtn)
 {
-    var astrNum = strNumbers.split(",");
-    if ((strNumbers.length <= 0) || (astrNum.length <= 0))
-    {
-        rtn.rn = 0;
-        return;
-    }
-
-    var anNum = [];
-    for (var n = 0; n < astrNum.length; ++n)
-    {
-        var nNum = parseInt(astrNum[n]);
-        if (isNaN(nNum) || (nNum < 0) || (nNum > 36))
-        {
-            rtn.rn = -1;
-            return;
-        }
-
-        rtn.anVal[n] = nNum;
-    }
-
-    rtn.rn = 1;
+    NumberStringToArray(strNumbers, 0, 36, rtn);
 }
+
 
 function CStats3C3R()
 {

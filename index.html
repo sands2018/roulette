@@ -109,10 +109,11 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 .bttnDialog { width: 200px; height: 70px; line-height: 70px; color: #aa8833; border: 1px solid #aa8833; }
 
 #divImport { position: fixed; top: 0px; z-index:90; width: 100%; height: 100%; }
-#divConfig { position: fixed; top: 0px; z-index:91; width: 100%; height: 100%; }
-.divDialogTitle { width: 100%; height: 80px; text-align: center; padding: 10px; border-bottom: 1px solid #aa8833; color: #aa8833; background-color: #f3efe3; }
+#divConfig { position: fixed; top: 0px; z-index:91; width: 100%; height: 100%;  padding-top: 170px }
+.divDialogTitle { width: 100%; height: 80px; text-align: center; padding: 10px; border-bottom: 1px solid #aa8833; 
+                  color: #aa8833; background-color: #f3efe3; }
 
-#divBetsManage { position: fixed; top: 0px; z-index:93; width: 100%; height: 100%; }
+#divBetsManage { position: fixed; top: 0px; z-index:93; width: 100%; height: 100%;  padding-top: 170px }
 
 #txtClipboard { font-size: 36px; border: 0 } 
 #tblImport .tdSpec { font-size: 36px; text-align: left; padding: 8px 0 3px 0; }
@@ -167,8 +168,8 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 #divFilesBottomMain { border-top: 1px solid #aa8833; background-color: #f8f7f5; }
 #tblFilesButtons td { width: 200px; padding: 3px 10px 5px 10px } 
 
-#tblFilesButtons .tdSBEnabled { color: #aa8833; background-color: white; border: 1px solid #aa8833 }
-#tblFilesButtons .tdSBDisabled { color: #bbbbbb; background-color: white; border: 1px solid #bbbbbb }
+.tdSBEnabled { color: #aa8833; background-color: white; border: 1px solid #aa8833 }
+.tdSBDisabled { color: #bbbbbb; background-color: white; border: 1px solid #bbbbbb }
 
 #tdBttnStatsGamesConfig, #tdBttnStatsQuit { color: #aa8833; border: 1px solid #aa8833; }
 
@@ -182,27 +183,15 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
   border-style: solid;
 }
 
-#divFilesMain .datagrid-header 
-{
-  border-width: 0 0 1px 0;
-  border-style: solid;
-}
+#divFilesMain .datagrid-header { border-width: 0 0 1px 0;  border-style: solid; }
+#divFilesMain .datagrid-btable { border-bottom: 1px solid #bbb; }
 
-#divFilesMain .datagrid-btable
-{
-  border-bottom: 1px solid #bbb;
-}
+#tblConfig .datagrid-header { border-bottom: 1px solid #aa8833; }
 
+#tdBetsConfig, #tdRndsConfig  { border: 1px solid #aaa }
+#tdBetsManage { border: 1px solid #aa8833 }
 
-#tblConfig .datagrid-header, #tblBetsManage .datagrid-header {
-  border: 1px solid #bbb;
-  border-bottom: 1px solid #aa8833;
-}
-#tblConfig .datagrid-btable, #tblBetsManage .datagrid-btable {
-  border-left: 1px solid #bbb;
-  border-right: 1px solid #bbb;
-  border-bottom: 1px solid #bbb;
-}  
+#tblBetsBttns { width: 320px; }  
 
 </style>
 
@@ -210,9 +199,9 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 <script type="text/javascript" src="3rd/clipboard.min.js"></script>
 <script type="text/javascript" src="3rd/easyui/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="3rd/jquery.alerts.js"></script>
-<script type="text/javascript" src="js/common.js?v=3"></script>
-<script type="text/javascript" src="js/process.js?v=3"></script>
-<script type="text/javascript" src="js/message.js?v=3"></script>
+<script type="text/javascript" src="js/common.js?v=2"></script>
+<script type="text/javascript" src="js/process.js?v=2"></script>
+<script type="text/javascript" src="js/message.js?v=2"></script>
 
 <script language="javascript">
 </script>
@@ -433,13 +422,13 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
         </div>
     </div>
 
-    <div id="divConfig" style="display: none; padding-top: 200px">
+    <div id="divConfig" style="display: none;">
         <div class="divDialog" style="background-color: white; margin: 0 auto; width: 780px;">
             <div class="divDialogTitle">打法配置</div>
-            <div style="padding: 20px 0 10px 0;">
-                <table cellpadding="0" cellspacing="30" style="width: 100%; margin: 0 auto;" id="tblConfig">
+            <div style="padding: 10px 0 0 0;">
+                <table cellpadding="0" cellspacing="20" style="width: 100%; margin: 0 auto;" id="tblConfig">
                     <tr>
-                        <td id="tdsBetConfig" width="70%" height="600" style="text-align: center">
+                        <td id="tdBetsConfig" width="70%" height="720" style="text-align: center">
                             <table id="dgGameBets" data-options="header:'#hhh',singleSelect:true,border:false,fit:true,fitColumns:true,scrollbarSize:0">
                                 <thead>
                                     <tr>
@@ -449,7 +438,7 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
                                 </thead>
                             </table>
                         </td>
-                        <td id="tdRndsConfig" width="*%" height="600" style="text-align: center">
+                        <td id="tdRndsConfig" width="*%" style="text-align: center">
                             <table id="dgGameRnds" data-options="header:'#hhh',singleSelect:true,border:false,fit:true,fitColumns:true,scrollbarSize:0">
                                 <thead>
                                     <tr>
@@ -465,8 +454,8 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
                             <table cellpadding="0" cellspacing="20" border="0" style="margin: auto">
                                 <tr>
                                     <td class="bttnDialog" onclick="OnConfigOK()">确定</td>
-                                    <td class="bttnDialog" onclick="OnConfigManage()">管理</td>
                                     <td class="bttnDialog" onclick="OnConfigCancel()">取消</td>
+                                    <td class="bttnDialog" onclick="OnConfigManage()">管理</td>
                                 </tr>
                             </table>
                         </td>
@@ -476,13 +465,13 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
         </div>
     </div>
 
-    <div id="divBetsManage" style="display: none; padding-top: 280px">
+    <div id="divBetsManage" style="display: none;">
         <div class="divDialog" style="background-color: white; margin: 0 auto; width: 820px;">
             <div class="divDialogTitle">打法管理</div>
             <div style="padding: 30px;">
                 <table cellpadding="0" cellspacing="10" style="width: 100%; margin: 0 auto;" id="tblBetsManage">
                     <tr>
-                        <td id="tdBetsManage" width="60%" height="780" style="text-align: center">
+                        <td id="tdBetsManage" width="60%" height="830" style="text-align: center">
                             <table id="dgBetsManage" data-options="header:'#hhh',singleSelect:true,border:false,fit:true,fitColumns:true,scrollbarSize:0">
                                 <thead>
                                     <tr>
@@ -492,9 +481,10 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
                             </table>
                         </td>
                         <td id="tdBetsBttns" width="*%" style="vertical-align: top; text-align: center">
-                            <table cellpadding="0" cellspacing="20" border="0" style="margin: auto">
+                            <table cellpadding="0" cellspacing="20" border="0" style="margin: auto" id="tblBetsBttns">
                                 <tr><td class="bttnDialog" onclick="OnBetsManageAdd()">添加</td></tr>
-                                <tr><td class="bttnDialog" onclick="OnBetsManageDel()">删除</td></tr>
+                                <tr><td class="bttnDialog tdSBDisabled" id="tdBttnBetsManageDel" onclick="OnBetsManageDel()">删除</td></tr>
+                                <tr><td class="bttnDialog" onclick="OnBetsManageRestoreDefault()">预定义回归</td></tr>
                                 <tr><td class="bttnDialog" onclick="OnBetsManageOK()">完成</td></tr>
                             </table>
                         </td>
