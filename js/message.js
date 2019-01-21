@@ -789,7 +789,6 @@ $(document).ready(function ()
     // play:
     $("#tdBttnPlay").click(function ()
     {
-        return;
         OnPlayRestart();
 
         var div = document.getElementById("divPlayBttns");
