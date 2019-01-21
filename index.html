@@ -193,7 +193,7 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 
 #tblBetsBttns { width: 320px; }  
 
-.bttnPlay { width: 180px; height: 60px; line-height: 60px; color: #aa8833; border: 1px solid #aa8833; }
+.bttnPlay { width: 150px; height: 60px; line-height: 60px; color: #aa8833; border: 1px solid #aa8833; }
 
 #tblPlayBttns .tdSBEnabled { color: #aa8833; background-color: white; border: 1px solid #aa8833 }
 #tblPlayBttns .tdSBDisabled { color: #bbbbbb; background-color: white; border: 1px solid #bbbbbb }
@@ -555,11 +555,29 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
                 </tr>
             </table>
             <div id="divPlayBttns" style="display: none">
-                <table cellpadding="0" cellspacing="10" border="0" style="margin: auto" id="tblPlayBttns">
+                <table cellpadding="0" cellspacing="0" border="0" style="margin: auto">
                     <tr>
-                        <td class="bttnPlay" id="tdBttnPlayPauseContinue" onclick="OnPlayPauseContinue()">暂停</td>
-                        <td class="bttnPlay" id="tdBttnPlayRestart" onclick="OnPlayRestart()">重播</td>
-                        <td class="bttnPlay" id="tdBttnPlayStop" onclick="OnPlayStop()">结束</td>
+                        <td>
+                            <table cellpadding="0" cellspacing="0" border="0">
+                                <tr>
+                                    <td id="tdPlayCount" style="text-align: right">10</td>
+                                    <td>/</td>
+                                    <td id="tdPlayTotal" style="text-align: left">20</td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td style="width: 30px">&nbsp;</td>
+                        <td>
+                            <table cellpadding="0" cellspacing="10" border="0" id="tblPlayBttns">
+                                <tr>
+                                    <td class="bttnPlay" id="tdBttnPlayPauseContinue" onclick="OnPlayPauseContinue()">暂停</td>
+                                    <td class="bttnPlay" id="tdBttnPlayRestart" onclick="OnPlayRestart()">重播</td>
+                                    <td class="bttnPlay" id="tdBttnPlayStop" onclick="OnPlayStop()">结束</td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td style="width: 30px">&nbsp;</td>
+                        <td id="tdPlaySpeedBttns"></td>
                     </tr>
                 </table>
             </div>

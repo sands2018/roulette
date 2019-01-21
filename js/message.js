@@ -609,6 +609,19 @@ function CPlay()
 
 var g_play = new CPlay();
 
+function UpdatePlayStatus(nCount, nTotal)
+{
+    var td = document.getElementById("tdPlayCount");
+    td.innerHTML = nCount.toString();
+
+    if(nTotal > 0)
+    {
+        td = document.getElementById("tdPlayTotal");
+        td.innerHTML = nTotal.toString();
+    }
+
+}
+
 function StopPlay()
 {
     if (g_play.Status >= 0)
@@ -667,6 +680,7 @@ function OnPlayTimer()
 
     var num = g_play.Step();
     UpdatePlayButtons();
+    UpdatePlayStatus(g_play.nIDX + 1, -1);
     if (num < 0)
         return;
 
@@ -691,6 +705,7 @@ function OnPlayRestart()
     Play_Show_AddNum();
 
     UpdatePlayButtons();
+    UpdatePlayStatus(g_play.nIDX + 1, -1);
 }
 
 function OnPlayStop()
@@ -803,6 +818,7 @@ $(document).ready(function ()
     $("#tdBttnPlay").click(function ()
     {
         OnPlayRestart();
+        UpdatePlayStatus(g_play.nIDX + 1, g_play.anNum.length);
 
         var div = document.getElementById("divPlayBttns");
         div.style.display = "";
