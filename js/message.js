@@ -300,11 +300,6 @@ function SwitchStats()
     td.innerHTML = astrTitle[nIdx];
 }
 
-function OnHideStats()
-{
-    SwitchWindow("divStats", "divMain");
-}
-
 function OnStatsNumClick(nCol)
 {
     Show_StatsNumbers(nCol);
@@ -341,11 +336,13 @@ function OpenStatistics(strID)
 
     if (strID == "g") // games
     {
-        if ((g_bttnStats.nSelIdx != 0) && (g_bttnStats.nSelIdx != 1))
+        //if ((g_bttnStats.nSelIdx != 0) && (g_bttnStats.nSelIdx != 1))
+        if (g_bttnStats.nSelIdx != 0)
             g_status.StatsIdx = g_bttnStats.nSelIdx;
 
         g_bttnStats.nSelIdx = 0;
     }
+    /*
     else if (strID == "n") // numbers
     {
         if ((g_bttnStats.nSelIdx != 0) && (g_bttnStats.nSelIdx != 1))
@@ -353,7 +350,9 @@ function OpenStatistics(strID)
 
         g_bttnStats.nSelIdx = 1;
     }
-    else if ((g_bttnStats.nSelIdx == 0) || (g_bttnStats.nSelIdx == 1))
+    */
+    //else if ((g_bttnStats.nSelIdx == 0) || (g_bttnStats.nSelIdx == 1))
+    else if (g_bttnStats.nSelIdx == 0)
     {
         g_bttnStats.nSelIdx = g_status.StatsIdx;
     }
@@ -538,6 +537,165 @@ function OnBetsManageOK()
     div.style.display = "none";
 }
 
+// play records: --------------------------------------------------------------
+
+function CPlay()
+{
+    this.anNum = [];
+    this.nIDX = -1;
+    this.Status = -1;
+    this.TimerID;
+
+    var TIMER_INTERVAL = 2000;
+
+    this.ReachEnd = function ()
+    {
+        return (this.nIDX >= (this.anNum.length - 1));
+    }
+
+    this.Start = function (queue)
+    {
+        if (this.anNum.length > 0)
+            this.anNum.splice(0, this.anNum.length);
+
+        for (var n = 0; n <= queue.nIDX; ++n)
+            this.anNum[n] = queue.anNum[n];
+
+        queue.anNum.splice(0, queue.anNum.length);
+        queue.nIDX = -1;
+
+        this.nIDX = -1;
+
+        this.Status = 1;
+
+        this.TimerID = window.setInterval(OnPlayTimer, TIMER_INTERVAL);
+    }
+
+    this.PauseContinue = function ()
+    {
+        if (this.Status > 0)
+        {
+            window.clearInterval(this.TimerID);
+            this.Status = 0;
+        }
+        else if (this.Status == 0)
+        {
+            this.TimerID = window.setInterval(OnPlayTimer, TIMER_INTERVAL);
+            this.Status = 1;
+        }
+    }
+
+    this.Stop = function ()
+    {
+        if (this.Status >= 0)
+        {
+            window.clearInterval(this.TimerID);
+            this.Status = -1;
+        }
+    }
+
+    this.Step = function ()
+    {
+        this.nIDX++;
+        if (this.nIDX >= this.anNum.length)
+            return -1;
+
+        if (this.ReachEnd())
+            this.Stop();
+
+        return this.anNum[this.nIDX];
+    }
+}
+
+var g_play = new CPlay();
+
+function OnQuitStats()
+{
+    if (g_play.Status >= 0)
+    {
+        g_play.Stop();
+
+        for (var n = g_play.nIDX + 1; n < g_play.anNum.length; ++n)
+            Calc_AddNum(g_play.anNum[n]);
+
+        Calc_Sum();
+
+        Show_AddNum();
+    }
+
+    SwitchWindow("divStats", "divMain");
+}
+
+
+function UpdatePlayButtons()
+{
+    var bttn = document.getElementById("tdBttnPlayPauseContinue");
+    bttn.className = "bttnPlay " + ((g_play.Status >= 0) ? "tdSBEnabled" : "tdSBDisabled");
+    if (g_play.Status == 0)
+        bttn.innerHTML = "继续";
+    else
+        bttn.innerHTML = "暂停";
+
+    bttn = document.getElementById("tdBttnPlayRestart");
+    bttn.className = "bttnPlay " + ((g_play.Status <= 0) ? "tdSBEnabled" : "tdSBDisabled");
+
+    bttn = document.getElementById("tdBttnPlayStop");
+    bttn.className = "bttnPlay tdSBEnabled";
+    if (g_play.Status >= 0)
+        bttn.innerHTML = "结束";
+    else
+        bttn.innerHTML = "退出";
+}
+
+function OnPlayTimer()
+{
+    if (g_play.Status < 0)
+        return;
+
+    var num = g_play.Step();
+    UpdatePlayButtons();
+    if (num < 0)
+        return;
+
+    Calc_AddNum(num);
+    Calc_Sum();
+    Play_Show_AddNum();
+}
+
+
+function OnPlayPauseContinue()
+{
+    g_play.PauseContinue();
+    UpdatePlayButtons();
+}
+
+function OnPlayRestart()
+{
+    g_play.Start(g_queue);
+    var num = g_play.Step();
+    Calc_AddNum(num);
+    Calc_Sum();
+    Play_Show_AddNum();
+
+    UpdatePlayButtons();
+}
+
+function OnPlayStop()
+{
+    if (g_play.Status >= 0)
+    {
+        g_play.Stop();
+        UpdatePlayButtons();
+    }
+    else
+    {
+        OnQuitStats();
+    }
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+
 $(document).ready(function ()
 {
     // sys change theme:
@@ -628,10 +786,16 @@ $(document).ready(function ()
         OpenStatistics("g");
     });
 
-    // stats numbers:
-    $("#tdBttnStatsNumbers").click(function ()
+    // play:
+    $("#tdBttnPlay").click(function ()
     {
-        OpenStatistics("n");
+        return;
+        OnPlayRestart();
+
+        var div = document.getElementById("divPlayBttns");
+        div.style.display = "";
+
+        OpenStatistics("g");
     });
 
     $("#tdBttnSave").click(function ()

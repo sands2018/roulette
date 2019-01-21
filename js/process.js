@@ -399,7 +399,7 @@ function Show_Queue()
 function Show_RefreshSysButtons()
 {
     var astrIDBttn = ["tdBttnTheme", "tdBttnRestart", "tdBttnRestore", "tdBttnImport", "tdBttnExport", "tdBttnSave",
-        "tdBttnStatsGames", "tdBttnStatsNumbers", "tdBttnStatistics", "tdBttnManage", "tdBttnConfig", "tdBttnMore"];
+        "tdBttnStatsGames", "tdBttnStatistics", "tdBttnPlay", "tdBttnManage", "tdBttnConfig", "tdBttnMore"];
 
     var abEnabled = [];
 
@@ -408,14 +408,17 @@ function Show_RefreshSysButtons()
         abEnabled[n] = true;
     }
 
-    if (g_queue.nIDX < 0)
+    if (g_queue.nIDX < 1)
+    {
+        abEnabled[8] = false; // play
+    }
+    else if (g_queue.nIDX < 0)
     {
         abEnabled[1] = false; // restart
         abEnabled[4] = false; // export
         abEnabled[5] = false; // save
         abEnabled[6] = false; // stats games
-        abEnabled[7] = false; // stats numbers
-        abEnabled[8] = false; // statistics
+        abEnabled[7] = false; // statistics
     }
     else
     {
@@ -450,6 +453,14 @@ function Show_AddNum()
     Show_RefreshSysButtons();
     Show_SumLists();
     Show_StatsGames(-1, true);
+}
+
+function Play_Show_AddNum()
+{
+    Show_StatsGames(-1, false);
+    Show_StatsNumbers(-1);
+    Show_StatsRounds();
+    Show_StatsMisc();
 }
 
 function PageInit_Data()

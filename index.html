@@ -193,6 +193,11 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 
 #tblBetsBttns { width: 320px; }  
 
+.bttnPlay { width: 280px; height: 70px; line-height: 70px; color: #aa8833; border: 1px solid #aa8833; }
+
+#tblPlayBttns .tdSBEnabled { color: #aa8833; background-color: white; border: 1px solid #aa8833 }
+#tblPlayBttns .tdSBDisabled { color: #bbbbbb; background-color: white; border: 1px solid #bbbbbb }
+
 </style>
 
 <script type="text/javascript" src="3rd/jquery-3.3.1.min.js"></script>
@@ -318,10 +323,10 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
                     <tr id="trBttnMore">
                         <td id="tdBttnTheme">NA</td>
                         <td id="tdBttnRestart">重置</td>
-                        <td id="tdBttnConfig">配置</td>
+                        <td id="tdBttnPlay">播放</td>
                         <td id="tdBttnImport">导入</td>
                         <td id="tdBttnManage">数据</td>
-                        <td id="tdBttnStatsNumbers">号码</td>
+                        <td id="tdBttnConfig">配置</td>
                     </tr>
                     <tr id="trBttnEmpty">
                         <td colspan="5">&nbsp;</td>
@@ -500,7 +505,7 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
             <table cellpadding="0" cellspacing="0" style="width: 100%;" id="tblStatsTitleBar">
                 <tr>
                     <td style="width: 91%; text-align: center" id="tdStatsTitle">统计数据</td>
-                    <td style="width: 9%; height: 80px; font-family: Arial" onclick="OnHideStats()">x</td>
+                    <td style="width: 9%; height: 80px; font-family: Arial" onclick="OnQuitStats()">x</td>
                 </tr>
             </table>
         </div>
@@ -544,11 +549,20 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
                     <td style="width: 81%"><div id="divStatsBttns"></div></td>
                     <td style="width: 19%">
                         <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; height: 60px">
-                            <tr><td id="tdBttnStatsQuit" onclick="OnHideStats()">退出</td></tr>
+                            <tr><td id="tdBttnStatsQuit" onclick="OnQuitStats()">退出</td></tr>
                         </table>
                     </td>
                 </tr>
             </table>
+            <div id="divPlayBttns" style="display: none">
+                <table cellpadding="0" cellspacing="10" border="0" style="margin: auto" id="tblPlayBttns">
+                    <tr>
+                        <td class="bttnPlay" id="tdBttnPlayPauseContinue" onclick="OnPlayPauseContinue()">暂停</td>
+                        <td class="bttnPlay" id="tdBttnPlayRestart" onclick="OnPlayRestart()">重播</td>
+                        <td class="bttnPlay" id="tdBttnPlayStop" onclick="OnPlayStop()">结束</td>
+                    </tr>
+                </table>
+            </div>
             <div style="height: 10px">&nbsp;</div>
         </div>
     </div>
