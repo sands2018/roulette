@@ -410,7 +410,7 @@ function OnConfigOK()
     g_gamebets.betsels.rows.splice(0, g_gamebets.betsels.rows.length);
     g_gamebets.betsels.total = selBets.length;
     for (var n = 0; n < selBets.length; ++n)
-        g_gamebets.betsels.rows[n] = new CValue(selBets[n].v);
+        g_gamebets.betsels.rows[n] = new CArrayValue(selBets[n].v);
     g_gamebets.SaveBetSels();
 
     g_gamebets.rndsels.rows.splice(0, g_gamebets.rndsels.rows.length);
@@ -471,10 +471,11 @@ function OnBetsManageAdd()
                 {
                     $('#dgBetsManage').datagrid({ data: g_gamebets.bets });
                     $('#dgBetsManage').datagrid('reload');
+
+                    UpdateConfigManageButtonStatus();
                 }
             }
         }
-
         return rb;
     });
     $('.messager-input').attr('maxlength', 20);
@@ -500,6 +501,8 @@ function OnBetsManageDel()
             {
                 $('#dgBetsManage').datagrid({ data: g_gamebets.bets });
                 $('#dgBetsManage').datagrid('reload');
+
+                UpdateConfigManageButtonStatus();
             }
         }
     });
@@ -507,7 +510,7 @@ function OnBetsManageDel()
 
 function OnBetsManageRestoreDefault()
 {
-    jConfirm('确定要重新加入默认打法吗？', '请确认', function (rb)
+    jConfirm('确定要重新加入预定义的打法吗？', '请确认', function (rb)
     {
         if (rb)
         {
@@ -517,6 +520,8 @@ function OnBetsManageRestoreDefault()
             {
                 $('#dgBetsManage').datagrid({ data: g_gamebets.bets });
                 $('#dgBetsManage').datagrid('reload');
+
+                UpdateConfigManageButtonStatus();
             }
         }
     });

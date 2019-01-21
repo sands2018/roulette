@@ -99,6 +99,11 @@ function CValue(val)
     this.v = val;
 }
 
+function CArrayValue(val)
+{
+    this.v = val.slice(0);
+}
+
 function GetArrayDataString(aData)
 {
     var strData = "";
@@ -114,6 +119,11 @@ function GetArrayDataString(aData)
     }
 
     return strData;
+}
+
+function IsIntArrayEqual(an1, an2)
+{
+    return (GetArrayDataString(an1) == GetArrayDataString(an2));
 }
 
 
@@ -153,7 +163,7 @@ function CGameBets()
     this.DefaultBets = function ()
     {
         for (var n = 0; n < aBetDefault.length; ++n)
-            this.bets.rows[n] = new CValue(aBetDefault[n]);
+            this.bets.rows[n] = new CArrayValue(aBetDefault[n]);
 
         this.bets.total = this.bets.rows.length;
     }
@@ -211,25 +221,13 @@ function CGameBets()
             this.rndsels = JSON.parse(strData);
     }
 
-    this.GetBetString = function(n)
-    {
-        return GetArrayDataString(this.bets.rows[n].v);
-    }
-
-    this.GetBetSelString = function(n)
-    {
-        return GetArrayDataString(this.betsels.rows[n].v);
-    }
-
     this.BetSelected = function (val)
     {
-        var strVal = GetArrayDataString(val);
-
         var bChecked = false;
 
         for(var n = 0; n < this.betsels.rows.length; ++ n)
         {
-            if (this.GetBetSelString(n) == strVal)
+            if (IsIntArrayEqual(this.betsels.rows[n].v, val))
             {
                 bChecked = true;
                 break;
@@ -277,13 +275,11 @@ function CGameBets()
         if (rtn.anVal.length > 10)
             return -102;
 
-        var strVal = GetArrayDataString(rtn.anVal);
-
         var bFound = false;
 
         for (var n = 0; n < this.bets.rows.length; ++n)
         {
-            if (this.GetBetString(n) == strVal)
+            if (IsIntArrayEqual(this.bets.rows[n].v, rtn.anVal))
             {
                 bFound = true;
                 break;
@@ -293,7 +289,7 @@ function CGameBets()
         if (bFound)
             return -111;
 
-        var val = new CValue(rtn.anVal);
+        var val = new CArrayValue(rtn.anVal);
 
         this.bets.rows.push(val);
         this.betsels.rows.push(val);
@@ -318,7 +314,7 @@ function CGameBets()
 
             for (var n = this.bets.rows.length - 1; n >= 0 ; --n)
             {
-                if (this.GetBetString(n) == strVal)
+                if (GetArrayDataString(this.bets.rows[n].v) == strVal)
                 {
                     this.bets.rows.splice(n, 1);
                     break;
@@ -327,7 +323,7 @@ function CGameBets()
 
             for (var n = this.betsels.rows.length - 1; n >= 0 ; --n)
             {
-                if (this.GetBetSelString(n) == strVal)
+                if (GetArrayDataString(this.betsels.rows[n].v) == strVal)
                 {
                     this.betsels.rows.splice(n, 1);
                     break;
@@ -346,8 +342,61 @@ function CGameBets()
     // 0: all default bets already exist
     this.RestoreDefaultBets = function ()
     {
-        var rn = 1;
-        return rn;
+        var bAllFound = true;
+        for (var n0 = 0; n0 < aBetDefault.length; ++n0)
+        {
+            var bFound = false;
+
+            for(var n = 0; n < this.bets.rows.length; ++ n)
+            {
+                if (IsIntArrayEqual(this.bets.rows[n].v, aBetDefault[n0]))
+                {
+                    bFound = true;
+                    break;
+                }
+            }
+
+            if(!bFound)
+            {
+                bAllFound = false;
+                break;
+            }
+        }
+
+        if (bAllFound)
+            return 0;
+
+        for (var n0 = 0; n0 < aBetDefault.length; ++n0)
+        {
+            for (var n = 0; n < this.bets.rows.length; ++n)
+            {
+                if (IsIntArrayEqual(this.bets.rows[n].v, aBetDefault[n0]))
+                {
+                    this.bets.rows.splice(n, 1);
+                    break;
+                }
+            }
+
+            for (var n = 0; n < this.betsels.rows.length; ++n)
+            {
+                if (IsIntArrayEqual(this.betsels.rows[n].v, aBetDefault[n0]))
+                {
+                    this.betsels.rows.splice(n, 1);
+                    break;
+                }
+            }
+        }
+
+        for (var n0 = 0; n0 < aBetDefault.length; ++n0)
+        {
+            this.bets.rows.splice(n0, 0, new CArrayValue(aBetDefault[n0]));
+            this.betsels.rows.splice(n0, 0, new CArrayValue(aBetDefault[n0]));
+        }
+
+        this.SaveBets();
+        this.SaveBetSels();
+
+        return 1;
     }
 
     this.ErrorMessage = function (rn)
