@@ -609,19 +609,32 @@ function CPlay()
 
 var g_play = new CPlay();
 
-function OnQuitStats()
+function StopPlay()
 {
     if (g_play.Status >= 0)
     {
         g_play.Stop();
+    }
 
+    if (g_play.nIDX < (g_play.anNum.length - 1))
+    {
+        var nn = g_queue.anNum.length;
         for (var n = g_play.nIDX + 1; n < g_play.anNum.length; ++n)
             Calc_AddNum(g_play.anNum[n]);
 
         Calc_Sum();
+        nn = g_queue.anNum.length;
 
         Show_AddNum();
     }
+}
+
+function OnQuitStats()
+{
+    StopPlay();
+
+    var div = document.getElementById("divPlayBttns");
+    div.style.display = "none";
 
     SwitchWindow("divStats", "divMain");
 }
@@ -684,7 +697,7 @@ function OnPlayStop()
 {
     if (g_play.Status >= 0)
     {
-        g_play.Stop();
+        StopPlay();
         UpdatePlayButtons();
     }
     else

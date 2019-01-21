@@ -408,11 +408,7 @@ function Show_RefreshSysButtons()
         abEnabled[n] = true;
     }
 
-    if (g_queue.nIDX < 1)
-    {
-        abEnabled[8] = false; // play
-    }
-    else if (g_queue.nIDX < 0)
+    if (g_queue.nIDX < 0)
     {
         abEnabled[1] = false; // restart
         abEnabled[4] = false; // export
@@ -423,6 +419,11 @@ function Show_RefreshSysButtons()
     else
     {
         abEnabled[2] = false; // restore
+    }
+
+    if (g_queue.nIDX < 1)
+    {
+        abEnabled[8] = false; // play
     }
 
     for (var n = 0; n < astrIDBttn.length; ++n)
