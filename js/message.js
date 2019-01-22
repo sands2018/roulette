@@ -3,6 +3,10 @@
     5  - main top;
     9  - main bottom;
     10 - show gameboard/keyboard;
+    20 - view number;
+    21 - view number middle;
+    25 - view number top;
+    29 - view number bottom;
     30 - statistics middle;
     35 - statistics top;
     39 - statistics bottom;
@@ -11,7 +15,8 @@
     55 - file top;
     59 - file bottom;
     90 - import;
-    91 - games statistics config;
+    91 - games config;
+    93 - bets manage;
 */
 
 
@@ -276,6 +281,19 @@ function OnBttnStatsLongsClick(nIdx)
 {
     g_bttnStatsLongs.OnClick(nIdx);
     Show_StatsLongs();
+}
+
+// ----------------------------------------------
+
+function Show_RefreshViewNumButton()
+{
+    g_bttnViewNum.Show("divViewNumBttns");
+}
+
+function OnBttnViewNumClick(nIdx)
+{
+    g_bttnViewNum.OnClick(nIdx);
+    Show_ViewNum();
 }
 
 
@@ -795,6 +813,23 @@ function OnPlayStop()
     }
 }
 
+function OnViewNum()
+{
+    if (g_queue.nIDX < 0)
+        return;
+
+    Show_RefreshViewNumButton();
+    Show_ViewNum();
+
+    var div = document.getElementById("divViewNum");
+    div.style.display = "";
+}
+
+function OnQuitViewNum()
+{
+    var div = document.getElementById("divViewNum");
+    div.style.display = "none";
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 

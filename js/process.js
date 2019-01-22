@@ -1427,3 +1427,49 @@ function AfterOpenData(rb)
     }
 }
 
+function Show_ViewNum()
+{
+    if (g_queue.nIDX < 0)
+        return;
+
+    var nLine = g_queue.nIDX / 10;
+    var nIdx = g_queue.nIDX;
+
+    var strHtml = "<table cellpadding='0' cellspacing='20' border='0' style='width: 100%' id='tblViewNum'>";
+    for (var nn = 0; nn < nLine; ++nn)
+    {
+        strHtml += "<tr>";
+        for (var n = 0; n < 10; ++n)
+        {
+            strHtml += "<td class='";
+            if (nIdx >= 0)
+            {
+                var num = g_queue.anNum[nIdx];
+
+                var nRC = g_bttnViewNum.Value();
+                var nNumRC = 0;
+                if (nRC < 3)
+                    nNumRC = GetNumCol(num);
+                else
+                    nNumRC = GetNumRow(num) + 3;
+
+                strHtml += ((nNumRC == nRC) ? "tdHighlight" : "tdNormal") + "'>";
+
+                strHtml += num.toString();
+            }
+            else
+            {
+                strHtml += "tdEmpty'>&nbsp;";
+            }
+            strHtml += "</td>";
+
+            --nIdx;
+        }
+
+        strHtml += "</tr>";
+    }
+    strHtml += "</table>"
+
+    var div = document.getElementById("divViewNumC");
+    div.innerHTML = strHtml;
+}

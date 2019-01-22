@@ -1919,4 +1919,5 @@ var g_bttnStatsScope = new CBttnOptions("StatsScope", [40, 70, 110, 180, -1], nu
 var g_bttnStatsLongsBet = new CBttnOptions("StatsLongsBet", [4, 5, 6], null, 2, 120);
 var g_bttnStatsLongs = new CBttnOptions("StatsLongs", [10, 11, 12, 13], ["10+", "11+", "12+", "13+"], 2, 120);
 var g_bttnStats = new CBttnOptions("Stats", [0, 1, 2, 3], ["打法", "号码", "轮次", "其它"], 0, 0);
+var g_bttnViewNum = new CBttnOptions("ViewNum", [0, 1, 2, 3, 4, 5], ["一组", "二组", "三组", "1行", "2行", "3行"], 0, 0);
 var g_bttnPlaySpeed = new CBttnOptions("PlaySpeed", [1, 2, 3], ["1/2", "1x", "2x"], 1, 80);

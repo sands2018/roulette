@@ -84,9 +84,9 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 #tblStatsSum .tdStatsSumListItem { text-align: left; }
 #divStatsSumLists { width: 100% }
 
-#tblStatsTitleBar td, #tblFilesTitleBar td { border: 1px solid #aa8833; border-right: 0; font-size: 40px; background-color: #f3efe3 }
-#tblStatsTitleBar td:first-child, #tblFilesTitleBar td:first-child { border-left: 0 }
-#tdStatsTitle, #tdFilesTitle { color: #aa8833; padding: 3px 0 5px 0; }
+#tblStatsTitleBar td, #tblFilesTitleBar td, #tblViewNumTitleBar td { border: 1px solid #aa8833; border-right: 0; font-size: 40px; background-color: #f3efe3 }
+#tblStatsTitleBar td:first-child, #tblFilesTitleBar td:first-child, #tblViewNumTitleBar td:first-child { border-left: 0 }
+#tdStatsTitle, #tdFilesTitle, #tdViewNumTitle { color: #aa8833; padding: 3px 0 5px 0; }
 
 #tblStatsNumbers td { border-bottom: 1px solid #bbbbbb; }
 #tblStatsNumbers tr:first-child td { padding: 8px 0; border-top: 1px solid #cf8f28; border-bottom: 1px solid #cf8f28; }
@@ -171,7 +171,7 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 .tdSBEnabled { color: #aa8833; background-color: white; border: 1px solid #aa8833 }
 .tdSBDisabled { color: #bbbbbb; background-color: white; border: 1px solid #bbbbbb }
 
-#tdBttnStatsGamesConfig, #tdBttnStatsQuit { color: #aa8833; border: 1px solid #aa8833; }
+#tdBttnStatsGamesConfig, #tdBttnStatsQuit, tdBttnViewNumQuit { color: #aa8833; border: 1px solid #aa8833; }
 
 .datagrid-btable td { text-align: left; }
 
@@ -192,6 +192,11 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 #tdBetsManage { border: 1px solid #aa8833 }
 
 #tblBetsBttns { width: 320px; }  
+
+#tblViewNum td { width: 10%; height: 70px; }
+#tblViewNum .tdNormal { border: 1px solid #ccaa88; background-color: white; }
+#tblViewNum .tdHighlight { border: 1px solid #aa8833; background-color: #f8e3af; }
+#tblViewNum .tdEmpty { border: 0; background-color: white; }
 
 .bttnPlay { width: 130px; height: 60px; line-height: 60px; color: #aa8833; border: 1px solid #aa8833; }
 
@@ -252,7 +257,17 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
                         <td id="tdColumnsT11"></td><td id="tdColumnsV11"></td>
                     </tr>
                 </table>
-                <div id="divColumnsBttns"></div>
+                <table cellpadding="0" cellspacing="0" border="0" style="width: 100%">
+                    <tr>
+                        <td><div id="divColumnsBttns"></div></td>
+                        <td style="width: 100px">
+                            <table cellpadding="0" cellspacing="0" border="0" style="width: 100%">
+                                <tr><td class="tdBttn" onclick="OnViewNum()">...</td></tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+                
             </div>
 
             <div id="divFinishedLong" style="padding: 10px"></div>
@@ -623,5 +638,28 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
             </div>
         </div>
     </div>
+
+    <div id="divViewNum" style="position:absolute; top: 0; z-index: 20; width: 100%; height: 100%;
+            background-color: white; display: none">
+        <div id="divViewNumTop" style="z-index: 25; position: fixed; right: 0px; top:0px; width: 100%;">
+            <table cellpadding="0" cellspacing="0" style="width: 100%;" id="tblViewNumTitleBar">
+                <tr>
+                    <td style="width: 91%; text-align: center" id="tdViewNumTitle">号码查看</td>
+                    <td style="width: 9%; height: 80px; font-family: Arial" onclick="OnQuitViewNum()">x</td>
+                </tr>
+            </table>
+        </div>
+        <div style="width: 100%; height: 90px">&nbsp;</div>
+
+        <div id="divViewNumMain" style="z-index: 21; position: fixed; width: 100%; background-color: white;">
+            <div id="divViewNumC"></div>
+        </div>
+
+        <div id="divViewNumBottom" style="z-index: 29; position: fixed; right: 0px; bottom:0px; width: 100%; height: auto;">
+            <div style="background-color: white; height: 10px">&nbsp;</div>
+            <div id="divViewNumBttns"></div>
+        </div>
+    </div>
+
 </body>
 </html>
