@@ -278,6 +278,8 @@ function OnBttnStatsLongsClick(nIdx)
     Show_StatsLongs();
 }
 
+
+
 // ----------------------------------------------
 
 function SwitchStats()
@@ -546,7 +548,25 @@ function CPlay()
     this.Status = -1;
     this.TimerID;
 
-    var TIMER_INTERVAL = 2000;
+    function GetTimerInterval()
+    {
+        var nInterval = 2000;
+        if (g_bttnPlaySpeed.Value() == 1)
+            nInterval = 4000;
+        else if (g_bttnPlaySpeed.Value() == 3)
+            nInterval = 1000;
+
+        return nInterval;
+    }
+
+    this.ChangeInterval = function()
+    {
+        if(this.Status == 1)
+        {
+            window.clearInterval(this.TimerID);
+            this.TimerID = window.setInterval(OnPlayTimer, GetTimerInterval());
+        }
+    }
 
     this.ReachEnd = function ()
     {
@@ -568,7 +588,7 @@ function CPlay()
 
         this.Status = 1;
 
-        this.TimerID = window.setInterval(OnPlayTimer, TIMER_INTERVAL);
+        this.TimerID = window.setInterval(OnPlayTimer, GetTimerInterval());
     }
 
     this.PauseContinue = function ()
@@ -580,7 +600,7 @@ function CPlay()
         }
         else if (this.Status == 0)
         {
-            this.TimerID = window.setInterval(OnPlayTimer, TIMER_INTERVAL);
+            this.TimerID = window.setInterval(OnPlayTimer, GetTimerInterval());
             this.Status = 1;
         }
     }
@@ -608,6 +628,19 @@ function CPlay()
 }
 
 var g_play = new CPlay();
+
+
+function Show_RefreshPlaySpeedButton()
+{
+    g_bttnPlaySpeed.Show("tdPlaySpeedBttns");
+}
+
+function OnBttnPlaySpeedClick(nIdx)
+{
+    g_bttnPlaySpeed.OnClick(nIdx);
+    g_play.ChangeInterval();
+}
+
 
 function UpdatePlayStatus(nCount, nTotal)
 {
@@ -820,6 +853,7 @@ $(document).ready(function ()
         OnPlayRestart();
         UpdatePlayStatus(g_play.nIDX + 1, g_play.anNum.length);
 
+        Show_RefreshPlaySpeedButton();
         var div = document.getElementById("divPlayBttns");
         div.style.display = "";
 
