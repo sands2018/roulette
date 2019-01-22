@@ -493,7 +493,7 @@ function OnConfigManage()
 
 function OnBetsManageAdd()
 {
-    $.messager.defaults = { ok: "确定", cancel: "取消", width: 700, top: 430 };
+    $.messager.defaults = { ok: "确定", cancel: "取消", width: 700, top: 300 };
     $.messager.prompt('添加打法', '请输入新打法：', function (strBet)
     {
         var rb = true;
