@@ -428,6 +428,35 @@ function OnConfigOK()
 }
 
 
+function UpdateDataGridBetsRowColor(strDataGrid, index, row)
+{
+    var strStyle = "";
+
+    if (g_gamebets.IsDefaultBet(row.v))
+    {
+        var rows = $('#' + strDataGrid).datagrid('getSelections');
+        var bSelected = false;
+        for (var n = 0; n < rows.length; ++n)
+        {
+            if ($('#' + strDataGrid).datagrid('getRowIndex', rows[n]) == index)
+            {
+                bSelected = true;
+                break;
+            }
+        }
+        var strColor = "";
+        if (bSelected)
+            strColor = "#e5dfcf";
+        else
+            strColor = "#f3f3f3";
+
+        strStyle = "background-color:" + strColor + ";";
+    }
+
+    return strStyle;
+}
+
+
 function OnConfigManage()
 {
     $(function ()
@@ -436,10 +465,22 @@ function OnConfigManage()
             data: g_gamebets.bets,
             singleSelect: false,
             showHeader: false,
+            rowStyler: function (index, row)
+            {
+                return UpdateDataGridBetsRowColor('dgBetsManage', index, row);
+            },
             onClickRow: function (nIdxRow)
             {
                 UpdateConfigManageButtonStatus();
-            }
+            },
+            onSelect: function (index, row)
+            {
+                $('#dgBetsManage').datagrid('refreshRow', index);
+            },
+            onUnselect: function (index, row)
+            {
+                $('#dgBetsManage').datagrid('refreshRow', index);
+            },
         });
     });
 
@@ -916,16 +957,31 @@ $(document).ready(function ()
             $('#dgGameBets').datagrid({
                 data: g_gamebets.bets,
                 singleSelect: false,
+                rowStyler: function (index, row)
+                {
+                    return UpdateDataGridBetsRowColor('dgGameBets', index, row);
+                },
                 onLoadSuccess: function (data)
                 {
                     if (data)
                     {
                         $.each(data.rows, function (index, item)
                         {
-                            if(g_gamebets.BetSelected(item.v))
+                            if (g_gamebets.BetSelected(item.v))
+                            {
                                 $('#dgGameBets').datagrid('checkRow', index);
+                                $('#dgGameBets').datagrid('refreshRow', index);
+                            }
                         });
                     }
+                },
+                onSelect: function(index, row)
+                {
+                    $('#dgGameBets').datagrid('refreshRow', index);
+                },
+                onUnselect: function (index, row)
+                {
+                    $('#dgGameBets').datagrid('refreshRow', index);
                 },
             });
 

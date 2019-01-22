@@ -176,6 +176,20 @@ function CGameBets()
         this.rnds.total = this.rnds.rows.length;
     }
 
+    this.IsDefaultBet = function(anVal)
+    {
+        var bFound = false;
+        for(var n = 0; n < aBetDefault.length; ++ n)
+        {
+            if(IsIntArrayEqual(anVal, aBetDefault[n]))
+            {
+                bFound = true;
+                break;
+            }
+        }
+        return bFound;
+    }
+
     var DATA_BETS = "DATA_BETS";
     var DATA_BET_SELS = "DATA_BET_SELS";
     var DATA_RND_SELS = "DATA_RND_SELS";
