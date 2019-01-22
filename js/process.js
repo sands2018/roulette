@@ -1432,7 +1432,7 @@ function Show_ViewNum()
     if (g_queue.nIDX < 0)
         return;
 
-    var nLine = g_queue.nIDX / 10;
+    var nLine = g_queue.nIDX / 10 + 1;
     var nIdx = g_queue.nIDX;
 
     var strHtml = "<table cellpadding='0' cellspacing='20' border='0' style='width: 100%' id='tblViewNum'>";
@@ -1446,16 +1446,23 @@ function Show_ViewNum()
             {
                 var num = g_queue.anNum[nIdx];
 
-                var nRC = g_bttnViewNum.Value();
-                var nNumRC = 0;
-                if (nRC < 3)
-                    nNumRC = GetNumCol(num);
+                if (num == 0)
+                {
+                    strHtml += "tdZero'>0";
+                }
                 else
-                    nNumRC = GetNumRow(num) + 3;
+                {
+                    var nRC = g_bttnViewNum.Value();
+                    var nNumRC = 0;
+                    if (nRC < 3)
+                        nNumRC = GetNumCol(num);
+                    else
+                        nNumRC = GetNumRow(num) + 3;
 
-                strHtml += ((nNumRC == nRC) ? "tdHighlight" : "tdNormal") + "'>";
+                    strHtml += ((nNumRC == nRC) ? "tdHighlight" : "tdNormal") + "'>";
 
-                strHtml += num.toString();
+                    strHtml += num.toString();
+                }
             }
             else
             {
