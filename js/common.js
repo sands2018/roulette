@@ -1726,7 +1726,7 @@ function CStatsWaves()
         {
             if (this.anPrev[an[n]] != 0)
             {
-                var nDistance = this.nIDX - anPrev[an[n]] - 1;
+                var nDistance = this.nIDX - this.anPrev[an[n]] - 1;
                 if (nDistance > 15)
                     nDistance = 15;
 
