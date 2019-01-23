@@ -1003,13 +1003,33 @@ function Show_StatsWaves()
         strHtml += "<td class='tdMSep'>" + ((nn == 0) ? "三组" : "3行") + "</td><td class='tdSep'>偏差</td>";
         strHtml += "<td class='tdMSep'>" + ((nn == 0) ? "组" : "行") + "</td><td>偏差</td></tr>";
 
-        for(var n = 0; n < 10 /*nMaxLine*/; ++ n)
+        for(var n = 0; n < nMaxLine; ++ n)
         {
             strHtml += "<tr>";
-            strHtml += "<td class='tdMSep'>10.12</td><td class='tdSep'>3.38</td>";
-            strHtml += "<td class='tdMSep'>10.12</td><td class='tdSep'>3.38</td>";
-            strHtml += "<td class='tdMSep'>10.12</td><td class='tdSep'>3.38</td>";
-            strHtml += "<td class='tdMSep'>10.12</td><td>3.38</td>";
+            for (var i = 0; i < 4; ++i)
+            {
+                strHtml += "<td class='tdMSep'>";
+                var nIdx = nn * 4 + i;
+                var j = g_waves.afIntvMA[nIdx].length - 1 - n;
+
+                if (j >= 0)
+                    strHtml += g_waves.afIntvMA[nIdx][j].toFixed(2);
+                else
+                    strHtml += "&nbsp;";
+
+                strHtml += "</td><td";
+                if (i != 3)
+                    strHtml += " class='tdSep'";
+
+                strHtml += ">";
+
+                if (j >= 0)
+                    strHtml += g_waves.afOffsetMA[nIdx][j].toFixed(2);
+                else
+                    strHtml += "&nbsp;";
+
+                strHtml += "</td>";
+            }
             strHtml += "</tr>";
         }
         strHtml += "</table>"

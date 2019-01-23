@@ -129,7 +129,7 @@ function IsIntArrayEqual(an1, an2)
     if (nLen1 != nLen2)
         return false;
 
-    var bEqual = false;
+    var bEqual = true;
 
     for (var n = 0; n < nLen1; ++n)
     {
@@ -1706,7 +1706,7 @@ function CStatsWaves()
             this.afOffsetMA[n] = [];
         }
 
-        this.anPrev = [0, 0, 0, 0, 0, 0];
+        this.anPrev = [0, 0, 0, 0, 0, 0, 0, 0];
         this.nIDX = -1;
     }
 
