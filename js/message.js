@@ -302,8 +302,8 @@ function OnBttnViewNumClick(nIdx)
 
 function SwitchStats()
 {
-    var astrDiv = ["Games", "Numbers", "Rounds", "Misc"];
-    var astrTitle = ["打法统计数据", "号码统计数据", "轮次汇总数据", "其它统计数据"];
+    var astrDiv = ["Games", "Waves", "Numbers", "Rounds", "Misc"];
+    var astrTitle = ["打法统计数据", "波浪统计数据", "号码统计数据", "轮次汇总数据", "其它统计数据"];
     var nIdx = g_bttnStats.Value();
 
     for (var n = 0; n < astrDiv.length; ++n)
@@ -349,20 +349,29 @@ function OpenStatistics(strID)
     if (g_queue.nIDX < 0)
         return;
 
+    if ((strID == "w") && (g_queue.nIDX < 10))
+        return;
+
     Show_StatsGames(-1, false);
+    Show_StatsWaves();
     Show_StatsNumbers(-1);
     Show_StatsRounds();
     Show_StatsMisc();
 
     if (strID == "g") // games
     {
-        //if ((g_bttnStats.nSelIdx != 0) && (g_bttnStats.nSelIdx != 1))
-        if (g_bttnStats.nSelIdx != 0)
+        if (!IsDirectStatsWindowIdx(g_bttnStats.nSelIdx))
             g_status.StatsIdx = g_bttnStats.nSelIdx;
 
         g_bttnStats.nSelIdx = 0;
     }
-    /*
+    else if (strID == "w") // waves
+    {
+        if ((g_bttnStats.nSelIdx != 0) && (g_bttnStats.nSelIdx != 1))
+            g_status.StatsIdx = g_bttnStats.nSelIdx;
+
+        g_bttnStats.nSelIdx = 1;
+    }
     else if (strID == "n") // numbers
     {
         if ((g_bttnStats.nSelIdx != 0) && (g_bttnStats.nSelIdx != 1))
@@ -370,9 +379,7 @@ function OpenStatistics(strID)
 
         g_bttnStats.nSelIdx = 1;
     }
-    */
-    //else if ((g_bttnStats.nSelIdx == 0) || (g_bttnStats.nSelIdx == 1))
-    else if (g_bttnStats.nSelIdx == 0)
+    else if (IsDirectStatsWindowIdx(g_bttnStats.nSelIdx))
     {
         g_bttnStats.nSelIdx = g_status.StatsIdx;
     }
@@ -922,6 +929,19 @@ $(document).ready(function ()
     {
         OpenStatistics("g");
     });
+
+    // stats waves:
+    $("#tdBttnStatsWaves").click(function ()
+    {
+        OpenStatistics("w");
+    });
+
+    // stats numbers:
+    $("#tdBttnStatsNumbers").click(function ()
+    {
+        OpenStatistics("n");
+    });
+    
 
     // play:
     $("#tdBttnPlay").click(function ()

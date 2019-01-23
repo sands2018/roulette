@@ -123,7 +123,24 @@ function GetArrayDataString(aData)
 
 function IsIntArrayEqual(an1, an2)
 {
-    return (GetArrayDataString(an1) == GetArrayDataString(an2));
+    var nLen1 = an1.length;
+    var nLen2 = an2.length;
+
+    if (nLen1 != nLen2)
+        return false;
+
+    var bEqual = false;
+
+    for (var n = 0; n < nLen1; ++n)
+    {
+        if(an1[n] != an2[n])
+        {
+            bEqual = false;
+            break;
+        }
+    }
+
+    return bEqual;
 }
 
 
@@ -1670,6 +1687,96 @@ function CStatsRoundSum()
     }
 }
 
+
+function CStatsWaves()
+{
+    this.anIntvAv = [];
+    this.anPrev = [];
+    this.nIDX = -1;
+
+    this.afIntvMA = [];
+    this.afOffsetMA = [];
+
+    this.Reset = function ()
+    {
+        for (var n = 0; n < 8; ++n)
+        {
+            this.anIntvAv[n] = [];
+            this.afIntvMA[n] = [];
+            this.afOffsetMA[n] = [];
+        }
+
+        this.anPrev = [0, 0, 0, 0, 0, 0];
+        this.nIDX = -1;
+    }
+
+    this.AddNum = function (num)
+    {
+        if (num == 0)
+            return;
+
+        ++this.nIDX;
+
+        var nCol = GetNumCol(num);
+        var nRow = GetNumRow(num);
+
+        var an = [nCol, nRow + 3];
+
+        for(var n = 0; n < 2; ++ n)
+        {
+            if (this.anPrev[an[n]] != 0)
+            {
+                var nDistance = this.nIDX - anPrev[an[n]] - 1;
+                if (nDistance > 15)
+                    nDistance = 15;
+
+                this.anIntvAv[an[n]].push(nDistance);
+                this.anIntvAv[(an[n] < 3) ? 6 : 7].push(nDistance);
+            }
+
+            this.anPrev[an[n]] = this.nIDX;
+        }
+    }
+
+    this.Calc = function(nMACount)
+    {
+        if (nMACount <= 0)
+            return;
+
+        for (var nn = 0; nn < 8; ++nn)
+        {
+            var nLen = this.afIntvMA[nn].length;
+            if (nLen > 0)
+                this.afIntvMA[nn].splice(0, nLen);
+
+            nLen = this.afOffsetMA[nn].length;
+            if (nLen > 0)
+                this.afOffsetMA[nn].splice(0, nLen);
+
+            if (this.anIntvAv[nn].length < nMACount)
+                continue;
+
+            for (var n = nMACount - 1; n < this.anIntvAv[nn].length; ++n)
+            {
+                var nSum = 0;
+
+                for (var i = 0; i < nMACount; ++i)
+                    nSum += this.anIntvAv[nn][n - i];
+
+                var fAv = nSum * 1.0 / nMACount;
+                this.afIntvMA[nn].push(fAv);
+
+                var fSum = 0;
+                for (var i = 0; i < nMACount; ++i)
+                    fSum += Math.abs(this.anIntvAv[nn][n - i] - fAv);
+
+                fAv = fSum / nMACount;
+                this.afOffsetMA[nn].push(fAv);
+            }
+        }
+    }
+}
+
 function CStatsLongItem()
 {
     this.nRoundBefore = 0; // not used currently
@@ -1910,6 +2017,7 @@ var g_queue = new CNumQueue();
 var g_status = new CSysStatus();
 var g_3C3R = new CStats3C3R();
 var g_columns = new CStatsColumns();
+var g_waves = new CStatsWaves();
 var g_files = new CSysFiles();
 
 var g_bttnColumns = new CBttnOptions("Columns", [3, 4, 5, 6, 7], null, 2, -1);
@@ -1918,6 +2026,6 @@ var g_bttnStatsSum = new CBttnOptions("StatsSum", [100, 200, 300, -1], null, 2, 
 var g_bttnStatsScope = new CBttnOptions("StatsScope", [40, 70, 110, 180, -1], null, 2, 150);
 var g_bttnStatsLongsBet = new CBttnOptions("StatsLongsBet", [4, 5, 6], null, 2, 120);
 var g_bttnStatsLongs = new CBttnOptions("StatsLongs", [10, 11, 12, 13], ["10+", "11+", "12+", "13+"], 2, 120);
-var g_bttnStats = new CBttnOptions("Stats", [0, 1, 2, 3], ["打法", "号码", "轮次", "其它"], 0, 0);
+var g_bttnStats = new CBttnOptions("Stats", [0, 1, 2, 3, 4], ["打法", "波浪", "号码", "轮次", "其它"], 0, 0);
 var g_bttnViewNum = new CBttnOptions("ViewNum", [0, 1, 2, 3, 4, 5], ["一组", "二组", "三组", "1行", "2行", "3行"], 0, 0);
 var g_bttnPlaySpeed = new CBttnOptions("PlaySpeed", [1, 2, 3], ["1/2", "1x", "2x"], 1, 80);

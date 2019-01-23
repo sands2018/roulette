@@ -338,11 +338,12 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
                 <table cellpadding="0" cellspacing="10" border="0" style="width: 100%" id="tblSysButtons">
                     <tr id="trBttnMore">
                         <td id="tdBttnTheme">NA</td>
-                        <td id="tdBttnRestart">重置</td>
                         <td id="tdBttnPlay">播放</td>
+                        <td id="tdBttnRestart">重置</td>
                         <td id="tdBttnImport">导入</td>
-                        <td id="tdBttnManage">数据</td>
+                        <td id="tdBttnStatsNumbers">号码</td>
                         <td id="tdBttnConfig">配置</td>
+                        <td id="tdBttnManage">数据</td>
                     </tr>
                     <tr id="trBttnEmpty">
                         <td colspan="5">&nbsp;</td>
@@ -353,6 +354,7 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
                         <td id="tdBttnSave">保存</td>
                         <td id="tdBttnExport">导出</td>
                         <td id="tdBttnStatistics">统计</td>
+                        <td id="tdBttnStatsWaves">波浪</td>
                         <td id="tdBttnStatsGames">打法</td>
                     </tr>
                 </table>
@@ -529,6 +531,7 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
             background-color: white;">
             <div style="height: 100px">&nbsp;</div>
             <div id="divStatsGames"></div>
+            <div id="divStatsWaves"></div>
             <div id="divStatsNumbers">
                 <div id="divStatsNumbersC"></div>
                 <div class="divStatsTitle">最大距离前五名：</div>
@@ -562,8 +565,8 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
             <div id="divStatsScopeBttns"></div>
             <table cellpadding="0" cellspacing="10" border="0" style="width: 100%">
                 <tr>
-                    <td style="width: 81%"><div id="divStatsBttns"></div></td>
-                    <td style="width: 19%">
+                    <td style="width: 84%"><div id="divStatsBttns"></div></td>
+                    <td style="width: 16%">
                         <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; height: 60px">
                             <tr><td id="tdBttnStatsQuit" onclick="OnQuitStats()">退出</td></tr>
                         </table>

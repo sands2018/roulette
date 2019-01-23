@@ -398,8 +398,9 @@ function Show_Queue()
 
 function Show_RefreshSysButtons()
 {
-    var astrIDBttn = ["tdBttnTheme", "tdBttnRestart", "tdBttnRestore", "tdBttnImport", "tdBttnExport", "tdBttnSave",
-        "tdBttnStatsGames", "tdBttnStatistics", "tdBttnPlay", "tdBttnManage", "tdBttnConfig", "tdBttnMore"];
+    var astrIDBttn = ["tdBttnTheme", "tdBttnRestart", "tdBttnRestore", "tdBttnImport", "tdBttnExport",
+        "tdBttnSave", "tdBttnStatsGames", "tdBttnStatsWaves", "tdBttnStatsNumbers", "tdBttnStatistics",
+        "tdBttnPlay", "tdBttnManage", "tdBttnConfig", "tdBttnMore"];
 
     var abEnabled = [];
 
@@ -414,7 +415,8 @@ function Show_RefreshSysButtons()
         abEnabled[4] = false; // export
         abEnabled[5] = false; // save
         abEnabled[6] = false; // stats games
-        abEnabled[7] = false; // statistics
+        abEnabled[8] = false; // stats numbers
+        abEnabled[9] = false; // statistics
     }
     else
     {
@@ -422,9 +424,10 @@ function Show_RefreshSysButtons()
     }
 
     if (g_queue.nIDX < 1)
-    {
-        abEnabled[8] = false; // play
-    }
+        abEnabled[10] = false; // play
+
+    if (g_queue.nIDX < 1)
+        abEnabled[7] = false; // stats waves
 
     for (var n = 0; n < astrIDBttn.length; ++n)
     {
@@ -437,11 +440,13 @@ function Calc_AddNum(num)
 {
     g_queue.AddNum(num);
     g_3C3R.AddNum(num);
+    g_waves.AddNum(num);
 }
 
 function Calc_Sum()
 {
     g_columns.ReCalc(g_queue);
+    g_waves.Calc(10);
 }
 
 function Show_AddNum()
@@ -459,6 +464,7 @@ function Show_AddNum()
 function Play_Show_AddNum()
 {
     Show_StatsGames(-1, false);
+    Show_StatsWaves();
     Show_StatsNumbers(-1);
     Show_StatsRounds();
     Show_StatsMisc();
@@ -470,6 +476,7 @@ function PageInit_Data()
     g_columns.Reset();
     g_status.Reset();
     g_queue.Reset();
+    g_waves.Reset();
 }
 
 
@@ -969,6 +976,10 @@ function Show_StatsGames(nCol, bMain)
     divGames.innerHTML = strHtml;
 }
 
+function Show_StatsWaves()
+{
+
+}
 
 function Show_StatsRounds()
 {
@@ -1479,4 +1490,9 @@ function Show_ViewNum()
 
     var div = document.getElementById("divViewNumC");
     div.innerHTML = strHtml;
+}
+
+function IsDirectStatsWindowIdx(nIdx)
+{
+    return (nIdx <= 2);
 }
