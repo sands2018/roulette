@@ -976,9 +976,49 @@ function Show_StatsGames(nCol, bMain)
     divGames.innerHTML = strHtml;
 }
 
+function SwitchStatsWaveCR()
+{
+    var nDivID = g_bttnStatsWaveCR.Value();
+    var astrDivID = ["divStatsWavesCol", "divStatsWavesRow"];
+    for(var nn = 0; nn < 2; ++ nn)
+    {
+        var div = document.getElementById(astrDivID[nn]);
+        div.style.display = (nn == nDivID) ? "" : "none";
+    }
+}
+
 function Show_StatsWaves()
 {
+    g_waves.Calc(g_bttnStatsWaveMA.Value());
 
+    var astrDivID = ["divStatsWavesCol", "divStatsWavesRow"];
+
+    for(var nn = 0; nn < 2; ++ nn)
+    {
+        var nMaxLine = g_waves.afIntvMA[nn * 4 + 3].length;
+        var strHtml = "<table cellpadding='0' cellspacing='0' border='0' width='100%' ";
+        strHtml += "id='tblStatsWave" + ((nn == 0) ? "C" : "R") + "'><tr>";
+        strHtml += "<td class='tdMSep'>" + ((nn == 0) ? "一组" : "1行") + "</td><td class='tdSep'>偏差</td>";
+        strHtml += "<td class='tdMSep'>" + ((nn == 0) ? "二组" : "2行") + "</td><td class='tdSep'>偏差</td>";
+        strHtml += "<td class='tdMSep'>" + ((nn == 0) ? "三组" : "3行") + "</td><td class='tdSep'>偏差</td>";
+        strHtml += "<td class='tdMSep'>" + ((nn == 0) ? "组" : "行") + "</td><td>偏差</td></tr>";
+
+        for(var n = 0; n < 10 /*nMaxLine*/; ++ n)
+        {
+            strHtml += "<tr>";
+            strHtml += "<td class='tdMSep'>10.12</td><td class='tdSep'>3.38</td>";
+            strHtml += "<td class='tdMSep'>10.12</td><td class='tdSep'>3.38</td>";
+            strHtml += "<td class='tdMSep'>10.12</td><td class='tdSep'>3.38</td>";
+            strHtml += "<td class='tdMSep'>10.12</td><td>3.38</td>";
+            strHtml += "</tr>";
+        }
+        strHtml += "</table>"
+
+        var div = document.getElementById(astrDivID[nn]);
+        div.innerHTML = strHtml;
+    }
+
+    SwitchStatsWaveCR();
 }
 
 function Show_StatsRounds()

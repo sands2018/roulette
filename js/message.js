@@ -259,6 +259,32 @@ function OnBttnStatsScopeClick(nIdx)
 
 // ----------------------------------------------
 
+function Show_RefreshStatsWaveMAButton()
+{
+    g_bttnStatsWaveMA.Show("divStatsWaveMABttns");
+}
+
+function OnBttnStatsWaveMAClick(nIdx)
+{
+    g_bttnStatsWaveMA.OnClick(nIdx);
+    Show_StatsWaves();
+}
+
+// ----------------------------------------------
+
+function Show_RefreshStatsWaveCRButton()
+{
+    g_bttnStatsWaveCR.Show("divStatsWaveCRBttns");
+}
+
+function OnBttnStatsWaveCRClick(nIdx)
+{
+    g_bttnStatsWaveCR.OnClick(nIdx);
+    SwitchStatsWaveCR();
+}
+
+// ----------------------------------------------
+
 function Show_RefreshStatsLongsBetButton()
 {
     g_bttnStatsLongsBet.Show("divStatsLongsBetBttns");
@@ -297,7 +323,6 @@ function OnBttnViewNumClick(nIdx)
 }
 
 
-
 // ----------------------------------------------
 
 function SwitchStats()
@@ -315,6 +340,11 @@ function SwitchStats()
         var div = document.getElementById("divStats" + astrDiv[n]);
         div.style.display = strDisplay;
     }
+
+    var div1 = document.getElementById("divStatsScopeBttns");
+    var div2 = document.getElementById("divStatsWaveBttns");
+    div1.style.display = (nIdx == 1) ? "none" : "";
+    div2.style.display = (nIdx == 1) ? "" : "none";
 
     var td = document.getElementById("tdStatsTitle");
     td.innerHTML = astrTitle[nIdx];
@@ -349,7 +379,7 @@ function OpenStatistics(strID)
     if (g_queue.nIDX < 0)
         return;
 
-    if ((strID == "w") && (g_queue.nIDX < 10))
+    if ((strID == "w") && (g_queue.nIDX < 1))
         return;
 
     Show_StatsGames(-1, false);
@@ -367,17 +397,17 @@ function OpenStatistics(strID)
     }
     else if (strID == "w") // waves
     {
-        if ((g_bttnStats.nSelIdx != 0) && (g_bttnStats.nSelIdx != 1))
+        if (!IsDirectStatsWindowIdx(g_bttnStats.nSelIdx))
             g_status.StatsIdx = g_bttnStats.nSelIdx;
 
         g_bttnStats.nSelIdx = 1;
     }
     else if (strID == "n") // numbers
     {
-        if ((g_bttnStats.nSelIdx != 0) && (g_bttnStats.nSelIdx != 1))
+        if (!IsDirectStatsWindowIdx(g_bttnStats.nSelIdx))
             g_status.StatsIdx = g_bttnStats.nSelIdx;
 
-        g_bttnStats.nSelIdx = 1;
+        g_bttnStats.nSelIdx = 2;
     }
     else if (IsDirectStatsWindowIdx(g_bttnStats.nSelIdx))
     {
@@ -385,6 +415,8 @@ function OpenStatistics(strID)
     }
 
     Show_RefreshStatsScopeButton();
+    Show_RefreshStatsWaveMAButton();
+    Show_RefreshStatsWaveCRButton();
     Show_RefreshStatsLongsButton();
     Show_RefreshStatsLongsBetButton();
     Show_RefreshStatsButton();

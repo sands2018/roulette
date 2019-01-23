@@ -1720,7 +1720,7 @@ function CStatsWaves()
         var nCol = GetNumCol(num);
         var nRow = GetNumRow(num);
 
-        var an = [nCol, nRow + 3];
+        var an = [nCol, nRow + 4];
 
         for(var n = 0; n < 2; ++ n)
         {
@@ -1731,7 +1731,7 @@ function CStatsWaves()
                     nDistance = 15;
 
                 this.anIntvAv[an[n]].push(nDistance);
-                this.anIntvAv[(an[n] < 3) ? 6 : 7].push(nDistance);
+                this.anIntvAv[(an[n] < 4) ? 3 : 7].push(nDistance);
             }
 
             this.anPrev[an[n]] = this.nIDX;
@@ -2024,6 +2024,8 @@ var g_bttnColumns = new CBttnOptions("Columns", [3, 4, 5, 6, 7], null, 2, -1);
 var g_bttnStatsGroups = new CBttnOptions("StatsGroups", [20, 40, 60, 80, 100, -1], null, 2, 0);
 var g_bttnStatsSum = new CBttnOptions("StatsSum", [100, 200, 300, -1], null, 2, 150);
 var g_bttnStatsScope = new CBttnOptions("StatsScope", [40, 70, 110, 180, -1], null, 2, 150);
+var g_bttnStatsWaveMA = new CBttnOptions("StatsWaveMA", [10, 20, 30, 40, 50, 70, 100], null, 0, 100);
+var g_bttnStatsWaveCR = new CBttnOptions("StatsWaveCR", [0, 1], ["组", "行"], 0, 100);
 var g_bttnStatsLongsBet = new CBttnOptions("StatsLongsBet", [4, 5, 6], null, 2, 120);
 var g_bttnStatsLongs = new CBttnOptions("StatsLongs", [10, 11, 12, 13], ["10+", "11+", "12+", "13+"], 2, 120);
 var g_bttnStats = new CBttnOptions("Stats", [0, 1, 2, 3, 4], ["打法", "波浪", "号码", "轮次", "其它"], 0, 0);
