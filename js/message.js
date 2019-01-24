@@ -430,6 +430,16 @@ function OnMainSwitchStats(bShowGames)
     div2.style.display = strDisplay2;
 }
 
+function OnSwitchStatsWavesTextDraw(nIdx)
+{
+    var astrID = ["divStatsWavesText", "divStatsWavesDraw"];
+    for (var n = 0; n < 2; ++n)
+    {
+        var div = document.getElementById(astrID[n]);
+        div.style.display = ((nIdx == n) ? "none" : "");
+    }
+}
+
 function OnConfigCancel()
 {
     var div = document.getElementById("divConfig");

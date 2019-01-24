@@ -1000,7 +1000,7 @@ function Show_StatsWaves()
     div.innerHTML = strHtml;
 
 
-    var nMax = 190;
+    var nMax = 197;
     var nLen = g_waves.afOffset[0].length;
 
     var canvas = document.getElementById("canvas");
@@ -1043,6 +1043,20 @@ function Show_StatsWaves()
             context.lineTo(10 + i * 5, anBase[nn] - g_waves.afOffset[nn][n]);
         }
         context.stroke();
+
+        context.font = "28px 微软雅黑";
+
+        var strText = "";
+        if (nn == 0) strText = "第一组";
+        else if (nn == 1) strText = "第二组";
+        else if (nn == 2) strText = "第三组";
+        else if (nn == 3) strText = "组";
+        else if (nn == 4) strText = "第1行";
+        else if (nn == 5) strText = "第2行";
+        else if (nn == 6) strText = "第3行";
+        else if (nn == 7) strText = "行";
+
+        context.fillText(strText, 10, anBase[nn] - 70);
     }
 }
 
