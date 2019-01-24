@@ -977,7 +977,12 @@ function Show_StatsGames(nCol, bMain)
 
 function Show_StatsWaves()
 {
+    var div = document.getElementById("divStatsWavesText");
+    div.style.display = "none";
+
     var nMaxLine = g_waves.afOffset[0].length;
+    if (nMaxLine <= 0)
+        return;
 
     var strHtml = "<table cellpadding='0' cellspacing='0' border='0' width='100%' id='tblStatsWave'><tr>";
     strHtml += "<td>一组</td><td>二组</td><td>三组</td><td>组</td>";
@@ -992,8 +997,51 @@ function Show_StatsWaves()
     }
     strHtml += "</table>"
 
-    var div = document.getElementById("divStatsWaves");
     div.innerHTML = strHtml;
+
+
+    var nMax = 190;
+    var nLen = g_waves.afOffset[0].length;
+
+    if (nLen <= 0)
+        return;
+
+    var nIdx0 = 0;
+    if (nLen > nMax)
+        nIdx0 = nLen - nMax;
+
+    var canvas = document.getElementById("canvas");
+    var context = canvas.getContext('2d');
+
+    var anBase = [100, 300, 500, 700, 900, 1100, 1300, 1500];
+
+    for (var nn = 0; nn < 8; ++ nn)
+    {
+        context.strokeStyle = "grey";
+        context.lineWidth = 1;
+        context.beginPath();
+        context.moveTo(10, anBase[nn]);
+        context.lineTo(990, anBase[nn]);
+        context.closePath();
+        context.stroke();
+
+        context.beginPath();
+        if((nn % 4) == 3)
+            context.strokeStyle = "#ff9977";
+        else
+            context.strokeStyle = "#a9cf99";
+
+        context.lineWidth = 5;
+
+        for (var n = nIdx0; n < nLen; ++n)
+        {
+            var i = n - nIdx0;
+
+            context.moveTo(10 + i * 5, anBase[nn]);
+            context.lineTo(10 + i * 5, anBase[nn] - g_waves.afOffset[nn][n]);
+        }
+        context.stroke();
+    }
 }
 
 function Show_StatsRounds()
