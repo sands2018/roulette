@@ -1044,7 +1044,7 @@ function Show_StatsWaves()
         }
         context.stroke();
 
-        context.font = "40px 微软雅黑";
+        context.font = "36px 微软雅黑";
 
         var strText = "";
         if (nn == 0) strText = "第一组";
@@ -1056,7 +1056,7 @@ function Show_StatsWaves()
         else if (nn == 6) strText = "第3行";
         else if (nn == 7) strText = "行";
 
-        context.fillText(strText, 40, anBase[nn] - 59);
+        context.fillText(strText, 25, anBase[nn] - 63);
     }
 }
 
