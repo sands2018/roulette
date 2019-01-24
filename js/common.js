@@ -1713,7 +1713,6 @@ function CStatsWaves()
             if (nLen > 0)
                 this.afOffset[n].splice(0, nLen);
         }
-
     }
 
     this.AddNum = function(num)
@@ -1751,15 +1750,11 @@ function CStatsWaves()
             this.afOffset[nIdx].push(fOffset);
 
             if ((n % 3) == 0)
-            {
                 fMaxOffset = 0;
-            }
-            else
-            {
-                var fOffsetAbs = Math.abs(fOffset);
-                if (fOffsetAbs > fMaxOffset)
-                    fMaxOffset = fOffsetAbs;
-            }
+
+            var fOffsetAbs = Math.abs(fOffset);
+            if (fOffsetAbs > fMaxOffset)
+                fMaxOffset = fOffsetAbs;
 
             if ((n % 3) == 2)
                 this.afOffset[nIdx + 1].push(fMaxOffset)
