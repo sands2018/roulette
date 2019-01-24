@@ -1690,13 +1690,13 @@ function CStatsRoundSum()
 
 function CStatsWaves()
 {
-    this.anNum = [];
-    this.afOffset = [];
+    this.anNum = new Array();
+    this.afOffset = new Array(8);
     this.nScope = 20;
 
     for (var n = 0; n < 8; ++n)
     {
-        this.afOffset[n] = [];
+        this.afOffset[n] = new Array();
     }
  
     this.Reset = function (nScope)
@@ -1746,7 +1746,7 @@ function CStatsWaves()
             if (n >= 3)
                 nIdx += 1;
 
-            var fOffset = (fAv - anSum[n]) * 100.0 / fAv;
+            var fOffset = (anSum[n] - fAv) * 100.0 / fAv;
             this.afOffset[nIdx].push(fOffset);
 
             if ((n % 3) == 0)
@@ -1766,7 +1766,7 @@ function CStatsWaves()
         if (this.nScope == nScope)
             return;
 
-        var anNumTemp = [];
+        var anNumTemp = new Array(this.anNum.length);
 
         for (var n = 0; n < this.anNum.length; ++n)
             anNumTemp[n] = this.anNum[n];
@@ -1776,14 +1776,6 @@ function CStatsWaves()
         for (var n = 0; n < anNumTemp.length; ++n)
             this.AddNum(anNumTemp[n]);
     }
-
-    this.anIntvAv = [];
-    this.anPrev = [];
-    this.nIDX = -1;
-
-    this.afIntvMA = [];
-    this.afOffsetMA = [];
-
 }
 
 function CStatsLongItem()
@@ -2033,7 +2025,7 @@ var g_bttnColumns = new CBttnOptions("Columns", [3, 4, 5, 6, 7], null, 2, -1);
 var g_bttnStatsGroups = new CBttnOptions("StatsGroups", [20, 40, 60, 80, 100, -1], null, 2, 0);
 var g_bttnStatsSum = new CBttnOptions("StatsSum", [100, 200, 300, -1], null, 2, 150);
 var g_bttnStatsScope = new CBttnOptions("StatsScope", [40, 70, 110, 180, -1], null, 2, 150);
-var g_bttnStatsWave = new CBttnOptions("StatsWave", [20, 40, 60, 80, 100, 150, 200], null, 0, 0);
+var g_bttnStatsWave = new CBttnOptions("StatsWave", [20, 30, 40, 60, 80, 100, 200], null, 0, 0);
 var g_bttnStatsLongsBet = new CBttnOptions("StatsLongsBet", [4, 5, 6], null, 2, 120);
 var g_bttnStatsLongs = new CBttnOptions("StatsLongs", [10, 11, 12, 13], ["10+", "11+", "12+", "13+"], 2, 120);
 var g_bttnStats = new CBttnOptions("Stats", [0, 1, 2, 3, 4], ["打法", "波浪", "号码", "轮次", "其它"], 0, 0);

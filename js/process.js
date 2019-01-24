@@ -1003,15 +1003,17 @@ function Show_StatsWaves()
     var nMax = 190;
     var nLen = g_waves.afOffset[0].length;
 
+    var canvas = document.getElementById("canvas");
+    var context = canvas.getContext('2d');
+
+    context.clearRect(0, 0, 1000, 2000);
+
     if (nLen <= 0)
         return;
 
     var nIdx0 = 0;
     if (nLen > nMax)
         nIdx0 = nLen - nMax;
-
-    var canvas = document.getElementById("canvas");
-    var context = canvas.getContext('2d');
 
     var anBase = [100, 300, 500, 700, 900, 1100, 1300, 1500];
 
