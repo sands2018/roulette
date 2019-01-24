@@ -446,7 +446,6 @@ function Calc_AddNum(num)
 function Calc_Sum()
 {
     g_columns.ReCalc(g_queue);
-    g_waves.Calc(10);
 }
 
 function Show_AddNum()
@@ -476,7 +475,7 @@ function PageInit_Data()
     g_columns.Reset();
     g_status.Reset();
     g_queue.Reset();
-    g_waves.Reset();
+    g_waves.Reset(g_bttnStatsWave.Value());
 }
 
 
@@ -976,69 +975,25 @@ function Show_StatsGames(nCol, bMain)
     divGames.innerHTML = strHtml;
 }
 
-function SwitchStatsWaveCR()
-{
-    var nDivID = g_bttnStatsWaveCR.Value();
-    var astrDivID = ["divStatsWavesCol", "divStatsWavesRow"];
-    for(var nn = 0; nn < 2; ++ nn)
-    {
-        var div = document.getElementById(astrDivID[nn]);
-        div.style.display = (nn == nDivID) ? "" : "none";
-    }
-}
-
 function Show_StatsWaves()
 {
-    g_waves.Calc(g_bttnStatsWaveMA.Value());
+    var nMaxLine = g_waves.afOffset[0].length;
 
-    var astrDivID = ["divStatsWavesCol", "divStatsWavesRow"];
+    var strHtml = "<table cellpadding='0' cellspacing='0' border='0' width='100%' id='tblStatsWave'><tr>";
+    strHtml += "<td>一组</td><td>二组</td><td>三组</td><td>组</td>";
+    strHtml += "<td>1行</td><td>2行</td><td>3行</td><td>行</td></tr>";
 
-    for(var nn = 0; nn < 2; ++ nn)
+    for(var n = nMaxLine - 1; n >= 0 ; -- n)
     {
-        var nMaxLine = g_waves.afIntvMA[nn * 4 + 3].length;
-        var strHtml = "<table cellpadding='0' cellspacing='0' border='0' width='100%' ";
-        strHtml += "id='tblStatsWave" + ((nn == 0) ? "C" : "R") + "'><tr>";
-        strHtml += "<td class='tdMSep'>" + ((nn == 0) ? "一组" : "1行") + "</td><td class='tdSep'>偏差</td>";
-        strHtml += "<td class='tdMSep'>" + ((nn == 0) ? "二组" : "2行") + "</td><td class='tdSep'>偏差</td>";
-        strHtml += "<td class='tdMSep'>" + ((nn == 0) ? "三组" : "3行") + "</td><td class='tdSep'>偏差</td>";
-        strHtml += "<td class='tdMSep'>" + ((nn == 0) ? "组" : "行") + "</td><td>偏差</td></tr>";
-
-        for(var n = 0; n < nMaxLine; ++ n)
-        {
-            strHtml += "<tr>";
-            for (var i = 0; i < 4; ++i)
-            {
-                strHtml += "<td class='tdMSep'>";
-                var nIdx = nn * 4 + i;
-                var j = g_waves.afIntvMA[nIdx].length - 1 - n;
-
-                if (j >= 0)
-                    strHtml += g_waves.afIntvMA[nIdx][j].toFixed(2);
-                else
-                    strHtml += "&nbsp;";
-
-                strHtml += "</td><td";
-                if (i != 3)
-                    strHtml += " class='tdSep'";
-
-                strHtml += ">";
-
-                if (j >= 0)
-                    strHtml += g_waves.afOffsetMA[nIdx][j].toFixed(2);
-                else
-                    strHtml += "&nbsp;";
-
-                strHtml += "</td>";
-            }
-            strHtml += "</tr>";
-        }
-        strHtml += "</table>"
-
-        var div = document.getElementById(astrDivID[nn]);
-        div.innerHTML = strHtml;
+        strHtml += "<tr>";
+        for (var i = 0; i < 8; ++i)
+            strHtml += "<td>" + g_waves.afOffset[i][n].toFixed(0) + "</td>"
+        strHtml += "</tr>";
     }
+    strHtml += "</table>"
 
-    SwitchStatsWaveCR();
+    var div = document.getElementById("divStatsWaves");
+    div.innerHTML = strHtml;
 }
 
 function Show_StatsRounds()

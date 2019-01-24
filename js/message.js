@@ -259,28 +259,16 @@ function OnBttnStatsScopeClick(nIdx)
 
 // ----------------------------------------------
 
-function Show_RefreshStatsWaveMAButton()
+function Show_RefreshStatsWaveButton()
 {
-    g_bttnStatsWaveMA.Show("divStatsWaveMABttns");
+    g_bttnStatsWave.Show("divStatsWaveBttns");
 }
 
-function OnBttnStatsWaveMAClick(nIdx)
+function OnBttnStatsWaveClick(nIdx)
 {
-    g_bttnStatsWaveMA.OnClick(nIdx);
+    g_bttnStatsWave.OnClick(nIdx);
+    g_waves.ResetScope(g_bttnStatsWave.Value());
     Show_StatsWaves();
-}
-
-// ----------------------------------------------
-
-function Show_RefreshStatsWaveCRButton()
-{
-    g_bttnStatsWaveCR.Show("divStatsWaveCRBttns");
-}
-
-function OnBttnStatsWaveCRClick(nIdx)
-{
-    g_bttnStatsWaveCR.OnClick(nIdx);
-    SwitchStatsWaveCR();
 }
 
 // ----------------------------------------------
@@ -415,8 +403,7 @@ function OpenStatistics(strID)
     }
 
     Show_RefreshStatsScopeButton();
-    Show_RefreshStatsWaveMAButton();
-    Show_RefreshStatsWaveCRButton();
+    Show_RefreshStatsWaveButton();
     Show_RefreshStatsLongsButton();
     Show_RefreshStatsLongsBetButton();
     Show_RefreshStatsButton();

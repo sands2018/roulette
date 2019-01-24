@@ -1690,6 +1690,98 @@ function CStatsRoundSum()
 
 function CStatsWaves()
 {
+    this.anNum = [];
+    this.afOffset = [];
+    this.nScope = 20;
+
+    for (var n = 0; n < 8; ++n)
+    {
+        this.afOffset[n] = [];
+    }
+ 
+    this.Reset = function (nScope)
+    {
+        this.nScope = nScope;
+
+        var nLen = this.anNum.length;
+        if (nLen > 0)
+            this.anNum.splice(0, nLen);
+
+        for (var n = 0; n < 8; ++n)
+        {
+            nLen = this.afOffset[n].length;
+            if (nLen > 0)
+                this.afOffset[n].splice(0, nLen);
+        }
+
+    }
+
+    this.AddNum = function(num)
+    {
+        if (num == 0)
+            return;
+
+        this.anNum.push(num);
+
+        if (this.anNum.length < this.nScope)
+            return;
+
+        var anSum = [0, 0, 0, 0, 0, 0];
+
+        for (var n = this.anNum.length - 1; n >= this.anNum.length - this.nScope; --n)
+        {
+            var nNum = this.anNum[n];
+            var nCol = GetNumCol(nNum);
+            var nRow = GetNumRow(nNum);
+            anSum[nCol]++;
+            anSum[nRow + 3]++;
+        }
+
+        var fAv = this.nScope / 3.0;
+
+        var fMaxOffset = 0;
+
+        for (var n = 0; n < 6; ++n)
+        {
+            var nIdx = n;
+            if (n >= 3)
+                nIdx += 1;
+
+            var fOffset = (fAv - anSum[n]) * 100.0 / fAv;
+            this.afOffset[nIdx].push(fOffset);
+
+            if ((n % 3) == 0)
+            {
+                fMaxOffset = 0;
+            }
+            else
+            {
+                var fOffsetAbs = Math.abs(fOffset);
+                if (fOffsetAbs > fMaxOffset)
+                    fMaxOffset = fOffsetAbs;
+            }
+
+            if ((n % 3) == 2)
+                this.afOffset[nIdx + 1].push(fMaxOffset)
+        }
+    }
+
+    this.ResetScope = function (nScope)
+    {
+        if (this.nScope == nScope)
+            return;
+
+        var anNumTemp = [];
+
+        for (var n = 0; n < this.anNum.length; ++n)
+            anNumTemp[n] = this.anNum[n];
+
+        this.Reset(nScope);
+
+        for (var n = 0; n < anNumTemp.length; ++n)
+            this.AddNum(anNumTemp[n]);
+    }
+
     this.anIntvAv = [];
     this.anPrev = [];
     this.nIDX = -1;
@@ -1697,84 +1789,6 @@ function CStatsWaves()
     this.afIntvMA = [];
     this.afOffsetMA = [];
 
-    this.Reset = function ()
-    {
-        for (var n = 0; n < 8; ++n)
-        {
-            this.anIntvAv[n] = [];
-            this.afIntvMA[n] = [];
-            this.afOffsetMA[n] = [];
-        }
-
-        this.anPrev = [0, 0, 0, 0, 0, 0, 0, 0];
-        this.nIDX = -1;
-    }
-
-    this.AddNum = function (num)
-    {
-        if (num == 0)
-            return;
-
-        ++this.nIDX;
-
-        var nCol = GetNumCol(num);
-        var nRow = GetNumRow(num);
-
-        var an = [nCol, nRow + 4];
-
-        for(var n = 0; n < 2; ++ n)
-        {
-            if (this.anPrev[an[n]] != 0)
-            {
-                var nDistance = this.nIDX - this.anPrev[an[n]] - 1;
-                if (nDistance > 15)
-                    nDistance = 15;
-
-                this.anIntvAv[an[n]].push(nDistance);
-                this.anIntvAv[(an[n] < 4) ? 3 : 7].push(nDistance);
-            }
-
-            this.anPrev[an[n]] = this.nIDX;
-        }
-    }
-
-    this.Calc = function(nMACount)
-    {
-        if (nMACount <= 0)
-            return;
-
-        for (var nn = 0; nn < 8; ++nn)
-        {
-            var nLen = this.afIntvMA[nn].length;
-            if (nLen > 0)
-                this.afIntvMA[nn].splice(0, nLen);
-
-            nLen = this.afOffsetMA[nn].length;
-            if (nLen > 0)
-                this.afOffsetMA[nn].splice(0, nLen);
-
-            if (this.anIntvAv[nn].length < nMACount)
-                continue;
-
-            for (var n = nMACount - 1; n < this.anIntvAv[nn].length; ++n)
-            {
-                var nSum = 0;
-
-                for (var i = 0; i < nMACount; ++i)
-                    nSum += this.anIntvAv[nn][n - i];
-
-                var fAv = nSum * 1.0 / nMACount;
-                this.afIntvMA[nn].push(fAv);
-
-                var fSum = 0;
-                for (var i = 0; i < nMACount; ++i)
-                    fSum += Math.abs(this.anIntvAv[nn][n - i] - fAv);
-
-                fAv = fSum / nMACount;
-                this.afOffsetMA[nn].push(fAv);
-            }
-        }
-    }
 }
 
 function CStatsLongItem()
@@ -2024,8 +2038,7 @@ var g_bttnColumns = new CBttnOptions("Columns", [3, 4, 5, 6, 7], null, 2, -1);
 var g_bttnStatsGroups = new CBttnOptions("StatsGroups", [20, 40, 60, 80, 100, -1], null, 2, 0);
 var g_bttnStatsSum = new CBttnOptions("StatsSum", [100, 200, 300, -1], null, 2, 150);
 var g_bttnStatsScope = new CBttnOptions("StatsScope", [40, 70, 110, 180, -1], null, 2, 150);
-var g_bttnStatsWaveMA = new CBttnOptions("StatsWaveMA", [10, 20, 30, 40, 50, 70, 100], null, 0, 100);
-var g_bttnStatsWaveCR = new CBttnOptions("StatsWaveCR", [0, 1], ["组", "行"], 0, 100);
+var g_bttnStatsWave = new CBttnOptions("StatsWave", [20, 40, 60, 80, 100, 150, 200], null, 0, 0);
 var g_bttnStatsLongsBet = new CBttnOptions("StatsLongsBet", [4, 5, 6], null, 2, 120);
 var g_bttnStatsLongs = new CBttnOptions("StatsLongs", [10, 11, 12, 13], ["10+", "11+", "12+", "13+"], 2, 120);
 var g_bttnStats = new CBttnOptions("Stats", [0, 1, 2, 3, 4], ["打法", "波浪", "号码", "轮次", "其它"], 0, 0);
