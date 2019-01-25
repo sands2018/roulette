@@ -1005,11 +1005,11 @@ function Show_StatsWaves()
 
     var canvas = document.getElementById("canvas");
     canvas.width = 935;
-    canvas.height = 2000;
+    canvas.height = 1440;
 
     var context = canvas.getContext('2d');
 
-    context.clearRect(0, 0, 1000, 2000);
+    context.clearRect(0, 0, canvas.width, canvas.height);
 
     if (nLen <= 0)
         return;
@@ -1018,10 +1018,14 @@ function Show_StatsWaves()
     if (nLen > nMax)
         nIdx0 = nLen - nMax;
 
-    var anBase = [100, 300, 500, 700, 900, 1100, 1300, 1500];
+    var nHeight100 = 72;
+    var nHeight50 = nHeight100 / 2;
+    var anBase = new Array(8);
 
     for (var nn = 0; nn < 8; ++ nn)
     {
+        anBase[nn] = 10 + nHeight100 * (2 * nn + 1);
+
         context.beginPath();
         if((nn % 4) == 3)
             context.strokeStyle = "#ff9977";
@@ -1035,32 +1039,51 @@ function Show_StatsWaves()
             var i = n - nIdx0;
 
             context.moveTo(20 + i * 5, anBase[nn]);
-            context.lineTo(20 + i * 5, anBase[nn] - g_waves.afOffset[nn][n]);
+            context.lineTo(20 + i * 5, anBase[nn] - (g_waves.afOffset[nn][n] * nHeight100 / 100));
         }
         context.stroke();
 
-        context.strokeStyle = "grey";
-        context.lineWidth = 1;
-        context.beginPath();
-        context.moveTo(20, anBase[nn]);
-        context.lineTo(910, anBase[nn]);
-        context.closePath();
-        context.stroke();
+    }
 
-        context.font = "36px 微软雅黑";
+    context.strokeStyle = "#8f8f8f";
+    context.lineWidth = 1;
+    context.beginPath();
+    for(var n = 0; n < 32; ++ n)
+    {
+        context.moveTo(18, 10 + nHeight50 * n);
+        context.lineTo(917, 10 + nHeight50 * n);
+    }
+    context.closePath();
+    context.stroke();
+
+    context.strokeStyle = "#afafaf";
+    context.lineWidth = 1;
+    context.beginPath();
+    for (var n = 0; n <= 10; ++n)
+    {
+        context.moveTo(18 + 90 * n, 10);
+        context.lineTo(18 + 90 * n, 10 + nHeight50 * 31);
+    }
+    context.closePath();
+    context.stroke();
+
+    for (var nn = 0; nn < 8; ++nn)
+    {
+        context.font = "30px 微软雅黑";
 
         var strText = "";
-        if (nn == 0) strText = "第一组";
-        else if (nn == 1) strText = "第二组";
-        else if (nn == 2) strText = "第三组";
+        if (nn == 0) strText = "一组";
+        else if (nn == 1) strText = "二组";
+        else if (nn == 2) strText = "三组";
         else if (nn == 3) strText = "组";
-        else if (nn == 4) strText = "第1行";
-        else if (nn == 5) strText = "第2行";
-        else if (nn == 6) strText = "第3行";
+        else if (nn == 4) strText = "1行";
+        else if (nn == 5) strText = "2行";
+        else if (nn == 6) strText = "3行";
         else if (nn == 7) strText = "行";
 
-        context.fillText(strText, 25, anBase[nn] - 63);
+        context.fillText(strText, 25, anBase[nn] - nHeight50 - 5);
     }
+
 }
 
 function Show_StatsRounds()
