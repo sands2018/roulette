@@ -1000,10 +1000,13 @@ function Show_StatsWaves()
     div.innerHTML = strHtml;
 
 
-    var nMax = 197;
+    var nMax = 180;
     var nLen = g_waves.afOffset[0].length;
 
     var canvas = document.getElementById("canvas");
+    canvas.width = 935;
+    canvas.height = 2000;
+
     var context = canvas.getContext('2d');
 
     context.clearRect(0, 0, 1000, 2000);
@@ -1019,14 +1022,6 @@ function Show_StatsWaves()
 
     for (var nn = 0; nn < 8; ++ nn)
     {
-        context.strokeStyle = "grey";
-        context.lineWidth = 1;
-        context.beginPath();
-        context.moveTo(10, anBase[nn]);
-        context.lineTo(990, anBase[nn]);
-        context.closePath();
-        context.stroke();
-
         context.beginPath();
         if((nn % 4) == 3)
             context.strokeStyle = "#ff9977";
@@ -1039,9 +1034,17 @@ function Show_StatsWaves()
         {
             var i = n - nIdx0;
 
-            context.moveTo(10 + i * 5, anBase[nn]);
-            context.lineTo(10 + i * 5, anBase[nn] - g_waves.afOffset[nn][n]);
+            context.moveTo(20 + i * 5, anBase[nn]);
+            context.lineTo(20 + i * 5, anBase[nn] - g_waves.afOffset[nn][n]);
         }
+        context.stroke();
+
+        context.strokeStyle = "grey";
+        context.lineWidth = 1;
+        context.beginPath();
+        context.moveTo(20, anBase[nn]);
+        context.lineTo(910, anBase[nn]);
+        context.closePath();
         context.stroke();
 
         context.font = "36px 微软雅黑";
