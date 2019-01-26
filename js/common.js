@@ -1701,7 +1701,8 @@ function CStatsWaves()
  
     this.Reset = function (nScope)
     {
-        this.nScope = nScope;
+        if(nScope >= 0)
+            this.nScope = nScope;
 
         var nLen = this.anNum.length;
         if (nLen > 0)

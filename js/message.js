@@ -828,6 +828,7 @@ function OnPlayRestart()
 {
     g_play.Start(g_queue);
     var num = g_play.Step();
+    g_waves.Reset(-1);
     Calc_AddNum(num);
     Calc_Sum();
     Play_Show_AddNum();
