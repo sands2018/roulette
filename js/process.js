@@ -463,7 +463,7 @@ function Show_AddNum()
 function Play_Show_AddNum()
 {
     Show_StatsGames(-1, false);
-    Show_StatsWaves();
+    Show_StatsWaves(false);
     Show_StatsNumbers(-1);
     Show_StatsRounds();
     Show_StatsMisc();
@@ -975,33 +975,36 @@ function Show_StatsGames(nCol, bMain)
     divGames.innerHTML = strHtml;
 }
 
-function Show_StatsWaves()
+function Show_StatsWaves(bSwitchToDraw)
 {
     var div = document.getElementById("divStatsWavesText");
-    div.style.display = "none";
 
-    var nMaxLine = g_waves.afOffset[0].length;
-    if (nMaxLine <= 0)
-        return;
+    if (bSwitchToDraw)
+    {
+        div.style.display = "none";
+    }
 
     var strHtml = "<table cellpadding='0' cellspacing='0' border='0' width='100%' id='tblStatsWave'><tr>";
     strHtml += "<td>一组</td><td>二组</td><td>三组</td><td>组</td>";
     strHtml += "<td>1行</td><td>2行</td><td>3行</td><td>行</td></tr>";
 
-    for(var n = nMaxLine - 1; n >= 0 ; -- n)
-    {
-        strHtml += "<tr>";
-        for (var i = 0; i < 8; ++i)
-            strHtml += "<td>" + g_waves.afOffset[i][n].toFixed(0) + "</td>"
-        strHtml += "</tr>";
-    }
-    strHtml += "</table>"
+    var nLen = g_waves.afOffset[0].length;
 
+    if (nLen > 0)
+    {
+        for (var n = nLen - 1; n >= 0 ; --n)
+        {
+            strHtml += "<tr>";
+            for (var i = 0; i < 8; ++i)
+                strHtml += "<td>" + g_waves.afOffset[i][n].toFixed(0) + "</td>"
+            strHtml += "</tr>";
+        }
+    }
+
+    strHtml += "</table>"
     div.innerHTML = strHtml;
 
-
     var nMax = 180;
-    var nLen = g_waves.afOffset[0].length;
 
     var canvas = document.getElementById("canvas");
     canvas.width = 935;
@@ -1011,9 +1014,6 @@ function Show_StatsWaves()
 
     context.clearRect(0, 0, canvas.width, canvas.height);
 
-    if (nLen <= 0)
-        return;
-
     var nIdx0 = 0;
     if (nLen > nMax)
         nIdx0 = nLen - nMax;
@@ -1021,28 +1021,30 @@ function Show_StatsWaves()
     var nHeight100 = 72;
     var nHeight50 = nHeight100 / 2;
     var anBase = new Array(8);
-
-    for (var nn = 0; nn < 8; ++ nn)
-    {
+    for (var nn = 0; nn < 8; ++nn)
         anBase[nn] = 10 + nHeight100 * (2 * nn + 1);
 
-        context.beginPath();
-        if((nn % 4) == 3)
-            context.strokeStyle = "#ff9977";
-        else
-            context.strokeStyle = "#a9cf99";
-
-        context.lineWidth = 5;
-
-        for (var n = nIdx0; n < nLen; ++n)
+    if (nLen > 0)
+    {
+        for (var nn = 0; nn < 8; ++nn)
         {
-            var i = n - nIdx0;
+            context.beginPath();
+            if ((nn % 4) == 3)
+                context.strokeStyle = "#ff9977";
+            else
+                context.strokeStyle = "#a9cf99";
 
-            context.moveTo(20 + i * 5, anBase[nn]);
-            context.lineTo(20 + i * 5, anBase[nn] - (g_waves.afOffset[nn][n] * nHeight100 / 100));
+            context.lineWidth = 5;
+
+            for (var n = nIdx0; n < nLen; ++n)
+            {
+                var i = n - nIdx0;
+
+                context.moveTo(20 + i * 5, anBase[nn]);
+                context.lineTo(20 + i * 5, anBase[nn] - (g_waves.afOffset[nn][n] * nHeight100 / 100));
+            }
+            context.stroke();
         }
-        context.stroke();
-
     }
 
     context.strokeStyle = "#8f8f8f";
@@ -1084,6 +1086,11 @@ function Show_StatsWaves()
         context.fillText(strText, 25, anBase[nn] - nHeight50 - 5);
     }
 
+    if (bSwitchToDraw)
+    {
+        var div = document.getElementById("divStatsWavesDraw");
+        div.style.display = "";
+    }
 }
 
 function Show_StatsRounds()

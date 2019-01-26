@@ -268,7 +268,7 @@ function OnBttnStatsWaveClick(nIdx)
 {
     g_bttnStatsWave.OnClick(nIdx);
     g_waves.ResetScope(g_bttnStatsWave.Value());
-    Show_StatsWaves();
+    Show_StatsWaves(false);
 }
 
 // ----------------------------------------------
@@ -371,7 +371,7 @@ function OpenStatistics(strID)
         return;
 
     Show_StatsGames(-1, false);
-    Show_StatsWaves();
+    Show_StatsWaves(true);
     Show_StatsNumbers(-1);
     Show_StatsRounds();
     Show_StatsMisc();
