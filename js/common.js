@@ -1814,18 +1814,19 @@ function CStatsWaves()
             this.AddNum(anNumTemp[n]);
     }
 
-    this.DrawDistance = function (strCanvasID, nWidth, nHeight, nCR, bDetail)
+    // nDetail: 8、4、1
+    this.DrawDistance = function (strCanvasID, nWidth, nHeight, nCR, nDetail)
     {
         var canvas = document.getElementById(strCanvasID);
         canvas.width = nWidth;
         canvas.height = nHeight;
 
         var nX0 = 0;
-        if (bDetail)
+        if (nDetail != 8)
             nX0 = 60; // for numbers on the left sides
 
-        var nRectX = bDetail? 30 : 10;
-        var nRectY = bDetail? 50 : 20;
+        var nRectX = (nDetail == 1) ? 30 : 10;
+        var nRectY = (nDetail == 1) ? 50 : ((nDetail == 4) ? 10 : 15);
         var nRectW = nWidth - 2 * nRectX - nX0;
         var nRectH = nHeight - 2 * nRectY;
 
@@ -1854,12 +1855,12 @@ function CStatsWaves()
         {
             context.beginPath();
 
-            if (bDetail)
+            if (nDetail != 8)
             {
                 if ((n % 5) == 0)
                 {
                     context.strokeStyle = "#5f5f5f";
-                    context.lineWidth = 3;
+                    context.lineWidth = ((nDetail == 4)? 2 : 3);
                 }
                 else
                 {
@@ -1869,21 +1870,37 @@ function CStatsWaves()
             }
             else
             {
-                context.strokeStyle = "#aaaaaa";
+                context.strokeStyle = "#7f7f7f";
                 context.lineWidth = 1;
             }
 
 
-            if (bDetail || ((n % 5) == 0))
+            if ((nDetail != 8) || ((n % 5) == 0))
             {
                 context.moveTo(nX0 - 1 + nRectX, nRectY + n * nRectH / 15);
                 context.lineTo(nX0 - 1 + nRectX + nRectW, nRectY + n * nRectH / 15);
                 context.stroke();
             }
 
-            if (bDetail)
+            if (nDetail != 8)
             {
-                context.fillText((15 - n), nRectX, nRectY + 15 + n * nRectH / 15);
+                if ((nDetail == 1) || ((n % 5) == 0))
+                {
+                    var nX = nRectX;
+                    nY = nRectY + 15 + n * nRectH / 15;
+
+                    if (nDetail == 4)
+                    {
+                        nX += 10;
+
+                        if (n == 0)
+                            nY += 15;
+                        else if (n == 15)
+                            nY -= 15;
+                    }
+
+                    context.fillText((15 - n), nX, nY);
+                }
             }
         }
 
@@ -1891,7 +1908,7 @@ function CStatsWaves()
             context.strokeStyle = "#ff9977";
         else
             context.strokeStyle = "#a9cf99";
-        context.lineWidth = (bDetail? 5 : 3);
+        context.lineWidth = ((nDetail != 8) ? 5 : 5);
 
         context.beginPath();
 
@@ -1923,10 +1940,10 @@ function CStatsWaves()
 
         var nX, nY;
 
-        if (bDetail)
+        if (nDetail != 8)
         {
-            nX = nX0 + nRectX + 30;
-            nY = nRectY + 43 + nRectH / 15;
+            nX = nX0 + nRectX + ((nDetail == 1) ? 30 : 20);
+            nY = nRectY + ((nDetail == 1)? 43 : 30) + nRectH / 15;
         }
         else
         {
@@ -1934,7 +1951,7 @@ function CStatsWaves()
             nY = 70;
         }
 
-        context.font = (bDetail ? "40px" : "36px") + " 微软雅黑";
+        context.font = ((nDetail == 1) ? "40px" : "36px") + " 微软雅黑";
         context.fillText(strText, nX, nY);
     }
 }

@@ -1100,7 +1100,7 @@ function Show_StatsDistances()
     for(var n = 0; n < 8; ++ n)
     {
         var strCanvasID = "cvDist" + n.toString();
-        g_waves.DrawDistance(strCanvasID, 1080, 170, n, false);
+        g_waves.DrawDistance(strCanvasID, 1080, 170, n, 8);
     }
 }
 

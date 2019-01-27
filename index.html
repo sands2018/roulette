@@ -217,12 +217,17 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 #tblViewNum .tdEmpty { border: 0; background-color: white; }
 #tblViewNum .tdZero { border: 1px solid #ccaa88; background-color: #e3f3db; }
 
-.bttnPlay { width: 130px; height: 60px; line-height: 60px; color: #aa8833; border: 1px solid #aa8833; }
+.bttnSystem { height: 60px; line-height: 60px; color: #aa8833; border: 1px solid #aa8833; }
+.bttnPlay { width: 130px; }
+.bttnStatsDist { width: 200px; }
 
 #tblPlayBttns .tdSBEnabled { color: #aa8833; background-color: white; border: 1px solid #aa8833 }
 #tblPlayBttns .tdSBDisabled { color: #bbbbbb; background-color: white; border: 1px solid #bbbbbb }
 
-.divStatsDistances { width: 100%; height: 155px; }
+.divStatsDistances0 { width: 100%; height: 155px; }
+.divStatsDistances1 { width: 100%; height: 290px; }
+#divStatsDistances0, #divStatsDistances1 { width: 100%; height: 100%; }
+
 #divStatsDistDetail { position: fixed; top: 0px; z-index: 50; width: 100%; height: 100%; padding-top: 200px }
 #divStatsDistDetailDraw { border-left: 0; border-right: 0; width: 100%; height: 1000px; }
 
@@ -559,29 +564,52 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
                 </div>
             </div>
             <div id="divStatsDistances">
-                <div class="divStatsDistances" onclick="OnStatsDistanceClick(0)">
-                    <canvas id="cvDist0" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
+                <div id="divStatsDistances0">
+                    <div class="divStatsDistances0" onclick="OnStatsDistance0Click(0)">
+                        <canvas id="cvDist0" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
+                    </div>
+                    <div class="divStatsDistances0" onclick="OnStatsDistance0Click(0)">
+                        <canvas id="cvDist1" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
+                    </div>
+                    <div class="divStatsDistances0" onclick="OnStatsDistance0Click(0)">
+                        <canvas id="cvDist2" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
+                    </div>
+                    <div class="divStatsDistances0" onclick="OnStatsDistance0Click(0)">
+                        <canvas id="cvDist3" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
+                    </div>
+                    <div class="divStatsDistances0" onclick="OnStatsDistance0Click(1)">
+                        <canvas id="cvDist4" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
+                    </div>
+                    <div class="divStatsDistances0" onclick="OnStatsDistance0Click(1)">
+                        <canvas id="cvDist5" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
+                    </div>
+                    <div class="divStatsDistances0" onclick="OnStatsDistance0Click(1)">
+                        <canvas id="cvDist6" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
+                    </div>
+                    <div class="divStatsDistances0" onclick="OnStatsDistance0Click(1)">
+                        <canvas id="cvDist7" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
+                    </div>
                 </div>
-                <div class="divStatsDistances" onclick="OnStatsDistanceClick(1)">
-                    <canvas id="cvDist1" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
-                </div>
-                <div class="divStatsDistances" onclick="OnStatsDistanceClick(2)">
-                    <canvas id="cvDist2" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
-                </div>
-                <div class="divStatsDistances" onclick="OnStatsDistanceClick(3)">
-                    <canvas id="cvDist3" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
-                </div>
-                <div class="divStatsDistances" onclick="OnStatsDistanceClick(4)">
-                    <canvas id="cvDist4" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
-                </div>
-                <div class="divStatsDistances" onclick="OnStatsDistanceClick(5)">
-                    <canvas id="cvDist5" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
-                </div>
-                <div class="divStatsDistances" onclick="OnStatsDistanceClick(6)">
-                    <canvas id="cvDist6" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
-                </div>
-                <div class="divStatsDistances" onclick="OnStatsDistanceClick(7)">
-                    <canvas id="cvDist7" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
+                <div id="divStatsDistances1" style="display: none">
+                    <div class="divStatsDistances1" onclick="OnStatsDistanceClick(0)">
+                        <canvas id="cvDist10" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
+                    </div>
+                    <div class="divStatsDistances1" onclick="OnStatsDistanceClick(1)">
+                        <canvas id="cvDist11" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
+                    </div>
+                    <div class="divStatsDistances1" onclick="OnStatsDistanceClick(2)">
+                        <canvas id="cvDist12" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
+                    </div>
+                    <div class="divStatsDistances1" onclick="OnStatsDistanceClick(3)">
+                        <canvas id="cvDist13" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
+                    </div>
+                    <div style="width: 100%; height: 100px">
+                        <table cellpadding="0" cellspacing="10" border="0" style="margin: 0 auto;">
+                            <tr>
+                                <td class="bttnSystem bttnStatsDist" id="tdBttnStatsDistReturn" onclick="OnStatsDistance1Return()">返回</td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
             </div>
             <div id="divStatsNumbers">
@@ -642,9 +670,9 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
                         <td>
                             <table cellpadding="0" cellspacing="10" border="0" id="tblPlayBttns">
                                 <tr>
-                                    <td class="bttnPlay" id="tdBttnPlayPauseContinue" onclick="OnPlayPauseContinue()">暂停</td>
-                                    <td class="bttnPlay" id="tdBttnPlayRestart" onclick="OnPlayRestart()">重播</td>
-                                    <td class="bttnPlay" id="tdBttnPlayStop" onclick="OnPlayStop()">结束</td>
+                                    <td class="bttnSystem bttnPlay" id="tdBttnPlayPauseContinue" onclick="OnPlayPauseContinue()">暂停</td>
+                                    <td class="bttnSystem bttnPlay" id="tdBttnPlayRestart" onclick="OnPlayRestart()">重播</td>
+                                    <td class="bttnSystem bttnPlay" id="tdBttnPlayStop" onclick="OnPlayStop()">结束</td>
                                 </tr>
                             </table>
                         </td>

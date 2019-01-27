@@ -870,10 +870,33 @@ function OnQuitViewNum()
     div.style.display = "none";
 }
 
+function OnStatsDistance0Click(nCorR)
+{
+    for (var n = 0; n < 4; ++n)
+    {
+        var strCanvasID = "cvDist1" + n.toString();
+        g_waves.DrawDistance(strCanvasID, 1080, 300, (nCorR * 4 + n), 4);
+    }
+
+    var div = document.getElementById("divStatsDistances0");
+    div.style.display = "none";
+
+    var div = document.getElementById("divStatsDistances1");
+    div.style.display = "";
+}
+
+function OnStatsDistance1Return()
+{
+    var div = document.getElementById("divStatsDistances1");
+    div.style.display = "none";
+
+    var div = document.getElementById("divStatsDistances0");
+    div.style.display = "";
+}
 
 function OnStatsDistanceClick(nCR)
 {
-    g_waves.DrawDistance("cvDist", 1080, 1000, nCR, true);
+    g_waves.DrawDistance("cvDist", 1080, 1000, nCR, 1);
 
     var div = document.getElementById("divStatsDistDetail");
     div.style.display = "";
