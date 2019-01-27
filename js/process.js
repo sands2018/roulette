@@ -1095,13 +1095,36 @@ function Show_StatsFrequencies(bSwitchToDraw)
     }
 }
 
-function Show_StatsDistances()
+function DrawDistances8()
 {
-    for(var n = 0; n < 8; ++ n)
+    for (var n = 0; n < 8; ++n)
     {
         var strCanvasID = "cvDist" + n.toString();
         g_waves.DrawDistance(strCanvasID, 1080, 170, n, 8);
     }
+}
+
+function DrawDistances4(nCROpt)
+{
+    for (var n = 0; n < 4; ++n)
+    {
+        var strCanvasID = "cvDist1" + n.toString();
+        g_waves.DrawDistance(strCanvasID, 1080, 300, (nCROpt * 4 + n), 4);
+    }
+}
+
+function DrawDistance1(ncr)
+{
+    var nCR = g_status.StatsDistCROpt * 4 + ncr;
+    g_waves.DrawDistance("cvDist", 1080, 1000, nCR, 1);
+}
+
+
+function Show_StatsDistances()
+{
+    DrawDistances8();
+    DrawDistances4(g_status.StatsDistCROpt);
+    DrawDistance1(g_status.StatsDistCR);
 }
 
 function Show_StatsRounds()

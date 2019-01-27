@@ -739,6 +739,8 @@ function CSysStatus()
     this.QueueExpand = 0;
     this.anStatsSumExpand = [0, 0, 0, 0];
     this.StatsIdx = 3;
+    this.StatsDistCROpt = 0;
+    this.StatsDistCR = 0;
 
     this.Reset = function()
     {
@@ -1697,8 +1699,6 @@ function CStatsWaves()
     this.anCount = new Array(8);
     this.anPrev = new Array(6);
 
-    this.nCorR = 0;
-
     for (var n = 0; n < 8; ++n)
     {
         this.afOffset[n] = new Array();
@@ -1819,13 +1819,6 @@ function CStatsWaves()
     // nDetail: 8、4、1
     this.DrawDistance = function (strCanvasID, nWidth, nHeight, nCR, nDetail)
     {
-        if (nDetail == 4)
-            this.nCorR = (nCR > 3) ? 1 : 0;
-
-        var ncr = nCR;
-        if (nDetail == 1)
-            ncr = nCR + this.nCorR * 4;
-
         var canvas = document.getElementById(strCanvasID);
         canvas.width = nWidth;
         canvas.height = nHeight;
@@ -1844,7 +1837,7 @@ function CStatsWaves()
         context.clearRect(0, 0, canvas.width, canvas.height);
 
         var nMax = 72;
-        var nLen = this.anCount[ncr].length;
+        var nLen = this.anCount[nCR].length;
         var nIdx0 = 0;
         if (nLen > nMax)
             nIdx0 = nLen - nMax;
@@ -1913,7 +1906,7 @@ function CStatsWaves()
             }
         }
 
-        if ((ncr % 4) == 3)
+        if ((nCR % 4) == 3)
             context.strokeStyle = "#ff9977";
         else
             context.strokeStyle = "#a9cf99";
@@ -1923,7 +1916,7 @@ function CStatsWaves()
 
         for (var n = nIdx0; n < nLen; ++n)
         {
-            var nVal = this.anCount[ncr][n];
+            var nVal = this.anCount[nCR][n];
             if (nVal > 15)
                 nVal = 15;
 
@@ -1938,14 +1931,14 @@ function CStatsWaves()
         context.stroke();
 
         var strText = "";
-        if (ncr == 0) strText = "第一组";
-        else if (ncr == 1) strText = "第二组";
-        else if (ncr == 2) strText = "第三组";
-        else if (ncr == 3) strText = "组";
-        else if (ncr == 4) strText = "第1行";
-        else if (ncr == 5) strText = "第2行";
-        else if (ncr == 6) strText = "第3行";
-        else if (ncr == 7) strText = "行";
+        if (nCR == 0) strText = "第一组";
+        else if (nCR == 1) strText = "第二组";
+        else if (nCR == 2) strText = "第三组";
+        else if (nCR == 3) strText = "组";
+        else if (nCR == 4) strText = "第1行";
+        else if (nCR == 5) strText = "第2行";
+        else if (nCR == 6) strText = "第3行";
+        else if (nCR == 7) strText = "行";
 
         var nX, nY;
 
