@@ -1694,9 +1694,13 @@ function CStatsWaves()
     this.afOffset = new Array(8);
     this.nScope = 20;
 
+    this.anCount = new Array(8);
+    this.anPrev = new Array(6);
+
     for (var n = 0; n < 8; ++n)
     {
         this.afOffset[n] = new Array();
+        this.anCount[n] = new Array();
     }
  
     this.Reset = function (nScope)
@@ -1714,6 +1718,16 @@ function CStatsWaves()
             if (nLen > 0)
                 this.afOffset[n].splice(0, nLen);
         }
+
+        for (var n = 0; n < 8; ++n)
+        {
+            nLen = this.anCount[n].length;
+            if (nLen > 0)
+                this.anCount[n].splice(0, nLen);
+        }
+
+        for(var n = 0; n < 6; ++ n)
+            this.anPrev[n] = -1;
     }
 
     this.AddNum = function(num)
@@ -1723,16 +1737,38 @@ function CStatsWaves()
 
         this.anNum.push(num);
 
+        var nCol = GetNumCol(num);
+        var nRow = GetNumRow(num);
+
+        var nIdx = this.anNum.length - 1;
+
+        for (var n = 0; n < 2; ++n)
+        {
+            var i = ((n == 0)? nCol : (nRow + 3));
+            var nn = ((i >= 3) ? (i + 1) : i);
+
+            if(this.anPrev[i] >= 0)
+            {
+                var nSpan =  nIdx - this.anPrev[i];
+                this.anCount[nn].push(nSpan);
+                this.anCount[(i >= 3) ? 7 : 3].push(nSpan);
+            }
+
+            this.anPrev[i] = nIdx;
+        }
+
         if (this.anNum.length < this.nScope)
             return;
 
-        var anSum = [0, 0, 0, 0, 0, 0];
+        var anSum = new Array(6);
+        for (var n = 0; n < 6; ++n)
+            anSum[n] = 0;
 
         for (var n = this.anNum.length - 1; n >= this.anNum.length - this.nScope; --n)
         {
             var nNum = this.anNum[n];
-            var nCol = GetNumCol(nNum);
-            var nRow = GetNumRow(nNum);
+            nCol = GetNumCol(nNum);
+            nRow = GetNumRow(nNum);
             anSum[nCol]++;
             anSum[nRow + 3]++;
         }
@@ -1776,6 +1812,130 @@ function CStatsWaves()
 
         for (var n = 0; n < anNumTemp.length; ++n)
             this.AddNum(anNumTemp[n]);
+    }
+
+    this.DrawDistance = function (strCanvasID, nWidth, nHeight, nCR, bDetail)
+    {
+        var canvas = document.getElementById(strCanvasID);
+        canvas.width = nWidth;
+        canvas.height = nHeight;
+
+        var nX0 = 0;
+        if (bDetail)
+            nX0 = 60; // for numbers on the left sides
+
+        var nRectX = bDetail? 30 : 10;
+        var nRectY = bDetail? 50 : 20;
+        var nRectW = nWidth - 2 * nRectX - nX0;
+        var nRectH = nHeight - 2 * nRectY;
+
+        var context = canvas.getContext('2d');
+
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+        var nMax = 72;
+        var nLen = this.anCount[nCR].length;
+        var nIdx0 = 0;
+        if (nLen > nMax)
+            nIdx0 = nLen - nMax;
+        
+        context.strokeStyle = "#aaaaaa";
+        context.lineWidth = 1;
+        context.beginPath();
+        context.moveTo(nX0 - 1 + nRectX, nRectY);
+        context.lineTo(nX0 - 1 + nRectX, nRectY + nRectH);
+        context.moveTo(nX0 - 1 + nRectX + nRectW, nRectY);
+        context.lineTo(nX0 - 1 + nRectX + nRectW, nRectY + nRectH);
+        context.stroke();
+        
+        context.font = "30px 微软雅黑";
+
+        for (var n = 0; n <= 15; ++n)
+        {
+            context.beginPath();
+
+            if (bDetail)
+            {
+                if ((n % 5) == 0)
+                {
+                    context.strokeStyle = "#5f5f5f";
+                    context.lineWidth = 3;
+                }
+                else
+                {
+                    context.strokeStyle = "#aaaaaa";
+                    context.lineWidth = 1;
+                }
+            }
+            else
+            {
+                context.strokeStyle = "#aaaaaa";
+                context.lineWidth = 1;
+            }
+
+
+            if (bDetail || ((n % 5) == 0))
+            {
+                context.moveTo(nX0 - 1 + nRectX, nRectY + n * nRectH / 15);
+                context.lineTo(nX0 - 1 + nRectX + nRectW, nRectY + n * nRectH / 15);
+                context.stroke();
+            }
+
+            if (bDetail)
+            {
+                context.fillText((15 - n), nRectX, nRectY + 15 + n * nRectH / 15);
+            }
+        }
+
+        if ((nCR % 4) == 3)
+            context.strokeStyle = "#ff9977";
+        else
+            context.strokeStyle = "#a9cf99";
+        context.lineWidth = (bDetail? 5 : 3);
+
+        context.beginPath();
+
+        for (var n = nIdx0; n < nLen; ++n)
+        {
+            var nVal = this.anCount[nCR][n];
+            if (nVal > 15)
+                nVal = 15;
+
+            var nX = nX0 + nRectX + (n - nIdx0) * nRectW / (nMax - 1);
+            var nY = nHeight - nRectY - nVal * nRectH / 15;
+
+            if(n == nIdx0)
+                context.moveTo(nX, nY);
+            else
+                context.lineTo(nX, nY);
+        }
+        context.stroke();
+
+        var strText = "";
+        if (nCR == 0) strText = "第一组";
+        else if (nCR == 1) strText = "第二组";
+        else if (nCR == 2) strText = "第三组";
+        else if (nCR == 3) strText = "组";
+        else if (nCR == 4) strText = "第1行";
+        else if (nCR == 5) strText = "第2行";
+        else if (nCR == 6) strText = "第3行";
+        else if (nCR == 7) strText = "行";
+
+        var nX, nY;
+
+        if (bDetail)
+        {
+            nX = nX0 + nRectX + 30;
+            nY = nRectY + 43 + nRectH / 15;
+        }
+        else
+        {
+            nX = 30;
+            nY = 70;
+        }
+
+        context.font = (bDetail ? "40px" : "36px") + " 微软雅黑";
+        context.fillText(strText, nX, nY);
     }
 }
 
@@ -2026,9 +2186,9 @@ var g_bttnColumns = new CBttnOptions("Columns", [3, 4, 5, 6, 7], null, 2, -1);
 var g_bttnStatsGroups = new CBttnOptions("StatsGroups", [20, 40, 60, 80, 100, -1], null, 2, 0);
 var g_bttnStatsSum = new CBttnOptions("StatsSum", [100, 200, 300, -1], null, 2, 150);
 var g_bttnStatsScope = new CBttnOptions("StatsScope", [40, 70, 110, 180, -1], null, 2, 150);
-var g_bttnStatsWave = new CBttnOptions("StatsWave", [18, 36, 54, 72, 108, 180, 360], null, 0, 0);
+var g_bttnStatsFrequency = new CBttnOptions("StatsFrequency", [18, 36, 54, 72, 108, 180, 360], null, 0, 0);
 var g_bttnStatsLongsBet = new CBttnOptions("StatsLongsBet", [4, 5, 6], null, 2, 120);
 var g_bttnStatsLongs = new CBttnOptions("StatsLongs", [10, 11, 12, 13], ["10+", "11+", "12+", "13+"], 2, 120);
-var g_bttnStats = new CBttnOptions("Stats", [0, 1, 2, 3, 4], ["打法", "波浪", "号码", "轮次", "其它"], 0, 0);
+var g_bttnStats = new CBttnOptions("Stats", [0, 1, 2, 3, 4, 5], ["打法", "频率", "距离", "号码", "轮次", "其它"], 0, 0);
 var g_bttnViewNum = new CBttnOptions("ViewNum", [0, 1, 2, 3, 4, 5], ["一组", "二组", "三组", "1行", "2行", "3行"], 0, 0);
 var g_bttnPlaySpeed = new CBttnOptions("PlaySpeed", [1, 2, 3], ["1/2", "1x", "2x"], 1, 80);

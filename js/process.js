@@ -399,7 +399,7 @@ function Show_Queue()
 function Show_RefreshSysButtons()
 {
     var astrIDBttn = ["tdBttnTheme", "tdBttnRestart", "tdBttnRestore", "tdBttnImport", "tdBttnExport",
-        "tdBttnSave", "tdBttnStatsGames", "tdBttnStatsWaves", "tdBttnStatsNumbers", "tdBttnStatistics",
+        "tdBttnSave", "tdBttnStatsGames", "tdBttnStatsFrequecies", "tdBttnStatsDistances", "tdBttnStatistics",
         "tdBttnPlay", "tdBttnManage", "tdBttnConfig", "tdBttnMore"];
 
     var abEnabled = [];
@@ -463,7 +463,8 @@ function Show_AddNum()
 function Play_Show_AddNum()
 {
     Show_StatsGames(-1, false);
-    Show_StatsWaves(false);
+    Show_StatsFrequencies(false);
+    Show_StatsDistances();
     Show_StatsNumbers(-1);
     Show_StatsRounds();
     Show_StatsMisc();
@@ -475,7 +476,7 @@ function PageInit_Data()
     g_columns.Reset();
     g_status.Reset();
     g_queue.Reset();
-    g_waves.Reset(g_bttnStatsWave.Value());
+    g_waves.Reset(g_bttnStatsFrequency.Value());
 }
 
 
@@ -975,16 +976,16 @@ function Show_StatsGames(nCol, bMain)
     divGames.innerHTML = strHtml;
 }
 
-function Show_StatsWaves(bSwitchToDraw)
+function Show_StatsFrequencies(bSwitchToDraw)
 {
-    var div = document.getElementById("divStatsWavesText");
+    var div = document.getElementById("divStatsFrequenciesText");
 
     if (bSwitchToDraw)
     {
         div.style.display = "none";
     }
 
-    var strHtml = "<table cellpadding='0' cellspacing='0' border='0' width='100%' id='tblStatsWave'><tr>";
+    var strHtml = "<table cellpadding='0' cellspacing='0' border='0' width='100%' id='tblStatsFrequency'><tr>";
     strHtml += "<td>一组</td><td>二组</td><td>三组</td><td>组</td>";
     strHtml += "<td>1行</td><td>2行</td><td>3行</td><td>行</td></tr>";
 
@@ -1043,6 +1044,7 @@ function Show_StatsWaves(bSwitchToDraw)
                 context.moveTo(20 + i * 5, anBase[nn]);
                 context.lineTo(20 + i * 5, anBase[nn] - (g_waves.afOffset[nn][n] * nHeight100 / 100));
             }
+            context.closePath();
             context.stroke();
         }
     }
@@ -1069,10 +1071,10 @@ function Show_StatsWaves(bSwitchToDraw)
     context.closePath();
     context.stroke();
 
+    context.font = "30px 微软雅黑";
+
     for (var nn = 0; nn < 8; ++nn)
     {
-        context.font = "30px 微软雅黑";
-
         var strText = "";
         if (nn == 0) strText = "一组";
         else if (nn == 1) strText = "二组";
@@ -1088,8 +1090,17 @@ function Show_StatsWaves(bSwitchToDraw)
 
     if (bSwitchToDraw)
     {
-        var div = document.getElementById("divStatsWavesDraw");
+        var div = document.getElementById("divStatsFrequenciesDraw");
         div.style.display = "";
+    }
+}
+
+function Show_StatsDistances()
+{
+    for(var n = 0; n < 8; ++ n)
+    {
+        var strCanvasID = "cvDist" + n.toString();
+        g_waves.DrawDistance(strCanvasID, 1080, 170, n, false);
     }
 }
 

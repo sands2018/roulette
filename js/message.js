@@ -10,10 +10,11 @@
     30 - statistics middle;
     35 - statistics top;
     39 - statistics bottom;
-    50 - file;
-    51 - file main;
-    55 - file top;
-    59 - file bottom;
+    50 - stats distance detail
+    70 - file;
+    71 - file main;
+    75 - file top;
+    79 - file bottom;
     90 - import;
     91 - games config;
     93 - bets manage;
@@ -259,16 +260,16 @@ function OnBttnStatsScopeClick(nIdx)
 
 // ----------------------------------------------
 
-function Show_RefreshStatsWaveButton()
+function Show_RefreshStatsFrequencyButton()
 {
-    g_bttnStatsWave.Show("divStatsWaveBttns");
+    g_bttnStatsFrequency.Show("divStatsFrequencyBttns");
 }
 
-function OnBttnStatsWaveClick(nIdx)
+function OnBttnStatsFrequencyClick(nIdx)
 {
-    g_bttnStatsWave.OnClick(nIdx);
-    g_waves.ResetScope(g_bttnStatsWave.Value());
-    Show_StatsWaves(false);
+    g_bttnStatsFrequency.OnClick(nIdx);
+    g_waves.ResetScope(g_bttnStatsFrequency.Value());
+    Show_StatsFrequencies(false);
 }
 
 // ----------------------------------------------
@@ -315,8 +316,8 @@ function OnBttnViewNumClick(nIdx)
 
 function SwitchStats()
 {
-    var astrDiv = ["Games", "Waves", "Numbers", "Rounds", "Misc"];
-    var astrTitle = ["打法统计数据", "波浪统计数据", "号码统计数据", "轮次汇总数据", "其它统计数据"];
+    var astrDiv = ["Games", "Frequencies", "Distances", "Numbers", "Rounds", "Misc"];
+    var astrTitle = ["打法统计数据", "频率统计数据", "距离统计数据", "号码统计数据", "轮次汇总数据", "其它统计数据"];
     var nIdx = g_bttnStats.Value();
 
     for (var n = 0; n < astrDiv.length; ++n)
@@ -330,8 +331,8 @@ function SwitchStats()
     }
 
     var div1 = document.getElementById("divStatsScopeBttns");
-    var div2 = document.getElementById("divStatsWaveBttns");
-    div1.style.display = (nIdx == 1) ? "none" : "";
+    var div2 = document.getElementById("divStatsFrequencyBttns");
+    div1.style.display = ((nIdx == 1) || (nIdx == 2)) ? "none" : "";
     div2.style.display = (nIdx == 1) ? "" : "none";
 
     var td = document.getElementById("tdStatsTitle");
@@ -367,11 +368,12 @@ function OpenStatistics(strID)
     if (g_queue.nIDX < 0)
         return;
 
-    if ((strID == "w") && (g_queue.nIDX < 1))
+    if (((strID == "f") || (strID == "d")) && (g_queue.nIDX < 1))
         return;
 
     Show_StatsGames(-1, false);
-    Show_StatsWaves(true);
+    Show_StatsFrequencies(true);
+    Show_StatsDistances();
     Show_StatsNumbers(-1);
     Show_StatsRounds();
     Show_StatsMisc();
@@ -383,14 +385,14 @@ function OpenStatistics(strID)
 
         g_bttnStats.nSelIdx = 0;
     }
-    else if (strID == "w") // waves
+    else if (strID == "f") // frequencies
     {
         if (!IsDirectStatsWindowIdx(g_bttnStats.nSelIdx))
             g_status.StatsIdx = g_bttnStats.nSelIdx;
 
         g_bttnStats.nSelIdx = 1;
     }
-    else if (strID == "n") // numbers
+    else if (strID == "d") // distances
     {
         if (!IsDirectStatsWindowIdx(g_bttnStats.nSelIdx))
             g_status.StatsIdx = g_bttnStats.nSelIdx;
@@ -403,7 +405,7 @@ function OpenStatistics(strID)
     }
 
     Show_RefreshStatsScopeButton();
-    Show_RefreshStatsWaveButton();
+    Show_RefreshStatsFrequencyButton();
     Show_RefreshStatsLongsButton();
     Show_RefreshStatsLongsBetButton();
     Show_RefreshStatsButton();
@@ -430,9 +432,9 @@ function OnMainSwitchStats(bShowGames)
     div2.style.display = strDisplay2;
 }
 
-function OnSwitchStatsWavesTextDraw(nIdx)
+function OnSwitchStatsFrequenciesTextDraw(nIdx)
 {
-    var astrID = ["divStatsWavesText", "divStatsWavesDraw"];
+    var astrID = ["divStatsFrequenciesText", "divStatsFrequenciesDraw"];
     for (var n = 0; n < 2; ++n)
     {
         var div = document.getElementById(astrID[n]);
@@ -868,6 +870,21 @@ function OnQuitViewNum()
     div.style.display = "none";
 }
 
+
+function OnStatsDistanceClick(nCR)
+{
+    g_waves.DrawDistance("cvDist", 1080, 1000, nCR, true);
+
+    var div = document.getElementById("divStatsDistDetail");
+    div.style.display = "";
+}
+
+function OnHideStatsDistDetail()
+{
+    var div = document.getElementById("divStatsDistDetail");
+    div.style.display = "none";
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 $(document).ready(function ()
@@ -960,16 +977,16 @@ $(document).ready(function ()
         OpenStatistics("g");
     });
 
-    // stats waves:
-    $("#tdBttnStatsWaves").click(function ()
+    // stats frequencies:
+    $("#tdBttnStatsFrequecies").click(function ()
     {
-        OpenStatistics("w");
+        OpenStatistics("f");
     });
 
-    // stats numbers:
-    $("#tdBttnStatsNumbers").click(function ()
+    // stats distances:
+    $("#tdBttnStatsDistances").click(function ()
     {
-        OpenStatistics("n");
+        OpenStatistics("d");
     });
     
 
