@@ -1751,7 +1751,7 @@ function CStatsWaves()
 
             if(this.anPrev[i] >= 0)
             {
-                var nSpan =  nIdx - this.anPrev[i];
+                var nSpan =  nIdx - this.anPrev[i] - 1;
                 this.anCount[nn].push(nSpan);
                 this.anCount[(i >= 3) ? 7 : 3].push(nSpan);
             }
@@ -1837,6 +1837,9 @@ function CStatsWaves()
         context.clearRect(0, 0, canvas.width, canvas.height);
 
         var nMax = 72;
+        if ((nCR % 4) == 3)
+            nMax = nMax * 3;
+
         var nLen = this.anCount[nCR].length;
         var nIdx0 = 0;
         if (nLen > nMax)
