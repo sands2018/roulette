@@ -1751,7 +1751,7 @@ function CStatsWaves()
 
             if(this.anPrev[i] >= 0)
             {
-                var nSpan =  nIdx - this.anPrev[i] - 1;
+                var nSpan =  nIdx - this.anPrev[i];
                 this.anCount[nn].push(nSpan);
                 this.anCount[(i >= 3) ? 7 : 3].push(nSpan);
             }
