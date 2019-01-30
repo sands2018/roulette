@@ -187,8 +187,8 @@ function CGameBets()
 
     this.DefaultRnds = function ()
     {
-        for (var n = 0; n < 8; ++n)
-            this.rnds.rows[n] = new CValue(n + 1);
+        for (var n = 0; n < 9; ++n)
+            this.rnds.rows[n] = new CValue(n);
 
         this.rnds.total = this.rnds.rows.length;
     }
