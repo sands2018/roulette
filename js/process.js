@@ -840,15 +840,16 @@ function GetStatsNumTdString(statsNum, nIdx, aStr)
 function Show_StatsRowCol()
 {
     var div = document.getElementById("divStatsRowCol");
-    var astrTitle = ["第一组", "第二组", "第三组", "第1行", "第2行", "第3行"];
+    var astrTitle = ["一组", "二组", "三组", "1行", "2行", "3行"];
 
-    var strHtml = "";
+    var strHtml = "<table cellspacing='0' cellpadding='0' border='0'>";
 
     for (var nn = 0; nn < 6; ++nn)
     {
-        strHtml += "<div class='divSRCTitle'>"
+        strHtml += "<tr>";
+        strHtml += "<td class='tdSRCTitle'>"
         strHtml += astrTitle[nn];
-        strHtml += "</div>";
+        strHtml += "</td><td class='tdSRC'>";
 
         var nIdx = (nn < 3) ? nn : (nn + 1);
 
@@ -874,14 +875,14 @@ function Show_StatsRowCol()
                     continue;
             }
 
-            strHtml += ",";
+            strHtml += ", ";
             strHtml += nVal.toString();
 
             ++nCount;
-            if (nCount >= 80)
+            if (nCount >= 60)
                 break;
         }
-        strHtml += "<br>";
+        strHtml += "</td></tr>";
     }
 
     div.innerHTML = strHtml;
