@@ -847,9 +847,15 @@ function Show_StatsRowCol()
     for (var nn = 0; nn < 6; ++nn)
     {
         strHtml += "<tr>";
-        strHtml += "<td class='tdSRCTitle'>"
+        strHtml += "<td class='tdSRCTitle";
+        if (nn < 5)
+            strHtml += " SRCMore";
+        strHtml += "'>";
         strHtml += astrTitle[nn];
-        strHtml += "</td><td class='tdSRC'>";
+        strHtml += "</td><td class='tdSRC";
+        if (nn < 5)
+            strHtml += " SRCMore";
+        strHtml += "'>";
 
         var nIdx = (nn < 3) ? nn : (nn + 1);
 
@@ -879,7 +885,7 @@ function Show_StatsRowCol()
             strHtml += nVal.toString();
 
             ++nCount;
-            if (nCount >= 60)
+            if (nCount >= 72)
                 break;
         }
         strHtml += "</td></tr>";
