@@ -324,7 +324,7 @@ function OnStatsMiscClick(nIdx)
 
 function SwitchStatsMisc()
 {
-    var astrDiv = ["divStatsRounds", "divStatsRoundBet", "divStatsLongs"];
+    var astrDiv = ["divStatsRoundBet", "divStatsLongs", "divStatsRounds"];
 
     for (var n = 0; n < astrDiv.length; ++n)
     {
