@@ -852,10 +852,14 @@ function Show_StatsRowCol()
 
         var nIdx = (nn < 3) ? nn : (nn + 1);
 
+        var nCount = 0;
+
         var nFirstVal = g_3C3R.data.anValue[nn];
         strHtml += "<span class='" + ((nFirstVal == 0) ? "numFirstZero" : "numFirst") + "'>";
         strHtml += nFirstVal.toString();
         strHtml += "</span>"
+
+        ++nCount;
 
         var bFirst = true;
 
@@ -872,6 +876,9 @@ function Show_StatsRowCol()
 
             strHtml += ",";
             strHtml += nVal.toString();
+
+            if (nCount >= 80)
+                break;
         }
         strHtml += "<br>";
     }
