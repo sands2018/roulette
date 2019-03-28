@@ -552,6 +552,7 @@ function NumberString_StatsGroupsCount(nNum)
     return "<span class='SGCNumber'>" + nNum.toString() + "</span>"
 }
 
+
 function Show_StatsGroupsCount()
 {
     var stats3C3R = new CIndexedArray();
@@ -835,6 +836,49 @@ function GetStatsNumTdString(statsNum, nIdx, aStr)
         aStr[2] = Math.round(statsNum.anFrequence[nIdx] * 100) / 100;
     }
 }
+
+function Show_StatsRowCol()
+{
+    var div = document.getElementById("divStatsRowCol");
+    var astrTitle = ["第一组", "第二组", "第三组", "第1行", "第2行", "第3行"];
+
+    var strHtml = "";
+
+    for (var nn = 0; nn < 6; ++nn)
+    {
+        strHtml += "<div class='divSRCTitle'>"
+        strHtml += astrTitle[nn];
+        strHtml += "</div>";
+
+        var nIdx = (nn < 3) ? nn : (nn + 1);
+
+        var nFirstVal = g_3C3R.data.anValue[nn];
+        strHtml += "<span class='" + ((nFirstVal == 0) ? "numFirstZero" : "numFirst") + "'>";
+        strHtml += nFirstVal.toString();
+        strHtml += "</span>"
+
+        var bFirst = true;
+
+        for (var n = g_waves.anCount[nIdx].length - 1 ; n >= 0; --n)
+        {
+            var nVal = (g_waves.anCount[nIdx][n] - 1);
+
+            if (bFirst)
+            {
+                bFirst = false;
+                if (nVal == 0)
+                    continue;
+            }
+
+            strHtml += ",";
+            strHtml += nVal.toString();
+        }
+        strHtml += "<br>";
+    }
+
+    div.innerHTML = strHtml;
+}
+
 
 function Show_StatsNumbers(nCol)
 {

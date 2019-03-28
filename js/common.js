@@ -48,6 +48,12 @@ function ReadData(key, strDefault)
     return strValue;
 }
 
+function ReadIntData(key, nDefault)
+{
+    var strData = ReadData(key, nDefault.toString());
+    return parseInt(strData);
+}
+
 function DeleteData(key)
 {
     if (!window.localStorage)
@@ -729,6 +735,7 @@ var DATA_KEYBOARDID = "KEYBOARDID";
 var DATA_SEPERATE3C3R = "SEPERATE3C3R";
 var DATA_COLUMNSBUTTON = "COLUMNSBUTTON";
 var DATA_SGCOUNTIDX = "SGCOUNTIDX";
+var DATA_STATSMISC = "STATSMISC";
 
 function CSysStatus()
 {
@@ -741,12 +748,14 @@ function CSysStatus()
     this.StatsIdx = 3;
     this.StatsDistCROpt = 0;
     this.StatsDistCR = 0;
+    this.StatsMisc = 0;
 
     this.Reset = function()
     {
         this.QueueExpand = 0;
         this.KeyboardID = ReadData(DATA_KEYBOARDID, "K");
         this.Seperate3C3R = ReadData(DATA_SEPERATE3C3R, "F");
+        this.StatsMisc = ReadIntData(DATA_STATSMISC, 0);
 
         for (var n = 0; n < 4; ++n)
             this.anStatsSumExpand[n] = 0;
@@ -1097,7 +1106,7 @@ function CStatsNumbers(nCol)
         }
 
         // calc Distance: -----------------------
-        // distance is always from most recent num (that is, nBefore is useless for distance calcuiation)
+        // distance is always from most recent num (that is, nBefore is useless for distance calculation)
 
         var nMaxIdx = queue.nIDX;
         var nMinIdx = queue.nIDX - nScope + 1;
@@ -2211,6 +2220,6 @@ var g_bttnStatsScope = new CBttnOptions("StatsScope", [18, 30, 40, 70, 110, -1],
 var g_bttnStatsFrequency = new CBttnOptions("StatsFrequency", [18, 36, 54, 72, 108, 180, 360], null, 0, 0);
 var g_bttnStatsLongsBet = new CBttnOptions("StatsLongsBet", [4, 5, 6], null, 2, 120);
 var g_bttnStatsLongs = new CBttnOptions("StatsLongs", [10, 11, 12, 13], ["10+", "11+", "12+", "13+"], 2, 120);
-var g_bttnStats = new CBttnOptions("Stats", [0, 1, 2, 3, 4, 5], ["打法", "频率", "距离", "号码", "轮次", "其它"], 0, 0);
+var g_bttnStats = new CBttnOptions("Stats", [0, 1, 2, 3, 4, 5], ["打法", "频率", "距离", "行组", "号码", "其它"], 0, 0);
 var g_bttnViewNum = new CBttnOptions("ViewNum", [0, 1, 2, 3, 4, 5], ["一组", "二组", "三组", "1行", "2行", "3行"], 0, 0);
 var g_bttnPlaySpeed = new CBttnOptions("PlaySpeed", [1, 2, 3], ["1/2", "1x", "2x"], 1, 80);

@@ -213,9 +213,9 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 
 #tblViewNum td { width: 10%; height: 70px; }
 #tblViewNum .tdNormal { border: 1px solid #ccaa88; background-color: white; }
-#tblViewNum .tdHighlight { border: 1px solid #aa8833; background-color: #f3ecdb; }
+#tblViewNum .tdHighlight { border: 1px solid #aa8833; background-color: #ffe2b2; }
 #tblViewNum .tdEmpty { border: 0; background-color: white; }
-#tblViewNum .tdZero { border: 1px solid #ccaa88; background-color: #e3f3db; }
+#tblViewNum .tdZero { border: 1px solid #ccaa88; background-color: #c7ecbe; }
 
 .bttnSystem { height: 60px; line-height: 60px; color: #aa8833; border: 1px solid #aa8833; }
 .bttnPlay { width: 130px; }
@@ -230,6 +230,10 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 
 #divStatsDistDetail { position: fixed; top: 0px; z-index: 50; width: 100%; height: 100%; padding-top: 200px }
 #divStatsDistDetailDraw { border-left: 0; border-right: 0; width: 100%; height: 1000px; }
+
+.divSRCTitle { font-size: 40px; color: #995539; padding: 20px 0 5px 0 }
+.numFirstZero { color: #ff9933; }
+.numFirst { color: #3399ff; }
 
 </style>
 
@@ -612,19 +616,22 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
                     </div>
                 </div>
             </div>
+            <div id="divStatsRowCol" style="word-wrap:break-word; padding: 0px 20px 20px 20px">
+            </div>
             <div id="divStatsNumbers">
                 <div id="divStatsNumbersC"></div>
                 <div class="divStatsTitle">最大距离前五名：</div>
                 <div id="divMaxDistanceTops"></div>
             </div>
-            <div id="divStatsRounds"></div>
             <div id="divStatsMisc">
+                <div class="divStatsTitle" onclick="OnStatsMiscClick(0)">轮次统计数据</div>
+                <div id="divStatsRounds"></div>
+                <div class="divStatsTitle" onclick="OnStatsMiscClick(1)">轮次参考数据</div>
                 <div id="divStatsRoundBet">
-                    <div class="divStatsTitle">轮次参考数据：</div>
                     <div id="divStatsRoundBetC"></div>
                 </div>
+                <div class="divStatsTitle" onclick="OnStatsMiscClick(2)">长套结束统计数据</div>
                 <div id="divStatsLongs">
-                    <div class="divStatsTitle">长套结束统计数据：</div>
                     <div id="divStatsLongsC"></div>
                     <table cellpadding="0" cellspacing="0" border="0" id="tblStatsLongsBttns">
                         <tr>

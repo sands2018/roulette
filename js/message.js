@@ -314,10 +314,34 @@ function OnBttnViewNumClick(nIdx)
 
 // ----------------------------------------------
 
+function OnStatsMiscClick(nIdx)
+{
+    g_status.StatsMisc = nIdx;
+    WriteData(DATA_STATSMISC, nIdx.toString());
+    SwitchStatsMisc();
+}
+
+
+function SwitchStatsMisc()
+{
+    var astrDiv = ["divStatsRounds", "divStatsRoundBet", "divStatsLongs"];
+
+    for (var n = 0; n < astrDiv.length; ++n)
+    {
+        var strDisplay = "";
+        if (n != g_status.StatsMisc)
+            strDisplay = "none";
+
+        var div = document.getElementById(astrDiv[n]);
+        div.style.display = strDisplay;
+    }
+}
+
+
 function SwitchStats()
 {
-    var astrDiv = ["Games", "Frequencies", "Distances", "Numbers", "Rounds", "Misc"];
-    var astrTitle = ["打法统计数据", "频率统计数据", "距离统计数据", "号码统计数据", "轮次汇总数据", "其它统计数据"];
+    var astrDiv = ["Games", "Frequencies", "Distances", "RowCol", "Numbers", "Misc"];
+    var astrTitle = ["打法统计数据", "频率统计图", "距离统计图", "距离统计数据", "号码统计数据", "其它统计数据"];
     var nIdx = g_bttnStats.Value();
 
     for (var n = 0; n < astrDiv.length; ++n)
@@ -332,11 +356,13 @@ function SwitchStats()
 
     var div1 = document.getElementById("divStatsScopeBttns");
     var div2 = document.getElementById("divStatsFrequencyBttns");
-    div1.style.display = ((nIdx == 1) || (nIdx == 2)) ? "none" : "";
+    div1.style.display = ((nIdx == 1) || (nIdx == 2) || (nIdx == 3)) ? "none" : "";
     div2.style.display = (nIdx == 1) ? "" : "none";
 
     var td = document.getElementById("tdStatsTitle");
     td.innerHTML = astrTitle[nIdx];
+
+    SwitchStatsMisc();
 }
 
 function OnStatsNumClick(nCol)
@@ -374,6 +400,7 @@ function OpenStatistics(strID)
     Show_StatsGames(-1, false);
     Show_StatsFrequencies(true);
     Show_StatsDistances();
+    Show_StatsRowCol();
     Show_StatsNumbers(-1);
     Show_StatsRounds();
     Show_StatsMisc();
