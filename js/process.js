@@ -877,6 +877,7 @@ function Show_StatsRowCol()
             strHtml += ",";
             strHtml += nVal.toString();
 
+            ++nCount;
             if (nCount >= 80)
                 break;
         }
