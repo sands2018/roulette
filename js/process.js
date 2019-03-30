@@ -1372,7 +1372,7 @@ function Show_StatsLongs()
     data3C3R.Reset();
 
     var nTotalCount = 0;
-    var anOccurCount = [0, 0, 0, 0, 0, 0];
+    var anOccurCount = [0, 0, 0, 0, 0, 0, 0];
     var nNotOccurCount = 0;
 
     var aLongs = [];
