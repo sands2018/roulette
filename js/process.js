@@ -1397,16 +1397,16 @@ function Show_StatsLongs()
                 {
                     anOccurCount[aLongs[nn].nRoundAfter]++
                     aLongs[nn].Reset();
-                    break;
                 }
-
-                aLongs[nn].nRoundAfter++;
-
-                if (aLongs[nn].nRoundAfter >= nBetCount)
+                else
                 {
-                    nNotOccurCount++;
-                    aLongs[nn].Reset();
-                    break;
+                    aLongs[nn].nRoundAfter++;
+
+                    if (aLongs[nn].nRoundAfter >= nBetCount)
+                    {
+                        nNotOccurCount++;
+                        aLongs[nn].Reset();
+                    }
                 }
             }
             else
