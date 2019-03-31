@@ -180,7 +180,6 @@ function OnDelNum()
         return;
 
     var num = g_queue.anNum[g_queue.nIDX];
-
     g_anDelNum.push(num);
 
     if (g_queue.nIDX == 0)
