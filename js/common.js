@@ -1758,7 +1758,7 @@ function CStatsWaves()
             var i = ((n == 0)? nCol : (nRow + 3));
             var nn = ((i >= 3) ? (i + 1) : i);
 
-            if(this.anPrev[i] >= 0)
+            //if(this.anPrev[i] >= 0)
             {
                 var nSpan =  nIdx - this.anPrev[i];
                 this.anCount[nn].push(nSpan);
@@ -2212,6 +2212,7 @@ var g_3C3R = new CStats3C3R();
 var g_columns = new CStatsColumns();
 var g_waves = new CStatsWaves();
 var g_files = new CSysFiles();
+var g_anDelNum = new Array();
 
 var g_bttnColumns = new CBttnOptions("Columns", [3, 4, 5, 6, 7], null, 2, -1);
 var g_bttnStatsGroups = new CBttnOptions("StatsGroups", [20, 40, 60, 80, 100, -1], null, 2, 0);
@@ -2220,6 +2221,6 @@ var g_bttnStatsScope = new CBttnOptions("StatsScope", [18, 30, 40, 70, 110, -1],
 var g_bttnStatsFrequency = new CBttnOptions("StatsFrequency", [18, 36, 54, 72, 108, 180, 360], null, 0, 0);
 var g_bttnStatsLongsBet = new CBttnOptions("StatsLongsBet", [2, 3, 4, 5, 6, 7], null, 2, 100);
 var g_bttnStatsLongs = new CBttnOptions("StatsLongs", [3, 4, 5, 6, 7], ["3+", "4+", "5+", "6+", "7+"], 2, 122);
-var g_bttnStats = new CBttnOptions("Stats", [0, 1, 2, 3, 4, 5], ["打法", "频率", "距离", "行组", "号码", "其它"], 0, 0);
+var g_bttnStats = new CBttnOptions("Stats", [0, 1, 2, 3, 4, 5, 6], ["打法", "频率", "距离", "行组", "追打", "号码", "其它"], 0, 0);
 var g_bttnViewNum = new CBttnOptions("ViewNum", [0, 1, 2, 3, 4, 5], ["一组", "二组", "三组", "1行", "2行", "3行"], 0, 0);
 var g_bttnPlaySpeed = new CBttnOptions("PlaySpeed", [1, 2, 3], ["1/2", "1x", "2x"], 1, 80);

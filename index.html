@@ -386,8 +386,8 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
                         <td id="tdBttnRestore">恢复</td>
                         <td id="tdBttnExport">导出</td>
                         <td id="tdBttnStatistics">统计</td>
-                        <td id="tdBttnStatsDistances">距离</td>
-                        <td id="tdBttnStatsFrequecies">频率</td>
+                        <td id="tdBttnStatsRowCol">行组</td>
+                        <td id="tdBttnStatsLongs">追打</td>
                         <td id="tdBttnStatsGames">打法</td>
                     </tr>
                 </table>
@@ -417,8 +417,9 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
                     </tr>
                     <tr>
                         <td id="tdKEsc" onclick="OnEscape()" class="tdGreen">esc</td>
-                        <td id="tdK0" onclick="OnAddNum(0)" colspan="3">0</td>
-                        <td id="tdKDel" onclick="OnDelNum()" colspan="2" class="tdGreen">del</td>
+                        <td id="tdK0" onclick="OnAddNum(0)" colspan="2">0</td>
+                        <td id="tdKDel" onclick="OnDelNum()" colspan="2" class="tdGreen">&larr;</td>
+                        <td id="tdKFw" onclick="OnForward()" class="tdGreen">&rarr;</td>
                         <td id="tdKSwitch" onclick="OnSwitchInput(0)" colspan="2" class="tdGreen">switch</td>
                         <td id="tdKHide" onclick="OnHideKeyboard()" class="tdHide tdGreen">x</td>
                     </tr>
@@ -446,8 +447,9 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
                     </tr>
                     <tr>
                         <td id="tdBEsc" onclick="OnEscape()" colspan="2" class="tdGreen">esc</td>
-                        <td id="tdB0" onclick="OnAddNum(0)" colspan="4">0</td>
-                        <td id="tdBDel" onclick="OnDelNum()" colspan="2" class="tdGreen">del</td>
+                        <td id="tdB0" onclick="OnAddNum(0)" colspan="3">0</td>
+                        <td id="tdBDel" onclick="OnDelNum()" colspan="2" class="tdGreen">&larr;</td>
+                        <td id="tdBFw" onclick="OnForward()" class="tdGreen">&rarr;</td>
                         <td id="tdBSwitch" onclick="OnSwitchInput(1)" colspan="3" class="tdGreen">switch</td>
                         <td id="tdBHide" onclick="OnHideKeyboard()" class="tdHide tdGreen">x</td>
                     </tr>
@@ -620,6 +622,19 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
             </div>
             <div id="divStatsRowCol" style="word-wrap:break-word; padding: 0px 20px 20px 20px">
             </div>
+            <div id="divStatsLongs">
+                <div id="divStatsLongsC"></div>
+                <table cellpadding="0" cellspacing="0" border="0" id="tblStatsLongsBttns">
+                    <tr>
+                        <td class="tdSLBttnsT">长套后轮次：</td>
+                        <td><div id="divStatsLongsBetBttns"></div></td>
+                    </tr>
+                    <tr>
+                        <td class="tdSLBttnsT">长套轮次：</td>
+                        <td><div id="divStatsLongsBttns"></div></td>
+                    </tr>
+                </table>
+            </div>
             <div id="divStatsNumbers">
                 <div id="divStatsNumbersC"></div>
                 <div class="divStatsTitle">最大距离前五名：</div>
@@ -630,21 +645,7 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
                 <div id="divStatsRoundBet">
                     <div id="divStatsRoundBetC"></div>
                 </div>
-                <div class="divStatsTitle" onclick="OnStatsMiscClick(1)">长套结束统计数据</div>
-                <div id="divStatsLongs">
-                    <div id="divStatsLongsC"></div>
-                    <table cellpadding="0" cellspacing="0" border="0" id="tblStatsLongsBttns">
-                        <tr>
-                            <td class="tdSLBttnsT">长套后轮次：</td>
-                            <td><div id="divStatsLongsBetBttns"></div></td>
-                        </tr>
-                        <tr>
-                            <td class="tdSLBttnsT">长套轮次：</td>
-                            <td><div id="divStatsLongsBttns"></div></td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="divStatsTitle" onclick="OnStatsMiscClick(2)">轮次统计数据</div>
+                <div class="divStatsTitle" onclick="OnStatsMiscClick(1)">轮次统计数据</div>
                 <div id="divStatsRounds"></div>
             </div>
         </div>
@@ -655,12 +656,7 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
             <div id="divStatsFrequencyBttns"></div>
             <table cellpadding="0" cellspacing="10" border="0" style="width: 100%">
                 <tr>
-                    <td style="width: 87%"><div id="divStatsBttns"></div></td>
-                    <td style="width: 13%">
-                        <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; height: 60px">
-                            <tr><td id="tdBttnStatsQuit" onclick="OnQuitStats()">退出</td></tr>
-                        </table>
-                    </td>
+                    <td style="width: 100%"><div id="divStatsBttns"></div></td>
                 </tr>
             </table>
             <div id="divPlayBttns" style="display: none">

@@ -24,7 +24,7 @@
 
 function OnPageInit()
 {
-    PageInit_Data();
+    PageInit_Data(true);
 
     Show_Keyboard(true);
     Show_3C3R();
@@ -118,12 +118,21 @@ function OnSeperate3C3RClick()
     Show_3C3R();
 }
 
-function OnAddNum(num)
+function DoAddNum(num)
 {
     Calc_AddNum(num);
     Calc_Sum();
     Show_AddNum();
     SaveNumbers();
+}
+
+function OnAddNum(num)
+{
+    var nLen = g_anDelNum.length;
+    if(nLen > 0)
+        g_anDelNum.splice(0, nLen);
+
+    DoAddNum(num);
 }
 
 function OnStatsSumListClick(nID)
@@ -170,10 +179,15 @@ function OnDelNum()
     if (g_queue.nIDX < 0)
         return;
 
+    var num = g_queue.anNum[g_queue.nIDX];
+
+    g_anDelNum.push(num);
+
     if (g_queue.nIDX == 0)
     {
-        PageInit_Data();
+        PageInit_Data(false);
         Show_AddNum();
+
         return;
     }
 
@@ -182,8 +196,16 @@ function OnDelNum()
     for(var n = 0; n < g_queue.nIDX; ++ n)
         anNum[n] = g_queue.anNum[n];
 
-    ResetData(anNum);
+    ResetData(anNum, false);
     SaveNumbers();
+}
+
+function OnForward()
+{
+    if(g_anDelNum.length <= 0)
+        return;
+
+    DoAddNum(g_anDelNum.pop());
 }
 
 // ----------------------------------------------
@@ -324,7 +346,7 @@ function OnStatsMiscClick(nIdx)
 
 function SwitchStatsMisc()
 {
-    var astrDiv = ["divStatsRoundBet", "divStatsLongs", "divStatsRounds"];
+    var astrDiv = ["divStatsRoundBet", "divStatsRounds"];
 
     for (var n = 0; n < astrDiv.length; ++n)
     {
@@ -340,8 +362,8 @@ function SwitchStatsMisc()
 
 function SwitchStats()
 {
-    var astrDiv = ["Games", "Frequencies", "Distances", "RowCol", "Numbers", "Misc"];
-    var astrTitle = ["打法统计数据", "频率统计图", "距离统计图", "距离统计数据", "号码统计数据", "其它统计数据"];
+    var astrDiv = ["Games", "Frequencies", "Distances", "RowCol", "Longs", "Numbers", "Misc"];
+    var astrTitle = ["打法统计数据", "频率统计图", "距离统计图", "距离统计数据", "追打统计数据", "号码统计数据", "其它统计数据"];
     var nIdx = g_bttnStats.Value();
 
     for (var n = 0; n < astrDiv.length; ++n)
@@ -394,7 +416,7 @@ function OpenStatistics(strID)
     if (g_queue.nIDX < 0)
         return;
 
-    if (((strID == "f") || (strID == "d")) && (g_queue.nIDX < 1))
+    if (((strID == "f") || (strID == "d") || (strID == "l")) && (g_queue.nIDX < 1))
         return;
 
     Show_StatsGames(-1, false);
@@ -417,14 +439,28 @@ function OpenStatistics(strID)
         if (!IsDirectStatsWindowIdx(g_bttnStats.nSelIdx))
             g_status.StatsIdx = g_bttnStats.nSelIdx;
 
-        g_bttnStats.nSelIdx = 1;
+        g_bttnStats.nSelIdx = 1; // ????????
     }
     else if (strID == "d") // distances
     {
         if (!IsDirectStatsWindowIdx(g_bttnStats.nSelIdx))
             g_status.StatsIdx = g_bttnStats.nSelIdx;
 
-        g_bttnStats.nSelIdx = 2;
+        g_bttnStats.nSelIdx = 2; // ????????
+    }
+    else if(strID == "r") // rowcol
+    {
+        if (!IsDirectStatsWindowIdx(g_bttnStats.nSelIdx))
+            g_status.StatsIdx = g_bttnStats.nSelIdx;
+
+        g_bttnStats.nSelIdx = 3;
+    }
+    else if(strID == "l") // longs
+    {
+        if (!IsDirectStatsWindowIdx(g_bttnStats.nSelIdx))
+            g_status.StatsIdx = g_bttnStats.nSelIdx;
+
+        g_bttnStats.nSelIdx = 4;
     }
     else if (IsDirectStatsWindowIdx(g_bttnStats.nSelIdx))
     {
@@ -964,7 +1000,7 @@ $(document).ready(function ()
         {
             if(rb)
             {
-                PageInit_Data();
+                PageInit_Data(true);
                 Show_AddNum();
             }
         });
@@ -1028,19 +1064,18 @@ $(document).ready(function ()
         OpenStatistics("g");
     });
 
-    // stats frequencies:
-    $("#tdBttnStatsFrequecies").click(function ()
+    // stats rowcol:
+    $("#tdBttnStatsRowCol").click(function ()
     {
-        OpenStatistics("f");
+        OpenStatistics("r");
     });
 
-    // stats distances:
-    $("#tdBttnStatsDistances").click(function ()
+     // stats longs:
+    $("#tdBttnStatsLongs").click(function ()
     {
-        OpenStatistics("d");
+        OpenStatistics("l");
     });
-    
-
+ 
     // play:
     $("#tdBttnPlay").click(function ()
     {

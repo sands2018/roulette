@@ -399,7 +399,7 @@ function Show_Queue()
 function Show_RefreshSysButtons()
 {
     var astrIDBttn = ["tdBttnTheme", "tdBttnRestart", "tdBttnRestore", "tdBttnImport", "tdBttnExport",
-        "tdBttnSave", "tdBttnStatsGames", "tdBttnStatsFrequecies", "tdBttnStatsDistances", "tdBttnStatistics",
+        "tdBttnSave", "tdBttnStatsGames", "tdBttnStatsRowCol", "tdBttnStatsLongs", "tdBttnStatistics",
         "tdBttnPlay", "tdBttnManage", "tdBttnConfig", "tdBttnMore"];
 
     var abEnabled = [];
@@ -415,7 +415,8 @@ function Show_RefreshSysButtons()
         abEnabled[4] = false; // export
         abEnabled[5] = false; // save
         abEnabled[6] = false; // stats games
-        abEnabled[8] = false; // stats numbers
+        abEnabled[7] = false; // stats rowcol
+        abEnabled[8] = false; // stats longs
         abEnabled[9] = false; // statistics
     }
     else
@@ -427,7 +428,7 @@ function Show_RefreshSysButtons()
         abEnabled[10] = false; // play
 
     if (g_queue.nIDX < 1)
-        abEnabled[7] = false; // stats waves
+        abEnabled[8] = false; // stats longs
 
     for (var n = 0; n < astrIDBttn.length; ++n)
     {
@@ -470,13 +471,21 @@ function Play_Show_AddNum()
     Show_StatsMisc();
 }
 
-function PageInit_Data()
+function PageInit_Data(bCleanAll)
 {
     g_3C3R.Reset();
     g_columns.Reset();
     g_status.Reset();
     g_queue.Reset();
+
     g_waves.Reset(g_bttnStatsFrequency.Value());
+
+    if(!bCleanAll)
+        return;
+
+    var nLen = g_anDelNum.length;
+    if(nLen > 0)
+        g_anDelNum.splice(0, nLen);
 }
 
 
@@ -601,9 +610,9 @@ function Show_StatsGroupsCount()
     tdRow.innerHTML = strHtml;
 }
 
-function ResetData(anNum)
+function ResetData(anNum, bCleanAll)
 {
-    PageInit_Data();
+    PageInit_Data(bCleanAll);
 
     for (var n = 0; n < anNum.length; ++n)
         Calc_AddNum(anNum[n]);
@@ -676,7 +685,7 @@ function ResetDataFromNumString(strNum, strAction, AfterResetData)
     jConfirm(strMsg, '请确认', function (rb)
     {
         if (rb)
-            ResetData(rtn.anVal);
+            ResetData(rtn.anVal, true);
 
         if (AfterResetData != null)
             AfterResetData(rb);
