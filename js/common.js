@@ -2203,6 +2203,17 @@ function CSysFiles()
     }
 }
 
+// for import and export:
+function CGameData()
+{
+    this.Name = "";     // name 
+    this.SaveTime = ""; // save time
+    this.tms = 0;       // time (in ms)
+    this.Count = 0;     // number count
+    this.Numbers = "";  // value (string of numbers)
+}
+
+
 
 // global variables: ----------------------------------------------------------
 

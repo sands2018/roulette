@@ -1489,8 +1489,8 @@ function SetFilesTitle(strTitle)
 
 function UpdateFilesButtonStatus(nSelCount)
 {
-    var astrIDBttn = ["tdBttnFileOpen", "tdBttnFileRename", "tdBttnFileDelete", "tdBttnFileExit"];
-    var abEnabled = [true, true, true, true];
+    var astrIDBttn = ["tdBttnFileOpen", "tdBttnFileRename", "tdBttnFileDelete", "tdBttnFileImport", "tdBttnFileExport", "tdBttnFileExit"];
+    var abEnabled = [true, true, true, true, true, true];
 
     if (nSelCount == 0)
     {
@@ -1504,6 +1504,8 @@ function UpdateFilesButtonStatus(nSelCount)
         abEnabled[1] = false;
         abEnabled[2] = true;
     }
+
+    abEnabled[4] = (g_files.fs.rows.length > 0);
 
     for (var n = 0; n < astrIDBttn.length; ++n)
     {
@@ -1539,9 +1541,9 @@ function OpenFilesDialog()
     div.style.top = n1 + 1;
     div.style.height = n2 - n1 - 1;
 
-    UpdateFilesButtonStatus(0);
-
     g_files.Load();
+
+    UpdateFilesButtonStatus(0);
 
     $(function ()
     {

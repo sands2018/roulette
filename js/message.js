@@ -971,6 +971,21 @@ function OnHideStatsDistDetail()
     div.style.display = "none";
 }
 
+function AddGameData(aGameData, row)
+{
+    var strNum = ReadData(row.p);
+
+    var gamedata = new CGameData();
+    gamedata.Name = row.n;
+    gamedata.tms = row.t;
+    var tm = new Date(gamedata.tms);
+    gamedata.SaveTime = tm.format("yyyy-MM-dd HH:mm");
+    gamedata.Count = row.c;
+    gamedata.Numbers = strNum;
+
+    aGameData.push(gamedata);
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 $(document).ready(function ()
@@ -1267,5 +1282,49 @@ $(document).ready(function ()
 
         var strNum = ReadData(rows[0].p);
         ResetDataFromNumString(strNum, "open", AfterOpenData);
+    });
+
+    $("#tdBttnFileExport").click(function ()
+    {
+        g_files.Load();
+        var nCount = g_files.fs.rows.length;
+
+        if (nCount <= 0)
+            return;
+
+        var aGameData = new Array();
+
+        var rows = $('#dgFiles').datagrid('getSelections');
+        if (rows.length > 0)
+        {
+            for (var n = 0; n < rows.length; ++n)
+            {
+                AddGameData(aGameData, rows[n]);
+            }
+        }
+        else
+        {
+            for (var n = 0; n < nCount; ++n)
+            {
+                AddGameData(aGameData, g_files.fs.rows[n]);
+            }
+        }
+
+        var strExport = JSON.stringify(aGameData);
+
+        var clipboard = new ClipboardJS('#tdBttnFileExport');
+        $("#tdBttnFileExport").attr("data-clipboard-action", "copy");
+        $("#tdBttnFileExport").attr("data-clipboard-text", strExport);
+
+        clipboard.on('success', function (e)
+        {
+            jAlert("数据已经用JSON格式导出到剪贴板", "导出数据");
+        });
+
+        clipboard.on('error', function (e)
+        {
+            jAlert("数据复制失败", "导出数据");
+        });
+
     });
 });
