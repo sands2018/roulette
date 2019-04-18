@@ -2074,6 +2074,22 @@ function CSysFiles()
         return rn;
     }
 
+    this.SaveIndex = function ()
+    {
+        var strIndex = JSON.stringify(this.fs);
+        WriteData(DATA_FILE_INDEX, strIndex);
+    }
+
+    this.SaveCurrent = function (strFileName, bOverWrite)
+    {
+        var strNum = NumArrayToString(g_queue);
+        var tm = new Date();
+        tms = tm.getTime();
+        var nNumCount = g_queue.nIDX + 1;
+
+        return this.Save(strFileName, nNumCount, strNum, tms, tms, bOverWrite);
+    }
+
     // return value:
     // 1: success
     // -101: name length is 0
@@ -2081,7 +2097,7 @@ function CSysFiles()
     // -103: name illegal char found
     // -111: name already exists
     // -11: too many files
-    this.Save = function (strFileName, bOverWrite)
+    this.Save = function (strFileName, nNumCount, strNum, tms, tmsIdx, bOverWrite)
     {
         var rn = this.CheckName(strFileName);
         var bDoOverWrite = (bOverWrite && (rn == -111));
@@ -2098,24 +2114,19 @@ function CSysFiles()
                 return -11;
         }
 
-        var strNum = NumArrayToString(g_queue);
-        var nNumCount = g_queue.nIDX + 1;
-        var tm = new Date();
-
         if (!bDoOverWrite)
         {
-            var strDataKey = DATA_FILE_PREFIX + tm.format("yyyyMMddHHmmss");
+            var strDataKey = DATA_FILE_PREFIX + tmsIdx.toString();
+
             var file = new CRouletteFileInfo();
             file.n = strFileName;
             file.p = strDataKey;
             file.c = nNumCount;
             //file.t = tm.format("yyyy-MM-dd HH:mm");
-            file.t = tm.getTime();
+            file.t = tms;
             this.fs.rows.push(file);
             this.fs.total = this.fs.rows.length;
-            var strIndex = JSON.stringify(this.fs);
-
-            WriteData(DATA_FILE_INDEX, strIndex);
+            this.SaveIndex();
             WriteData(strDataKey, strNum);
         }
         else
@@ -2133,10 +2144,8 @@ function CSysFiles()
             if (nIdx >= 0)
             {
                 this.fs.rows[nIdx].c = nNumCount;
-                this.fs.rows[nIdx].t = tm.getTime();
-                var strIndex = JSON.stringify(this.fs);
-
-                WriteData(DATA_FILE_INDEX, strIndex);
+                this.fs.rows[nIdx].t = tms;
+                this.SaveIndex();
                 WriteData(this.fs.rows[nIdx].p, strNum);
             }
         }

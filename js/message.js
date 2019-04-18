@@ -971,6 +971,131 @@ function OnHideStatsDistDetail()
     div.style.display = "none";
 }
 
+function IsInteger(obj)
+{
+    return (typeof obj === 'number') && (obj % 1 === 0);
+}
+
+function OnFileImport()
+{
+    var txt = document.getElementById("txtClipboard");
+    var strValue = txt.value;
+
+    var strErrFileName = "";
+
+    try
+    {
+        var aGameData = JSON.parse(strValue);
+        var nCount = aGameData.length;
+
+        if (nCount <= 0)
+            throw -1;
+
+        if ((nCount + g_files.fs.rows.length) > MAX_FILE_COUNT)
+            throw -3;
+
+        var aName = new Array();
+
+        for (var n = 0; n < nCount; ++n)
+        {
+            var gamedata = aGameData[n];
+            var strName = gamedata.Name;
+            if (strName == null)
+                throw -1;
+
+            strName = $.trim(gamedata.Name);
+            if(strName.length <= 0)
+                throw -10;
+
+            var tms = gamedata.tms;
+            if (tms == null)
+                throw -1;
+            var strNum = gamedata.Numbers;
+            if (strNum == null)
+                throw -1;
+
+            var strname = strName.toLowerCase();
+            var bDuplicated = false;
+            for (var nn = 0; nn < aName.length; ++nn)
+            {
+                if(strname == aName[nn])
+                {
+                    bDuplicated = true;
+                    break;
+                }
+            }
+            if (bDuplicated)
+            {
+                strErrFileName = strName;
+                throw -11;
+            }
+
+            aName.push(strname);
+
+            var rtn = new CReturnArray();
+            NumStringToArray(strNum, rtn);
+            if (rtn.rn < 0)
+                throw -2;
+            var nNumCount = rtn.anVal.length;
+            if(nNumCount <= 0)
+                throw -2;
+
+            aGameData[n].Count = nNumCount;
+
+            var rn = g_files.CheckName(strName);
+            if (rn == -111)
+            {
+                strErrFileName = strName;
+                throw -11;
+            }
+            else if(rn < 0)
+            {
+                strErrFileName = strName;
+                throw -12;
+            }
+        }
+
+        var tm = new Date();
+        tms = tm.getTime();
+
+        for (var n = 0; n < nCount; ++n)
+        {
+            var gamedata = aGameData[n];
+            var strName = $.trim(gamedata.Name);
+            var nNumCount = gamedata.Count;
+            var tms = gamedata.tms;
+            var strNum = gamedata.Numbers;
+            g_files.Save(strName, nNumCount, strNum, tms, tms + n, false);
+        }
+
+        $('#dgFiles').datagrid({ data: g_files.fs });
+        $('#dgFiles').datagrid('reload');
+
+        OnImportOK();
+    }
+    catch(e)
+    {
+        var nErr = -1;
+        if (IsInteger(e))
+            nErr = e;
+
+        var strMsg = "数据格式不正确，请检查";
+
+        if (nErr == -2)
+            strMsg = "号码数据有问题，请检查";
+        else if (nErr == -3)
+            strMsg = "保存的总文件数不能超过" + MAX_FILE_COUNT.toString() + "个";
+        else if (nErr == -10)
+            strMsg = "名称不能为空";
+        else if (nErr == -11)
+            strMsg = "'" + strErrFileName + "'重名了";
+        else if(nErr == -12)
+            strMsg = "'" + strErrFileName + "'名称不合法";
+
+        jAlert(strMsg, "导入失败");
+    }
+}
+
 function AddGameData(aGameData, row)
 {
     var strNum = ReadData(row.p);
@@ -985,6 +1110,7 @@ function AddGameData(aGameData, row)
 
     aGameData.push(gamedata);
 }
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -1061,6 +1187,10 @@ $(document).ready(function ()
         txt.value = "";
         //trSpecImport.style.display = "";
         //tdBttnDoImport.style.display = "";
+        var bttn1 = document.getElementById("tdBttnDoImport");
+        bttn1.style.display = "";
+        var bttn2 = document.getElementById("tdBttnDoFileImport");
+        bttn2.style.display = "none";
         var div = document.getElementById("divImport");
         div.style.display = "";
         txt.select();
@@ -1114,14 +1244,14 @@ $(document).ready(function ()
             var rb = true;
             if (strFileName != null)
             {
-                var rn = g_files.Save(strFileName, false);
+                var rn = g_files.SaveCurrent(strFileName, false);
                 if (rn == -111)
                 {
                     jConfirm('该名称的数据已存在，是否需要覆盖？', '请确认', function (bConfirmed)
                     {
                         if (bConfirmed)
                         {
-                            rn = g_files.Save(strFileName, true);
+                            rn = g_files.SaveCurrent(strFileName, true);
                             rb = AfterSaveFile(strFileName, rn);
                             if (rb)
                                 $(".messager-body").window('close');
@@ -1326,5 +1456,18 @@ $(document).ready(function ()
             jAlert("数据复制失败", "导出数据");
         });
 
+    });
+
+    $("#tdBttnFileImport").click(function ()
+    {
+        var txt = document.getElementById("txtClipboard");
+        txt.value = "";
+        var bttn1 = document.getElementById("tdBttnDoImport");
+        bttn1.style.display = "none";
+        var bttn2 = document.getElementById("tdBttnDoFileImport");
+        bttn2.style.display = "";
+        var div = document.getElementById("divImport");
+        div.style.display = "";
+        txt.select();
     });
 });
