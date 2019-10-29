@@ -608,6 +608,54 @@ function Show_StatsGroupsCount()
         strHtml += NumberString_StatsGroupsCount(stats3C3R.anValue[nIdx]);
     }
     tdRow.innerHTML = strHtml;
+
+    ShowStatsBisections();
+}
+
+function ShowStatsBisections()
+{
+    var anCountRB = [0, 0];
+    var anCountOE = [0, 0];
+    var anCountBS = [0, 0];
+
+    var nCalcCount = g_bttnStatsGroups.Value();
+    var nCount = 0;
+
+    for (var n = g_queue.nIDX; n >= 0; --n)
+    {
+        var numQ = g_queue.anNum[n];
+
+        if (numQ == 0)
+            continue;
+
+        if (g_astrNumberColor[numQ] == "r")
+            anCountRB[0] += 1;
+        else
+            anCountRB[1] += 1;
+
+        if((numQ % 2) == 1)
+            anCountOE[0] += 1;
+        else
+            anCountOE[1] += 1;
+
+        if (numQ > 18)
+            anCountBS[0] += 1;
+        else
+            anCountBS[1] += 1;
+
+        ++nCount;
+        if (nCount >= nCalcCount)
+            break;
+    }
+
+    var tdColRB = document.getElementById("tdStatsBisectionRBValue");
+    tdColRB.innerHTML = anCountRB[0].toString() + "&nbsp;:&nbsp;" + anCountRB[1].toString();
+
+    var tdColOE = document.getElementById("tdStatsBisectionOEValue");
+    tdColOE.innerHTML = anCountOE[0].toString() + "&nbsp;:&nbsp;" + anCountOE[1].toString();
+
+    var tdColBS = document.getElementById("tdStatsBisectionBSValue");
+    tdColBS.innerHTML = anCountBS[0].toString() + "&nbsp;:&nbsp;" + anCountBS[1].toString();
 }
 
 function ResetData(anNum, bCleanAll)

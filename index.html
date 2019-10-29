@@ -84,6 +84,9 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 #tblStatsSum .tdStatsSumListItem { text-align: left; }
 #divStatsSumLists { width: 100% }
 
+#tdStatsBisectionOE, #tdStatsBisectionBS { padding-left: 20px }
+.tdStatsBisectionValue { text-align: left; }
+
 #tblStatsTitleBar td, #tblFilesTitleBar td, #tblViewNumTitleBar td { border: 1px solid #aa8833; border-right: 0; font-size: 40px; background-color: #f3efe3 }
 #tblStatsTitleBar td:first-child, #tblFilesTitleBar td:first-child, #tblViewNumTitleBar td:first-child { border-left: 0 }
 #tdStatsTitle, #tdFilesTitle, #tdViewNumTitle { color: #aa8833; padding: 3px 0 5px 0; }
@@ -350,6 +353,13 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
                     <tr>
                         <td id="tdStatsGroupsCol" width="53%"></td>
                         <td id="tdStatsGroupsRow"></td>
+                    </tr>
+                </table>
+                <table cellpadding="0" cellspacing="0" id="tblStatsBisections">
+                    <tr>
+                        <td id="tdStatsBisectionRB">红黑</td><td id="tdStatsBisectionRBValue" class="tdStatsBisectionValue">99 : 99</td>
+                        <td id="tdStatsBisectionOE">单双</td><td id="tdStatsBisectionOEValue" class="tdStatsBisectionValue">99 : 99</td>
+                        <td id="tdStatsBisectionBS">大小</td><td id="tdStatsBisectionBSValue" class="tdStatsBisectionValue">99 : 99</td>
                     </tr>
                 </table>
                 <div id="divStatsGroupsBttns"></div>
