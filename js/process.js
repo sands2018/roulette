@@ -30,7 +30,7 @@ function Calc_StatsGroupsCount(stats3C3R, queue)
 function ChangeTheme(theme)
 {
     var csslink = document.getElementById("linkTheme");
-    csslink.href = "css/" + theme + ".css";
+    csslink.href = "css/" + theme + ".css?v=3";
 }
 
 function Show_RefreshTheme()
