@@ -30,7 +30,7 @@
 #tblStatsGroups td:first-child { border-right: 1px solid #8f8f8f; }
 .SGCTitle { color: black; }
 .SGCNumber { color: #aa3322; }
-#tblStatsBisections { padding: 20px 3px; width: 100%; color: black; }
+#tblStatsBisections { padding: 10px 3px; width: 100%; color: black; }
 
 
 #tblStatsSum { border: 1px solid #8f8f8f; border-bottom: 0; width: 100%; margin: 13px 0 8px 0 }

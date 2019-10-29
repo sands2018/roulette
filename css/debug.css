@@ -30,7 +30,7 @@
 #tblStatsGroups td:first-child { border-right: 1px solid #e8e8e8; }
 .SGCTitle { color: #e8e8e8; }
 .SGCNumber { color: #e8e8e8; }
-#tblStatsBisections { padding: 20px 3px; width: 100%; color: #e8e8e8; }
+#tblStatsBisections { padding: 10px 3px; width: 100%; color: #e8e8e8; }
 
 #tblStatsSum { border: 1px solid #e8e8e8; border-bottom: 0; width: 100%; margin: 13px 0 8px 0 }
 #tblStatsSum td { color: #e8e8e8; border-bottom: 1px solid #e8e8e8; font-size: 36px; padding: 3px 8px; text-align: center; }
