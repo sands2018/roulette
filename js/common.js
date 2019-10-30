@@ -968,13 +968,19 @@ function CStatsColumns()
     }
 }
 
-
-function CStatsView(nSortColCount, nCol, dataKey)
+// CStatsView: --------------------------------------------
+//
+//   Base class to sort statistics result; 
+//   Save latest sort column option;
+//
+//   nSortCol - sort column. -1: no change
+// 
+function CStatsView(nSortColCount, nSortCol, dataKey)
 {
     var nColRead = 0;
     var strVal = ReadData(dataKey, "");
 
-    this.nColSel = nCol;
+    this.nColSel = nSortCol;
     this.anSort = [];
 
     var bValid = false;
@@ -1270,6 +1276,10 @@ function CNumberMaxDistances()
     }
 }
 
+// CGameItem: --------------------------------------------=
+//
+//   打法统计中，每满足一条GameRuleItem，就开始一个新的game item进行统计
+//
 function CGameItem()
 {
     this.nIdx = 1;
@@ -1281,18 +1291,30 @@ function CGameItem()
     this.nHit = 0;
 }
 
-
+// CGameRule: ---------------------------------------------
+//
+//   (1)从第几轮开始；(2)押几轮，具体怎么押。
+//   而行、组分开后的具体的打法，则是由CGame来表达
+//
 function CGameRule(nAfter, anBet)
 {
     this.nAfter = nAfter;
     this.anBet = anBet;
 }
 
-// nACR: 0 - all; 1 - column; 2 - row
+// CGame: -------------------------------------------------
+//
+//   对GameRule行、组分开后的明细，是具体的一个打法
+//
+//   nACR: 
+//     0     - 行、组合起来统计; 
+//     1,2   - 行、组分开来统计，1为组，2为行
+//     10~15 - 单个行、单个组统计，10~12为1、2、3组，13~15为1、2、3行
+//
 function CGame(gamerule, nACR)
 {
-    this.nAfter = gamerule.nAfter;
-    this.nRound = gamerule.anBet.length;
+    this.nAfter = gamerule.nAfter; // 从第几轮开始
+    this.nRound = gamerule.anBet.length; // 押几轮
     this.nACR = nACR;
 
     this.anBet = [];
@@ -1304,11 +1326,18 @@ function CGame(gamerule, nACR)
     }
 
     if (nACR == 0)
-        strName = "全_" + strName;
+        strName = /*"全_" + */strName;
     else if (nACR == 1)
         strName = "组_" + strName;
     else if (nACR == 2)
         strName = "行_" + strName;
+    else if ((nACR >= 10) && (nACR <= 15))
+    {
+        if (nACR < 13)
+            strName = (nACR - 10 + 1).toString() + "组_" + strName;
+        else
+            strName = (nACR - 10 - 2).toString() + "行_" + strName;
+    }
 
     this.strName = strName;
 
@@ -1323,7 +1352,7 @@ function CGame(gamerule, nACR)
 
     this.nBalance = 0;
 
-    this.aItem = [];
+    this.aItem = []; // 该种类型打法的所有Game Item
 
     this.Add = function (item)
     {
@@ -1382,7 +1411,7 @@ function CGame(gamerule, nACR)
 
         if (this.nACR == 0)
             anNum3C3R = [nNumCol, nNumRow + 3];
-        else if (this.nACR == 1)
+        else if ((this.nACR == 1) || ((this.nACR >= 10) && (this.nACR <= 12)))
             anNum3C3R = [nNumCol];
         else
             anNum3C3R = [nNumRow + 3];
@@ -1436,6 +1465,11 @@ function CGame(gamerule, nACR)
             nEnd = 2;
         else if (this.nACR == 2)
             nStart = 3;
+        else if (this.nACR >= 10)
+        {
+            nStart = this.nACR - 10;
+            nEnd = nStart;
+        }
 
         for (var n = nStart; n <= nEnd; ++n)
         {
@@ -1466,14 +1500,16 @@ function CGame(gamerule, nACR)
 }
 
 
-function CStatsGames(nCol)
+// nSortCol - sort column, 0: name, 1: win, 2: realtime, -1: no change
+
+function CStatsGames(nSortCol)
 {
     var DATA_STATSGAMES_COL = "STATSGAMES_COL";
 
-    CStatsView.call(this, 3, nCol, DATA_STATSGAMES_COL);
+    CStatsView.call(this, 3, nSortCol, DATA_STATSGAMES_COL);
 
     this.aGame = [];
-    this.anIdx = [];
+    this.anIdx = []; // for sort result
 
     var anGameRule = [];
 
@@ -1483,11 +1519,37 @@ function CStatsGames(nCol)
             anGameRule.push(new CGameRule(g_gamebets.rndsels.rows[nn].v, g_gamebets.betsels.rows[n].v));
     }
 
+    var bCombine = true;
+    var bSeperate = true;
+    var bSpecific = true;
+    var nIdx = 0;
+
     for (var nn = 0; nn < anGameRule.length; ++nn)
     {
-        for (var n = 0; n < 3; ++n)
+        // 行、组合起来统计：
+        if (bCombine)
         {
-            this.aGame[nn * 3 + n] = new CGame(anGameRule[nn], n);
+            this.aGame[nIdx] = new CGame(anGameRule[nn], 0);
+            nIdx++;
+        }
+
+        // 行、组分开来统计：
+        if (bSeperate)
+        {
+            this.aGame[nIdx] = new CGame(anGameRule[nn], 1);
+            nIdx++;
+            this.aGame[nIdx] = new CGame(anGameRule[nn], 2);
+            nIdx++;
+        }
+
+        // 单个行、单个组统计：
+        if (bSpecific)
+        {
+            for (var n = 0; n < 6; ++n)
+            {
+                this.aGame[nIdx] = new CGame(anGameRule[nn], 10+n);
+                nIdx++;
+            }
         }
     }
 

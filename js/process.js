@@ -30,7 +30,7 @@ function Calc_StatsGroupsCount(stats3C3R, queue)
 function ChangeTheme(theme)
 {
     var csslink = document.getElementById("linkTheme");
-    csslink.href = "css/" + theme + ".css?v=3";
+    csslink.href = "css/" + theme + ".css";
 }
 
 function Show_RefreshTheme()
@@ -1029,7 +1029,10 @@ function Show_StatsNumbers(nCol)
     div.innerHTML = strHtml;
 }
 
-function Show_StatsGames(nCol, bMain)
+// nSortCol - sort column, 0: name, 1: win, 2: realtime, -1: no change
+// bMain    - whether stats on main page (there is a game stats list on main page, also 
+//                                     there is a specific game stats page)
+function Show_StatsGames(nSortCol, bMain)
 {
     var strCtrlID = "";
     var strTD = "";
@@ -1059,7 +1062,7 @@ function Show_StatsGames(nCol, bMain)
 
     var nScope = g_bttnStatsScope.Value();
 
-    var games = new CStatsGames(nCol);
+    var games = new CStatsGames(nSortCol);
     games.Calc(g_queue, nScope, 0);
 
     var strHtml = "<table cellpadding='0' cellspacing='0' id='tbl" + strCtrlID + "'>";
