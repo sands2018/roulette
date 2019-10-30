@@ -526,6 +526,13 @@ function OnConfigOK()
         return;
     }
 
+    var selACRs = $('#dgACROption').datagrid('getChecked');
+    if (selACRs.length <= 0)
+    {
+        jAlert("至少要选择一个行组选项！", "打法配置");
+        return;
+    }
+
     g_gamebets.betsels.rows.splice(0, g_gamebets.betsels.rows.length);
     g_gamebets.betsels.total = selBets.length;
     for (var n = 0; n < selBets.length; ++n)
@@ -537,6 +544,12 @@ function OnConfigOK()
     for (var n = 0; n < selRnds.length; ++n)
         g_gamebets.rndsels.rows[n] = new CValue(selRnds[n].v);
     g_gamebets.SaveRndSels();
+    
+    g_gamebets.ACRsels.rows.splice(0, g_gamebets.ACRsels.rows.length);
+    g_gamebets.ACRsels.total = selRnds.length;
+    for (var n = 0; n < selACRs.length; ++n)
+        g_gamebets.ACRsels.rows[n] = new CValue(selACRs[n].v);
+    g_gamebets.SaveACRSels();
 
     Show_StatsGames(-1, false);
     Show_StatsGames(-1, true);
@@ -1332,6 +1345,23 @@ $(document).ready(function ()
                     }
                 },
             });
+
+            $('#dgACROption').datagrid({
+                data: g_gamebets.ACROpts,
+                singleSelect: false,
+                onLoadSuccess: function (data)
+                {
+                    if (data)
+                    {
+                        $.each(data.rows, function (index, item)
+                        {
+                            if (g_gamebets.ACRSelected(item.v))
+                                $('#dgACROption').datagrid('checkRow', index);
+                        });
+                    }
+                },
+            });
+
         });
 
         var div = document.getElementById("divConfig");

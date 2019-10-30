@@ -209,7 +209,7 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 
 #tblConfig .datagrid-header { border-bottom: 1px solid #aa8833; }
 
-#tdBetsConfig, #tdRndsConfig  { border: 1px solid #aaa }
+#tdBetsConfig, #tdRndsConfig, #tdACROptConfig  { border: 1px solid #aaa }
 #tdBetsManage { border: 1px solid #aa8833 }
 
 #tblBetsBttns { width: 320px; }  
@@ -512,6 +512,18 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
                                     <tr>
                                         <th data-options="field:'chkGameRnds',checkbox:true"></th>
                                         <th data-options="field:'v',width:150,sortable:false,formatter:FormatRndCol,align:'center'">轮</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="tdACROptConfig" colspan="2" height="250">
+                            <table id="dgACROption" data-options="header:'#hhh',singleSelect:true,border:false,fit:true,fitColumns:true,scrollbarSize:0">
+                                <thead>
+                                    <tr>
+                                        <th data-options="field:'chkACROption',checkbox:true"></th>
+                                        <th data-options="field:'v',width:300,sortable:false">行组选项</th>
                                     </tr>
                                 </thead>
                             </table>

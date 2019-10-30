@@ -154,8 +154,10 @@ function CGameBets()
 {
     this.bets = new CGridData();
     this.rnds = new CGridData();
+    this.ACROpts = new CGridData();
     this.betsels = new CGridData();
     this.rndsels = new CGridData();
+    this.ACRsels = new CGridData();
 
     var aBetDefault = [
         [1, 2, 4],
@@ -183,6 +185,13 @@ function CGameBets()
         this.rndsels.total = this.rnds.total;
     }
 
+    this.DefaultACRSels = function ()
+    {
+        this.ACRsels.rows[0] = this.ACROpts.rows[1];
+
+        this.ACRsels.total = 1;
+    }
+
     this.DefaultBets = function ()
     {
         for (var n = 0; n < aBetDefault.length; ++n)
@@ -197,6 +206,15 @@ function CGameBets()
             this.rnds.rows[n] = new CValue(n);
 
         this.rnds.total = this.rnds.rows.length;
+    }
+
+    this.DefaultACROpts = function()
+    {
+        this.ACROpts.rows[0] = new CValue("“行、组合并”进行统计");
+        this.ACROpts.rows[1] = new CValue("“行、组分开”进行统计");
+        this.ACROpts.rows[2] = new CValue("“单个行、组”进行统计");
+
+        this.ACROpts.total = this.ACROpts.rows.length;
     }
 
     this.IsDefaultBet = function(anVal)
@@ -216,6 +234,7 @@ function CGameBets()
     var DATA_BETS = "DATA_BETS";
     var DATA_BET_SELS = "DATA_BET_SELS";
     var DATA_RND_SELS = "DATA_RND_SELS";
+    var DATA_ACR_SELS = "DATA_ACR_SELS";
 
     this.SaveBets = function ()
     {
@@ -235,6 +254,12 @@ function CGameBets()
         WriteData(DATA_RND_SELS, strData);
     }
 
+    this.SaveACRSels = function ()
+    {
+        var strData = JSON.stringify(this.ACRsels);
+        WriteData(DATA_ACR_SELS, strData);
+    }
+
     this.Load = function()
     {
         var strData = ReadData(DATA_BETS);
@@ -244,6 +269,7 @@ function CGameBets()
             this.bets = JSON.parse(strData);
 
         this.DefaultRnds();
+        this.DefaultACROpts();
 
         strData = ReadData(DATA_BET_SELS);
         if ((strData == null) || (strData.length == 0))
@@ -256,6 +282,12 @@ function CGameBets()
             this.DefaultRndSels();
         else
             this.rndsels = JSON.parse(strData);
+
+        strData = ReadData(DATA_ACR_SELS);
+        if ((strData == null) || (strData.length == 0))
+            this.DefaultACRSels();
+        else
+            this.ACRsels = JSON.parse(strData);
     }
 
     this.BetSelected = function (val)
@@ -283,6 +315,22 @@ function CGameBets()
         for (var n = 0; n < this.rndsels.rows.length; ++n)
         {
             if (this.rndsels.rows[n].v.toString() == strVal)
+            {
+                bChecked = true;
+                break;
+            }
+        }
+
+        return bChecked;
+    }
+
+    this.ACRSelected = function (strVal)
+    {
+        var bChecked = false;
+
+        for (var n = 0; n < this.ACRsels.rows.length; ++n)
+        {
+            if (this.ACRsels.rows[n].v == strVal)
             {
                 bChecked = true;
                 break;
@@ -1519,9 +1567,28 @@ function CStatsGames(nSortCol)
             anGameRule.push(new CGameRule(g_gamebets.rndsels.rows[nn].v, g_gamebets.betsels.rows[n].v));
     }
 
-    var bCombine = true;
-    var bSeperate = true;
-    var bSpecific = true;
+    var bCombine = false;
+    var bSeperate = false;
+    var bSpecific = false;
+
+    for (var nn = 0; nn < g_gamebets.ACROpts.rows.length; ++nn)
+    {
+        for (var n = 0; n < g_gamebets.ACRsels.rows.length; ++n)
+        {
+            if(g_gamebets.ACRsels.rows[n].v == g_gamebets.ACROpts.rows[nn].v)
+            {
+                if (nn == 0)
+                    bCombine = true;
+                else if (nn == 1)
+                    bSeperate = true;
+                else
+                    bSpecific = true;
+
+                break;
+            }
+        }
+    }
+
     var nIdx = 0;
 
     for (var nn = 0; nn < anGameRule.length; ++nn)

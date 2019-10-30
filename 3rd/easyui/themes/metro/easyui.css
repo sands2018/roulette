@@ -876,7 +876,6 @@
 }
 .textbox-label {
   display: inline-block;
-  width: 300px;
   height: 50px;
   line-height: 50px;
   vertical-align: middle;
@@ -3309,14 +3308,14 @@
 }
 .checkbox {
   position: relative;
-  border: 5px solid #9fcf5f;
+  border: 2px solid #aa8833;
   -moz-border-radius: 0px 0px 0px 0px;
   -webkit-border-radius: 0px 0px 0px 0px;
   border-radius: 0px 0px 0px 0px;
 }
 .checkbox-checked {
   border: 0;
-  background: #9fcf5f;
+  background: #cbc3ab;
 }
 .checkbox-inner {
   position: absolute;
