@@ -793,7 +793,7 @@ function CSysStatus()
     this.Seperate3C3R = "F";
     this.QueueExpand = 0;
     this.anStatsSumExpand = [0, 0, 0, 0];
-    this.StatsIdx = 3;
+    this.IndirectStatsIdx = 2; // 非直接进入的统计页面的idx，默认：频率
     this.StatsDistCROpt = 0;
     this.StatsDistCR = 0;
     this.StatsMisc = 0;
@@ -2064,10 +2064,23 @@ function CStatsWaves()
             var nX = nX0 + nRectX + (n - nIdx0) * nRectW / (nMax - 1);
             var nY = nHeight - nRectY - nVal * nRectH / 15;
 
-            if(n == nIdx0)
-                context.moveTo(nX, nY);
+            if ((nCR % 4) == 3)
+            {
+                if (n == nIdx0)
+                    context.moveTo(nX, nY);
+                else
+                    context.lineTo(nX, nY);
+            }
             else
-                context.lineTo(nX, nY);
+            {
+                if (n != nIdx0)
+                    context.lineTo(nX, nY);
+                context.moveTo(nX - 5, nY + 5);
+                context.lineTo(nX + 5, nY - 5);
+                context.moveTo(nX - 5, nY - 5);
+                context.lineTo(nX + 5, nY + 5);
+                context.moveTo(nX, nY);
+            }
         }
         context.stroke();
 

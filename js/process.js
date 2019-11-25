@@ -399,7 +399,7 @@ function Show_Queue()
 function Show_RefreshSysButtons()
 {
     var astrIDBttn = ["tdBttnTheme", "tdBttnRestart", "tdBttnRestore", "tdBttnImport", "tdBttnExport",
-        "tdBttnSave", "tdBttnStatsGames", "tdBttnStatsRowCol", "tdBttnStatsLongs", "tdBttnStatistics",
+        "tdBttnSave", "tdBttnStatsGames", "tdBttnStatsRowCol", "tdBttnStatsFrequencies", "tdBttnStatistics",
         "tdBttnPlay", "tdBttnManage", "tdBttnConfig", "tdBttnMore"];
 
     var abEnabled = [];
@@ -1759,7 +1759,9 @@ function Show_ViewNum()
     div.innerHTML = strHtml;
 }
 
+// 是否是首页有按钮直接可以进到的统计页面：
 function IsDirectStatsWindowIdx(nIdx)
 {
-    return (nIdx <= 2);
+    // 现在首页上有的直接按钮是：打法（0）、频率（1）、行组（3）
+    return ((nIdx == 0) || (nIdx == 1) || (nIdx == 3));
 }

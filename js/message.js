@@ -258,6 +258,10 @@ function Show_RefreshStatsButton()
 function OnBttnStatsClick(nIdx)
 {
     g_bttnStats.OnClick(nIdx);
+    if (!IsDirectStatsWindowIdx(nIdx))
+    {
+        g_status.IndirectStatsIdx = nIdx;
+    }
     SwitchStats();
 }
 
@@ -428,42 +432,27 @@ function OpenStatistics(strID)
 
     if (strID == "g") // games
     {
-        if (!IsDirectStatsWindowIdx(g_bttnStats.nSelIdx))
-            g_status.StatsIdx = g_bttnStats.nSelIdx;
-
         g_bttnStats.nSelIdx = 0;
     }
     else if (strID == "f") // frequencies
     {
-        if (!IsDirectStatsWindowIdx(g_bttnStats.nSelIdx))
-            g_status.StatsIdx = g_bttnStats.nSelIdx;
-
-        g_bttnStats.nSelIdx = 1; // ????????
+        g_bttnStats.nSelIdx = 1;
     }
     else if (strID == "d") // distances
     {
-        if (!IsDirectStatsWindowIdx(g_bttnStats.nSelIdx))
-            g_status.StatsIdx = g_bttnStats.nSelIdx;
-
-        g_bttnStats.nSelIdx = 2; // ????????
+        g_bttnStats.nSelIdx = 2;
     }
     else if(strID == "r") // rowcol
     {
-        if (!IsDirectStatsWindowIdx(g_bttnStats.nSelIdx))
-            g_status.StatsIdx = g_bttnStats.nSelIdx;
-
         g_bttnStats.nSelIdx = 3;
     }
     else if(strID == "l") // longs
     {
-        if (!IsDirectStatsWindowIdx(g_bttnStats.nSelIdx))
-            g_status.StatsIdx = g_bttnStats.nSelIdx;
-
         g_bttnStats.nSelIdx = 4;
     }
-    else if (IsDirectStatsWindowIdx(g_bttnStats.nSelIdx))
+    else if (strID == "s") // stats
     {
-        g_bttnStats.nSelIdx = g_status.StatsIdx;
+        g_bttnStats.nSelIdx = g_status.IndirectStatsIdx;
     }
 
     Show_RefreshStatsScopeButton();
@@ -1228,9 +1217,9 @@ $(document).ready(function ()
     });
 
      // stats longs:
-    $("#tdBttnStatsLongs").click(function ()
+    $("#tdBttnStatsFrequencies").click(function ()
     {
-        OpenStatistics("l");
+        OpenStatistics("f");
     });
  
     // play:
