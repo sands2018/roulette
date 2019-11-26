@@ -38,13 +38,16 @@ function OnPageInit()
 
     Show_RefreshStatsSumButton();
     Show_SumLists();
-    Show_StatsGames(-1, true);
+    Show_StatsGames(-1, true); // 打法（主页）
 
     Init_Theme();
     Show_RefreshTheme();
 
     if (g_nDebug == 1)
         ChangeTheme("debug");
+
+    SwitchStatsRounds(-1);
+    SwitchStatsOther(-1);
 }
 
 
@@ -261,8 +264,24 @@ function OnBttnStatsClick(nIdx)
     if (!IsDirectStatsWindowIdx(nIdx))
     {
         g_status.IndirectStatsIdx = nIdx;
+        WriteIntData(DATA_INDIRECTSTATSIDX, nIdx);
     }
     SwitchStats();
+}
+
+
+// ----------------------------------------------
+
+
+function Show_RefreshStatsOtherButton()
+{
+    g_bttnStatsOther.Show("divStatsOtherBttns");
+}
+
+function OnBttnStatsOtherClick(nIdx)
+{
+    g_bttnStatsOther.OnClick(nIdx);
+    SwitchStatsOther(nIdx);
 }
 
 
@@ -276,25 +295,27 @@ function Show_RefreshStatsScopeButton()
 function OnBttnStatsScopeClick(nIdx)
 {
     g_bttnStatsScope.OnClick(nIdx);
-    Show_StatsNumbers(-1);
-    Show_StatsGames(-1, false);
-    Show_StatsGames(-1, true);
-    Show_StatsRounds();
-    Show_StatsMisc();
+    Show_StatsGames(-1, false); // 打法（非主页）
+    Show_StatsGames(-1, true);  // 打法（主页）
+    Show_StatsRounds();         // 轮次 - 轮次统计数据
+    Show_StatsRoundBet();       // 轮次 - 轮次参考数据
+    Show_StatsNumbers(-1);      // 其它 - 号码
+    Show_StatsLongs();          // 其它 - 追打
 }
 
 // ----------------------------------------------
 
-function Show_RefreshStatsFrequencyButton()
+
+function Show_RefreshStatsFrequencyScopeButton()
 {
-    g_bttnStatsFrequency.Show("divStatsFrequencyBttns");
+    g_bttnStatsFrequencyScope.Show("divStatsFrequencyScopeBttns");
 }
 
-function OnBttnStatsFrequencyClick(nIdx)
+function OnBttnStatsFrequencyScopeClick(nIdx)
 {
-    g_bttnStatsFrequency.OnClick(nIdx);
-    g_waves.ResetScope(g_bttnStatsFrequency.Value());
-    Show_StatsFrequencies(false);
+    g_bttnStatsFrequencyScope.OnClick(nIdx);
+    g_waves.ResetScope(g_bttnStatsFrequencyScope.Value());
+    Show_StatsFrequencies(false); // 频率
 }
 
 // ----------------------------------------------
@@ -307,7 +328,7 @@ function Show_RefreshStatsLongsBetButton()
 function OnBttnStatsLongsBetClick(nIdx)
 {
     g_bttnStatsLongsBet.OnClick(nIdx);
-    Show_StatsLongs();
+    Show_StatsLongs(); // 其它 - 追打
 }
 
 // ----------------------------------------------
@@ -320,7 +341,7 @@ function Show_RefreshStatsLongsButton()
 function OnBttnStatsLongsClick(nIdx)
 {
     g_bttnStatsLongs.OnClick(nIdx);
-    Show_StatsLongs();
+    Show_StatsLongs(); // 其它 - 追打
 }
 
 // ----------------------------------------------
@@ -339,34 +360,53 @@ function OnBttnViewNumClick(nIdx)
 
 // ----------------------------------------------
 
-function OnStatsMiscClick(nIdx)
+function OnStatsRoundsClick(nIdx)
 {
-    g_status.StatsMisc = nIdx;
-    WriteData(DATA_STATSMISC, nIdx.toString());
-    SwitchStatsMisc();
+    SwitchStatsRounds(nIdx);
 }
 
 
-function SwitchStatsMisc()
+// ----------------------------------------------------------------------------
+
+function SwitchWindows(astrDiv, nIdx, KEY_DATA)
 {
-    var astrDiv = ["divStatsRoundBet", "divStatsRounds"];
+    var nIdxSwitch = nIdx;
+
+    if (nIdxSwitch < 0)
+        nIdxSwitch = ReadIntData(KEY_DATA, 0);
+
+    if (nIdxSwitch >= astrDiv.length)
+        nIdxSwitch = astrDiv.length - 1;
 
     for (var n = 0; n < astrDiv.length; ++n)
     {
         var strDisplay = "";
-        if (n != g_status.StatsMisc)
+        if (n != nIdxSwitch)
             strDisplay = "none";
 
         var div = document.getElementById(astrDiv[n]);
         div.style.display = strDisplay;
     }
+
+    WriteIntData(KEY_DATA, nIdxSwitch);
 }
 
+function SwitchStatsRounds(nIdx)
+{
+    var astrDiv = ["divStatsRoundBet", "divStatsRoundSum"];
+    SwitchWindows(astrDiv, nIdx, DATA_STATSROUNDSIDX);
+}
+
+function SwitchStatsOther(nIdx)
+{
+    var astrDiv = ["divStatsLongs", "divStatsNumbers"];
+    SwitchWindows(astrDiv, nIdx, DATA_STATSOTHERIDX);
+}
 
 function SwitchStats()
 {
-    var astrDiv = ["Games", "Frequencies", "Distances", "RowCol", "Longs", "Numbers", "Misc"];
-    var astrTitle = ["打法统计数据", "频率统计图", "距离统计图", "距离统计数据", "追打统计数据", "号码统计数据", "其它统计数据"];
+    var astrDiv = ["Games", "Frequencies", "Distances", "RowCol", "RowColDig", "Rounds", "Other"];
+    var astrTitle = ["打法统计数据", "频率统计图", "距离统计图", "行组距离数据", "行组细化数据", "轮次统计数据", "其它统计数据"];
     var nIdx = g_bttnStats.Value();
 
     for (var n = 0; n < astrDiv.length; ++n)
@@ -380,25 +420,23 @@ function SwitchStats()
     }
 
     var div1 = document.getElementById("divStatsScopeBttns");
-    var div2 = document.getElementById("divStatsFrequencyBttns");
+    var div2 = document.getElementById("divStatsFrequencyScopeBttns");
     div1.style.display = ((nIdx == 1) || (nIdx == 2) || (nIdx == 3)) ? "none" : "";
     div2.style.display = (nIdx == 1) ? "" : "none";
 
     var td = document.getElementById("tdStatsTitle");
     td.innerHTML = astrTitle[nIdx];
-
-    SwitchStatsMisc();
 }
 
 function OnStatsNumClick(nCol)
 {
-    Show_StatsNumbers(nCol);
+    Show_StatsNumbers(nCol); // 其它 - 号码
 }
 
 function OnStatsGamesClick(nCol)
 {
-    Show_StatsGames(nCol, true);
-    Show_StatsGames(-1, false);
+    Show_StatsGames(nCol, true); // 打法（非主页）
+    Show_StatsGames(-1, false); // 打法（主页）
 }
 
 function OnShowHideMoreButtons()
@@ -414,6 +452,7 @@ function OnShowHideMoreButtons()
     tr2.style.display = strDisplay;
 }
 
+// 打开统计页面：
 function OpenStatistics(strID)
 {
     if (g_queue.nIDX < 0)
@@ -422,13 +461,14 @@ function OpenStatistics(strID)
     if (((strID == "f") || (strID == "d") || (strID == "l")) && (g_queue.nIDX < 1))
         return;
 
-    Show_StatsGames(-1, false);
-    Show_StatsFrequencies(true);
-    Show_StatsDistances();
-    Show_StatsRowCol();
-    Show_StatsNumbers(-1);
-    Show_StatsRounds();
-    Show_StatsMisc();
+    Show_StatsGames(-1, false);  // 打法（非主页）
+    Show_StatsFrequencies(true); // 频率
+    Show_StatsDistances();       // 距离
+    Show_StatsRowCol();          // 行组
+    Show_StatsRounds();          // 轮次 - 轮次统计数据
+    Show_StatsRoundBet();        // 轮次 - 轮次参考数据
+    Show_StatsNumbers(-1);       // 其它 - 号码
+    Show_StatsLongs();           // 其它 - 追打
 
     if (strID == "g") // games
     {
@@ -456,9 +496,10 @@ function OpenStatistics(strID)
     }
 
     Show_RefreshStatsScopeButton();
-    Show_RefreshStatsFrequencyButton();
+    Show_RefreshStatsFrequencyScopeButton();
     Show_RefreshStatsLongsButton();
     Show_RefreshStatsLongsBetButton();
+    Show_RefreshStatsOtherButton();
     Show_RefreshStatsButton();
 
     SwitchStats();
@@ -540,8 +581,8 @@ function OnConfigOK()
         g_gamebets.ACRsels.rows[n] = new CValue(selACRs[n].v);
     g_gamebets.SaveACRSels();
 
-    Show_StatsGames(-1, false);
-    Show_StatsGames(-1, true);
+    Show_StatsGames(-1, false); // 打法（非主页）
+    Show_StatsGames(-1, true); // 打法（主页）
 
     var div = document.getElementById("divConfig");
     div.style.display = "none";
@@ -693,8 +734,8 @@ function OnBetsManageOK()
 {
     $('#dgGameBets').datagrid({ data: g_gamebets.bets });
     $('#dgGameBets').datagrid('reload');
-    Show_StatsGames(-1, false);
-    Show_StatsGames(-1, true);
+    Show_StatsGames(-1, false); // 打法（非主页）
+    Show_StatsGames(-1, true); // 打法（主页）
 
     var div = document.getElementById("divBetsManage");
     div.style.display = "none";

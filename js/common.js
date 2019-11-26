@@ -35,6 +35,11 @@ function WriteData(key, value)
     storage[key] = value;
 }
 
+function WriteIntData(key, nValue)
+{
+    WriteData(key, nValue.toString());
+}
+
 function ReadData(key, strDefault)
 {
     if (!window.localStorage)
@@ -783,7 +788,9 @@ var DATA_KEYBOARDID = "KEYBOARDID";
 var DATA_SEPERATE3C3R = "SEPERATE3C3R";
 var DATA_COLUMNSBUTTON = "COLUMNSBUTTON";
 var DATA_SGCOUNTIDX = "SGCOUNTIDX";
-var DATA_STATSMISC = "STATSMISC";
+var DATA_STATSROUNDSIDX = "STATSROUNDSIDX";
+var DATA_STATSOTHERIDX = "STATSOTHERIDX";
+var DATA_INDIRECTSTATSIDX = "INDIRECTSTATSIDX";
 
 function CSysStatus()
 {
@@ -793,17 +800,15 @@ function CSysStatus()
     this.Seperate3C3R = "F";
     this.QueueExpand = 0;
     this.anStatsSumExpand = [0, 0, 0, 0];
-    this.IndirectStatsIdx = 2; // 非直接进入的统计页面的idx，默认：频率
+    this.IndirectStatsIdx = ReadIntData(DATA_INDIRECTSTATSIDX, 2); // 非直接进入的统计页面的idx，默认：频率
     this.StatsDistCROpt = 0;
     this.StatsDistCR = 0;
-    this.StatsMisc = 0;
 
     this.Reset = function()
     {
         this.QueueExpand = 0;
         this.KeyboardID = ReadData(DATA_KEYBOARDID, "K");
         this.Seperate3C3R = ReadData(DATA_SEPERATE3C3R, "F");
-        this.StatsMisc = ReadIntData(DATA_STATSMISC, 0);
 
         for (var n = 0; n < 4; ++n)
             this.anStatsSumExpand[n] = 0;
@@ -1136,11 +1141,11 @@ function CStatsView(nSortColCount, nSortCol, dataKey)
     }
 }
 
-function CStatsNumbers(nCol)
+function CStatsNumbers(nSortCol)
 {
     var DATA_STATSNUM_COL = "STATSNUM_COL";
 
-    CStatsView.call(this, 3, nCol, DATA_STATSNUM_COL);
+    CStatsView.call(this, 3, nSortCol, DATA_STATSNUM_COL);
 
     this.anDistance = [];
     this.anFrequence = [];
@@ -2380,9 +2385,22 @@ var g_bttnColumns = new CBttnOptions("Columns", [3, 4, 5, 6, 7], null, 2, -1);
 var g_bttnStatsGroups = new CBttnOptions("StatsGroups", [20, 40, 60, 80, 100, -1], null, 2, 0);
 var g_bttnStatsSum = new CBttnOptions("StatsSum", [100, 200, 300, -1], null, 2, 150);
 var g_bttnStatsScope = new CBttnOptions("StatsScope", [18, 30, 40, 70, 110, -1], null, 2, 150);
-var g_bttnStatsFrequency = new CBttnOptions("StatsFrequency", [18, 36, 54, 72, 108, 180, 360], null, 0, 0);
+var g_bttnStatsFrequencyScope = new CBttnOptions("StatsFrequencyScope", [18, 36, 54, 72, 108, 180, 360], null, 0, 0);
 var g_bttnStatsLongsBet = new CBttnOptions("StatsLongsBet", [2, 3, 4, 5, 6, 7], null, 2, 100);
 var g_bttnStatsLongs = new CBttnOptions("StatsLongs", [3, 4, 5, 6, 7], ["3+", "4+", "5+", "6+", "7+"], 2, 122);
-var g_bttnStats = new CBttnOptions("Stats", [0, 1, 2, 3, 4, 5, 6], ["打法", "频率", "距离", "行组", "追打", "号码", "其它"], 0, 0);
+var g_bttnStats = new CBttnOptions("Stats", [0, 1, 2, 3, 4, 5, 6], ["打法", "频率", "距离", "行组", "细化", "轮次", "其它"], 0, 0);
+var g_bttnStatsOther = new CBttnOptions("StatsOther", [0, 1], ["追打", "号码"], 0, 180);
 var g_bttnViewNum = new CBttnOptions("ViewNum", [0, 1, 2, 3, 4, 5], ["一组", "二组", "三组", "1行", "2行", "3行"], 0, 0);
 var g_bttnPlaySpeed = new CBttnOptions("PlaySpeed", [1, 2, 3], ["1/2", "1x", "2x"], 1, 80);
+
+
+// Show_StatsGames(nSortCol, bMain);     // 打法
+// Show_StatsFrequencies(bSwitchToDraw); // 频率
+// Show_StatsDistances();                // 距离
+// Show_StatsRowCol();                   // 行组
+// Show_StatsRounds();                   // 轮次 - 轮次统计数据
+// Show_StatsRoundBet();                 // 轮次 - 轮次参考数据 
+// Show_StatsNumbers(-1);                // 其它 - 号码
+// Show_StatsLongs();                    // 其它 - 追打
+
+

@@ -175,7 +175,7 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 #trSRSTitle1 td, #trSRSTitle2 td { color: #aa8833; border-top: 1px solid #cf8f28; border-bottom: 1px solid #cf8f28; padding: 2px 0; }
 #trSRSTitle1 td { border-bottom: 0; }
 .divStatsTitle { font-size: 40px; color: #aa8833; padding: 18px 18px 13px 18px }
-#divStatsMisc div:first-child div:first-child { padding-top: 0px }
+#divStatsOther div:first-child div:first-child { padding-top: 0px }
 
 #tblStatsLongs td { border: 1px solid #cf8f28; border-bottom: 0; border-left: 0; width: 12.5% }
 #tblStatsLongs tr:first-child td { color: #aa8833; }
@@ -645,38 +645,43 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
             </div>
             <div id="divStatsRowCol" style="word-wrap:break-word; padding: 0px 20px 20px 20px">
             </div>
-            <div id="divStatsLongs">
-                <div id="divStatsLongsC"></div>
-                <table cellpadding="0" cellspacing="0" border="0" id="tblStatsLongsBttns">
-                    <tr>
-                        <td class="tdSLBttnsT">长套后轮次：</td>
-                        <td><div id="divStatsLongsBetBttns"></div></td>
-                    </tr>
-                    <tr>
-                        <td class="tdSLBttnsT">长套轮次：</td>
-                        <td><div id="divStatsLongsBttns"></div></td>
-                    </tr>
-                </table>
+            <div id="divStatsRowColDig" style="word-wrap:break-word; padding: 0px 20px 20px 20px">
             </div>
-            <div id="divStatsNumbers">
-                <div id="divStatsNumbersC"></div>
-                <div class="divStatsTitle">最大距离前五名：</div>
-                <div id="divMaxDistanceTops"></div>
-            </div>
-            <div id="divStatsMisc">
-                <div class="divStatsTitle" onclick="OnStatsMiscClick(0)">轮次参考数据</div>
+            <div id="divStatsRounds">
+                <div class="divStatsTitle" onclick="OnStatsRoundsClick(0)">轮次参考数据</div>
                 <div id="divStatsRoundBet">
                     <div id="divStatsRoundBetC"></div>
                 </div>
-                <div class="divStatsTitle" onclick="OnStatsMiscClick(1)">轮次统计数据</div>
-                <div id="divStatsRounds"></div>
+                <div class="divStatsTitle" onclick="OnStatsRoundsClick(1)">轮次统计数据</div>
+                <div id="divStatsRoundSum"></div>
+            </div>
+            <div id="divStatsOther">
+                <div id="divStatsOtherBttns"></div>
+                <div id="divStatsLongs">
+                    <div id="divStatsLongsC"></div>
+                    <table cellpadding="0" cellspacing="0" border="0" id="tblStatsLongsBttns">
+                        <tr>
+                            <td class="tdSLBttnsT">长套后轮次：</td>
+                            <td><div id="divStatsLongsBetBttns"></div></td>
+                        </tr>
+                        <tr>
+                            <td class="tdSLBttnsT">长套轮次：</td>
+                            <td><div id="divStatsLongsBttns"></div></td>
+                        </tr>
+                    </table>
+                </div>
+                <div id="divStatsNumbers">
+                    <div id="divStatsNumbersC"></div>
+                    <div class="divStatsTitle">最大距离前五名：</div>
+                    <div id="divMaxDistanceTops"></div>
+                </div>
             </div>
         </div>
         <div id="divStatsBottom" style="position: fixed; bottom: 0px; z-index: 39; width: 100%;
             background-color: white;">
             <div style="height: 25px">&nbsp;</div>
             <div id="divStatsScopeBttns"></div>
-            <div id="divStatsFrequencyBttns"></div>
+            <div id="divStatsFrequencyScopeBttns"></div>
             <table cellpadding="0" cellspacing="10" border="0" style="width: 100%">
                 <tr>
                     <td style="width: 100%"><div id="divStatsBttns"></div></td>
