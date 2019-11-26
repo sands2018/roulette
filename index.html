@@ -174,7 +174,7 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 #tblStatsRoundSum td:last-child { border-right: 0; }
 #trSRSTitle1 td, #trSRSTitle2 td { color: #aa8833; border-top: 1px solid #cf8f28; border-bottom: 1px solid #cf8f28; padding: 2px 0; }
 #trSRSTitle1 td { border-bottom: 0; }
-.divStatsTitle { font-size: 40px; color: #aa8833; padding: 18px 18px 13px 18px }
+.divStatsTitle { font-size: 40px; color: #aa8833; padding: 13px 18px 13px 13px }
 #divStatsOther div:first-child div:first-child { padding-top: 0px }
 
 #tblStatsLongs td { border: 1px solid #cf8f28; border-bottom: 0; border-left: 0; width: 12.5% }
@@ -496,7 +496,7 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
             <div style="padding: 10px 0 0 0;">
                 <table cellpadding="0" cellspacing="20" style="width: 100%; margin: 0 auto;" id="tblConfig">
                     <tr>
-                        <td id="tdBetsConfig" width="70%" height="720" style="text-align: center">
+                        <td id="tdBetsConfig" width="70%" height="600" style="text-align: center">
                             <table id="dgGameBets" data-options="header:'#hhh',singleSelect:true,border:false,fit:true,fitColumns:true,scrollbarSize:0">
                                 <thead>
                                     <tr>
@@ -518,7 +518,7 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
                         </td>
                     </tr>
                     <tr>
-                        <td id="tdACROptConfig" colspan="2" height="250">
+                        <td id="tdACROptConfig" colspan="2" height="230">
                             <table id="dgACROption" data-options="header:'#hhh',singleSelect:true,border:false,fit:true,fitColumns:true,scrollbarSize:0">
                                 <thead>
                                     <tr>
@@ -586,7 +586,7 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
         </div>
         <div id="divStatsMiddle" style="position:absolute; top: 0; z-index: 30; width: 100%; height: 100%;
             background-color: white;">
-            <div style="height: 100px">&nbsp;</div>
+            <div style="height: 97px">&nbsp;</div>
             <div id="divStatsGames"></div>
             <div id="divStatsFrequencies">
                 <div id="divStatsFrequenciesText" onclick="OnSwitchStatsFrequenciesTextDraw(0)"></div>
@@ -657,6 +657,7 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
             </div>
             <div id="divStatsOther">
                 <div id="divStatsOtherBttns"></div>
+                <div style="height: 15px">&nbsp;</div>
                 <div id="divStatsLongs">
                     <div id="divStatsLongsC"></div>
                     <table cellpadding="0" cellspacing="0" border="0" id="tblStatsLongsBttns">
