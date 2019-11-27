@@ -398,9 +398,9 @@ function Show_Queue()
 
 function Show_RefreshSysButtons()
 {
-    var astrIDBttn = ["tdBttnTheme", "tdBttnRestart", "tdBttnRestore", "tdBttnImport", "tdBttnExport",
-        "tdBttnSave", "tdBttnStatsGames", "tdBttnStatsRowCol", "tdBttnStatsFrequencies", "tdBttnStatistics",
-        "tdBttnPlay", "tdBttnManage", "tdBttnConfig", "tdBttnMore"];
+    var astrIDBttn = ["tdBttnTheme", "tdBttnRestore", "tdBttnImport", "tdBttnExport", "tdBttnSave",
+        "tdBttnStatsGames", "tdBttnStatsRowCol", "tdBttnStatsRowColDig", "tdBttnStatsFrequencies", 
+        "tdBttnStatistics", "tdBttnPlay", "tdBttnManage", "tdBttnConfig", "tdBttnMore"];
 
     var abEnabled = [];
 
@@ -411,24 +411,25 @@ function Show_RefreshSysButtons()
 
     if (g_queue.nIDX < 0)
     {
-        abEnabled[1] = false; // restart
-        abEnabled[4] = false; // export
-        abEnabled[5] = false; // save
-        abEnabled[6] = false; // stats games
-        abEnabled[7] = false; // stats rowcol
-        abEnabled[8] = false; // stats longs
+        // abEnabled[1] = false; // restart ////////// currently not used
+        abEnabled[3] = false; // export
+        abEnabled[4] = false; // save
+        abEnabled[5] = false; // stats games
+        abEnabled[6] = false; // stats rowcol
+        abEnabled[7] = false; // stats rowcol dig
+        abEnabled[8] = false; // stats frequencies
         abEnabled[9] = false; // statistics
     }
     else
     {
-        abEnabled[2] = false; // restore
+        abEnabled[1] = false; // restore
     }
 
     if (g_queue.nIDX < 1)
         abEnabled[10] = false; // play
 
     if (g_queue.nIDX < 1)
-        abEnabled[8] = false; // stats longs
+        abEnabled[8] = false; // stats frequencies
 
     for (var n = 0; n < astrIDBttn.length; ++n)
     {
@@ -467,6 +468,7 @@ function Play_Show_AddNum()
     Show_StatsFrequencies(false); // 频率
     Show_StatsDistances();        // 距离
     Show_StatsRowCol();           // 行组
+    Show_StatsRowColDig();        // 细化
     Show_StatsRounds();           // 轮次 - 轮次统计数据
     Show_StatsRoundBet();         // 轮次 - 轮次参考数据
     Show_StatsNumbers(-1);        // 其它 - 号码
@@ -954,6 +956,12 @@ function Show_StatsRowCol()
     div.innerHTML = strHtml;
 }
 
+// 细化
+function Show_StatsRowColDig()
+{
+
+}
+
 // 号码统计数据：
 function Show_StatsNumbers(nSortCol)
 {
@@ -1003,7 +1011,7 @@ function Show_StatsNumbers(nSortCol)
 
     strHtml += "</table>";
 
-    var div = document.getElementById("divStatsNumbersC");
+    var div = document.getElementById("divStatsOtherNumbersContents");
     div.innerHTML = strHtml;
 
     var maxdistances = new CNumberMaxDistances();
@@ -1529,7 +1537,7 @@ function Show_StatsLongs()
 
     strHtml += "</table>";
 
-    var div = document.getElementById("divStatsLongsC");
+    var div = document.getElementById("divStatsOtherLongsContents");
     div.innerHTML = strHtml;
 }
 
@@ -1760,9 +1768,3 @@ function Show_ViewNum()
     div.innerHTML = strHtml;
 }
 
-// 是否是首页有按钮直接可以进到的统计页面：
-function IsDirectStatsWindowIdx(nIdx)
-{
-    // 现在首页上有的直接按钮是：打法（0）、频率（1）、行组（3）
-    return ((nIdx == 0) || (nIdx == 1) || (nIdx == 3));
-}

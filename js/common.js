@@ -2384,11 +2384,26 @@ var g_anDelNum = new Array();
 var g_bttnColumns = new CBttnOptions("Columns", [3, 4, 5, 6, 7], null, 2, -1);
 var g_bttnStatsGroups = new CBttnOptions("StatsGroups", [20, 40, 60, 80, 100, -1], null, 2, 0);
 var g_bttnStatsSum = new CBttnOptions("StatsSum", [100, 200, 300, -1], null, 2, 150);
-var g_bttnStatsScope = new CBttnOptions("StatsScope", [18, 30, 40, 70, 110, -1], null, 2, 150);
+var g_bttnStatsScope = new CBttnOptions("StatsScope", [18, 36, 72, 144, 288, -1], null, 2, 150);
 var g_bttnStatsFrequencyScope = new CBttnOptions("StatsFrequencyScope", [18, 36, 54, 72, 108, 180, 360], null, 0, 0);
 var g_bttnStatsLongsBet = new CBttnOptions("StatsLongsBet", [2, 3, 4, 5, 6, 7], null, 2, 100);
 var g_bttnStatsLongs = new CBttnOptions("StatsLongs", [3, 4, 5, 6, 7], ["3+", "4+", "5+", "6+", "7+"], 2, 122);
-var g_bttnStats = new CBttnOptions("Stats", [0, 1, 2, 3, 4, 5, 6], ["打法", "频率", "距离", "行组", "细化", "轮次", "其它"], 0, 0);
+
+// stats options >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+var g_bttnStats = new CBttnOptions("Stats", [0, 1, 2, 3, 4, 5, 6], ["打法", "行组", "距离", "频率", "细化", "轮次", "其它"], 0, 0);
+var g_astrStatsDiv = ["Games", "RowCol", "Distances", "Frequencies", "RowColDig", "Rounds", "Other"];
+var g_astrStatsTitle = ["打法统计数据", "行组距离数据", "距离统计图", "频率统计图", "行组细化数据", "轮次统计数据", "其它统计数据"];
+
+// 是否是首页有按钮直接可以进到的统计页面：
+function IsDirectStatsWindowIdx(nIdx)
+{
+    // 现在首页上有的直接按钮是：打法（0）、行组（1）、频率（3）、细化（4）
+    return ((nIdx == 0) || (nIdx == 1) || (nIdx == 3) || (nIdx == 4));
+}
+
+// stats options <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
 var g_bttnStatsOther = new CBttnOptions("StatsOther", [0, 1], ["追打", "号码"], 0, 180);
 var g_bttnViewNum = new CBttnOptions("ViewNum", [0, 1, 2, 3, 4, 5], ["一组", "二组", "三组", "1行", "2行", "3行"], 0, 0);
 var g_bttnPlaySpeed = new CBttnOptions("PlaySpeed", [1, 2, 3], ["1/2", "1x", "2x"], 1, 80);

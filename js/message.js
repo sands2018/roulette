@@ -399,33 +399,31 @@ function SwitchStatsRounds(nIdx)
 
 function SwitchStatsOther(nIdx)
 {
-    var astrDiv = ["divStatsLongs", "divStatsNumbers"];
+    var astrDiv = ["divStatsOtherLongs", "divStatsOtherNumbers"];
     SwitchWindows(astrDiv, nIdx, DATA_STATSOTHERIDX);
 }
 
 function SwitchStats()
 {
-    var astrDiv = ["Games", "Frequencies", "Distances", "RowCol", "RowColDig", "Rounds", "Other"];
-    var astrTitle = ["打法统计数据", "频率统计图", "距离统计图", "行组距离数据", "行组细化数据", "轮次统计数据", "其它统计数据"];
     var nIdx = g_bttnStats.Value();
 
-    for (var n = 0; n < astrDiv.length; ++n)
+    for (var n = 0; n < g_astrStatsDiv.length; ++n)
     {
         var strDisplay = "";
         if (n != g_bttnStats.nSelIdx)
             strDisplay = "none";
 
-        var div = document.getElementById("divStats" + astrDiv[n]);
+        var div = document.getElementById("divStats" + g_astrStatsDiv[n]);
         div.style.display = strDisplay;
     }
 
     var div1 = document.getElementById("divStatsScopeBttns");
     var div2 = document.getElementById("divStatsFrequencyScopeBttns");
     div1.style.display = ((nIdx == 1) || (nIdx == 2) || (nIdx == 3)) ? "none" : "";
-    div2.style.display = (nIdx == 1) ? "" : "none";
+    div2.style.display = (nIdx == 3) ? "" : "none";
 
     var td = document.getElementById("tdStatsTitle");
-    td.innerHTML = astrTitle[nIdx];
+    td.innerHTML = g_astrStatsTitle[nIdx];
 }
 
 function OnStatsNumClick(nCol)
@@ -465,6 +463,7 @@ function OpenStatistics(strID)
     Show_StatsFrequencies(true); // 频率
     Show_StatsDistances();       // 距离
     Show_StatsRowCol();          // 行组
+    Show_StatsRowColDig();       // 细化
     Show_StatsRounds();          // 轮次 - 轮次统计数据
     Show_StatsRoundBet();        // 轮次 - 轮次参考数据
     Show_StatsNumbers(-1);       // 其它 - 号码
@@ -474,7 +473,7 @@ function OpenStatistics(strID)
     {
         g_bttnStats.nSelIdx = 0;
     }
-    else if (strID == "f") // frequencies
+    else if (strID == "rc") // rowcol
     {
         g_bttnStats.nSelIdx = 1;
     }
@@ -482,11 +481,11 @@ function OpenStatistics(strID)
     {
         g_bttnStats.nSelIdx = 2;
     }
-    else if(strID == "r") // rowcol
+    else if (strID == "f") // frequencies
     {
         g_bttnStats.nSelIdx = 3;
     }
-    else if(strID == "l") // longs
+    else if (strID == "rcd") // rowcoldig
     {
         g_bttnStats.nSelIdx = 4;
     }
@@ -1173,7 +1172,7 @@ $(document).ready(function ()
         Show_RefreshTheme();
     });
 
-    // sys restart:
+    // sys restart: ////////// currently not used
     $("#tdBttnRestart").click(function ()
     {
         if (g_queue.nIDX < 0)
@@ -1254,10 +1253,16 @@ $(document).ready(function ()
     // stats rowcol:
     $("#tdBttnStatsRowCol").click(function ()
     {
-        OpenStatistics("r");
+        OpenStatistics("rc");
     });
 
-     // stats longs:
+    // stats rowcoldig:
+    $("#tdBttnStatsRowColDig").click(function ()
+    {
+        OpenStatistics("rcd");
+    });
+
+    // stats frequencies:
     $("#tdBttnStatsFrequencies").click(function ()
     {
         OpenStatistics("f");
