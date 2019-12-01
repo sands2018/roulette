@@ -299,6 +299,7 @@ function OnBttnStatsScopeClick(nIdx)
     Show_StatsGames(-1, true);  // 打法（主页）
     Show_StatsRounds();         // 轮次 - 轮次统计数据
     Show_StatsRoundBet();       // 轮次 - 轮次参考数据
+    Show_StatsCRDCompare(-1);   // 细化 - 各行各组比较
     Show_StatsNumbers(-1);      // 其它 - 号码
     Show_StatsLongs();          // 其它 - 追打
 }
@@ -385,14 +386,15 @@ function OnBttnStatsCRDOptClick(nIdx)
 
 // ----------------------------------------------
 
-function Show_RefreshStatsCRDRoundFromButton()
+function Show_RefreshStatsCRDRoundStartButton()
 {
-    g_bttnStatsCRDRoundFrom.Show("divStatsCRDRoundFromBttns");
+    g_bttnStatsCRDRoundStart.Show("divStatsCRDRoundStartBttns");
 }
 
-function OnBttnStatsCRDRoundFromClick(nIdx)
+function OnBttnStatsCRDRoundStartClick(nIdx)
 {
-    g_bttnStatsCRDRoundFrom.OnClick(nIdx);
+    g_bttnStatsCRDRoundStart.OnClick(nIdx);
+    Show_StatsCRDCompare(-1);
 }
 
 
@@ -406,8 +408,14 @@ function Show_RefreshStatsCRDRoundBetButton()
 function OnBttnStatsCRDRoundBetClick(nIdx)
 {
     g_bttnStatsCRDRoundBet.OnClick(nIdx);
+    Show_StatsCRDCompare(-1);
 }
 
+
+function OnStatsCRDCompareClick(nSortCol)
+{
+    Show_StatsCRDCompare(nSortCol);
+}
 
 // ----------------------------------------------
 
@@ -552,7 +560,7 @@ function OpenStatistics(strID)
     Show_RefreshStatsOtherButton();
     Show_RefreshStatsButton();
     Show_RefreshStatsCRDOptButton();
-    Show_RefreshStatsCRDRoundFromButton();
+    Show_RefreshStatsCRDRoundStartButton();
     Show_RefreshStatsCRDRoundBetButton();
 
     SwitchStats();

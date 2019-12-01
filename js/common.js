@@ -660,6 +660,22 @@ function GetColRowSpec(nIdx3C3R)
     return strSpec;
 }
 
+function GetColRowLongSpec(nIdx3C3R)
+{
+    var strSpec = "";
+    if (nIdx3C3R == 0) strSpec = "第一组";
+    else if (nIdx3C3R == 1) strSpec = "第二组";
+    else if (nIdx3C3R == 2) strSpec = "第三组";
+    else if (nIdx3C3R == 3) strSpec = "组";
+    else if (nIdx3C3R == 4) strSpec = "第1行";
+    else if (nIdx3C3R == 5) strSpec = "第2行";
+    else if (nIdx3C3R == 6) strSpec = "第3行";
+    else if (nIdx3C3R == 7) strSpec = "行";
+    else if (nIdx3C3R == 8) strSpec = "全部";
+    return strSpec;
+}
+
+
 // ------------------------------------------------------------------------
 
 function CIndexedArray()
@@ -1658,6 +1674,7 @@ function CStatsGames(nSortCol)
         }
 
         // sort: --------------------------------
+
         if (this.nColSel == 0) // id
         {
             var anValue = [];
@@ -1705,29 +1722,31 @@ function CCRDCompareData(nCR)
     this.fFailure = 0.0;
 }
 
-function CStatsCRDCompare()
+
+function CStatsCRDCompare(nSortCol)
 {
-    this.anCRDCompareData = new Array(8);
-    for (var n = 0; n < 8; ++ n)
+    this.anCRDCompareData = new Array(9);
+    this.anIdx = []; // for sort result
+
+    for (var n = 0; n < this.anCRDCompareData.length; ++n)
     {
-        var CRDCompareData = new CCRDCompareData(nCR);
-        anCRDCompareData[n] = CRDCompareData;
+        var CRDCompareData = new CCRDCompareData(n);
+        this.anCRDCompareData[n] = CRDCompareData;
+        this.anIdx[n] = n;
     }
+
 
     var DATA_STATSCRDROUNDBET_COL = "STATSCRDROUNDBET_COL";
 
-    CStatsView.call(this, 3, 0, DATA_STATSCRDROUNDBET_COL);
+    CStatsView.call(this, 3, nSortCol, DATA_STATSCRDROUNDBET_COL);
 
-    this.Calc = function(anDistance, nScope, nRoundStart, nRoundBet, nSortCol)
+    this.Calc = function(anDistance, nScope, nRoundStart, nRoundBet)
     {
         for (var nCR = 0; nCR < 8; ++nCR)
         {
             var nMax = nScope;
-
             if ((nCR % 4) == 3)
-            {
-                nMax = nScope * 3;
-            }
+                continue;
 
             var nSum = 0;
             for(var n = anDistance[nCR].length - 1; n >= 0; --n)
@@ -1737,15 +1756,58 @@ function CStatsCRDCompare()
                 if (nSum > nMax)
                     break;
 
-                if((nDistance > nRoundStart) && (nDistance < (nRoundStart + nRoundBet)))
-                    anCRDCompareData[nCR].nSucceeded += 1;
-                else
-                    anCRDCompareData[nCR].nFailed += 1;
-            }
+                nDistance -= 1;
 
-            var nTotal = anCRDCompareData[nCR].nSucceeded + anCRDCompareData[nCR].nFailed;
+                if (nDistance >= nRoundStart)
+                {
+                    if (nDistance < (nRoundStart + nRoundBet))
+                        this.anCRDCompareData[nCR].nSucceeded += 1;
+                    else
+                        this.anCRDCompareData[nCR].nFailed += 1;
+                }
+            }
+        }
+
+        this.anCRDCompareData[3].nSucceeded = this.anCRDCompareData[0].nSucceeded + this.anCRDCompareData[1].nSucceeded + this.anCRDCompareData[2].nSucceeded;
+        this.anCRDCompareData[3].nFailed = this.anCRDCompareData[0].nFailed + this.anCRDCompareData[1].nFailed + this.anCRDCompareData[2].nFailed;
+        this.anCRDCompareData[7].nSucceeded = this.anCRDCompareData[4].nSucceeded + this.anCRDCompareData[5].nSucceeded + this.anCRDCompareData[6].nSucceeded;
+        this.anCRDCompareData[7].nFailed = this.anCRDCompareData[4].nFailed + this.anCRDCompareData[5].nFailed + this.anCRDCompareData[6].nFailed;
+
+        this.anCRDCompareData[8].nSucceeded = this.anCRDCompareData[3].nSucceeded + this.anCRDCompareData[7].nSucceeded;
+        this.anCRDCompareData[8].nFailed = this.anCRDCompareData[3].nFailed + this.anCRDCompareData[7].nFailed;
+
+        for (var nCR = 0; nCR < this.anCRDCompareData.length; ++nCR)
+        {
+            var nTotal = this.anCRDCompareData[nCR].nSucceeded + this.anCRDCompareData[nCR].nFailed;
             if (nTotal > 0)
-                anCRDCompareData[nCR].fFailure = anCRDCompareData[nCR].nFailed * 1.0 / nTotal;
+                this.anCRDCompareData[nCR].fFailure = this.anCRDCompareData[nCR].nFailed * 1.0 / nTotal;
+        }
+
+        // sort: --------------------------------
+
+        if (this.nColSel == 0) // 名称
+        {
+            var anValue = [];
+            for (var n = 0; n < this.anCRDCompareData.length; ++n)
+                anValue[n] = n;
+
+            DoSort(anValue, this.anIdx, true);
+        }
+        else if(this.nColSel == 1) // 成功 
+        {
+            var anValue = [];
+            for (var n = 0; n < this.anCRDCompareData.length; ++n)
+                anValue[n] = this.anCRDCompareData[n].nSucceeded;
+
+            DoSort(anValue, this.anIdx, (this.anSort[1] == 0));
+        }
+        else if (this.nColSel == 2) // 失败率
+        {
+            var afValue = [];
+            for (var n = 0; n < this.anCRDCompareData.length; ++n)
+                afValue[n] = this.anCRDCompareData[n].fFailure;
+
+            DoSort(afValue, this.anIdx, (this.anSort[2] == 0));
         }
     }
 }
@@ -2148,15 +2210,7 @@ function CStatsWaves()
         }
         context.stroke();
 
-        var strText = "";
-        if (nCR == 0) strText = "第一组";
-        else if (nCR == 1) strText = "第二组";
-        else if (nCR == 2) strText = "第三组";
-        else if (nCR == 3) strText = "组";
-        else if (nCR == 4) strText = "第1行";
-        else if (nCR == 5) strText = "第2行";
-        else if (nCR == 6) strText = "第3行";
-        else if (nCR == 7) strText = "行";
+        var strText = GetColRowLongSpec(nCR);
 
         var nX, nY;
 
@@ -2448,7 +2502,7 @@ var g_bttnStatsFrequencyScope = new CBttnOptions("StatsFrequencyScope", [18, 36,
 var g_bttnStatsLongsBet = new CBttnOptions("StatsLongsBet", [2, 3, 4, 5, 6, 7], null, 2, 100, -1);
 var g_bttnStatsLongs = new CBttnOptions("StatsLongs", [3, 4, 5, 6, 7], ["3+", "4+", "5+", "6+", "7+"], 2, 122, -1);
 var g_bttnStatsCRDOpt = new CBttnOptions("StatsCRDOpt", [0, 1], ["各行各组比较", "行组细化数据"], 0, 350, 10);
-var g_bttnStatsCRDRoundFrom = new CBttnOptions("StatsCRDRoundFrom", [0, 1, 2, 3, 4, 5, 6, 7], null, 0, 0, -1);
+var g_bttnStatsCRDRoundStart = new CBttnOptions("StatsCRDRoundStart", [0, 1, 2, 3, 4, 5, 6, 7], null, 0, 0, -1);
 var g_bttnStatsCRDRoundBet = new CBttnOptions("StatsCRDRoundBet", [1, 2, 3, 4, 5, 6, 7, 8], null, 0, 0, -1);
 
 // stats options >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>

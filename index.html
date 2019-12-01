@@ -133,6 +133,15 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 #tblStatsGames tr:first-child td { border-bottom: 1px solid #8f8f8f; }
 #tblStatsGames tr:last-child td { border-bottom: 1px solid #8f8f8f; }
 
+#tblStatsCRDCompare { width: 100%; }
+#tblStatsCRDCompare td { font-size: 40px; padding: 0 20px; }
+#tblStatsCRDCompare tr:first-child td { padding: 8px 20px; }
+
+#tblStatsCRDCompare { border-top: 1px solid #8f8f8f; border-bottom: 1px solid #8f8f8f; }
+#tblStatsCRDCompare td { color: black; }
+#tblStatsCRDCompare tr:first-child td { border-bottom: 1px solid #8f8f8f; }
+#tblStatsCRDCompare tr:last-child td { border-bottom: 1px solid #8f8f8f; }
+
 #tblStatsGames .tdWon { color: #c37f7f; }
 #tblStatsGames .tdDrew { color: #939393; }
 #tblStatsGames .tdLost { color: #7fc37f; }
@@ -647,18 +656,18 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
             </div>
             <div id="divStatsColRowDig" style="word-wrap:break-word; padding: 0px 20px 20px 20px">
                 <div id="divStatsCRDOptBttns"></div>
-                <div id="divStatsCRDCompare" style="padding: 10px 0 0 0">
+                <div id="divStatsCRDCompare" style="padding: 10px 0">
                     <table cellpadding="0" cellspacing="0" border="0" style="width: 100%">
                         <tr>
                             <td width="130">开始</td>
-                            <td><div id="divStatsCRDRoundFromBttns"></div></td>
+                            <td><div id="divStatsCRDRoundStartBttns"></div></td>
                         </tr>
                         <tr>
                             <td>几轮</td>
                             <td><div id="divStatsCRDRoundBetBttns"></div></td>
                         </tr>
                     </table>
-                    <div id="divStatsCRDCompareList"></div>
+                    <div id="divStatsCRDCompareList" style="padding: 15px 0"></div>
                 </div>
                 <div id="divStatsCRDDetail">
 

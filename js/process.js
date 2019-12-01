@@ -957,10 +957,12 @@ function Show_StatsColRow()
 }
 
 // 细化 - Compare
-function Show_StatsCRDCompare()
+function Show_StatsCRDCompare(nSortCol)
 {
-    var CRDCompare = new CStatsCRDCompare();
-    CRDCompare.Calc();
+    var CRDCompare = new CStatsCRDCompare(nSortCol);
+
+    CRDCompare.Calc(g_waves.anDistance, g_bttnStatsScope.Value(),
+        g_bttnStatsCRDRoundStart.Value(), g_bttnStatsCRDRoundBet.Value());
 
     var divList = document.getElementById("divStatsCRDCompareList");
     var strHtml = "<table cellpadding='0' cellspacing='0' id='tblStatsCRDCompare'>";
@@ -971,6 +973,16 @@ function Show_StatsCRDCompare()
     strHtml += "<td onclick='OnStatsCRDCompareClick(2)'>失败率";
     strHtml += CRDCompare.SortMark(2);
     strHtml += "</td></tr>";
+
+    for(var n = 0; n < CRDCompare.anCRDCompareData.length; ++ n)
+    {
+        strHtml += "<tr><td>" + GetColRowLongSpec(CRDCompare.anIdx[n]) + "</td>";
+        strHtml += "<td>" + CRDCompare.anCRDCompareData[CRDCompare.anIdx[n]].nSucceeded.toString() + "</td>";
+        strHtml += "<td>" + CRDCompare.anCRDCompareData[CRDCompare.anIdx[n]].nFailed.toString() + "</td>";
+        strHtml += "<td>" + (CRDCompare.anCRDCompareData[CRDCompare.anIdx[n]].fFailure * 100).toFixed(2).toString() + "%</td>";
+        strHtml += "</tr>";
+    }
+
     strHtml += "</table>";
 
     divList.innerHTML = strHtml;
@@ -980,7 +992,7 @@ function Show_StatsCRDCompare()
 // 细化
 function Show_StatsColRowDig()
 {
-
+    Show_StatsCRDCompare(-1);
 }
 
 // 号码统计数据：
