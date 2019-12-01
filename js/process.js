@@ -399,7 +399,7 @@ function Show_Queue()
 function Show_RefreshSysButtons()
 {
     var astrIDBttn = ["tdBttnTheme", "tdBttnRestore", "tdBttnImport", "tdBttnExport", "tdBttnSave",
-        "tdBttnStatsGames", "tdBttnStatsRowCol", "tdBttnStatsRowColDig", "tdBttnStatsFrequencies", 
+        "tdBttnStatsGames", "tdBttnStatsColRow", "tdBttnStatsColRowDig", "tdBttnStatsFrequencies",
         "tdBttnStatistics", "tdBttnPlay", "tdBttnManage", "tdBttnConfig", "tdBttnMore"];
 
     var abEnabled = [];
@@ -415,8 +415,8 @@ function Show_RefreshSysButtons()
         abEnabled[3] = false; // export
         abEnabled[4] = false; // save
         abEnabled[5] = false; // stats games
-        abEnabled[6] = false; // stats rowcol
-        abEnabled[7] = false; // stats rowcol dig
+        abEnabled[6] = false; // stats colrow
+        abEnabled[7] = false; // stats colrow dig
         abEnabled[8] = false; // stats frequencies
         abEnabled[9] = false; // statistics
     }
@@ -467,8 +467,8 @@ function Play_Show_AddNum()
     Show_StatsGames(-1, false);   // 打法（非主页）
     Show_StatsFrequencies(false); // 频率
     Show_StatsDistances();        // 距离
-    Show_StatsRowCol();           // 行组
-    Show_StatsRowColDig();        // 细化
+    Show_StatsColRow();           // 行组
+    Show_StatsColRowDig();        // 细化
     Show_StatsRounds();           // 轮次 - 轮次统计数据
     Show_StatsRoundBet();         // 轮次 - 轮次参考数据
     Show_StatsNumbers(-1);        // 其它 - 号码
@@ -899,9 +899,9 @@ function GetStatsNumTdString(statsNum, nIdx, aStr)
 }
 
 // 行组
-function Show_StatsRowCol()
+function Show_StatsColRow()
 {
-    var div = document.getElementById("divStatsRowCol");
+    var div = document.getElementById("divStatsColRow");
     var astrTitle = ["一组", "二组", "三组", "1行", "2行", "3行"];
 
     var strHtml = "<table cellspacing='0' cellpadding='0' border='0'>";
@@ -932,9 +932,9 @@ function Show_StatsRowCol()
 
         var bFirst = true;
 
-        for (var n = g_waves.anCount[nIdx].length - 1 ; n >= 0; --n)
+        for (var n = g_waves.anDistance[nIdx].length - 1 ; n >= 0; --n)
         {
-            var nVal = (g_waves.anCount[nIdx][n] - 1);
+            var nVal = (g_waves.anDistance[nIdx][n] - 1);
 
             if (bFirst)
             {
@@ -956,8 +956,29 @@ function Show_StatsRowCol()
     div.innerHTML = strHtml;
 }
 
+// 细化 - Compare
+function Show_StatsCRDCompare()
+{
+    var CRDCompare = new CStatsCRDCompare();
+    CRDCompare.Calc();
+
+    var divList = document.getElementById("divStatsCRDCompareList");
+    var strHtml = "<table cellpadding='0' cellspacing='0' id='tblStatsCRDCompare'>";
+    strHtml += "<tr><td onclick='OnStatsCRDCompareClick(0)'>行组</td>";
+    strHtml += "<td onclick='OnStatsCRDCompareClick(1)'>成功";
+    strHtml += CRDCompare.SortMark(1);
+    strHtml += "</td><td>失败</td>";
+    strHtml += "<td onclick='OnStatsCRDCompareClick(2)'>失败率";
+    strHtml += CRDCompare.SortMark(2);
+    strHtml += "</td></tr>";
+    strHtml += "</table>";
+
+    divList.innerHTML = strHtml;
+}
+
+
 // 细化
-function Show_StatsRowColDig()
+function Show_StatsColRowDig()
 {
 
 }
@@ -1121,7 +1142,7 @@ function Show_StatsFrequencies(bSwitchToDraw)
     strHtml += "<td>一组</td><td>二组</td><td>三组</td><td>组</td>";
     strHtml += "<td>1行</td><td>2行</td><td>3行</td><td>行</td></tr>";
 
-    var nLen = g_waves.afOffset[0].length;
+    var nLen = g_waves.afFrequency[0].length;
 
     if (nLen > 0)
     {
@@ -1129,7 +1150,7 @@ function Show_StatsFrequencies(bSwitchToDraw)
         {
             strHtml += "<tr>";
             for (var i = 0; i < 8; ++i)
-                strHtml += "<td>" + g_waves.afOffset[i][n].toFixed(0) + "</td>"
+                strHtml += "<td>" + g_waves.afFrequency[i][n].toFixed(0) + "</td>"
             strHtml += "</tr>";
         }
     }
@@ -1174,7 +1195,7 @@ function Show_StatsFrequencies(bSwitchToDraw)
                 var i = n - nIdx0;
 
                 context.moveTo(20 + i * 5, anBase[nn]);
-                context.lineTo(20 + i * 5, anBase[nn] - (g_waves.afOffset[nn][n] * nHeight100 / 100));
+                context.lineTo(20 + i * 5, anBase[nn] - (g_waves.afFrequency[nn][n] * nHeight100 / 100));
             }
             context.closePath();
             context.stroke();
@@ -1739,14 +1760,14 @@ function Show_ViewNum()
                 }
                 else
                 {
-                    var nRC = g_bttnViewNum.Value();
+                    var nCR = g_bttnViewNum.Value();
                     var nNumRC = 0;
-                    if (nRC < 3)
+                    if (nCR < 3)
                         nNumRC = GetNumCol(num);
                     else
                         nNumRC = GetNumRow(num) + 3;
 
-                    strHtml += ((nNumRC == nRC) ? "tdHighlight" : "tdNormal") + "'>";
+                    strHtml += ((nNumRC == nCR) ? "tdHighlight" : "tdNormal") + "'>";
 
                     strHtml += num.toString();
                 }

@@ -396,9 +396,9 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
                         <td id="tdBttnRestore">恢复</td>
                         <td id="tdBttnStatistics">统计</td>
                         <td id="tdBttnStatsGames">打法</td>
-                        <td id="tdBttnStatsRowCol">行组</td>
+                        <td id="tdBttnStatsColRow">行组</td>
                         <td id="tdBttnStatsFrequencies">频率</td>
-                        <td id="tdBttnStatsRowColDig">细化</td>
+                        <td id="tdBttnStatsColRowDig">细化</td>
                     </tr>
                 </table>
             </div>
@@ -519,10 +519,10 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
                     </tr>
                     <tr>
                         <td id="tdACROptConfig" colspan="2" height="230">
-                            <table id="dgACROption" data-options="header:'#hhh',singleSelect:true,border:false,fit:true,fitColumns:true,scrollbarSize:0">
+                            <table id="dgARCOption" data-options="header:'#hhh',singleSelect:true,border:false,fit:true,fitColumns:true,scrollbarSize:0">
                                 <thead>
                                     <tr>
-                                        <th data-options="field:'chkACROption',checkbox:true"></th>
+                                        <th data-options="field:'chkARCOption',checkbox:true"></th>
                                         <th data-options="field:'v',width:300,sortable:false">行组选项</th>
                                     </tr>
                                 </thead>
@@ -643,9 +643,26 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
                     </div>
                 </div>
             </div>
-            <div id="divStatsRowCol" style="word-wrap:break-word; padding: 0px 20px 20px 20px">
+            <div id="divStatsColRow" style="word-wrap:break-word; padding: 0px 20px 20px 20px">
             </div>
-            <div id="divStatsRowColDig" style="word-wrap:break-word; padding: 0px 20px 20px 20px">
+            <div id="divStatsColRowDig" style="word-wrap:break-word; padding: 0px 20px 20px 20px">
+                <div id="divStatsCRDOptBttns"></div>
+                <div id="divStatsCRDCompare" style="padding: 10px 0 0 0">
+                    <table cellpadding="0" cellspacing="0" border="0" style="width: 100%">
+                        <tr>
+                            <td width="130">开始</td>
+                            <td><div id="divStatsCRDRoundFromBttns"></div></td>
+                        </tr>
+                        <tr>
+                            <td>几轮</td>
+                            <td><div id="divStatsCRDRoundBetBttns"></div></td>
+                        </tr>
+                    </table>
+                    <div id="divStatsCRDCompareList"></div>
+                </div>
+                <div id="divStatsCRDDetail">
+
+                </div>
             </div>
             <div id="divStatsRounds">
                 <div class="divStatsTitle" onclick="OnStatsRoundsClick(0)">轮次参考数据</div>

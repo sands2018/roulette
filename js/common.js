@@ -159,7 +159,7 @@ function CGameBets()
 {
     this.bets = new CGridData();
     this.rnds = new CGridData();
-    this.ACROpts = new CGridData();
+    this.ARCOpts = new CGridData();
     this.betsels = new CGridData();
     this.rndsels = new CGridData();
     this.ACRsels = new CGridData();
@@ -192,7 +192,7 @@ function CGameBets()
 
     this.DefaultACRSels = function ()
     {
-        this.ACRsels.rows[0] = this.ACROpts.rows[1];
+        this.ACRsels.rows[0] = this.ARCOpts.rows[1];
 
         this.ACRsels.total = 1;
     }
@@ -213,13 +213,13 @@ function CGameBets()
         this.rnds.total = this.rnds.rows.length;
     }
 
-    this.DefaultACROpts = function()
+    this.DefaultARCOpts = function ()
     {
-        this.ACROpts.rows[0] = new CValue("“行、组合并”进行统计");
-        this.ACROpts.rows[1] = new CValue("“行、组分开”进行统计");
-        this.ACROpts.rows[2] = new CValue("“单个行、组”进行统计");
+        this.ARCOpts.rows[0] = new CValue("“行、组合并”进行统计");
+        this.ARCOpts.rows[1] = new CValue("“行、组分开”进行统计");
+        this.ARCOpts.rows[2] = new CValue("“单个行、组”进行统计");
 
-        this.ACROpts.total = this.ACROpts.rows.length;
+        this.ARCOpts.total = this.ARCOpts.rows.length;
     }
 
     this.IsDefaultBet = function(anVal)
@@ -239,7 +239,7 @@ function CGameBets()
     var DATA_BETS = "DATA_BETS";
     var DATA_BET_SELS = "DATA_BET_SELS";
     var DATA_RND_SELS = "DATA_RND_SELS";
-    var DATA_ACR_SELS = "DATA_ACR_SELS";
+    var DATA_ARC_SELS = "DATA_ARC_SELS";
 
     this.SaveBets = function ()
     {
@@ -262,7 +262,7 @@ function CGameBets()
     this.SaveACRSels = function ()
     {
         var strData = JSON.stringify(this.ACRsels);
-        WriteData(DATA_ACR_SELS, strData);
+        WriteData(DATA_ARC_SELS, strData);
     }
 
     this.Load = function()
@@ -274,7 +274,7 @@ function CGameBets()
             this.bets = JSON.parse(strData);
 
         this.DefaultRnds();
-        this.DefaultACROpts();
+        this.DefaultARCOpts();
 
         strData = ReadData(DATA_BET_SELS);
         if ((strData == null) || (strData.length == 0))
@@ -288,7 +288,7 @@ function CGameBets()
         else
             this.rndsels = JSON.parse(strData);
 
-        strData = ReadData(DATA_ACR_SELS);
+        strData = ReadData(DATA_ARC_SELS);
         if ((strData == null) || (strData.length == 0))
             this.DefaultACRSels();
         else
@@ -689,11 +689,12 @@ function CIndexedArray()
 
 
 // nBttdnWidth: <0 not set; 0 full size; >0 button width;
-function CBttnOptions(strName, anValue, astrTitle, nSelIdx, nBttnWidth)
+function CBttnOptions(strName, anValue, astrTitle, nSelIdx, nBttnWidth, nPaddingTopBottom)
 {
     this.DATA_KEY = "BTTNS_" + strName + "_IDX";
     this.strName = strName;
     this.nBttnWidth = nBttnWidth;
+    this.nPaddingTopBottom = nPaddingTopBottom;
     this.nCount = anValue.length;
 
     var strVal = ReadData(this.DATA_KEY, nSelIdx.toString());
@@ -762,6 +763,10 @@ function CBttnOptions(strName, anValue, astrTitle, nSelIdx, nBttnWidth)
             strStyle = "style='width: 100%' ";
 
         var strHtml = "<table cellpadding='0' cellspacing='10' border='0' " + strStyle + "id='tblBttn" + this.strName + "'><tr>";
+        var strPadding = "";
+        if (this.nPaddingTopBottom > 0)
+            strPadding = "; padding: " + this.nPaddingTopBottom.toString() + "px";
+
         for (var n = 0; n < this.nCount; ++n)
         {
             var strClass = "tdBttn";
@@ -770,7 +775,7 @@ function CBttnOptions(strName, anValue, astrTitle, nSelIdx, nBttnWidth)
 
             strHtml += "<td id='tdBttn" + this.strName + n.toString() + "' ";
             if(this.nBttnWidth > 0)
-                strHtml += "style='width: " + this.nBttnWidth.toString() + "px' ";
+                strHtml += "style='width: " + this.nBttnWidth.toString() + "px" + strPadding + "' ";
             strHtml += "class='" + strClass + "' ";
             strHtml += "onclick='OnBttn" + this.strName + "Click(" + n.toString() + ")'";
             strHtml += ">" + this.astrTitle[n] + "</td>";
@@ -1576,11 +1581,11 @@ function CStatsGames(nSortCol)
     var bSeperate = false;
     var bSpecific = false;
 
-    for (var nn = 0; nn < g_gamebets.ACROpts.rows.length; ++nn)
+    for (var nn = 0; nn < g_gamebets.ARCOpts.rows.length; ++nn)
     {
         for (var n = 0; n < g_gamebets.ACRsels.rows.length; ++n)
         {
-            if(g_gamebets.ACRsels.rows[n].v == g_gamebets.ACROpts.rows[nn].v)
+            if (g_gamebets.ACRsels.rows[n].v == g_gamebets.ARCOpts.rows[nn].v)
             {
                 if (nn == 0)
                     bCombine = true;
@@ -1687,6 +1692,60 @@ function CStatsGames(nSortCol)
                 anValue[n] = this.aGame[n].nBalance;
 
             DoSort(anValue, this.anIdx, (this.anSort[2] == 0));
+        }
+    }
+}
+
+
+function CCRDCompareData(nCR)
+{
+    this.nCR = nCR;
+    this.nSucceeded = 0;
+    this.nFailed = 0;
+    this.fFailure = 0.0;
+}
+
+function CStatsCRDCompare()
+{
+    this.anCRDCompareData = new Array(8);
+    for (var n = 0; n < 8; ++ n)
+    {
+        var CRDCompareData = new CCRDCompareData(nCR);
+        anCRDCompareData[n] = CRDCompareData;
+    }
+
+    var DATA_STATSCRDROUNDBET_COL = "STATSCRDROUNDBET_COL";
+
+    CStatsView.call(this, 3, 0, DATA_STATSCRDROUNDBET_COL);
+
+    this.Calc = function(anDistance, nScope, nRoundStart, nRoundBet, nSortCol)
+    {
+        for (var nCR = 0; nCR < 8; ++nCR)
+        {
+            var nMax = nScope;
+
+            if ((nCR % 4) == 3)
+            {
+                nMax = nScope * 3;
+            }
+
+            var nSum = 0;
+            for(var n = anDistance[nCR].length - 1; n >= 0; --n)
+            {
+                var nDistance = anDistance[nCR][n];
+                nSum += nDistance;
+                if (nSum > nMax)
+                    break;
+
+                if((nDistance > nRoundStart) && (nDistance < (nRoundStart + nRoundBet)))
+                    anCRDCompareData[nCR].nSucceeded += 1;
+                else
+                    anCRDCompareData[nCR].nFailed += 1;
+            }
+
+            var nTotal = anCRDCompareData[nCR].nSucceeded + anCRDCompareData[nCR].nFailed;
+            if (nTotal > 0)
+                anCRDCompareData[nCR].fFailure = anCRDCompareData[nCR].nFailed * 1.0 / nTotal;
         }
     }
 }
@@ -1836,16 +1895,16 @@ function CStatsRoundSum()
 function CStatsWaves()
 {
     this.anNum = new Array();
-    this.afOffset = new Array(8);
-    this.nScope = 20;
+    this.afFrequency = new Array(8); // 平均位移，和统计区间相关。统计区间改变，这个值需要重新计算；
+    this.nScope = 18;
 
-    this.anCount = new Array(8);
+    this.anDistance = new Array(8); // 距离值，和统计区间无关
     this.anPrev = new Array(6);
 
     for (var n = 0; n < 8; ++n)
     {
-        this.afOffset[n] = new Array();
-        this.anCount[n] = new Array();
+        this.afFrequency[n] = new Array();
+        this.anDistance[n] = new Array();
     }
  
     this.Reset = function (nScope)
@@ -1859,16 +1918,16 @@ function CStatsWaves()
 
         for (var n = 0; n < 8; ++n)
         {
-            nLen = this.afOffset[n].length;
+            nLen = this.afFrequency[n].length;
             if (nLen > 0)
-                this.afOffset[n].splice(0, nLen);
+                this.afFrequency[n].splice(0, nLen);
         }
 
         for (var n = 0; n < 8; ++n)
         {
-            nLen = this.anCount[n].length;
+            nLen = this.anDistance[n].length;
             if (nLen > 0)
-                this.anCount[n].splice(0, nLen);
+                this.anDistance[n].splice(0, nLen);
         }
 
         for(var n = 0; n < 6; ++ n)
@@ -1895,8 +1954,8 @@ function CStatsWaves()
             //if(this.anPrev[i] >= 0)
             {
                 var nSpan =  nIdx - this.anPrev[i];
-                this.anCount[nn].push(nSpan);
-                this.anCount[(i >= 3) ? 7 : 3].push(nSpan);
+                this.anDistance[nn].push(nSpan);
+                this.anDistance[(i >= 3) ? 7 : 3].push(nSpan);
             }
 
             this.anPrev[i] = nIdx;
@@ -1929,7 +1988,7 @@ function CStatsWaves()
                 nIdx += 1;
 
             var fOffset = (anSum[n] - fAv) * 100.0 / fAv;
-            this.afOffset[nIdx].push(fOffset);
+            this.afFrequency[nIdx].push(fOffset);
 
             if ((n % 3) == 0)
                 fMaxOffset = 0;
@@ -1939,7 +1998,7 @@ function CStatsWaves()
                 fMaxOffset = fOffsetAbs;
 
             if ((n % 3) == 2)
-                this.afOffset[nIdx + 1].push(fMaxOffset)
+                this.afFrequency[nIdx + 1].push(fMaxOffset)
         }
     }
 
@@ -1983,7 +2042,7 @@ function CStatsWaves()
         if ((nCR % 4) == 3)
             nMax = nMax * 3;
 
-        var nLen = this.anCount[nCR].length;
+        var nLen = this.anDistance[nCR].length;
         var nIdx0 = 0;
         if (nLen > nMax)
             nIdx0 = nLen - nMax;
@@ -2062,7 +2121,7 @@ function CStatsWaves()
 
         for (var n = nIdx0; n < nLen; ++n)
         {
-            var nVal = this.anCount[nCR][n];
+            var nVal = this.anDistance[nCR][n] - 1; // 实际画的是距离减1
             if (nVal > 15)
                 nVal = 15;
 
@@ -2381,18 +2440,21 @@ var g_waves = new CStatsWaves();
 var g_files = new CSysFiles();
 var g_anDelNum = new Array();
 
-var g_bttnColumns = new CBttnOptions("Columns", [3, 4, 5, 6, 7], null, 2, -1);
-var g_bttnStatsGroups = new CBttnOptions("StatsGroups", [20, 40, 60, 80, 100, -1], null, 2, 0);
-var g_bttnStatsSum = new CBttnOptions("StatsSum", [100, 200, 300, -1], null, 2, 150);
-var g_bttnStatsScope = new CBttnOptions("StatsScope", [18, 36, 72, 144, 288, -1], null, 2, 150);
-var g_bttnStatsFrequencyScope = new CBttnOptions("StatsFrequencyScope", [18, 36, 54, 72, 108, 180, 360], null, 0, 0);
-var g_bttnStatsLongsBet = new CBttnOptions("StatsLongsBet", [2, 3, 4, 5, 6, 7], null, 2, 100);
-var g_bttnStatsLongs = new CBttnOptions("StatsLongs", [3, 4, 5, 6, 7], ["3+", "4+", "5+", "6+", "7+"], 2, 122);
+var g_bttnColumns = new CBttnOptions("Columns", [3, 4, 5, 6, 7], null, 2, -1, -1);
+var g_bttnStatsGroups = new CBttnOptions("StatsGroups", [20, 40, 60, 80, 100, -1], null, 2, 0, -1);
+var g_bttnStatsSum = new CBttnOptions("StatsSum", [100, 200, 300, -1], null, 2, 150, -1);
+var g_bttnStatsScope = new CBttnOptions("StatsScope", [18, 36, 72, 144, 288, -1], null, 2, 150, -1);
+var g_bttnStatsFrequencyScope = new CBttnOptions("StatsFrequencyScope", [18, 36, 54, 72, 108, 180, 360], null, 0, 0, -1);
+var g_bttnStatsLongsBet = new CBttnOptions("StatsLongsBet", [2, 3, 4, 5, 6, 7], null, 2, 100, -1);
+var g_bttnStatsLongs = new CBttnOptions("StatsLongs", [3, 4, 5, 6, 7], ["3+", "4+", "5+", "6+", "7+"], 2, 122, -1);
+var g_bttnStatsCRDOpt = new CBttnOptions("StatsCRDOpt", [0, 1], ["各行各组比较", "行组细化数据"], 0, 350, 10);
+var g_bttnStatsCRDRoundFrom = new CBttnOptions("StatsCRDRoundFrom", [0, 1, 2, 3, 4, 5, 6, 7], null, 0, 0, -1);
+var g_bttnStatsCRDRoundBet = new CBttnOptions("StatsCRDRoundBet", [1, 2, 3, 4, 5, 6, 7, 8], null, 0, 0, -1);
 
 // stats options >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-var g_bttnStats = new CBttnOptions("Stats", [0, 1, 2, 3, 4, 5, 6], ["打法", "行组", "距离", "频率", "细化", "轮次", "其它"], 0, 0);
-var g_astrStatsDiv = ["Games", "RowCol", "Distances", "Frequencies", "RowColDig", "Rounds", "Other"];
+var g_bttnStats = new CBttnOptions("Stats", [0, 1, 2, 3, 4, 5, 6], ["打法", "行组", "距离", "频率", "细化", "轮次", "其它"], 0, 0, -1);
+var g_astrStatsDiv = ["Games", "ColRow", "Distances", "Frequencies", "ColRowDig", "Rounds", "Other"];
 var g_astrStatsTitle = ["打法统计数据", "行组距离数据", "距离统计图", "频率统计图", "行组细化数据", "轮次统计数据", "其它统计数据"];
 
 // 是否是首页有按钮直接可以进到的统计页面：
@@ -2404,15 +2466,15 @@ function IsDirectStatsWindowIdx(nIdx)
 
 // stats options <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-var g_bttnStatsOther = new CBttnOptions("StatsOther", [0, 1], ["追打", "号码"], 0, 180);
-var g_bttnViewNum = new CBttnOptions("ViewNum", [0, 1, 2, 3, 4, 5], ["一组", "二组", "三组", "1行", "2行", "3行"], 0, 0);
-var g_bttnPlaySpeed = new CBttnOptions("PlaySpeed", [1, 2, 3], ["1/2", "1x", "2x"], 1, 80);
+var g_bttnStatsOther = new CBttnOptions("StatsOther", [0, 1], ["追打", "号码"], 0, 180, -1);
+var g_bttnViewNum = new CBttnOptions("ViewNum", [0, 1, 2, 3, 4, 5], ["一组", "二组", "三组", "1行", "2行", "3行"], 0, 0, -1);
+var g_bttnPlaySpeed = new CBttnOptions("PlaySpeed", [1, 2, 3], ["1/2", "1x", "2x"], 1, 80, -1);
 
 
 // Show_StatsGames(nSortCol, bMain);     // 打法
 // Show_StatsFrequencies(bSwitchToDraw); // 频率
 // Show_StatsDistances();                // 距离
-// Show_StatsRowCol();                   // 行组
+// Show_StatsColRow();                   // 行组
 // Show_StatsRounds();                   // 轮次 - 轮次统计数据
 // Show_StatsRoundBet();                 // 轮次 - 轮次参考数据 
 // Show_StatsNumbers(-1);                // 其它 - 号码

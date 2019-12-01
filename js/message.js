@@ -360,6 +360,57 @@ function OnBttnViewNumClick(nIdx)
 
 // ----------------------------------------------
 
+function SwithStatsCRDWindow()
+{
+    var div0 = document.getElementById("divStatsCRDCompare");
+    var div1 = document.getElementById("divStatsCRDDetail");
+
+    var bDiv0 = (g_bttnStatsCRDOpt.Value() == 0);
+    div0.style.display = bDiv0 ? "" : "none";
+    div1.style.display = bDiv0 ? "none" : "";
+}
+
+function Show_RefreshStatsCRDOptButton()
+{
+    g_bttnStatsCRDOpt.Show("divStatsCRDOptBttns");
+    SwithStatsCRDWindow();
+}
+
+function OnBttnStatsCRDOptClick(nIdx)
+{
+    g_bttnStatsCRDOpt.OnClick(nIdx);
+    SwithStatsCRDWindow();
+}
+
+
+// ----------------------------------------------
+
+function Show_RefreshStatsCRDRoundFromButton()
+{
+    g_bttnStatsCRDRoundFrom.Show("divStatsCRDRoundFromBttns");
+}
+
+function OnBttnStatsCRDRoundFromClick(nIdx)
+{
+    g_bttnStatsCRDRoundFrom.OnClick(nIdx);
+}
+
+
+// ----------------------------------------------
+
+function Show_RefreshStatsCRDRoundBetButton()
+{
+    g_bttnStatsCRDRoundBet.Show("divStatsCRDRoundBetBttns");
+}
+
+function OnBttnStatsCRDRoundBetClick(nIdx)
+{
+    g_bttnStatsCRDRoundBet.OnClick(nIdx);
+}
+
+
+// ----------------------------------------------
+
 function OnStatsRoundsClick(nIdx)
 {
     SwitchStatsRounds(nIdx);
@@ -462,8 +513,8 @@ function OpenStatistics(strID)
     Show_StatsGames(-1, false);  // 打法（非主页）
     Show_StatsFrequencies(true); // 频率
     Show_StatsDistances();       // 距离
-    Show_StatsRowCol();          // 行组
-    Show_StatsRowColDig();       // 细化
+    Show_StatsColRow();          // 行组
+    Show_StatsColRowDig();       // 细化
     Show_StatsRounds();          // 轮次 - 轮次统计数据
     Show_StatsRoundBet();        // 轮次 - 轮次参考数据
     Show_StatsNumbers(-1);       // 其它 - 号码
@@ -473,7 +524,7 @@ function OpenStatistics(strID)
     {
         g_bttnStats.nSelIdx = 0;
     }
-    else if (strID == "rc") // rowcol
+    else if (strID == "rc") // colrow
     {
         g_bttnStats.nSelIdx = 1;
     }
@@ -485,7 +536,7 @@ function OpenStatistics(strID)
     {
         g_bttnStats.nSelIdx = 3;
     }
-    else if (strID == "rcd") // rowcoldig
+    else if (strID == "crd") // colrowdig
     {
         g_bttnStats.nSelIdx = 4;
     }
@@ -500,6 +551,9 @@ function OpenStatistics(strID)
     Show_RefreshStatsLongsBetButton();
     Show_RefreshStatsOtherButton();
     Show_RefreshStatsButton();
+    Show_RefreshStatsCRDOptButton();
+    Show_RefreshStatsCRDRoundFromButton();
+    Show_RefreshStatsCRDRoundBetButton();
 
     SwitchStats();
 
@@ -555,7 +609,7 @@ function OnConfigOK()
         return;
     }
 
-    var selACRs = $('#dgACROption').datagrid('getChecked');
+    var selACRs = $('#dgARCOption').datagrid('getChecked');
     if (selACRs.length <= 0)
     {
         jAlert("至少要选择一个行组选项！", "打法配置");
@@ -1250,16 +1304,16 @@ $(document).ready(function ()
         OpenStatistics("g");
     });
 
-    // stats rowcol:
-    $("#tdBttnStatsRowCol").click(function ()
+    // stats colrow:
+    $("#tdBttnStatsColRow").click(function ()
     {
         OpenStatistics("rc");
     });
 
-    // stats rowcoldig:
-    $("#tdBttnStatsRowColDig").click(function ()
+    // stats colrowdig:
+    $("#tdBttnStatsColRowDig").click(function ()
     {
-        OpenStatistics("rcd");
+        OpenStatistics("crd");
     });
 
     // stats frequencies:
@@ -1381,8 +1435,8 @@ $(document).ready(function ()
                 },
             });
 
-            $('#dgACROption').datagrid({
-                data: g_gamebets.ACROpts,
+            $('#dgARCOption').datagrid({
+                data: g_gamebets.ARCOpts,
                 singleSelect: false,
                 onLoadSuccess: function (data)
                 {
@@ -1391,7 +1445,7 @@ $(document).ready(function ()
                         $.each(data.rows, function (index, item)
                         {
                             if (g_gamebets.ACRSelected(item.v))
-                                $('#dgACROption').datagrid('checkRow', index);
+                                $('#dgARCOption').datagrid('checkRow', index);
                         });
                     }
                 },
