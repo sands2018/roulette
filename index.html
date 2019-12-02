@@ -240,8 +240,8 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 .divStatsDistances1 { width: 100%; height: 290px; }
 #divStatsDistances0, #divStatsDistances1 { width: 100%; height: 100%; }
 
-#divStatsDistDetail { position: fixed; top: 0px; z-index: 50; width: 100%; height: 100%; padding-top: 200px }
-#divStatsDistDetailDraw { border-left: 0; border-right: 0; width: 100%; height: 1000px; }
+#divStatsDistDetail, #divStatsCRCDetail { position: fixed; top: 0px; z-index: 50; width: 100%; height: 100%; padding-top: 200px }
+#divStatsDistDetailDraw, #divStatsCRCDetailDraw { border-left: 0; border-right: 0; width: 100%; height: 1000px; }
 
 .tdSRCTitle { font-size: 40px; color: #995539; vertical-align: top; padding: 8px 0px; width: 12%; }
 .tdSRC { font-size: 40px; word-break: break-all; word-wrap: break-word; text-align: left; padding: 8px 0px 8px 10px; width: 88%; }
@@ -605,28 +605,28 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
             </div>
             <div id="divStatsDistances">
                 <div id="divStatsDistances0">
-                    <div class="divStatsDistances0" onclick="OnStatsDistance8Click(0)">
+                    <div class="divStatsDistances0" onclick="OnStatsDistances8Click(0)">
                         <canvas id="cvDist0" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
                     </div>
-                    <div class="divStatsDistances0" onclick="OnStatsDistance8Click(0)">
+                    <div class="divStatsDistances0" onclick="OnStatsDistances8Click(1)">
                         <canvas id="cvDist1" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
                     </div>
-                    <div class="divStatsDistances0" onclick="OnStatsDistance8Click(0)">
+                    <div class="divStatsDistances0" onclick="OnStatsDistances8Click(2)">
                         <canvas id="cvDist2" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
                     </div>
-                    <div class="divStatsDistances0" onclick="OnStatsDistance8Click(0)">
+                    <div class="divStatsDistances0" onclick="OnStatsDistances8Click(3)">
                         <canvas id="cvDist3" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
                     </div>
-                    <div class="divStatsDistances0" onclick="OnStatsDistance8Click(1)">
+                    <div class="divStatsDistances0" onclick="OnStatsDistances8Click(4)">
                         <canvas id="cvDist4" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
                     </div>
-                    <div class="divStatsDistances0" onclick="OnStatsDistance8Click(1)">
+                    <div class="divStatsDistances0" onclick="OnStatsDistances8Click(5)">
                         <canvas id="cvDist5" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
                     </div>
-                    <div class="divStatsDistances0" onclick="OnStatsDistance8Click(1)">
+                    <div class="divStatsDistances0" onclick="OnStatsDistances8Click(6)">
                         <canvas id="cvDist6" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
                     </div>
-                    <div class="divStatsDistances0" onclick="OnStatsDistance8Click(1)">
+                    <div class="divStatsDistances0" onclick="OnStatsDistances8Click(7)">
                         <canvas id="cvDist7" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
                     </div>
                 </div>
@@ -654,6 +654,34 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
             </div>
             <div id="divStatsColRow" style="word-wrap:break-word; padding: 0px 20px 20px 20px">
             </div>
+            <div id="divStatsColRowCon" style="word-wrap:break-word; padding: 0px 20px 20px 20px">
+                <div id="divStatsCRC0">
+                    <div class="divStatsCRC0" onclick="OnStatsCRC8Click(0)">
+                        <canvas id="cvCRC0" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
+                    </div>
+                    <div class="divStatsCRC0" onclick="OnStatsCRC8Click(1)">
+                        <canvas id="cvCRC1" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
+                    </div>
+                    <div class="divStatsCRC0" onclick="OnStatsCRC8Click(2)">
+                        <canvas id="cvCRC2" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
+                    </div>
+                    <div class="divStatsCRC0" onclick="OnStatsCRC8Click(3)">
+                        <canvas id="cvCRC3" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
+                    </div>
+                    <div class="divStatsCRC0" onclick="OnStatsCRC8Click(4)">
+                        <canvas id="cvCRC4" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
+                    </div>
+                    <div class="divStatsCRC0" onclick="OnStatsCRC8Click(5)">
+                        <canvas id="cvCRC5" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
+                    </div>
+                    <div class="divStatsCRC0" onclick="OnStatsCRC8Click(6)">
+                        <canvas id="cvCRC6" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
+                    </div>
+                    <div class="divStatsCRC0" onclick="OnStatsCRC8Click(7)">
+                        <canvas id="cvCRC7" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
+                    </div>
+                </div>
+            </div>
             <div id="divStatsColRowDig" style="word-wrap:break-word; padding: 0px 20px 20px 20px">
                 <div id="divStatsCRDOptBttns"></div>
                 <div id="divStatsCRDCompare" style="padding: 10px 0">
@@ -672,14 +700,6 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
                 <div id="divStatsCRDDetail">
 
                 </div>
-            </div>
-            <div id="divStatsRounds">
-                <div class="divStatsTitle" onclick="OnStatsRoundsClick(0)">轮次参考数据</div>
-                <div id="divStatsRoundBet">
-                    <div id="divStatsRoundBetC"></div>
-                </div>
-                <div class="divStatsTitle" onclick="OnStatsRoundsClick(1)">轮次统计数据</div>
-                <div id="divStatsRoundSum"></div>
             </div>
             <div id="divStatsOther">
                 <div id="divStatsOtherBttns"></div>
@@ -701,6 +721,14 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
                     <div id="divStatsOtherNumbersContents"></div>
                     <div class="divStatsTitle">最大距离前五名：</div>
                     <div id="divMaxDistanceTops"></div>
+                </div>
+                <div id="divStatsOtherRounds">
+                    <div class="divStatsTitle" onclick="OnStatsRoundsClick(0)">轮次参考数据</div>
+                    <div id="divStatsRoundBet">
+                        <div id="divStatsRoundBetC"></div>
+                    </div>
+                    <div class="divStatsTitle" onclick="OnStatsRoundsClick(1)">轮次统计数据</div>
+                    <div id="divStatsRoundSum"></div>
                 </div>
             </div>
         </div>
@@ -748,6 +776,12 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
     <div id="divStatsDistDetail" style="display: none;">
         <div id="divStatsDistDetailDraw" class="divDialog" onclick="OnHideStatsDistDetail()">
             <canvas id="cvDist" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
+        </div>
+    </div>
+
+    <div id="divStatsCRCDetail" style="display: none;">
+        <div id="divStatsCRCDetailDraw" class="divDialog" onclick="OnHideStatsCRCDetail()">
+            <canvas id="cvCRC" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
         </div>
     </div>
 

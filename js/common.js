@@ -2507,20 +2507,91 @@ var g_bttnStatsCRDRoundBet = new CBttnOptions("StatsCRDRoundBet", [1, 2, 3, 4, 5
 
 // stats options >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-var g_bttnStats = new CBttnOptions("Stats", [0, 1, 2, 3, 4, 5, 6], ["打法", "行组", "距离", "频率", "细化", "轮次", "其它"], 0, 0, -1);
-var g_astrStatsDiv = ["Games", "ColRow", "Distances", "Frequencies", "ColRowDig", "Rounds", "Other"];
-var g_astrStatsTitle = ["打法统计数据", "行组距离数据", "距离统计图", "频率统计图", "行组细化数据", "轮次统计数据", "其它统计数据"];
+var idxTabGames = 0;
+var idxTabColRow = 1;
+var idxTabFrequencies = 2;
+var idxTabDistances = 3;
+var idxTabColRowCon = 4;
+var idxTabColRowDig = 5;
+var idxTabOther = 6;
+
+var g_bttnStats = new CBttnOptions("Stats",
+    [
+        idxTabGames,
+        idxTabColRow,
+        idxTabFrequencies,
+        idxTabDistances,
+        idxTabColRowCon,
+        idxTabColRowDig,
+        idxTabOther
+    ],
+    [
+        "打法",
+        "行组",
+        "频率",
+        "距离",
+        "集中",
+        "细化",
+        "其它"
+    ], 0, 0, -1);
+
+var g_astrStatsDiv =
+    [
+        "Games",
+        "ColRow",
+        "Frequencies",
+        "Distances",
+        "ColRowCon",
+        "ColRowDig",
+        "Other"
+    ];
+
+var g_astrStatsTitle =
+    [
+        "打法统计数据",
+        "行组距离数据",
+        "频率统计图",
+        "距离统计图",
+        "集中度统计图",
+        "行组细化数据",
+        "其它统计数据"
+    ];
 
 // 是否是首页有按钮直接可以进到的统计页面：
-function IsDirectStatsWindowIdx(nIdx)
+function IsDirectStatsTabIdx(nIdx)
 {
-    // 现在首页上有的直接按钮是：打法（0）、行组（1）、频率（3）、细化（4）
-    return ((nIdx == 0) || (nIdx == 1) || (nIdx == 3) || (nIdx == 4));
+    // 现在首页上有的直接按钮是：打法、行组、频率、细化
+    return (
+        (nIdx == idxTabGames) ||
+        (nIdx == idxTabColRow) ||
+        (nIdx == idxTabFrequencies) ||
+        (nIdx == idxTabColRowDig)
+        );
+}
+
+// 统计页是否带scope按钮：
+function StatsTabHasScopeBttns(nIdx)
+{
+    // 带scope按钮的统计页有：打法、集中、细化、其他
+    return (
+        (nIdx == idxTabGames) ||
+        (nIdx == idxTabColRowCon) ||
+        (nIdx == idxTabColRowDig) ||
+        (nIdx == idxTabOther)
+        );
+}
+
+// 统计页是否带frequecy scope按钮：
+function StatsTabHasFrequencyScopeBttns(nIdx)
+{
+    return (
+        (nIdx == idxTabFrequencies)
+        );
 }
 
 // stats options <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-var g_bttnStatsOther = new CBttnOptions("StatsOther", [0, 1], ["追打", "号码"], 0, 180, -1);
+var g_bttnStatsOther = new CBttnOptions("StatsOther", [0, 1, 2], ["追打", "号码", "轮次"], 0, 180, -1);
 var g_bttnViewNum = new CBttnOptions("ViewNum", [0, 1, 2, 3, 4, 5], ["一组", "二组", "三组", "1行", "2行", "3行"], 0, 0, -1);
 var g_bttnPlaySpeed = new CBttnOptions("PlaySpeed", [1, 2, 3], ["1/2", "1x", "2x"], 1, 80, -1);
 

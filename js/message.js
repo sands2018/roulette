@@ -261,7 +261,7 @@ function Show_RefreshStatsButton()
 function OnBttnStatsClick(nIdx)
 {
     g_bttnStats.OnClick(nIdx);
-    if (!IsDirectStatsWindowIdx(nIdx))
+    if (!IsDirectStatsTabIdx(nIdx))
     {
         g_status.IndirectStatsIdx = nIdx;
         WriteIntData(DATA_INDIRECTSTATSIDX, nIdx);
@@ -458,7 +458,7 @@ function SwitchStatsRounds(nIdx)
 
 function SwitchStatsOther(nIdx)
 {
-    var astrDiv = ["divStatsOtherLongs", "divStatsOtherNumbers"];
+    var astrDiv = ["divStatsOtherLongs", "divStatsOtherNumbers", "divStatsOtherRounds"];
     SwitchWindows(astrDiv, nIdx, DATA_STATSOTHERIDX);
 }
 
@@ -478,8 +478,8 @@ function SwitchStats()
 
     var div1 = document.getElementById("divStatsScopeBttns");
     var div2 = document.getElementById("divStatsFrequencyScopeBttns");
-    div1.style.display = ((nIdx == 1) || (nIdx == 2) || (nIdx == 3)) ? "none" : "";
-    div2.style.display = (nIdx == 3) ? "" : "none";
+    div1.style.display = StatsTabHasScopeBttns(nIdx) ? "" : "none";
+    div2.style.display = StatsTabHasFrequencyScopeBttns(nIdx) ? "" : "none";
 
     var td = document.getElementById("tdStatsTitle");
     td.innerHTML = g_astrStatsTitle[nIdx];
@@ -532,7 +532,7 @@ function OpenStatistics(strID)
     {
         g_bttnStats.nSelIdx = 0;
     }
-    else if (strID == "rc") // colrow
+    else if (strID == "cr") // colrow
     {
         g_bttnStats.nSelIdx = 1;
     }
@@ -1036,28 +1036,7 @@ function OnQuitViewNum()
     div.style.display = "none";
 }
 
-
-function OnStatsDistance8Click(nCROpt)
-{
-    g_status.StatsDistCROpt = nCROpt;
-
-    DrawDistances4(nCROpt);
-
-    var div = document.getElementById("divStatsDistances0");
-    div.style.display = "none";
-
-    var div = document.getElementById("divStatsDistances1");
-    div.style.display = "";
-}
-
-function OnStatsDistance1Return()
-{
-    var div = document.getElementById("divStatsDistances1");
-    div.style.display = "none";
-
-    var div = document.getElementById("divStatsDistances0");
-    div.style.display = "";
-}
+// Stats Distances ------------------------------------------------------------
 
 function OnStatsDistanceClick(nCR)
 {
@@ -1074,6 +1053,66 @@ function OnHideStatsDistDetail()
     var div = document.getElementById("divStatsDistDetail");
     div.style.display = "none";
 }
+
+
+function OnStatsDistances8Click(nCR)
+{
+    // 可以根据配置选项，直接显示单个数据的图，也可以先显示4个数据的图
+
+    if (0) // 显示4个数据的图
+    {
+        var nCROpt = nCR / 4;
+
+        g_status.StatsDistCROpt = nCROpt;
+
+        DrawDistances4(nCROpt);
+
+        var div = document.getElementById("divStatsDistances0");
+        div.style.display = "none";
+
+        var div = document.getElementById("divStatsDistances1");
+        div.style.display = "";
+    }
+    else // 直接显示单个数据的图：
+    {
+        OnStatsDistanceClick(nCR);
+    }
+}
+
+function OnStatsDistance1Return()
+{
+    var div = document.getElementById("divStatsDistances1");
+    div.style.display = "none";
+
+    var div = document.getElementById("divStatsDistances0");
+    div.style.display = "";
+}
+
+// Stats ColRow Concentration -------------------------------------------------
+
+function OnStatsCRCClick(nCR)
+{
+//    g_status.StatsDistCR = nCR;
+
+//    DrawDistance1(nCR);
+
+    var div = document.getElementById("divStatsCRCDetail");
+    div.style.display = "";
+}
+
+function OnHideStatsCRCDetail()
+{
+    var div = document.getElementById("divStatsCRCDetail");
+    div.style.display = "none";
+}
+
+function OnStatsCRC8Click(nCR)
+{
+    OnStatsCRCClick(nCR);
+}
+
+
+
 
 function IsInteger(obj)
 {
@@ -1315,7 +1354,7 @@ $(document).ready(function ()
     // stats colrow:
     $("#tdBttnStatsColRow").click(function ()
     {
-        OpenStatistics("rc");
+        OpenStatistics("cr");
     });
 
     // stats colrowdig:
