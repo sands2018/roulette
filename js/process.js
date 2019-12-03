@@ -465,14 +465,15 @@ function Show_AddNum()
 function Play_Show_AddNum()
 {
     Show_StatsGames(-1, false);   // 打法（非主页）
+    Show_StatsColRow();           // 行组
     Show_StatsFrequencies(false); // 频率
     Show_StatsDistances();        // 距离
-    Show_StatsColRow();           // 行组
+    Show_StatsColRowCon();        // 集中
     Show_StatsColRowDig();        // 细化
-    Show_StatsRounds();           // 轮次 - 轮次统计数据
-    Show_StatsRoundBet();         // 轮次 - 轮次参考数据
     Show_StatsNumbers(-1);        // 其它 - 号码
     Show_StatsLongs();            // 其它 - 追打
+    Show_StatsRounds();           // 其它 - 轮次 - 轮次统计数据
+    Show_StatsRoundBet();         // 其它 - 轮次 - 轮次参考数据
 }
 
 function PageInit_Data(bCleanAll)
@@ -988,6 +989,22 @@ function Show_StatsCRDCompare(nSortCol)
     divList.innerHTML = strHtml;
 }
 
+function DrawColRowCon8()
+{
+    for (var n = 0; n < 8; ++n)
+    {
+        var strCanvasID = "cvCRC" + n.toString();
+        g_waves.DrawColRowCon(strCanvasID, 1080, 170, n, 8);
+    }
+}
+
+// 集中
+
+function Show_StatsColRowCon()
+{
+    g_waves.CalcCRC();
+    DrawColRowCon8();
+}
 
 // 细化
 function Show_StatsColRowDig()

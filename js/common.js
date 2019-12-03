@@ -1956,9 +1956,9 @@ function CStatsRoundSum()
 
 function CStatsWaves()
 {
-    this.anNum = new Array();
+    this.anNum = new Array(); // 号码数组
     this.afFrequency = new Array(8); // 平均位移，和统计区间相关。统计区间改变，这个值需要重新计算；
-    this.nScope = 18;
+    this.nScope = 18; // scope值会在页面初始化的时候PageInit_Data()中通过Reset()来设置
 
     this.anDistance = new Array(8); // 距离值，和统计区间无关
     this.anPrev = new Array(6);
@@ -2228,7 +2228,217 @@ function CStatsWaves()
         context.font = ((nDetail == 1) ? "40px" : "36px") + " 微软雅黑";
         context.fillText(strText, nX, nY);
     }
+
+    // 2019.12.3 added:
+    // colrow concentration -------------------------------
+
+    this.CRC_NUM_COUNT = 15;
+    this.anCRCSum = new Array();
+    this.nCRCMaxDistCount = 0; // 距离次数的最大值，画图时使用
+
+    this.Init = function()
+    {
+        for (var ncr = 0; ncr < 8; ++ncr)
+        {
+            this.anCRCSum[ncr] = new Array();
+            for (var n = 0; n < this.CRC_NUM_COUNT; ++n)
+                this.anCRCSum[ncr][n] = 0;
+        }
+    }
+
+    this.CalcCRC = function()
+    {
+        this.nCRCMaxDistCount = 0;
+
+        for (var ncr = 0; ncr < 8; ++ncr)
+        {
+            for (var n = 0; n < this.CRC_NUM_COUNT; ++n)
+                this.anCRCSum[ncr][n] = 0;
+        }
+
+        for (var ncr = 0; ncr < 8; ++ncr)
+        {
+            if ((ncr % 4) == 3)
+                continue;
+
+            var nCRGroup = 3;
+            if (ncr > 3)
+                nCRGroup = 7;
+
+            var nLen = this.anDistance[ncr].length;
+            var nTotal = 0;
+
+            for(var n = nLen - 1; n >= 0; -- n)
+            {
+                var nDist = this.anDistance[ncr];
+                nTotal += nDist;
+                if (nTotal > this.nScope)
+                    break;
+
+                if (nDist < 0)
+                    nDist = 0;
+                else if (nDist >= this.CRC_NUM_COUNT)
+                    nDist = this.CRC_NUM_COUNT - 1;
+
+                this.anCRCSum[ncr][nDist] += 1;
+                if (this.anCRCSum[ncr][nDist] > this.nCRCMaxDistCount)
+                    this.nCRCMaxDistCount = this.this.anCRCSum[ncr][nDist];
+
+                this.anCRCSum[nCRGroup][nDist] += 1;
+            }
+        }
+    }
+
+    this.DrawColRowCon = function (strCanvasID, nWidth, nHeight, nCR, nDetail)
+    {
+        var canvas = document.getElementById(strCanvasID);
+        canvas.width = nWidth;
+        canvas.height = nHeight;
+
+        var nX0 = 0;
+        if (nDetail != 8)
+            nX0 = 60; // for numbers on the left sides
+
+        var nRectX = (nDetail == 1) ? 30 : 10;
+        var nRectY = (nDetail == 1) ? 50 : ((nDetail == 4) ? 10 : 15);
+        var nRectW = nWidth - 2 * nRectX - nX0;
+        var nRectH = nHeight - 2 * nRectY;
+
+        var context = canvas.getContext('2d');
+
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+        var nMax = 72;
+        if ((nCR % 4) == 3)
+            nMax = nMax * 3;
+
+        var nLen = this.anDistance[nCR].length;
+        var nIdx0 = 0;
+        if (nLen > nMax)
+            nIdx0 = nLen - nMax;
+
+        context.strokeStyle = "#aaaaaa";
+        context.lineWidth = 1;
+        context.beginPath();
+        context.moveTo(nX0 - 1 + nRectX, nRectY);
+        context.lineTo(nX0 - 1 + nRectX, nRectY + nRectH);
+        context.moveTo(nX0 - 1 + nRectX + nRectW, nRectY);
+        context.lineTo(nX0 - 1 + nRectX + nRectW, nRectY + nRectH);
+        context.stroke();
+
+        context.font = "30px 微软雅黑";
+
+        for (var n = 0; n <= 15; ++n)
+        {
+            context.beginPath();
+
+            if (nDetail != 8)
+            {
+                if ((n % 5) == 0)
+                {
+                    context.strokeStyle = "#5f5f5f";
+                    context.lineWidth = ((nDetail == 4) ? 2 : 3);
+                }
+                else
+                {
+                    context.strokeStyle = "#aaaaaa";
+                    context.lineWidth = 1;
+                }
+            }
+            else
+            {
+                context.strokeStyle = "#7f7f7f";
+                context.lineWidth = 1;
+            }
+
+
+            if ((nDetail != 8) || ((n % 5) == 0))
+            {
+                context.moveTo(nX0 - 1 + nRectX, nRectY + n * nRectH / 15);
+                context.lineTo(nX0 - 1 + nRectX + nRectW, nRectY + n * nRectH / 15);
+                context.stroke();
+            }
+
+            if (nDetail != 8)
+            {
+                if ((nDetail == 1) || ((n % 5) == 0))
+                {
+                    var nX = nRectX;
+                    nY = nRectY + 15 + n * nRectH / 15;
+
+                    if (nDetail == 4)
+                    {
+                        nX += 10;
+
+                        if (n == 0)
+                            nY += 15;
+                        else if (n == 15)
+                            nY -= 15;
+                    }
+
+                    context.fillText((15 - n), nX, nY);
+                }
+            }
+        }
+
+        if ((nCR % 4) == 3)
+            context.strokeStyle = "#ff9977";
+        else
+            context.strokeStyle = "#a9cf99";
+        context.lineWidth = ((nDetail != 8) ? 5 : 5);
+
+        context.beginPath();
+
+        for (var n = nIdx0; n < nLen; ++n)
+        {
+            var nVal = this.anDistance[nCR][n] - 1; // 实际画的是距离减1
+            if (nVal > 15)
+                nVal = 15;
+
+            var nX = nX0 + nRectX + (n - nIdx0) * nRectW / (nMax - 1);
+            var nY = nHeight - nRectY - nVal * nRectH / 15;
+
+            if ((nCR % 4) == 3)
+            {
+                if (n == nIdx0)
+                    context.moveTo(nX, nY);
+                else
+                    context.lineTo(nX, nY);
+            }
+            else
+            {
+                if (n != nIdx0)
+                    context.lineTo(nX, nY);
+                context.moveTo(nX - 5, nY + 5);
+                context.lineTo(nX + 5, nY - 5);
+                context.moveTo(nX - 5, nY - 5);
+                context.lineTo(nX + 5, nY + 5);
+                context.moveTo(nX, nY);
+            }
+        }
+        context.stroke();
+
+        var strText = GetColRowLongSpec(nCR);
+
+        var nX, nY;
+
+        if (nDetail != 8)
+        {
+            nX = nX0 + nRectX + ((nDetail == 1) ? 30 : 20);
+            nY = nRectY + ((nDetail == 1) ? 43 : 30) + nRectH / 15;
+        }
+        else
+        {
+            nX = 30;
+            nY = 70;
+        }
+
+        context.font = ((nDetail == 1) ? "40px" : "36px") + " 微软雅黑";
+        context.fillText(strText, nX, nY);
+    }
+
 }
+
 
 function CStatsLongItem()
 {
@@ -2597,12 +2807,14 @@ var g_bttnPlaySpeed = new CBttnOptions("PlaySpeed", [1, 2, 3], ["1/2", "1x", "2x
 
 
 // Show_StatsGames(nSortCol, bMain);     // 打法
+// Show_StatsColRow();                   // 行组
 // Show_StatsFrequencies(bSwitchToDraw); // 频率
 // Show_StatsDistances();                // 距离
-// Show_StatsColRow();                   // 行组
-// Show_StatsRounds();                   // 轮次 - 轮次统计数据
-// Show_StatsRoundBet();                 // 轮次 - 轮次参考数据 
+// Show_StatsColRowCon();                // 集中
+// Show_StatsColRowDig();                // 细化
 // Show_StatsNumbers(-1);                // 其它 - 号码
 // Show_StatsLongs();                    // 其它 - 追打
+// Show_StatsRounds();                   // 其它 - 轮次 - 轮次统计数据
+// Show_StatsRoundBet();                 // 其它 - 轮次 - 轮次参考数据 
 
 

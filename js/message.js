@@ -24,6 +24,8 @@
 
 function OnPageInit()
 {
+    g_waves.Init();
+
     PageInit_Data(true);
 
     Show_Keyboard(true);
@@ -295,13 +297,15 @@ function Show_RefreshStatsScopeButton()
 function OnBttnStatsScopeClick(nIdx)
 {
     g_bttnStatsScope.OnClick(nIdx);
+
     Show_StatsGames(-1, false); // 打法（非主页）
     Show_StatsGames(-1, true);  // 打法（主页）
-    Show_StatsRounds();         // 轮次 - 轮次统计数据
-    Show_StatsRoundBet();       // 轮次 - 轮次参考数据
+    Show_StatsColRowCon();      // 集中
     Show_StatsCRDCompare(-1);   // 细化 - 各行各组比较
     Show_StatsNumbers(-1);      // 其它 - 号码
     Show_StatsLongs();          // 其它 - 追打
+    Show_StatsRounds();         // 其它 - 轮次 - 轮次统计数据
+    Show_StatsRoundBet();       // 其它 - 轮次 - 轮次参考数据
 }
 
 // ----------------------------------------------
@@ -522,11 +526,12 @@ function OpenStatistics(strID)
     Show_StatsFrequencies(true); // 频率
     Show_StatsDistances();       // 距离
     Show_StatsColRow();          // 行组
+    Show_StatsColRowCon();       // 集中
     Show_StatsColRowDig();       // 细化
-    Show_StatsRounds();          // 轮次 - 轮次统计数据
-    Show_StatsRoundBet();        // 轮次 - 轮次参考数据
     Show_StatsNumbers(-1);       // 其它 - 号码
     Show_StatsLongs();           // 其它 - 追打
+    Show_StatsRounds();          // 其它 - 轮次 - 轮次统计数据
+    Show_StatsRoundBet();        // 其它 - 轮次 - 轮次参考数据
 
     if (strID == "g") // games
     {
