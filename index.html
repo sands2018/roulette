@@ -236,9 +236,14 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 #tblPlayBttns .tdSBEnabled { color: #aa8833; background-color: white; border: 1px solid #aa8833 }
 #tblPlayBttns .tdSBDisabled { color: #bbbbbb; background-color: white; border: 1px solid #bbbbbb }
 
-.divStatsDistances0, .divStatsCRC0 { width: 100%; height: 155px; }
-.divStatsDistances1 { width: 100%; height: 290px; }
-#divStatsDistances0, #divStatsDistances1 { width: 100%; height: 100%; }
+.divStatsDistances0 { width: 100%; height: 180px; }
+.divStatsDistances1, .divStatsCRC1 { width: 100%; height: 290px; }
+#divStatsDistances0, #divStatsDistances1, #divStatsCRC0, #divStatsCRC1 { width: 100%; height: 100%; }
+
+.tdStatsCRC01 { width: 50%; height: 260px; padding: 0 5px 0 10px; }
+.tdStatsCRC02 { width: 50%; height: 260px; padding: 0 10px 0 5px; }
+.tdStatsCRCT01 { font-size: 36px; padding: 10px 5px 0 20px; text-align: left; }
+.tdStatsCRCT0 { font-size: 36px; padding: 30px 5px 0 20px; text-align: left; }
 
 #divStatsDistDetail, #divStatsCRCDetail { position: fixed; top: 0px; z-index: 50; width: 100%; height: 100%; padding-top: 200px }
 #divStatsDistDetailDraw, #divStatsCRCDetailDraw { border-left: 0; border-right: 0; width: 100%; height: 1000px; }
@@ -654,32 +659,58 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
             </div>
             <div id="divStatsColRow" style="word-wrap:break-word; padding: 0px 20px 20px 20px">
             </div>
-            <div id="divStatsColRowCon" style="word-wrap:break-word; padding: 0px 20px 20px 20px">
+            <div id="divStatsColRowCon">
                 <div id="divStatsCRC0">
-                    <div class="divStatsCRC0" onclick="OnStatsCRC8Click(0)">
-                        <canvas id="cvCRC0" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
-                    </div>
-                    <div class="divStatsCRC0" onclick="OnStatsCRC8Click(1)">
-                        <canvas id="cvCRC1" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
-                    </div>
-                    <div class="divStatsCRC0" onclick="OnStatsCRC8Click(2)">
-                        <canvas id="cvCRC2" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
-                    </div>
-                    <div class="divStatsCRC0" onclick="OnStatsCRC8Click(3)">
-                        <canvas id="cvCRC3" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
-                    </div>
-                    <div class="divStatsCRC0" onclick="OnStatsCRC8Click(4)">
-                        <canvas id="cvCRC4" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
-                    </div>
-                    <div class="divStatsCRC0" onclick="OnStatsCRC8Click(5)">
-                        <canvas id="cvCRC5" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
-                    </div>
-                    <div class="divStatsCRC0" onclick="OnStatsCRC8Click(6)">
-                        <canvas id="cvCRC6" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
-                    </div>
-                    <div class="divStatsCRC0" onclick="OnStatsCRC8Click(7)">
-                        <canvas id="cvCRC7" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
-                    </div>
+                    <table id="tblStatsCRC" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td class="tdStatsCRCT01">第一组</td>
+                            <td class="tdStatsCRCT01">第1行</td>
+                        </tr>
+                        <tr>
+                            <td class="tdStatsCRC01" onclick="OnStatsCRC8Click(0)">
+                                <canvas id="cvCRC0" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
+                            </td>
+                            <td class="tdStatsCRC02" onclick="OnStatsCRC8Click(4)">
+                                <canvas id="cvCRC4" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="tdStatsCRCT0">第二组</td>
+                            <td class="tdStatsCRCT0">第2行</td>
+                        </tr>
+                        <tr>
+                            <td class="tdStatsCRC01" onclick="OnStatsCRC8Click(1)">
+                                <canvas id="cvCRC1" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
+                            </td>
+                            <td class="tdStatsCRC02" onclick="OnStatsCRC8Click(5)">
+                                <canvas id="cvCRC5" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="tdStatsCRCT0">第三组</td>
+                            <td class="tdStatsCRCT0">第3行</td>
+                        </tr>
+                        <tr>
+                            <td class="tdStatsCRC01" onclick="OnStatsCRC8Click(2)">
+                                <canvas id="cvCRC2" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
+                            </td>
+                            <td class="tdStatsCRC02" onclick="OnStatsCRC8Click(6)">
+                                <canvas id="cvCRC6" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="tdStatsCRCT0">组</td>
+                            <td class="tdStatsCRCT0">行</td>
+                        </tr>
+                        <tr>
+                            <td class="tdStatsCRC01" onclick="OnStatsCRC8Click(3)">
+                                <canvas id="cvCRC3" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
+                            </td>
+                            <td class="tdStatsCRC02" onclick="OnStatsCRC8Click(7)">
+                                <canvas id="cvCRC7" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
             </div>
             <div id="divStatsColRowDig" style="word-wrap:break-word; padding: 0px 20px 20px 20px">

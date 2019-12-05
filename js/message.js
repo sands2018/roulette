@@ -297,6 +297,7 @@ function Show_RefreshStatsScopeButton()
 function OnBttnStatsScopeClick(nIdx)
 {
     g_bttnStatsScope.OnClick(nIdx);
+    g_waves.ResetScope(g_bttnStatsScope.Value());
 
     Show_StatsGames(-1, false); // 打法（非主页）
     Show_StatsGames(-1, true);  // 打法（主页）
@@ -319,7 +320,7 @@ function Show_RefreshStatsFrequencyScopeButton()
 function OnBttnStatsFrequencyScopeClick(nIdx)
 {
     g_bttnStatsFrequencyScope.OnClick(nIdx);
-    g_waves.ResetScope(g_bttnStatsFrequencyScope.Value());
+    g_waves.ResetFrequencyScope(g_bttnStatsFrequencyScope.Value());
     Show_StatsFrequencies(false); // 频率
 }
 
@@ -1001,7 +1002,7 @@ function OnPlayRestart()
 {
     g_play.Start(g_queue);
     var num = g_play.Step();
-    g_waves.Reset(-1);
+    g_waves.Reset(-1, -1);
     Calc_AddNum(num);
     Calc_Sum();
     Play_Show_AddNum();

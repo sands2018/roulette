@@ -483,7 +483,7 @@ function PageInit_Data(bCleanAll)
     g_status.Reset();
     g_queue.Reset();
 
-    g_waves.Reset(g_bttnStatsFrequencyScope.Value());
+    g_waves.Reset(g_bttnStatsScope.Value(), g_bttnStatsFrequencyScope.Value());
 
     if(!bCleanAll)
         return;
@@ -935,7 +935,7 @@ function Show_StatsColRow()
 
         for (var n = g_waves.anDistance[nIdx].length - 1 ; n >= 0; --n)
         {
-            var nVal = (g_waves.anDistance[nIdx][n] - 1);
+            var nVal = (g_waves.anDistance[nIdx][n] - 1); // 显示的是距离-1
 
             if (bFirst)
             {
@@ -994,7 +994,7 @@ function DrawColRowCon8()
     for (var n = 0; n < 8; ++n)
     {
         var strCanvasID = "cvCRC" + n.toString();
-        g_waves.DrawColRowCon(strCanvasID, 1080, 170, n, 8);
+        g_waves.DrawColRowCon(strCanvasID, 480, 260, n, 8);
     }
 }
 

@@ -1958,9 +1958,10 @@ function CStatsWaves()
 {
     this.anNum = new Array(); // 号码数组
     this.afFrequency = new Array(8); // 平均位移，和统计区间相关。统计区间改变，这个值需要重新计算；
-    this.nScope = 18; // scope值会在页面初始化的时候PageInit_Data()中通过Reset()来设置
+    this.nScope = 18; // scope值会在页面初始化的时候PageInit_Data()中通过Reset()来初始化
+    this.nFrequencyScope = 18; // frequency scope值会在页面初始化的时候PageInit_Data()中通过Reset()来初始化
 
-    this.anDistance = new Array(8); // 距离值，和统计区间无关
+    this.anDistance = new Array(8); // 距离值，和统计区间无关，从1开始（出来后马上又出来，距离是1）
     this.anPrev = new Array(6);
 
     for (var n = 0; n < 8; ++n)
@@ -1969,10 +1970,13 @@ function CStatsWaves()
         this.anDistance[n] = new Array();
     }
  
-    this.Reset = function (nScope)
+    this.Reset = function (nScope, nFrequencyScope)
     {
         if(nScope >= 0)
             this.nScope = nScope;
+
+        if (nFrequencyScope >= 0)
+            this.nFrequencyScope = nFrequencyScope;
 
         var nLen = this.anNum.length;
         if (nLen > 0)
@@ -2023,14 +2027,14 @@ function CStatsWaves()
             this.anPrev[i] = nIdx;
         }
 
-        if (this.anNum.length < this.nScope)
+        if (this.anNum.length < this.nFrequencyScope)
             return;
 
         var anSum = new Array(6);
         for (var n = 0; n < 6; ++n)
             anSum[n] = 0;
 
-        for (var n = this.anNum.length - 1; n >= this.anNum.length - this.nScope; --n)
+        for (var n = this.anNum.length - 1; n >= this.anNum.length - this.nFrequencyScope; --n)
         {
             var nNum = this.anNum[n];
             nCol = GetNumCol(nNum);
@@ -2039,7 +2043,7 @@ function CStatsWaves()
             anSum[nRow + 3]++;
         }
 
-        var fAv = this.nScope / 3.0;
+        var fAv = this.nFrequencyScope / 3.0;
 
         var fMaxOffset = 0;
 
@@ -2066,7 +2070,12 @@ function CStatsWaves()
 
     this.ResetScope = function (nScope)
     {
-        if (this.nScope == nScope)
+        this.nScope = nScope;
+    }
+
+    this.ResetFrequencyScope = function (nFrequencyScope)
+    {
+        if (this.nFrequencyScope == nFrequencyScope)
             return;
 
         var anNumTemp = new Array(this.anNum.length);
@@ -2074,7 +2083,7 @@ function CStatsWaves()
         for (var n = 0; n < this.anNum.length; ++n)
             anNumTemp[n] = this.anNum[n];
 
-        this.Reset(nScope);
+        this.Reset(-1, nFrequencyScope);
 
         for (var n = 0; n < anNumTemp.length; ++n)
             this.AddNum(anNumTemp[n]);
@@ -2232,9 +2241,8 @@ function CStatsWaves()
     // 2019.12.3 added:
     // colrow concentration -------------------------------
 
-    this.CRC_NUM_COUNT = 15;
+    this.CRC_NUM_COUNT = 8;
     this.anCRCSum = new Array();
-    this.nCRCMaxDistCount = 0; // 距离次数的最大值，画图时使用
 
     this.Init = function()
     {
@@ -2246,10 +2254,8 @@ function CStatsWaves()
         }
     }
 
-    this.CalcCRC = function()
+    this.CalcCRC = function ()
     {
-        this.nCRCMaxDistCount = 0;
-
         for (var ncr = 0; ncr < 8; ++ncr)
         {
             for (var n = 0; n < this.CRC_NUM_COUNT; ++n)
@@ -2270,8 +2276,8 @@ function CStatsWaves()
 
             for(var n = nLen - 1; n >= 0; -- n)
             {
-                var nDist = this.anDistance[ncr];
-                nTotal += nDist;
+                var nDist = this.anDistance[ncr][n] - 1;
+                nTotal += (nDist + 1);
                 if (nTotal > this.nScope)
                     break;
 
@@ -2281,9 +2287,6 @@ function CStatsWaves()
                     nDist = this.CRC_NUM_COUNT - 1;
 
                 this.anCRCSum[ncr][nDist] += 1;
-                if (this.anCRCSum[ncr][nDist] > this.nCRCMaxDistCount)
-                    this.nCRCMaxDistCount = this.this.anCRCSum[ncr][nDist];
-
                 this.anCRCSum[nCRGroup][nDist] += 1;
             }
         }
@@ -2296,28 +2299,18 @@ function CStatsWaves()
         canvas.height = nHeight;
 
         var nX0 = 0;
-        if (nDetail != 8)
-            nX0 = 60; // for numbers on the left sides
+        var nHText = 50;
 
-        var nRectX = (nDetail == 1) ? 30 : 10;
-        var nRectY = (nDetail == 1) ? 50 : ((nDetail == 4) ? 10 : 15);
+        var nRectX = 10;
+        var nRectY = 2;
         var nRectW = nWidth - 2 * nRectX - nX0;
-        var nRectH = nHeight - 2 * nRectY;
+        var nRectH = nHeight - 2 * nRectY - nHText;
 
         var context = canvas.getContext('2d');
 
         context.clearRect(0, 0, canvas.width, canvas.height);
 
-        var nMax = 72;
-        if ((nCR % 4) == 3)
-            nMax = nMax * 3;
-
-        var nLen = this.anDistance[nCR].length;
-        var nIdx0 = 0;
-        if (nLen > nMax)
-            nIdx0 = nLen - nMax;
-
-        context.strokeStyle = "#aaaaaa";
+        context.strokeStyle = "#7f7f7f";
         context.lineWidth = 1;
         context.beginPath();
         context.moveTo(nX0 - 1 + nRectX, nRectY);
@@ -2326,6 +2319,73 @@ function CStatsWaves()
         context.lineTo(nX0 - 1 + nRectX + nRectW, nRectY + nRectH);
         context.stroke();
 
+        for (var n = 0; n <= 5; ++n)
+        {
+            context.beginPath();
+
+            if ((n % 5) == 0)
+            {
+                context.strokeStyle = "#3f3f3f";
+                context.lineWidth = 1;
+            }
+            else
+            {
+                context.strokeStyle = "#7f7f7f";
+                context.lineWidth = 1;
+            }
+
+            context.moveTo(nX0 - 1 + nRectX, nRectY + nRectH * n / 5);
+            context.lineTo(nX0 - 1 + nRectX + nRectW, nRectY + nRectH * n / 5);
+
+            context.stroke();
+        }
+
+        var nXIntv = nRectW / (this.CRC_NUM_COUNT + 1);
+        var fMaxPercent = (nDetail == 8) ? 0.5 : 0.5;
+        var nScope = ((this.nScope > 0) && (this.nScope < 99999)) ? this.nScope : this.anNum.length;
+
+        for(var n = 0; n < this.CRC_NUM_COUNT; ++ n)
+        {
+            var fBase = nScope * fMaxPercent / 3;
+
+            if ((nCR == 3) || (nCR == 7))
+            {
+                fBase = fBase * 3;
+            }
+
+            context.beginPath();
+
+            var nX = nX0 - 1 + nRectX + nXIntv * (n + 1);
+            var nH = this.anCRCSum[nCR][n] * nRectH / fBase;
+
+            if (nH <= nRectH)
+            {
+                if ((nCR == 3) || (nCR == 7))
+                    context.strokeStyle = "#ff9977";
+                else
+                    context.strokeStyle = "#a9cf99";
+
+                context.lineWidth = 20;
+            }
+            else
+            {
+                context.strokeStyle = "#cfa999";
+                context.lineWidth = 20 * nH / nRectH;
+
+                nH = nRectH;
+            }
+
+            context.moveTo(nX, nRectY + nRectH);
+            context.lineTo(nX, nRectY + nRectH - nH);
+
+            context.stroke();
+
+            var strText = (n < (this.CRC_NUM_COUNT - 1))? n.toString() : ((n - 1).toString() + "+");
+            context.font = ((nDetail == 1) ? "40px" : "36px") + " 微软雅黑";
+            context.fillText(strText, nX - 10, nRectY + nRectH + 40);
+        }
+
+        /*
         context.font = "30px 微软雅黑";
 
         for (var n = 0; n <= 15; ++n)
@@ -2435,6 +2495,7 @@ function CStatsWaves()
 
         context.font = ((nDetail == 1) ? "40px" : "36px") + " 微软雅黑";
         context.fillText(strText, nX, nY);
+        */
     }
 
 }
