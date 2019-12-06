@@ -2319,11 +2319,11 @@ function CStatsWaves()
         context.lineTo(nX0 - 1 + nRectX + nRectW, nRectY + nRectH);
         context.stroke();
 
-        for (var n = 0; n <= 5; ++n)
+        for (var n = 0; n <= 6; ++n)
         {
             context.beginPath();
 
-            if ((n % 5) == 0)
+            if ((n % 6) == 0)
             {
                 context.strokeStyle = "#3f3f3f";
                 context.lineWidth = 1;
@@ -2334,14 +2334,14 @@ function CStatsWaves()
                 context.lineWidth = 1;
             }
 
-            context.moveTo(nX0 - 1 + nRectX, nRectY + nRectH * n / 5);
-            context.lineTo(nX0 - 1 + nRectX + nRectW, nRectY + nRectH * n / 5);
+            context.moveTo(nX0 - 1 + nRectX, nRectY + nRectH * n / 6);
+            context.lineTo(nX0 - 1 + nRectX + nRectW, nRectY + nRectH * n / 6);
 
             context.stroke();
         }
 
         var nXIntv = nRectW / (this.CRC_NUM_COUNT + 1);
-        var fMaxPercent = (nDetail == 8) ? 0.5 : 0.5;
+        var fMaxPercent = (nDetail == 8) ? 0.6 : 0.6;
         var nScope = ((this.nScope > 0) && (this.nScope < 99999)) ? this.nScope : this.anNum.length;
 
         for(var n = 0; n < this.CRC_NUM_COUNT; ++ n)
@@ -2381,7 +2381,7 @@ function CStatsWaves()
             context.stroke();
 
             var strText = (n < (this.CRC_NUM_COUNT - 1))? n.toString() : ((n - 1).toString() + "+");
-            context.font = ((nDetail == 1) ? "40px" : "36px") + " 微软雅黑";
+            context.font = ((nDetail == 1) ? "36px" : "32px") + " 微软雅黑";
             context.fillText(strText, nX - 10, nRectY + nRectH + 40);
         }
 
