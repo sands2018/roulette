@@ -2318,30 +2318,39 @@ function CStatsWaves()
         context.moveTo(nX0 - 1 + nRectX + nRectW, nRectY);
         context.lineTo(nX0 - 1 + nRectX + nRectW, nRectY + nRectH);
         context.stroke();
+        var nMaxLine = (nDetail == 8) ? 5 : 5;
 
-        for (var n = 0; n <= 6; ++n)
+        for (var n = 0; n <= nMaxLine; ++n)
         {
             context.beginPath();
 
-            if ((n % 6) == 0)
+            if (((n % nMaxLine) == 0) || ((nMaxLine - n) % 5 == 0))
             {
-                context.strokeStyle = "#3f3f3f";
-                context.lineWidth = 1;
+                if ((n % nMaxLine) == 0)
+                {
+                    context.strokeStyle = "#1f1f1f";
+                    context.lineWidth = 1;
+                }
+                else
+                {
+                    context.strokeStyle = "#3f3f3f";
+                    context.lineWidth = 1;
+                }
             }
             else
             {
-                context.strokeStyle = "#7f7f7f";
+                context.strokeStyle = "#9f9f9f";
                 context.lineWidth = 1;
             }
 
-            context.moveTo(nX0 - 1 + nRectX, nRectY + nRectH * n / 6);
-            context.lineTo(nX0 - 1 + nRectX + nRectW, nRectY + nRectH * n / 6);
+            context.moveTo(nX0 - 1 + nRectX, nRectY + nRectH * n / nMaxLine);
+            context.lineTo(nX0 - 1 + nRectX + nRectW, nRectY + nRectH * n / nMaxLine);
 
             context.stroke();
         }
 
         var nXIntv = nRectW / (this.CRC_NUM_COUNT + 1);
-        var fMaxPercent = (nDetail == 8) ? 0.6 : 0.6;
+        var fMaxPercent = (nMaxLine / 10.0);
         var nScope = ((this.nScope > 0) && (this.nScope < 99999)) ? this.nScope : this.anNum.length;
 
         for(var n = 0; n < this.CRC_NUM_COUNT; ++ n)
