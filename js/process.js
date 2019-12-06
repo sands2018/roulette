@@ -471,7 +471,11 @@ function Play_Show_AddNum()
 {
     Show_StatsGames(-1, false);   // 打法（非主页）
     Show_StatsColRowDetail();     // 行组 - 明细
+
+    g_waves.CalcCRC();
     Show_StatsColRowChart();      // 行组 - 统计图
+    Show_StatsColRowSum();       // 行组 - 统计数据
+
     Show_StatsFrequencies(false); // 频率
     Show_StatsDistances();        // 距离
     Show_StatsColRowDig();        // 细化
@@ -1004,8 +1008,38 @@ function DrawColRowChart8()
 // 行组 - 统计图
 function Show_StatsColRowChart()
 {
-    g_waves.CalcCRC();
     DrawColRowChart8();
+}
+
+// 行组 - 统计数据
+function Show_StatsColRowSum()
+{
+    var strHtml = "<table cellpadding='0' cellspacing='0' style='width: 100%'>";
+
+    strHtml += "<tr><td>&nbsp;</td>";
+    for (var n = 0; n < g_waves.CRC_NUM_COUNT; ++n)
+    {
+        var strNum = n.toString();
+        if (n == (g_waves.CRC_NUM_COUNT - 1))
+            strNum = (g_waves.CRC_NUM_COUNT - 2).toString() + "+";
+        strHtml += "<td>" + strNum + "</td>";
+    }
+    strHtml += "</tr>";
+
+    for (var nCR = 0; nCR < 8; ++nCR)
+    {
+        strHtml += "<tr><td>" + GetColRowLongSpec(nCR) + "</td>";
+
+        for (var n = 0; n < g_waves.CRC_NUM_COUNT; ++n)
+        {
+            strHtml += "<td>" + g_waves.anCRCSum[nCR][n].toString() + "</td>";
+        }
+        strHtml += "</tr>";
+    }
+    strHtml += "</table>";
+
+    var div = document.getElementById("divStatsCRSTable");
+    div.innerHTML = strHtml;
 }
 
 // 细化

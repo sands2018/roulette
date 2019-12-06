@@ -317,7 +317,11 @@ function OnBttnStatsScopeClick(nIdx)
 
     Show_StatsGames(-1, false); // 打法（非主页）
     Show_StatsGames(-1, true);  // 打法（主页）
+
+    g_waves.CalcCRC();
     Show_StatsColRowChart();    // 行组 - 统计图
+    Show_StatsColRowSum();      // 行组 - 统计数据
+
     Show_StatsCRDCompare(-1);   // 细化 - 各行各组比较
     Show_StatsNumbers(-1);      // 其它 - 号码
     Show_StatsLongs();          // 其它 - 追打
@@ -505,7 +509,7 @@ function SwitchStats()
         div.style.display = strDisplay;
     }
 
-    ShowStatsScopeBttns(nIdx, 0);
+    ShowStatsScopeBttns(nIdx, g_bttnStatsColRow.Value());
 
     var td = document.getElementById("tdStatsTitle");
     td.innerHTML = g_astrStatsTitle[nIdx];
@@ -549,7 +553,11 @@ function OpenStatistics(strID)
     Show_StatsFrequencies(true); // 频率
     Show_StatsDistances();       // 距离
     Show_StatsColRowDetail();    // 行组 - 明细
+
+    g_waves.CalcCRC();
     Show_StatsColRowChart();     // 行组 - 统计图
+    Show_StatsColRowSum();       // 行组 - 统计数据
+
     Show_StatsColRowDig();       // 细化
     Show_StatsNumbers(-1);       // 其它 - 号码
     Show_StatsLongs();           // 其它 - 追打

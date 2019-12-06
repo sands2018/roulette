@@ -2770,6 +2770,7 @@ var g_bttnPlaySpeed = new CBttnOptions("PlaySpeed", [1, 2, 3], ["1/2", "1x", "2x
 // Show_StatsGames(nSortCol, bMain);     // 打法
 // Show_StatsColRowDetail();             // 行组 - 明细
 // Show_StatsColRowChart();              // 行组 - 统计图
+// Show_StatsColRowSum();                // 行组 - 统计数据
 // Show_StatsFrequencies(bSwitchToDraw); // 频率
 // Show_StatsDistances();                // 距离
 // Show_StatsColRowDig();                // 细化
