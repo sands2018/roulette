@@ -808,6 +808,7 @@ var DATA_NUMBERS = "NUMBERS";
 var DATA_KEYBOARDID = "KEYBOARDID";
 var DATA_SEPERATE3C3R = "SEPERATE3C3R";
 var DATA_COLUMNSBUTTON = "COLUMNSBUTTON";
+var DATA_STATSCOLROWIDX = "STATSCOLROWIDX";
 var DATA_SGCOUNTIDX = "SGCOUNTIDX";
 var DATA_STATSROUNDSIDX = "STATSROUNDSIDX";
 var DATA_STATSOTHERIDX = "STATSOTHERIDX";
@@ -2292,7 +2293,7 @@ function CStatsWaves()
         }
     }
 
-    this.DrawColRowCon = function (strCanvasID, nWidth, nHeight, nCR, nDetail)
+    this.DrawColRowChart = function (strCanvasID, nWidth, nHeight, nCR, nDetail)
     {
         var canvas = document.getElementById(strCanvasID);
         canvas.width = nWidth;
@@ -2791,9 +2792,8 @@ var idxTabGames = 0;
 var idxTabColRow = 1;
 var idxTabFrequencies = 2;
 var idxTabDistances = 3;
-var idxTabColRowCon = 4;
-var idxTabColRowDig = 5;
-var idxTabOther = 6;
+var idxTabColRowDig = 4;
+var idxTabOther = 5;
 
 var g_bttnStats = new CBttnOptions("Stats",
     [
@@ -2801,7 +2801,6 @@ var g_bttnStats = new CBttnOptions("Stats",
         idxTabColRow,
         idxTabFrequencies,
         idxTabDistances,
-        idxTabColRowCon,
         idxTabColRowDig,
         idxTabOther
     ],
@@ -2810,7 +2809,6 @@ var g_bttnStats = new CBttnOptions("Stats",
         "行组",
         "频率",
         "距离",
-        "集中",
         "细化",
         "其它"
     ], 0, 0, -1);
@@ -2821,7 +2819,6 @@ var g_astrStatsDiv =
         "ColRow",
         "Frequencies",
         "Distances",
-        "ColRowCon",
         "ColRowDig",
         "Other"
     ];
@@ -2832,7 +2829,6 @@ var g_astrStatsTitle =
         "行组距离数据",
         "频率统计图",
         "距离统计图",
-        "集中度统计图",
         "行组细化数据",
         "其它统计数据"
     ];
@@ -2849,27 +2845,33 @@ function IsDirectStatsTabIdx(nIdx)
         );
 }
 
-// 统计页是否带scope按钮：
-function StatsTabHasScopeBttns(nIdx)
+function ShowStatsScopeBttns(nTabIdx, nSubIdx)
 {
-    // 带scope按钮的统计页有：打法、集中、细化、其他
-    return (
-        (nIdx == idxTabGames) ||
-        (nIdx == idxTabColRowCon) ||
-        (nIdx == idxTabColRowDig) ||
-        (nIdx == idxTabOther)
+    // 统计页是否带scope按钮：
+    // 带scope按钮的统计页有：打法、行组（一部分）、细化、其他
+    var bShowScope = (
+        (nTabIdx == idxTabGames) ||
+        ((nTabIdx == idxTabColRow) && (nSubIdx != 0)) ||
+        (nTabIdx == idxTabColRowDig) ||
+        (nTabIdx == idxTabOther)
         );
+
+    // 统计页是否带frequecy scope按钮：
+    var bShowFrequencyScope = (
+        (nTabIdx == idxTabFrequencies)
+        );
+
+    var div1 = document.getElementById("divStatsScopeBttns");
+    var div2 = document.getElementById("divStatsFrequencyScopeBttns");
+
+    div1.style.display = bShowScope ? "" : "none";
+    div2.style.display = bShowFrequencyScope ? "" : "none";
 }
 
-// 统计页是否带frequecy scope按钮：
-function StatsTabHasFrequencyScopeBttns(nIdx)
-{
-    return (
-        (nIdx == idxTabFrequencies)
-        );
-}
 
 // stats options <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+var g_bttnStatsColRow = new CBttnOptions("StatsColRow", [0, 1, 2], ["明细", "统计图", "统计数据"], 0, 240, -1);
 
 var g_bttnStatsOther = new CBttnOptions("StatsOther", [0, 1, 2], ["追打", "号码", "轮次"], 0, 180, -1);
 var g_bttnViewNum = new CBttnOptions("ViewNum", [0, 1, 2, 3, 4, 5], ["一组", "二组", "三组", "1行", "2行", "3行"], 0, 0, -1);
@@ -2877,10 +2879,10 @@ var g_bttnPlaySpeed = new CBttnOptions("PlaySpeed", [1, 2, 3], ["1/2", "1x", "2x
 
 
 // Show_StatsGames(nSortCol, bMain);     // 打法
-// Show_StatsColRow();                   // 行组
+// Show_StatsColRowDetail();             // 行组 - 明细
+// Show_StatsColRowChart();              // 行组 - 统计图
 // Show_StatsFrequencies(bSwitchToDraw); // 频率
 // Show_StatsDistances();                // 距离
-// Show_StatsColRowCon();                // 集中
 // Show_StatsColRowDig();                // 细化
 // Show_StatsNumbers(-1);                // 其它 - 号码
 // Show_StatsLongs();                    // 其它 - 追打

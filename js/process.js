@@ -465,10 +465,10 @@ function Show_AddNum()
 function Play_Show_AddNum()
 {
     Show_StatsGames(-1, false);   // 打法（非主页）
-    Show_StatsColRow();           // 行组
+    Show_StatsColRowDetail();     // 行组 - 明细
+    Show_StatsColRowChart();      // 行组 - 统计图
     Show_StatsFrequencies(false); // 频率
     Show_StatsDistances();        // 距离
-    Show_StatsColRowCon();        // 集中
     Show_StatsColRowDig();        // 细化
     Show_StatsNumbers(-1);        // 其它 - 号码
     Show_StatsLongs();            // 其它 - 追打
@@ -899,10 +899,10 @@ function GetStatsNumTdString(statsNum, nIdx, aStr)
     }
 }
 
-// 行组
-function Show_StatsColRow()
+// 行组 - 明细
+function Show_StatsColRowDetail()
 {
-    var div = document.getElementById("divStatsColRow");
+    var div = document.getElementById("divStatsColRowDetail");
     var astrTitle = ["一组", "二组", "三组", "1行", "2行", "3行"];
 
     var strHtml = "<table cellspacing='0' cellpadding='0' border='0'>";
@@ -911,13 +911,11 @@ function Show_StatsColRow()
     {
         strHtml += "<tr>";
         strHtml += "<td class='tdSRCTitle";
-        if (nn < 5)
-            strHtml += " SRCMore";
+        strHtml += " SRCMore";
         strHtml += "'>";
         strHtml += astrTitle[nn];
         strHtml += "</td><td class='tdSRC";
-        if (nn < 5)
-            strHtml += " SRCMore";
+        strHtml += " SRCMore";
         strHtml += "'>";
 
         var nIdx = (nn < 3) ? nn : (nn + 1);
@@ -989,21 +987,21 @@ function Show_StatsCRDCompare(nSortCol)
     divList.innerHTML = strHtml;
 }
 
-function DrawColRowCon8()
+function DrawColRowChart8()
 {
     for (var n = 0; n < 8; ++n)
     {
         var strCanvasID = "cvCRC" + n.toString();
-        g_waves.DrawColRowCon(strCanvasID, 380, 270, n, 8);
+        g_waves.DrawColRowChart(strCanvasID, 380, 270, n, 8);
     }
 }
 
 // 集中
 
-function Show_StatsColRowCon()
+function Show_StatsColRowChart()
 {
     g_waves.CalcCRC();
-    DrawColRowCon8();
+    DrawColRowChart8();
 }
 
 // 细化

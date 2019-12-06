@@ -48,6 +48,7 @@ function OnPageInit()
     if (g_nDebug == 1)
         ChangeTheme("debug");
 
+    SwitchStatsColRow(-1);
     SwitchStatsRounds(-1);
     SwitchStatsOther(-1);
 }
@@ -275,6 +276,21 @@ function OnBttnStatsClick(nIdx)
 // ----------------------------------------------
 
 
+function Show_RefreshStatsColRowButton()
+{
+    g_bttnStatsColRow.Show("divStatsColRowBttns");
+}
+
+function OnBttnStatsColRowClick(nIdx)
+{
+    g_bttnStatsColRow.OnClick(nIdx);
+    SwitchStatsColRow(nIdx);
+}
+
+
+// ----------------------------------------------
+
+
 function Show_RefreshStatsOtherButton()
 {
     g_bttnStatsOther.Show("divStatsOtherBttns");
@@ -301,7 +317,7 @@ function OnBttnStatsScopeClick(nIdx)
 
     Show_StatsGames(-1, false); // 打法（非主页）
     Show_StatsGames(-1, true);  // 打法（主页）
-    Show_StatsColRowCon();      // 集中
+    Show_StatsColRowChart();    // 行组 - 统计图
     Show_StatsCRDCompare(-1);   // 细化 - 各行各组比较
     Show_StatsNumbers(-1);      // 其它 - 号码
     Show_StatsLongs();          // 其它 - 追打
@@ -455,6 +471,14 @@ function SwitchWindows(astrDiv, nIdx, KEY_DATA)
     WriteIntData(KEY_DATA, nIdxSwitch);
 }
 
+function SwitchStatsColRow(nIdx)
+{
+    ShowStatsScopeBttns(idxTabColRow, nIdx);
+
+    var astrDiv = ["divStatsColRowDetail", "divStatsColRowChart", "divStatsColRowSum"];
+    SwitchWindows(astrDiv, nIdx, DATA_STATSCOLROWIDX);
+}
+
 function SwitchStatsRounds(nIdx)
 {
     var astrDiv = ["divStatsRoundBet", "divStatsRoundSum"];
@@ -481,10 +505,7 @@ function SwitchStats()
         div.style.display = strDisplay;
     }
 
-    var div1 = document.getElementById("divStatsScopeBttns");
-    var div2 = document.getElementById("divStatsFrequencyScopeBttns");
-    div1.style.display = StatsTabHasScopeBttns(nIdx) ? "" : "none";
-    div2.style.display = StatsTabHasFrequencyScopeBttns(nIdx) ? "" : "none";
+    ShowStatsScopeBttns(nIdx, 0);
 
     var td = document.getElementById("tdStatsTitle");
     td.innerHTML = g_astrStatsTitle[nIdx];
@@ -526,8 +547,8 @@ function OpenStatistics(strID)
     Show_StatsGames(-1, false);  // 打法（非主页）
     Show_StatsFrequencies(true); // 频率
     Show_StatsDistances();       // 距离
-    Show_StatsColRow();          // 行组
-    Show_StatsColRowCon();       // 集中
+    Show_StatsColRowDetail();    // 行组 - 明细
+    Show_StatsColRowChart();     // 行组 - 统计图
     Show_StatsColRowDig();       // 细化
     Show_StatsNumbers(-1);       // 其它 - 号码
     Show_StatsLongs();           // 其它 - 追打
@@ -561,6 +582,7 @@ function OpenStatistics(strID)
 
     Show_RefreshStatsScopeButton();
     Show_RefreshStatsFrequencyScopeButton();
+    Show_RefreshStatsColRowButton();
     Show_RefreshStatsLongsButton();
     Show_RefreshStatsLongsBetButton();
     Show_RefreshStatsOtherButton();

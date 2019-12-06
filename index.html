@@ -250,7 +250,7 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 
 .tdSRCTitle { font-size: 36px; color: #995539; vertical-align: top; padding: 8px 0px; width: 12%; }
 .tdSRC { font-size: 36px; word-break: break-all; word-wrap: break-word; text-align: left; padding: 8px 0px 8px 10px; width: 88%; }
-.SRCMore { border-bottom: 1px solid #aa8833; }
+.SRCMore { border-top: 1px solid #aa8833; }
 .numFirstZero { color: #ff9933; }
 .numFirst { color: #3399ff; }
 
@@ -657,52 +657,57 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
                     </div>
                 </div>
             </div>
-            <div id="divStatsColRow" style="word-wrap:break-word; padding: 0px 20px 20px 20px">
-            </div>
-            <div id="divStatsColRowCon">
-                <div id="divStatsCRC0">
-                    <table id="tblStatsCRC" cellpadding="0" cellspacing="0">
-                        <tr>
-                            <td class="tdStatsCRCT0 tdStatsCRCT01">一组</td>
-                            <td class="tdStatsCRC0" onclick="OnStatsCRC8Click(0)">
-                                <canvas id="cvCRC0" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
-                            </td>
-                            <td class="tdStatsCRCT0 tdStatsCRCT02">1行</td>
-                            <td class="tdStatsCRC0" onclick="OnStatsCRC8Click(4)">
-                                <canvas id="cvCRC4" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="tdStatsCRCT0 tdStatsCRCT01">二组</td>
-                            <td class="tdStatsCRC0" onclick="OnStatsCRC8Click(1)">
-                                <canvas id="cvCRC1" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
-                            </td>
-                            <td class="tdStatsCRCT0 tdStatsCRCT02">2行</td>
-                            <td class="tdStatsCRC0" onclick="OnStatsCRC8Click(5)">
-                                <canvas id="cvCRC5" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="tdStatsCRCT0 tdStatsCRCT01">三组</td>
-                            <td class="tdStatsCRC0" onclick="OnStatsCRC8Click(2)">
-                                <canvas id="cvCRC2" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
-                            </td>
-                            <td class="tdStatsCRCT0 tdStatsCRCT02">3行</td>
-                            <td class="tdStatsCRC0" onclick="OnStatsCRC8Click(6)">
-                                <canvas id="cvCRC6" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="tdStatsCRCT0 tdStatsCRCT01">组</td>
-                            <td class="tdStatsCRC0" onclick="OnStatsCRC8Click(3)">
-                                <canvas id="cvCRC3" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
-                            </td>
-                            <td class="tdStatsCRCT0 tdStatsCRCT02">行</td>
-                            <td class="tdStatsCRC0" onclick="OnStatsCRC8Click(7)">
-                                <canvas id="cvCRC7" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
-                            </td>
-                        </tr>
-                    </table>
+            <div id="divStatsColRow">
+                <div id="divStatsColRowBttns"></div>
+                <div id="divStatsColRowDetail" style="word-wrap:break-word; padding: 10px 10px 10px 10px">
+                </div>
+                <div id="divStatsColRowChart" style="word-wrap:break-word; padding: 3px 10px 10px 10px">
+                    <div id="divStatsCRC0">
+                        <table id="tblStatsCRC" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td class="tdStatsCRCT0 tdStatsCRCT01">一组</td>
+                                <td class="tdStatsCRC0" onclick="OnStatsCRC8Click(0)">
+                                    <canvas id="cvCRC0" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
+                                </td>
+                                <td class="tdStatsCRCT0 tdStatsCRCT02">1行</td>
+                                <td class="tdStatsCRC0" onclick="OnStatsCRC8Click(4)">
+                                    <canvas id="cvCRC4" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="tdStatsCRCT0 tdStatsCRCT01">二组</td>
+                                <td class="tdStatsCRC0" onclick="OnStatsCRC8Click(1)">
+                                    <canvas id="cvCRC1" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
+                                </td>
+                                <td class="tdStatsCRCT0 tdStatsCRCT02">2行</td>
+                                <td class="tdStatsCRC0" onclick="OnStatsCRC8Click(5)">
+                                    <canvas id="cvCRC5" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="tdStatsCRCT0 tdStatsCRCT01">三组</td>
+                                <td class="tdStatsCRC0" onclick="OnStatsCRC8Click(2)">
+                                    <canvas id="cvCRC2" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
+                                </td>
+                                <td class="tdStatsCRCT0 tdStatsCRCT02">3行</td>
+                                <td class="tdStatsCRC0" onclick="OnStatsCRC8Click(6)">
+                                    <canvas id="cvCRC6" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="tdStatsCRCT0 tdStatsCRCT01">组</td>
+                                <td class="tdStatsCRC0" onclick="OnStatsCRC8Click(3)">
+                                    <canvas id="cvCRC3" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
+                                </td>
+                                <td class="tdStatsCRCT0 tdStatsCRCT02">行</td>
+                                <td class="tdStatsCRC0" onclick="OnStatsCRC8Click(7)">
+                                    <canvas id="cvCRC7" style="background-color: white; width: 100%; height: 100%">您当前的版本不支持</canvas>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div id="divStatsColRowSum" style="word-wrap:break-word; padding: 0px 10px 10px 10px">
                 </div>
             </div>
             <div id="divStatsColRowDig" style="word-wrap:break-word; padding: 0px 20px 20px 20px">
