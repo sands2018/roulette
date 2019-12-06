@@ -1116,7 +1116,7 @@ function OnStatsDistance1Return()
     div.style.display = "";
 }
 
-// Stats ColRow Concentration -------------------------------------------------
+// Stats ColRow Chart ---------------------------------------------------------
 
 function OnStatsCRCClick(nCR)
 {
@@ -1136,7 +1136,7 @@ function OnHideStatsCRCDetail()
 
 function OnStatsCRC8Click(nCR)
 {
-    OnStatsCRCClick(nCR);
+    // OnStatsCRCClick(nCR);
 }
 
 

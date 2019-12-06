@@ -2240,7 +2240,7 @@ function CStatsWaves()
     }
 
     // 2019.12.3 added:
-    // colrow concentration -------------------------------
+    // colrow chart ---------------------------------------
 
     this.CRC_NUM_COUNT = 8;
     this.anCRCSum = new Array();
@@ -2394,120 +2394,7 @@ function CStatsWaves()
             context.font = ((nDetail == 1) ? "36px" : "32px") + " 微软雅黑";
             context.fillText(strText, nX - 10, nRectY + nRectH + 40);
         }
-
-        /*
-        context.font = "30px 微软雅黑";
-
-        for (var n = 0; n <= 15; ++n)
-        {
-            context.beginPath();
-
-            if (nDetail != 8)
-            {
-                if ((n % 5) == 0)
-                {
-                    context.strokeStyle = "#5f5f5f";
-                    context.lineWidth = ((nDetail == 4) ? 2 : 3);
-                }
-                else
-                {
-                    context.strokeStyle = "#aaaaaa";
-                    context.lineWidth = 1;
-                }
-            }
-            else
-            {
-                context.strokeStyle = "#7f7f7f";
-                context.lineWidth = 1;
-            }
-
-
-            if ((nDetail != 8) || ((n % 5) == 0))
-            {
-                context.moveTo(nX0 - 1 + nRectX, nRectY + n * nRectH / 15);
-                context.lineTo(nX0 - 1 + nRectX + nRectW, nRectY + n * nRectH / 15);
-                context.stroke();
-            }
-
-            if (nDetail != 8)
-            {
-                if ((nDetail == 1) || ((n % 5) == 0))
-                {
-                    var nX = nRectX;
-                    nY = nRectY + 15 + n * nRectH / 15;
-
-                    if (nDetail == 4)
-                    {
-                        nX += 10;
-
-                        if (n == 0)
-                            nY += 15;
-                        else if (n == 15)
-                            nY -= 15;
-                    }
-
-                    context.fillText((15 - n), nX, nY);
-                }
-            }
-        }
-
-        if ((nCR % 4) == 3)
-            context.strokeStyle = "#ff9977";
-        else
-            context.strokeStyle = "#a9cf99";
-        context.lineWidth = ((nDetail != 8) ? 5 : 5);
-
-        context.beginPath();
-
-        for (var n = nIdx0; n < nLen; ++n)
-        {
-            var nVal = this.anDistance[nCR][n] - 1; // 实际画的是距离减1
-            if (nVal > 15)
-                nVal = 15;
-
-            var nX = nX0 + nRectX + (n - nIdx0) * nRectW / (nMax - 1);
-            var nY = nHeight - nRectY - nVal * nRectH / 15;
-
-            if ((nCR % 4) == 3)
-            {
-                if (n == nIdx0)
-                    context.moveTo(nX, nY);
-                else
-                    context.lineTo(nX, nY);
-            }
-            else
-            {
-                if (n != nIdx0)
-                    context.lineTo(nX, nY);
-                context.moveTo(nX - 5, nY + 5);
-                context.lineTo(nX + 5, nY - 5);
-                context.moveTo(nX - 5, nY - 5);
-                context.lineTo(nX + 5, nY + 5);
-                context.moveTo(nX, nY);
-            }
-        }
-        context.stroke();
-
-        var strText = GetColRowLongSpec(nCR);
-
-        var nX, nY;
-
-        if (nDetail != 8)
-        {
-            nX = nX0 + nRectX + ((nDetail == 1) ? 30 : 20);
-            nY = nRectY + ((nDetail == 1) ? 43 : 30) + nRectH / 15;
-        }
-        else
-        {
-            nX = 30;
-            nY = 70;
-        }
-
-        context.font = ((nDetail == 1) ? "40px" : "36px") + " 微软雅黑";
-        context.fillText(strText, nX, nY);
-        */
     }
-
 }
 
 

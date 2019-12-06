@@ -996,8 +996,7 @@ function DrawColRowChart8()
     }
 }
 
-// 集中
-
+// 行组 - 统计图
 function Show_StatsColRowChart()
 {
     g_waves.CalcCRC();
