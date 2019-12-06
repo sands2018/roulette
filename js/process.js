@@ -948,7 +948,7 @@ function Show_StatsColRow()
             strHtml += nVal.toString();
 
             ++nCount;
-            if (nCount >= 72)
+            if (nCount >= 80) // 最多显示80个数字
                 break;
         }
         strHtml += "</td></tr>";
