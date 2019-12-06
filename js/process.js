@@ -994,7 +994,7 @@ function DrawColRowCon8()
     for (var n = 0; n < 8; ++n)
     {
         var strCanvasID = "cvCRC" + n.toString();
-        g_waves.DrawColRowCon(strCanvasID, 380, 280, n, 8);
+        g_waves.DrawColRowCon(strCanvasID, 380, 270, n, 8);
     }
 }
 
