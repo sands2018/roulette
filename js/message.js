@@ -473,7 +473,7 @@ function SwitchWindows(astrDiv, nIdx, KEY_DATA)
 
 function SwitchStatsColRow(nIdx)
 {
-    ShowStatsScopeBttns(idxTabColRow, nIdx);
+    ShowStatsScopeBttns(IDX_TAB_COLROW, nIdx);
 
     var astrDiv = ["divStatsColRowDetail", "divStatsColRowChart", "divStatsColRowSum"];
     SwitchWindows(astrDiv, nIdx, DATA_STATSCOLROWIDX);
@@ -522,6 +522,7 @@ function OnStatsGamesClick(nCol)
     Show_StatsGames(-1, false); // 打法（主页）
 }
 
+// 暂时取消这个功能：
 function OnShowHideMoreButtons()
 {
     var tr1 = document.getElementById("trBttnMore");
@@ -557,23 +558,23 @@ function OpenStatistics(strID)
 
     if (strID == "g") // games
     {
-        g_bttnStats.nSelIdx = 0;
+        g_bttnStats.nSelIdx = IDX_TAB_GAMES;
     }
     else if (strID == "cr") // colrow
     {
-        g_bttnStats.nSelIdx = 1;
+        g_bttnStats.nSelIdx = IDX_TAB_COLROW;
     }
     else if (strID == "d") // distances
     {
-        g_bttnStats.nSelIdx = 2;
+        g_bttnStats.nSelIdx = IDX_TAB_DISTANCES;
     }
     else if (strID == "f") // frequencies
     {
-        g_bttnStats.nSelIdx = 3;
+        g_bttnStats.nSelIdx = IDX_TAB_FREQUENCIES;
     }
     else if (strID == "crd") // colrowdig
     {
-        g_bttnStats.nSelIdx = 4;
+        g_bttnStats.nSelIdx = IDX_TAB_COLROWDIG;
     }
     else if (strID == "s") // stats
     {
@@ -1397,6 +1398,12 @@ $(document).ready(function ()
         OpenStatistics("f");
     });
  
+    // stats distances:
+    $("#tdBttnStatsDistances").click(function ()
+    {
+        OpenStatistics("d");
+    });
+
     // play:
     $("#tdBttnPlay").click(function ()
     {

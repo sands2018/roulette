@@ -398,9 +398,13 @@ function Show_Queue()
 
 function Show_RefreshSysButtons()
 {
-    var astrIDBttn = ["tdBttnTheme", "tdBttnRestore", "tdBttnImport", "tdBttnExport", "tdBttnSave",
-        "tdBttnStatsGames", "tdBttnStatsColRow", "tdBttnStatsColRowDig", "tdBttnStatsFrequencies",
-        "tdBttnStatistics", "tdBttnPlay", "tdBttnManage", "tdBttnConfig", "tdBttnMore"];
+    var astrIDBttn = [
+        "tdBttnTheme", "tdBttnPlay", "tdBttnExport", "tdBttnImport",
+        "tdBttnSave", "tdBttnManage", "tdBttnConfig",
+
+        "tdBttnRestore", "tdBttnStatsGames", "tdBttnStatsColRow", "tdBttnStatsFrequencies",
+        "tdBttnStatsDistances", "tdBttnStatsColRowDig", "tdBttnStatistics"
+        ];
 
     var abEnabled = [];
 
@@ -412,24 +416,25 @@ function Show_RefreshSysButtons()
     if (g_queue.nIDX < 0)
     {
         // abEnabled[1] = false; // restart ////////// currently not used
-        abEnabled[3] = false; // export
+        abEnabled[2] = false; // export
         abEnabled[4] = false; // save
-        abEnabled[5] = false; // stats games
-        abEnabled[6] = false; // stats colrow
-        abEnabled[7] = false; // stats colrow dig
-        abEnabled[8] = false; // stats frequencies
-        abEnabled[9] = false; // statistics
+        abEnabled[8] = false; // stats games
+        abEnabled[9] = false; // stats colrow
+        abEnabled[10] = false; // stats frequencies
+        abEnabled[11] = false; // stats distances
+        abEnabled[12] = false; // stats colrow dig
+        abEnabled[13] = false; // statistics
     }
     else
     {
-        abEnabled[1] = false; // restore
+        abEnabled[7] = false; // restore
     }
 
     if (g_queue.nIDX < 1)
-        abEnabled[10] = false; // play
+        abEnabled[1] = false; // play
 
     if (g_queue.nIDX < 1)
-        abEnabled[8] = false; // stats frequencies
+        abEnabled[10] = false; // stats frequencies
 
     for (var n = 0; n < astrIDBttn.length; ++n)
     {

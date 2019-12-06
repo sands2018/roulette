@@ -24,6 +24,14 @@ var MAX_FILE_COUNT = 200;
 var DATA_FILE_INDEX = "FILE_INDEX_DATA";
 var DATA_FILE_PREFIX = "F_";
 
+var IDX_TAB_GAMES = 0;
+var IDX_TAB_COLROW = 1;
+var IDX_TAB_FREQUENCIES = 2;
+var IDX_TAB_DISTANCES = 3;
+var IDX_TAB_COLROWDIG = 4;
+var IDX_TAB_OTHER = 5;
+
+
 // basic: -----------------------------------------------------------
 
 function WriteData(key, value)
@@ -822,7 +830,7 @@ function CSysStatus()
     this.Seperate3C3R = "F";
     this.QueueExpand = 0;
     this.anStatsSumExpand = [0, 0, 0, 0];
-    this.IndirectStatsIdx = ReadIntData(DATA_INDIRECTSTATSIDX, 2); // 非直接进入的统计页面的idx，默认：频率
+    this.IndirectStatsIdx = ReadIntData(DATA_INDIRECTSTATSIDX, IDX_TAB_OTHER); // 非直接进入的统计页面的idx，默认：其他
     this.StatsDistCROpt = 0;
     this.StatsDistCR = 0;
 
@@ -2675,21 +2683,14 @@ var g_bttnStatsCRDRoundBet = new CBttnOptions("StatsCRDRoundBet", [1, 2, 3, 4, 5
 
 // stats options >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-var idxTabGames = 0;
-var idxTabColRow = 1;
-var idxTabFrequencies = 2;
-var idxTabDistances = 3;
-var idxTabColRowDig = 4;
-var idxTabOther = 5;
-
 var g_bttnStats = new CBttnOptions("Stats",
     [
-        idxTabGames,
-        idxTabColRow,
-        idxTabFrequencies,
-        idxTabDistances,
-        idxTabColRowDig,
-        idxTabOther
+        IDX_TAB_GAMES,
+        IDX_TAB_COLROW,
+        IDX_TAB_FREQUENCIES,
+        IDX_TAB_DISTANCES,
+        IDX_TAB_COLROWDIG,
+        IDX_TAB_OTHER
     ],
     [
         "打法",
@@ -2723,12 +2724,13 @@ var g_astrStatsTitle =
 // 是否是首页有按钮直接可以进到的统计页面：
 function IsDirectStatsTabIdx(nIdx)
 {
-    // 现在首页上有的直接按钮是：打法、行组、频率、细化
+    // 现在首页上有的直接按钮是：打法、行组、频率、距离、细化
     return (
-        (nIdx == idxTabGames) ||
-        (nIdx == idxTabColRow) ||
-        (nIdx == idxTabFrequencies) ||
-        (nIdx == idxTabColRowDig)
+        (nIdx == IDX_TAB_GAMES) ||
+        (nIdx == IDX_TAB_COLROW) ||
+        (nIdx == IDX_TAB_FREQUENCIES) ||
+        (nIdx == IDX_TAB_DISTANCES) ||
+        (nIdx == IDX_TAB_COLROWDIG)
         );
 }
 
@@ -2737,15 +2739,15 @@ function ShowStatsScopeBttns(nTabIdx, nSubIdx)
     // 统计页是否带scope按钮：
     // 带scope按钮的统计页有：打法、行组（一部分）、细化、其他
     var bShowScope = (
-        (nTabIdx == idxTabGames) ||
-        ((nTabIdx == idxTabColRow) && (nSubIdx != 0)) ||
-        (nTabIdx == idxTabColRowDig) ||
-        (nTabIdx == idxTabOther)
+        (nTabIdx == IDX_TAB_GAMES) ||
+        ((nTabIdx == IDX_TAB_COLROW) && (nSubIdx != 0)) ||
+        (nTabIdx == IDX_TAB_COLROWDIG) ||
+        (nTabIdx == IDX_TAB_OTHER)
         );
 
     // 统计页是否带frequecy scope按钮：
     var bShowFrequencyScope = (
-        (nTabIdx == idxTabFrequencies)
+        (nTabIdx == IDX_TAB_FREQUENCIES)
         );
 
     var div1 = document.getElementById("divStatsScopeBttns");
