@@ -549,6 +549,9 @@ function OpenStatistics(strID)
     if (((strID == "f") || (strID == "d") || (strID == "l")) && (g_queue.nIDX < 1))
         return;
 
+    // 这个放在最前面是因为只有这样 Show_StatsColRowSum()中的ShowStatsCREGrids() 才有效
+    SwitchWindow("divMain", "divStats");
+
     Show_StatsGames(-1, false);  // 打法（非主页）
     Show_StatsFrequencies(true); // 频率
     Show_StatsDistances();       // 距离
@@ -601,8 +604,6 @@ function OpenStatistics(strID)
     Show_RefreshStatsCRDRoundBetButton();
 
     SwitchStats();
-
-    SwitchWindow("divMain", "divStats");
 }
 
 function OnMainSwitchStats(bShowGames)
@@ -1679,4 +1680,5 @@ $(document).ready(function ()
         div.style.display = "";
         txt.select();
     });
+
 });

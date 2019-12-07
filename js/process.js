@@ -1011,24 +1011,87 @@ function Show_StatsColRowChart()
     DrawColRowChart8();
 }
 
+function ShowStatsCREGrids()
+{
+    $('#dgStatsCREColRows').datagrid({
+        data: g_waves.ColRows,
+        singleSelect: false,
+        onLoadSuccess: function (data)
+        {
+            $("#dgStatsCREColRows").parent().find("div .datagrid-header-check").children("input[type=\"checkbox\"]").eq(0).attr("style", "display:none;");
+            if (data)
+            {
+                $.each(data.rows, function (index, item)
+                {
+                    var n = 0;
+                    //if (g_gamebets.ACRSelected(item.v))
+                    //    $('#dgARCOption1').datagrid('checkRow', index);
+                });
+            }
+        },
+        onClickRow: function (nIdxRow)
+        {
+            var n = 0;
+        },
+        onSelect: function (index, row)
+        {
+            $('#dgStatsCREColRows').datagrid('refreshRow', index);
+        },
+        onUnselect: function (index, row)
+        {
+            $('#dgStatsCREColRows').datagrid('refreshRow', index);
+        },
+    });
+    $('#dgStatsCRERounds').datagrid({
+        data: g_waves.BetRounds,
+        singleSelect: false,
+        onLoadSuccess: function (data)
+        {
+            $("#dgStatsCRERounds").parent().find("div .datagrid-header-check").children("input[type=\"checkbox\"]").eq(0).attr("style", "display:none;");
+            if (data)
+            {
+                $.each(data.rows, function (index, item)
+                {
+                    var n = 0;
+                    //if (g_gamebets.ACRSelected(item.v))
+                    //    $('#dgARCOption1').datagrid('checkRow', index);
+                });
+            }
+        },
+        onClickRow: function (nIdxRow)
+        {
+            var n = 0;
+        },
+        onSelect: function (index, row)
+        {
+            $('#dgStatsCRERounds').datagrid('refreshRow', index);
+        },
+        onUnselect: function (index, row)
+        {
+            $('#dgStatsCRERounds').datagrid('refreshRow', index);
+        },
+    });
+}
+
+
 // 行组 - 统计数据
 function Show_StatsColRowSum()
 {
-    var strHtml = "<table cellpadding='0' cellspacing='0' style='width: 100%'>";
+    var strHtml = "<table id='tblStatsColRowSum' cellpadding='0' cellspacing='1' style='width: 100%'>";
 
-    strHtml += "<tr><td>&nbsp;</td>";
+    strHtml += "<tr><td class='tdStatsCRSColT'>&nbsp;</td>";
     for (var n = 0; n < g_waves.CRC_NUM_COUNT; ++n)
     {
         var strNum = n.toString();
         if (n == (g_waves.CRC_NUM_COUNT - 1))
             strNum = (g_waves.CRC_NUM_COUNT - 2).toString() + "+";
-        strHtml += "<td>" + strNum + "</td>";
+        strHtml += "<td class='tdStatsCRSCol'>" + strNum + "</td>";
     }
     strHtml += "</tr>";
 
     for (var nCR = 0; nCR < 8; ++nCR)
     {
-        strHtml += "<tr><td>" + GetColRowLongSpec(nCR) + "</td>";
+        strHtml += "<tr><td>" + GetColRowFullSpec(nCR) + "</td>";
 
         for (var n = 0; n < g_waves.CRC_NUM_COUNT; ++n)
         {
@@ -1040,6 +1103,8 @@ function Show_StatsColRowSum()
 
     var div = document.getElementById("divStatsCRSTable");
     div.innerHTML = strHtml;
+
+    ShowStatsCREGrids();
 }
 
 // 细化

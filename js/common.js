@@ -668,6 +668,21 @@ function GetColRowSpec(nIdx3C3R)
     return strSpec;
 }
 
+function GetColRowFullSpec(nIdx3C3R)
+{
+    var strSpec = "";
+    if (nIdx3C3R == 0) strSpec = "一组";
+    else if (nIdx3C3R == 1) strSpec = "二组";
+    else if (nIdx3C3R == 2) strSpec = "三组";
+    else if (nIdx3C3R == 3) strSpec = "组";
+    else if (nIdx3C3R == 4) strSpec = "1行";
+    else if (nIdx3C3R == 5) strSpec = "2行";
+    else if (nIdx3C3R == 6) strSpec = "3行";
+    else if (nIdx3C3R == 7) strSpec = "行";
+    else if (nIdx3C3R == 8) strSpec = "全部";
+    return strSpec;
+}
+
 function GetColRowLongSpec(nIdx3C3R)
 {
     var strSpec = "";
@@ -2250,8 +2265,14 @@ function CStatsWaves()
     // 2019.12.3 added:
     // colrow chart ---------------------------------------
 
+    // 2019.12.7 added:
+    // colrow explore -------------------------------------
+
     this.CRC_NUM_COUNT = 8;
     this.anCRCSum = new Array();
+
+    this.ColRows = new CGridData();
+    this.BetRounds = new CGridData();
 
     this.Init = function()
     {
@@ -2261,6 +2282,16 @@ function CStatsWaves()
             for (var n = 0; n < this.CRC_NUM_COUNT; ++n)
                 this.anCRCSum[ncr][n] = 0;
         }
+
+        for (var n = 0; n < 6; ++n)
+            this.ColRows.rows[n] = new CValue(GetColRowSpec(n));
+
+        this.ColRows.total = this.ColRows.rows.length;
+
+        for (var n = 0; n <= 6; ++n)
+            this.BetRounds.rows[n] = new CValue(n.toString());
+
+        this.BetRounds.total = this.BetRounds.rows.length;
     }
 
     this.CalcCRC = function ()
