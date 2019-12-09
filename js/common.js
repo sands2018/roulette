@@ -23,6 +23,8 @@ var QUEUE_LINE_NUM_COUNT = 15;
 var MAX_FILE_COUNT = 200;
 var DATA_FILE_INDEX = "FILE_INDEX_DATA";
 var DATA_FILE_PREFIX = "F_";
+var DATA_CRE_COLROW_INDEXES = "CRE_COLROW_INDEXES";
+var DATA_CRE_BET_ROUNDS = "CRE_BET_ROUNDS";
 
 var IDX_TAB_GAMES = 0;
 var IDX_TAB_COLROW = 1;
@@ -681,6 +683,20 @@ function GetColRowFullSpec(nIdx3C3R)
     else if (nIdx3C3R == 7) strSpec = "行";
     else if (nIdx3C3R == 8) strSpec = "全部";
     return strSpec;
+}
+
+function GetColRowIdx(strSpec)
+{
+    var nIdx3C3R = 0;
+    if (strSpec == "一组") nIdx3C3R = 0;
+    else if (strSpec == "二组") nIdx3C3R = 1;
+    else if (strSpec == "三组") nIdx3C3R = 2;
+    else if (strSpec == "组") nIdx3C3R = 3;
+    else if (strSpec == "1行") nIdx3C3R = 4;
+    else if (strSpec == "2行") nIdx3C3R = 5;
+    else if (strSpec == "3行") nIdx3C3R = 6;
+    else if (strSpec == "行") nIdx3C3R = 7;
+    return nIdx3C3R;
 }
 
 function GetColRowLongSpec(nIdx3C3R)
@@ -2433,6 +2449,30 @@ function CStatsWaves()
             context.font = ((nDetail == 1) ? "36px" : "32px") + " 微软雅黑";
             context.fillText(strText, nX - 10, nRectY + nRectH + 40);
         }
+    }
+
+    this.CalcCRE = function(anCRIdx, anRound, CREResult)
+    {
+        this.CalcCRC();
+
+        for (var nn = 0; nn < anCRIdx.length; ++nn)
+        {
+            var ncr = anCRIdx[nn];
+
+            var nSum = 0;
+            for (var n = 0; n < anRound.length; ++n)
+            {
+                nSum += (this.anCRCSum[ncr][n] * 20);
+                for (var n1 = n + 1; n1 < this.CRC_NUM_COUNT; ++n1)
+                {
+                    nSum -= (this.anCRCSum[ncr][n1] * 10);
+                }
+            }
+
+            CREResult.anValue[nn] = nSum;
+        }
+
+        CREResult.Sort(false);
     }
 }
 

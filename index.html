@@ -275,9 +275,13 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 #tblStatsCRExplore td table tr:first-child td { border: 0; }
 #tblStatsCRExplore td table td:first-child { border: 0; }
 
-#tdStatsCRE1 { width: 28%; }
-#tdStatsCRE2 { width: 22%; }
-#tdStatsCRE3 { width: 50%; }
+#tdStatsCRE1 { width: 30%; }
+#tdStatsCRE2 { width: 25%; }
+#tdStatsCRE3 { width: 45%; text-align: left; line-height: 60px; }
+#tblStatsCRExplore #tdStatsCRE3 { padding: 20px 30px; }
+.CREWin { color: #388858; }
+.CREDraw { color: #a3a3a3; }
+.CRELose { color: #d3c3b3; }
 
 </style>
 
@@ -739,10 +743,10 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
                             <tr>
                                 <td>行组</td>
                                 <td>轮次</td>
-                                <td>押注10元输赢</td>
+                                <td>筹码10元输赢</td>
                             </tr>
                             <tr>
-                                <td height="600" id="tdStatsCRE1">
+                                <td height="500" id="tdStatsCRE1">
                                     <table id="dgStatsCREColRows" data-options="showHeader:false,border:false,fit:true,fitColumns:true,scrollbarSize:0">
                                         <thead>
                                             <tr>
@@ -763,12 +767,6 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
                                     </table>
                                 </td>
                                 <td id="tdStatsCRE3">
-                                    <table id="tblStatsCREResult" cellpadding="0" cellspacing="0">
-                                        <tr>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
-                                    </table>
                                 </td>
                             </tr>
                         </table>

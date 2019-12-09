@@ -1011,35 +1011,141 @@ function Show_StatsColRowChart()
     DrawColRowChart8();
 }
 
+function GetCRESelectedColRows(anIdx)
+{
+    var rows = $('#dgStatsCREColRows').datagrid('getSelections');
+    for (var n = 0; n < rows.length; ++n)
+    {
+        anIdx[n] = GetColRowIdx(rows[n].v);
+    }
+}
+
+
+function GetCRESelectedRounds(anRound)
+{
+    var rows = $('#dgStatsCRERounds').datagrid('getSelections');
+    for (var n = 0; n < rows.length; ++n)
+    {
+        anRound[n] = parseInt(rows[n].v);
+    }
+}
+
+
+function ShowStatsCREResults()
+{
+    var anCRIdx = new Array();
+    GetCRESelectedColRows(anCRIdx);
+
+    var anRound = new Array();
+    GetCRESelectedRounds(anRound);
+
+    var strHtml = "";
+
+    if ((anCRIdx.length > 0) && (anRound.length > 0))
+    {
+        var CREResult = new CIndexedArray();
+        CREResult.Reset(anCRIdx.length);
+
+        g_waves.CalcCRE(anCRIdx, anRound, CREResult);
+
+        for(var n = 0; n < anCRIdx.length; ++n)
+        {
+            var nValue = CREResult.Value(n);
+
+            var strClass = (nValue > 0) ? "CREWin" : ((nValue == 0) ? "CREDraw" : "CRELose");
+
+            strHtml += "<span class='" + strClass + "'>"
+                + GetColRowLongSpec(anCRIdx[CREResult.anIdx[n]]) + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + CREResult.Value(n).toString()
+                + "元</span>";
+
+            if (n < (anCRIdx.length - 1))
+                strHtml += "<br>";
+        }
+    }
+
+    var td = document.getElementById("tdStatsCRE3");
+    td.innerHTML = strHtml;
+}
+
+function OnDGCREColRowsSelChange(bDG2Ready)
+{
+    var anIdx = new Array();
+    GetCRESelectedColRows(anIdx);
+
+    var strVal = "";
+    for (var n = 0; n < anIdx.length; ++n)
+    {
+        if (n > 0)
+            strVal += ",";
+        strVal += anIdx[n].toString();
+    }
+    WriteData(DATA_CRE_COLROW_INDEXES, strVal);
+
+    if(bDG2Ready)
+        ShowStatsCREResults();
+}
+
+function OnDGCRERoundsSelChange()
+{
+    var anRound = new Array();
+    GetCRESelectedRounds(anRound);
+
+    var strVal = "";
+    for (var n = 0; n < anRound.length; ++n)
+    {
+        if (n > 0)
+            strVal += ",";
+        strVal += anRound[n].toString();
+    }
+    WriteData(DATA_CRE_BET_ROUNDS, strVal);
+
+    ShowStatsCREResults();
+}
+
 function ShowStatsCREGrids()
 {
+    var bDG2Ready = false;
+
     $('#dgStatsCREColRows').datagrid({
         data: g_waves.ColRows,
         singleSelect: false,
         onLoadSuccess: function (data)
         {
+            bDG2Ready = false;
+
             $("#dgStatsCREColRows").parent().find("div .datagrid-header-check").children("input[type=\"checkbox\"]").eq(0).attr("style", "display:none;");
             if (data)
             {
-                $.each(data.rows, function (index, item)
+                var strVal = ReadData(DATA_CRE_COLROW_INDEXES, "");
+                if (strVal.length > 0)
                 {
-                    var n = 0;
-                    //if (g_gamebets.ACRSelected(item.v))
-                    //    $('#dgARCOption1').datagrid('checkRow', index);
-                });
+                    var astrIdx = strVal.split(",");
+
+                    $.each(data.rows, function (index, item)
+                    {
+                        for (var n = 0; n < astrIdx.length; ++n)
+                        {
+                            if(GetColRowFullSpec(parseInt(astrIdx[n])) == item.v)
+                            {
+                                $('#dgStatsCREColRows').datagrid('checkRow', index);
+                                break;
+                            }
+                        }
+                    });
+                }
             }
         },
         onClickRow: function (nIdxRow)
         {
-            var n = 0;
+            OnDGCREColRowsSelChange(bDG2Ready);
         },
         onSelect: function (index, row)
         {
-            $('#dgStatsCREColRows').datagrid('refreshRow', index);
+            OnDGCREColRowsSelChange(bDG2Ready);
         },
         onUnselect: function (index, row)
         {
-            $('#dgStatsCREColRows').datagrid('refreshRow', index);
+            OnDGCREColRowsSelChange(bDG2Ready);
         },
     });
     $('#dgStatsCRERounds').datagrid({
@@ -1047,30 +1153,45 @@ function ShowStatsCREGrids()
         singleSelect: false,
         onLoadSuccess: function (data)
         {
+            bDG2Ready = true;
+
             $("#dgStatsCRERounds").parent().find("div .datagrid-header-check").children("input[type=\"checkbox\"]").eq(0).attr("style", "display:none;");
             if (data)
             {
-                $.each(data.rows, function (index, item)
+                var strVal = ReadData(DATA_CRE_BET_ROUNDS, "");
+                if (strVal.length > 0)
                 {
-                    var n = 0;
-                    //if (g_gamebets.ACRSelected(item.v))
-                    //    $('#dgARCOption1').datagrid('checkRow', index);
-                });
+                    var astrIdx = strVal.split(",");
+
+                    $.each(data.rows, function (index, item)
+                    {
+                        for (var n = 0; n < astrIdx.length; ++n)
+                        {
+                            if (astrIdx[n] == item.v)
+                            {
+                                $('#dgStatsCRERounds').datagrid('checkRow', index);
+                                break;
+                            }
+                        }
+                    });
+                }
             }
         },
         onClickRow: function (nIdxRow)
         {
-            var n = 0;
+            OnDGCRERoundsSelChange();
         },
         onSelect: function (index, row)
         {
-            $('#dgStatsCRERounds').datagrid('refreshRow', index);
+            OnDGCRERoundsSelChange();
         },
         onUnselect: function (index, row)
         {
-            $('#dgStatsCRERounds').datagrid('refreshRow', index);
+            OnDGCRERoundsSelChange();
         },
     });
+
+    ShowStatsCREResults();
 }
 
 
@@ -1105,6 +1226,7 @@ function Show_StatsColRowSum()
     div.innerHTML = strHtml;
 
     ShowStatsCREGrids();
+    ShowStatsCREResults();
 }
 
 // 细化
