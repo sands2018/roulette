@@ -481,6 +481,12 @@ function SwitchStatsColRow(nIdx)
 
     var astrDiv = ["divStatsColRowDetail", "divStatsColRowChart", "divStatsColRowSum"];
     SwitchWindows(astrDiv, nIdx, DATA_STATSCOLROWIDX);
+
+    Show_StatsColRowDetail();    // 行组 - 明细
+
+    g_waves.CalcCRC();
+    Show_StatsColRowChart();     // 行组 - 统计图
+    Show_StatsColRowSum();       // 行组 - 统计数据
 }
 
 function SwitchStatsRounds(nIdx)
