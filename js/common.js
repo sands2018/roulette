@@ -2837,6 +2837,26 @@ var g_bttnStatsOther = new CBttnOptions("StatsOther", [0, 1, 2], ["追打", "号
 var g_bttnViewNum = new CBttnOptions("ViewNum", [0, 1, 2, 3, 4, 5], ["一组", "二组", "三组", "1行", "2行", "3行"], 0, 0, -1);
 var g_bttnPlaySpeed = new CBttnOptions("PlaySpeed", [1, 2, 3], ["1/2", "1x", "2x"], 1, 80, -1);
 
+var g_bttnPlayScope = new CBttnOptions("PlayScope", [18, 36, 72, 144, 288, -1], null, 5, 150, -1);
+
+
+function ShowStatitics()
+{
+    Show_StatsGames(-1, false);  // 打法（非主页）
+    Show_StatsFrequencies(true); // 频率
+    Show_StatsDistances();       // 距离
+    Show_StatsColRowDetail();    // 行组 - 明细
+
+    g_waves.CalcCRC();
+    Show_StatsColRowChart();     // 行组 - 统计图
+    Show_StatsColRowSum();       // 行组 - 统计数据
+
+    Show_StatsColRowDig();       // 细化
+    Show_StatsNumbers(-1);       // 其它 - 号码
+    Show_StatsLongs();           // 其它 - 追打
+    Show_StatsRounds();          // 其它 - 轮次 - 轮次统计数据
+    Show_StatsRoundBet();        // 其它 - 轮次 - 轮次参考数据
+}
 
 // Show_StatsGames(nSortCol, bMain);     // 打法
 // Show_StatsColRowDetail();             // 行组 - 明细

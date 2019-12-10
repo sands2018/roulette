@@ -11,6 +11,7 @@
     35 - statistics top;
     39 - statistics bottom;
     50 - stats distance detail
+    60 - play scope
     70 - file;
     71 - file main;
     75 - file top;
@@ -558,20 +559,7 @@ function OpenStatistics(strID)
     // 这个放在最前面是因为只有这样 Show_StatsColRowSum()中的ShowStatsCREGrids() 才有效
     SwitchWindow("divMain", "divStats");
 
-    Show_StatsGames(-1, false);  // 打法（非主页）
-    Show_StatsFrequencies(true); // 频率
-    Show_StatsDistances();       // 距离
-    Show_StatsColRowDetail();    // 行组 - 明细
-
-    g_waves.CalcCRC();
-    Show_StatsColRowChart();     // 行组 - 统计图
-    Show_StatsColRowSum();       // 行组 - 统计数据
-
-    Show_StatsColRowDig();       // 细化
-    Show_StatsNumbers(-1);       // 其它 - 号码
-    Show_StatsLongs();           // 其它 - 追打
-    Show_StatsRounds();          // 其它 - 轮次 - 轮次统计数据
-    Show_StatsRoundBet();        // 其它 - 轮次 - 轮次参考数据
+    ShowStatitics();
 
     if (strID == "g") // games
     {
@@ -852,7 +840,7 @@ function CPlay()
 {
     this.anNum = [];
     this.nIDX = -1;
-    this.Status = -1;
+    this.Status = -1; // 1: playing; 0: paused; -1: stopped
     this.TimerID;
 
     function GetTimerInterval()
@@ -880,7 +868,7 @@ function CPlay()
         return (this.nIDX >= (this.anNum.length - 1));
     }
 
-    this.Start = function (queue)
+    this.Start = function (queue, nScope)
     {
         if (this.anNum.length > 0)
             this.anNum.splice(0, this.anNum.length);
@@ -888,10 +876,27 @@ function CPlay()
         for (var n = 0; n <= queue.nIDX; ++n)
             this.anNum[n] = queue.anNum[n];
 
-        queue.anNum.splice(0, queue.anNum.length);
-        queue.nIDX = -1;
+        if (nScope >= queue.anNum.length)
+        {
+            queue.anNum.splice(0, queue.anNum.length);
+            queue.nIDX = -1;
 
-        this.nIDX = -1;
+            this.nIDX = -1;
+        }
+        else
+        {
+            var anNumTmp = [];
+            var nLen = queue.anNum.length - nScope;
+
+            for (var n = 0; n < nLen; ++n)
+            {
+                anNumTmp[n] = queue.anNum[n];
+            }
+
+            ResetData(anNumTmp, true);
+
+            this.nIDX = nLen - 1;
+        }
 
         this.Status = 1;
 
@@ -914,6 +919,12 @@ function CPlay()
 
     this.Stop = function ()
     {
+        var bttn1 = document.getElementById("tdBttnPlayStart");
+        bttn1.style.display = "";
+
+        var bttn2 = document.getElementById("tdBttnPlayPauseContinue");
+        bttn2.style.display = "none";
+
         if (this.Status >= 0)
         {
             window.clearInterval(this.TimerID);
@@ -936,6 +947,21 @@ function CPlay()
 
 var g_play = new CPlay();
 
+function Show_RefreshPlayScopeButton()
+{
+    g_bttnPlayScope.Show("divPlayScopeBttns");
+}
+
+function OnBttnPlayScopeClick(nIdx)
+{
+    g_bttnPlayScope.OnClick(nIdx);
+}
+
+function UpdatePlayScopeButton()
+{
+    var td = document.getElementById("tdBttnPlayScope");
+    td.innerHTML = g_bttnPlayScope.Title();
+}
 
 function Show_RefreshPlaySpeedButton()
 {
@@ -948,7 +974,6 @@ function OnBttnPlaySpeedClick(nIdx)
     g_play.ChangeInterval();
 }
 
-
 function UpdatePlayStatus(nCount, nTotal)
 {
     var td = document.getElementById("tdPlayCount");
@@ -959,16 +984,42 @@ function UpdatePlayStatus(nCount, nTotal)
         td = document.getElementById("tdPlayTotal");
         td.innerHTML = nTotal.toString();
     }
-
 }
+
+function ShowScopeDialog(bShow)
+{
+    var div = document.getElementById("divPlayScope");
+    div.style.display = bShow ? "" : "none";
+}
+
+function OnPlayScope()
+{
+    Show_RefreshPlayScopeButton();
+    ShowScopeDialog(true);
+}
+
+function OnPlayScopeOK()
+{
+    UpdatePlayScopeButton();
+    ShowScopeDialog(false);
+}
+
 
 function StopPlay()
 {
-    if (g_play.Status >= 0)
-    {
-        g_play.Stop();
-    }
+    if (g_play.Status < 0)
+        return;
 
+    g_play.Stop();
+
+    if (g_queue.anNum.length > 0)
+        g_queue.anNum.splice(0, g_queue.anNum.length);
+
+    ResetData(g_play.anNum, true);
+    UpdatePlayStatus(g_play.anNum.length, -1);
+    ShowStatitics();
+
+    /*
     if (g_play.nIDX < (g_play.anNum.length - 1))
     {
         var nn = g_queue.anNum.length;
@@ -980,6 +1031,7 @@ function StopPlay()
 
         Show_AddNum();
     }
+    */
 }
 
 function OnQuitStats()
@@ -1002,8 +1054,8 @@ function UpdatePlayButtons()
     else
         bttn.innerHTML = "暂停";
 
-    bttn = document.getElementById("tdBttnPlayRestart");
-    bttn.className = "bttnPlay " + ((g_play.Status <= 0) ? "tdSBEnabled" : "tdSBDisabled");
+    bttn = document.getElementById("tdBttnPlayScope");
+    bttn.className = "bttnPlay " + ((g_play.Status < 0) ? "tdSBEnabled" : "tdSBDisabled");
 
     bttn = document.getElementById("tdBttnPlayStop");
     bttn.className = "bttnPlay tdSBEnabled";
@@ -1029,16 +1081,11 @@ function OnPlayTimer()
     Play_Show_AddNum();
 }
 
-
-function OnPlayPauseContinue()
+function RestartPlay()
 {
-    g_play.PauseContinue();
-    UpdatePlayButtons();
-}
+    StopPlay();
 
-function OnPlayRestart()
-{
-    g_play.Start(g_queue);
+    g_play.Start(g_queue, g_bttnPlayScope.Value());
     var num = g_play.Step();
     g_waves.Reset(-1, -1);
     Calc_AddNum(num);
@@ -1047,6 +1094,25 @@ function OnPlayRestart()
 
     UpdatePlayButtons();
     UpdatePlayStatus(g_play.nIDX + 1, -1);
+}
+
+
+function OnPlayStart()
+{
+    var bttn1 = document.getElementById("tdBttnPlayStart");
+    bttn1.style.display = "none";
+
+    var bttn2 = document.getElementById("tdBttnPlayPauseContinue");
+    bttn2.style.display = "";
+
+    RestartPlay();
+    UpdatePlayStatus(g_play.nIDX + 1, g_play.anNum.length);
+}
+
+function OnPlayPauseContinue()
+{
+    g_play.PauseContinue();
+    UpdatePlayButtons();
 }
 
 function OnPlayStop()
@@ -1061,6 +1127,7 @@ function OnPlayStop()
         OnQuitStats();
     }
 }
+
 
 function OnViewNum()
 {
@@ -1422,8 +1489,9 @@ $(document).ready(function ()
     // play:
     $("#tdBttnPlay").click(function ()
     {
-        OnPlayRestart();
-        UpdatePlayStatus(g_play.nIDX + 1, g_play.anNum.length);
+//        RestartPlay();
+        UpdatePlayScopeButton();
+        UpdatePlayStatus(g_queue.anNum.length, g_queue.anNum.length);
 
         Show_RefreshPlaySpeedButton();
         var div = document.getElementById("divPlayBttns");
@@ -1688,3 +1756,4 @@ $(document).ready(function ()
     });
 
 });
+
