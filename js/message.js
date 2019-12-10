@@ -894,6 +894,7 @@ function CPlay()
             }
 
             ResetData(anNumTmp, true);
+            ShowStatitics();
 
             this.nIDX = nLen - 1;
         }
@@ -919,17 +920,21 @@ function CPlay()
 
     this.Stop = function ()
     {
+        if (this.Status >= 0)
+        {
+            window.clearInterval(this.TimerID);
+            this.Status = -1;
+        }
+
         var bttn1 = document.getElementById("tdBttnPlayStart");
         bttn1.style.display = "";
 
         var bttn2 = document.getElementById("tdBttnPlayPauseContinue");
         bttn2.style.display = "none";
 
-        if (this.Status >= 0)
-        {
-            window.clearInterval(this.TimerID);
-            this.Status = -1;
-        }
+        var bttn = document.getElementById("tdBttnPlayStop");
+        bttn.className = "bttnPlay tdSBEnabled";
+        bttn.innerHTML = "退出";
     }
 
     this.Step = function ()
@@ -1085,9 +1090,9 @@ function RestartPlay()
 {
     StopPlay();
 
+    g_waves.Reset(-1, -1);
     g_play.Start(g_queue, g_bttnPlayScope.Value());
     var num = g_play.Step();
-    g_waves.Reset(-1, -1);
     Calc_AddNum(num);
     Calc_Sum();
     Play_Show_AddNum();
@@ -1491,13 +1496,18 @@ $(document).ready(function ()
     {
 //        RestartPlay();
         UpdatePlayScopeButton();
+
+        var bttn = document.getElementById("tdBttnPlayStop");
+        bttn.className = "bttnPlay tdSBEnabled";
+        bttn.innerHTML = "退出";
+
         UpdatePlayStatus(g_queue.anNum.length, g_queue.anNum.length);
 
         Show_RefreshPlaySpeedButton();
         var div = document.getElementById("divPlayBttns");
         div.style.display = "";
 
-        OpenStatistics("g");
+        OpenStatistics("play");
     });
 
     $("#tdBttnSave").click(function ()
