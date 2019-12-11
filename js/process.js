@@ -1390,6 +1390,8 @@ function Show_StatsFrequencies(bSwitchToDraw)
         div.style.display = "none";
     }
 
+    // 这一段是显示个行、组频率的详细数值，意义不大，已经暂时弃用 >>>>>>>>>>>>>>>>>>>>>>>
+
     var strHtml = "<table cellpadding='0' cellspacing='0' border='0' width='100%' id='tblStatsFrequency'><tr>";
     strHtml += "<td>一组</td><td>二组</td><td>三组</td><td>组</td>";
     strHtml += "<td>1行</td><td>2行</td><td>3行</td><td>行</td></tr>";
@@ -1410,7 +1412,9 @@ function Show_StatsFrequencies(bSwitchToDraw)
     strHtml += "</table>"
     div.innerHTML = strHtml;
 
-    var nMax = 180;
+    // 这一段是显示个行、组频率的详细数值，意义不大，已经暂时弃用 <<<<<<<<<<<<<<<<<<<<<<<
+
+    var nMax = 180; // 最多显示180轮
 
     var canvas = document.getElementById("canvas");
     canvas.width = 935;
@@ -1445,6 +1449,8 @@ function Show_StatsFrequencies(bSwitchToDraw)
             for (var n = nIdx0; n < nLen; ++n)
             {
                 var i = n - nIdx0;
+                if (nLen < nMax)
+                    i = i + (nMax - nLen);
 
                 context.moveTo(20 + i * 5, anBase[nn]);
                 context.lineTo(20 + i * 5, anBase[nn] - (g_waves.afFrequency[nn][n] * nHeight100 / 100));

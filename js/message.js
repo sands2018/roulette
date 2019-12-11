@@ -619,6 +619,18 @@ function OnMainSwitchStats(bShowGames)
 
 function OnSwitchStatsFrequenciesTextDraw(nIdx)
 {
+    var div = document.getElementById("divStatsFrequenciesDraw");
+    var nDivW = div.offsetWidth;
+    var nDivH = div.offsetHeight;
+
+    var mouseX = event.clientX;
+    var mouseY = event.clientY;
+
+    var fPos = mouseY * 1.0 / nDivH;
+    var nnn = Math.floor((fPos - 110.0 / nDivH) * 10);
+    alert(nnn);
+    return;
+
     var astrID = ["divStatsFrequenciesText", "divStatsFrequenciesDraw"];
     for (var n = 0; n < 2; ++n)
     {
