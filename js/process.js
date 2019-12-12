@@ -2022,6 +2022,29 @@ function OnToolsTrim()
     txt.value = strTxt;
 }
 
+function OnToolsRevert()
+{
+    OnToolsTrim();
+
+    var txt = document.getElementById("txtTools");
+    var strText = txt.value;
+    var astrTxt = strText.split(",");
+
+    var strTxt = "";
+    var nLen = astrTxt.length;
+    if (nLen > 0)
+    {
+        for(var n = nLen - 1; n >= 0; --n)
+        {
+            strTxt += astrTxt[n];
+            if (n != 0)
+                strTxt += ",";
+        }
+    }
+
+    txt.value = strTxt;
+}
+
 function OnToolsCopy()
 {
     var txt = document.getElementById("txtTools");
