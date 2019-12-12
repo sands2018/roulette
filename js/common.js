@@ -2814,7 +2814,7 @@ function ShowStatsScopeBttns(nTabIdx, nSubIdx)
 
     // 统计页是否带frequecy scope按钮：
     var bShowFrequencyScope = (
-        (nTabIdx == IDX_TAB_FREQUENCIES)
+        ((nTabIdx == IDX_TAB_FREQUENCIES) && (g_waves.nFrequnceyCR < 0))
         );
 
     var div1 = document.getElementById("divStatsScopeBttns");
