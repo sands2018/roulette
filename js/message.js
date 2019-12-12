@@ -652,6 +652,9 @@ function OnSwitchStatsFrequenciesDrawDetail(nIdx)
         Show_StatsFrequencies();
     }
 
+    var div1 = document.getElementById("divStatsFrequencyScopeBttns");
+    div1.style.display = (nIdx == 0) ? "" : "none";
+
     var astrID = ["divStatsFrequenciesDetail", "divStatsFrequenciesDraw"];
     for (var n = 0; n < 2; ++n)
     {
