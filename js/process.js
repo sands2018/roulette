@@ -493,7 +493,7 @@ function PageInit_Data(bCleanAll)
     g_status.Reset();
     g_queue.Reset();
 
-    g_waves.Reset(g_bttnStatsScope.Value(), g_bttnStatsFrequencyScope.Value());
+    g_waves.Reset(g_bttnStatsScope.Value());
 
     if(!bCleanAll)
         return;
@@ -1388,38 +1388,8 @@ function Show_StatsFrequencies()
     if (nCR >= 0)
         return;
 
-    var nLen = g_waves.afFrequency[0].length;
+    var nLen = g_waves.afFrequencies[0][g_bttnStatsFrequencyScope.nSelIdx].length;
 
-    // 这一段是显示个行、组频率的详细数值，意义不大，已经暂时弃用 >>>>>>>>>>>>>>>>>>>>>>>
-
-    /*
-    var div = document.getElementById("divStatsFrequenciesText");
-
-    if (bSwitchToDraw) // bSwitchToDraw 本来是这个函数的参数
-    {
-        div.style.display = "none";
-    }
-
-    var strHtml = "<table cellpadding='0' cellspacing='0' border='0' width='100%' id='tblStatsFrequency'><tr>";
-    strHtml += "<td>一组</td><td>二组</td><td>三组</td><td>组</td>";
-    strHtml += "<td>1行</td><td>2行</td><td>3行</td><td>行</td></tr>";
-
-    if (nLen > 0)
-    {
-        for (var n = nLen - 1; n >= 0 ; --n)
-        {
-            strHtml += "<tr>";
-            for (var i = 0; i < 8; ++i)
-                strHtml += "<td>" + g_waves.afFrequency[i][n].toFixed(0) + "</td>"
-            strHtml += "</tr>";
-        }
-    }
-
-    strHtml += "</table>"
-    div.innerHTML = strHtml;
-    */
-
-    // 这一段是显示个行、组频率的详细数值，意义不大，已经暂时弃用 <<<<<<<<<<<<<<<<<<<<<<<
 
     var nMax = 180; // 最多显示180轮
 
@@ -1443,27 +1413,38 @@ function Show_StatsFrequencies()
 
     if (nLen > 0)
     {
+        var n1 = g_bttnStatsFrequencyScope.nSelIdx;
+
         for (var nn = 0; nn < 8; ++nn)
         {
-            context.beginPath();
-            if ((nn % 4) == 3)
-                context.strokeStyle = "#ff9977";
-            else
-                context.strokeStyle = "#a9cf99";
-
-            context.lineWidth = 5;
-
             for (var n = nIdx0; n < nLen; ++n)
             {
+                context.beginPath();
+
+                context.lineWidth = 5;
+
+                if ((nn % 4) == 3)
+                {
+                    context.strokeStyle = "#999999";
+                }
+                else
+                {
+                    if (g_waves.afFrequencies[nn][n1][n] >= 0)
+                        context.strokeStyle = "#a9cf99";
+                    else
+                        context.strokeStyle = "#eeaf9f";
+                }
+
                 var i = n - nIdx0;
                 if (nLen < nMax)
                     i = i + (nMax - nLen);
 
                 context.moveTo(20 + i * 5, anBase[nn]);
-                context.lineTo(20 + i * 5, anBase[nn] - (g_waves.afFrequency[nn][n] * nHeight100 / 100));
+                context.lineTo(20 + i * 5, anBase[nn] - (g_waves.afFrequencies[nn][n1][n] * nHeight100 / 100));
+
+                context.closePath();
+                context.stroke();
             }
-            context.closePath();
-            context.stroke();
         }
     }
 
@@ -1505,14 +1486,6 @@ function Show_StatsFrequencies()
 
         context.fillText(strText, 25, anBase[nn] - nHeight50 - 5);
     }
-
-    /*
-    if (bSwitchToDraw)
-    {
-        var div = document.getElementById("divStatsFrequenciesDraw");
-        div.style.display = "";
-    }
-    */
 }
 
 // 频率 - 单行组多区域
@@ -1522,6 +1495,85 @@ function Show_StatsFrequenciesDetail()
     if (nCR < 0)
         return;
 
+    var nScopeCount = g_anFrequencyScope.length;
+
+    var nMax = 180; // 最多显示180轮
+
+    var canvas = document.getElementById("cvFrequenciesDetail");
+    canvas.width = 935;
+    canvas.height = 1500;
+
+    var context = canvas.getContext('2d');
+
+    context.clearRect(0, 0, canvas.width, canvas.height);
+
+    var nHeight100 = canvas.height / 16;
+    var nHeight50 = nHeight100 / 2;
+    var anBase = new Array(nScopeCount);
+    for (var nn = 0; nn < nScopeCount; ++nn)
+        anBase[nn] = 10 + nHeight100 * (2 * nn + 1);
+
+    for (var nn = 0; nn < nScopeCount; ++nn)
+    {
+        var nLen = g_waves.afFrequencies[0][nn].length;
+        if (nLen <= 0)
+            continue;
+
+        var nIdx0 = 0;
+        if (nLen > nMax)
+            nIdx0 = nLen - nMax;
+
+        for (var n = nIdx0; n < nLen; ++n)
+        {
+            context.beginPath();
+
+            context.lineWidth = 5;
+
+            if (g_waves.afFrequencies[nCR][nn][n] >= 0)
+                context.strokeStyle = "#a9cf99";
+            else
+                context.strokeStyle = "#eeaf9f";
+
+            var i = n - nIdx0;
+            if (nLen < nMax)
+                i = i + (nMax - nLen);
+
+            context.moveTo(20 + i * 5, anBase[nn]);
+            context.lineTo(20 + i * 5, anBase[nn] - (g_waves.afFrequencies[nCR][nn][n] * nHeight100 / 100));
+
+            context.closePath();
+            context.stroke();
+        }
+    }
+
+    context.strokeStyle = "#8f8f8f";
+    context.lineWidth = 1;
+    context.beginPath();
+    for (var n = 0; n <= 4 * nScopeCount; ++n)
+    {
+        context.moveTo(18, 10 + nHeight50 * n);
+        context.lineTo(917, 10 + nHeight50 * n);
+    }
+    context.closePath();
+    context.stroke();
+
+    context.strokeStyle = "#afafaf";
+    context.lineWidth = 1;
+    context.beginPath();
+    for (var n = 0; n <= 10; ++n)
+    {
+        context.moveTo(18 + 90 * n, 10);
+        context.lineTo(18 + 90 * n, 10 + nHeight50 * 4 * nScopeCount);
+    }
+    context.closePath();
+    context.stroke();
+
+    context.font = "30px 微软雅黑";
+
+    for (var nn = 0; nn < nScopeCount; ++nn)
+    {
+        context.fillText(g_anFrequencyScope[nn].toString(), 25, anBase[nn] - nHeight50 - 5);
+    }
 }
 
 function DrawDistances8()

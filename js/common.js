@@ -2001,9 +2001,8 @@ function CStatsRoundSum()
 function CStatsWaves()
 {
     this.anNum = new Array(); // 号码数组
-    this.afFrequency = new Array(8); // 平均位移，和统计区间相关。统计区间改变，这个值需要重新计算；
+    this.afFrequencies = new Array(8); // 三维数组：行组、区间、频率值
     this.nScope = 18; // scope值会在页面初始化的时候PageInit_Data()中通过Reset()来初始化
-    this.nFrequencyScope = 18; // frequency scope值会在页面初始化的时候PageInit_Data()中通过Reset()来初始化
     this.nFrequnceyCR = -1; // <0: 是所有行组的频率图; >=0 具体某一行或某一组的频率
 
     this.anDistance = new Array(8); // 距离值，和统计区间无关，从1开始（出来后马上又出来，距离是1）
@@ -2011,17 +2010,18 @@ function CStatsWaves()
 
     for (var n = 0; n < 8; ++n)
     {
-        this.afFrequency[n] = new Array();
+        this.afFrequencies[n] = new Array();
+        for (var n1 = 0; n1 < g_anFrequencyScope.length; ++n1)
+            this.afFrequencies[n][n1] = new Array();
+
         this.anDistance[n] = new Array();
     }
+
  
-    this.Reset = function (nScope, nFrequencyScope)
+    this.Reset = function (nScope)
     {
         if(nScope >= 0)
             this.nScope = nScope;
-
-        if (nFrequencyScope >= 0)
-            this.nFrequencyScope = nFrequencyScope;
 
         var nLen = this.anNum.length;
         if (nLen > 0)
@@ -2029,9 +2029,12 @@ function CStatsWaves()
 
         for (var n = 0; n < 8; ++n)
         {
-            nLen = this.afFrequency[n].length;
-            if (nLen > 0)
-                this.afFrequency[n].splice(0, nLen);
+            for (var n1 = 0; n1 < g_anFrequencyScope.length; ++n1)
+            {
+                nLen = this.afFrequencies[n][n1].length;
+                if (nLen > 0)
+                    this.afFrequencies[n][n1].splice(0, nLen);
+            }
         }
 
         for (var n = 0; n < 8; ++n)
@@ -2072,66 +2075,54 @@ function CStatsWaves()
             this.anPrev[i] = nIdx;
         }
 
-        if (this.anNum.length < this.nFrequencyScope)
-            return;
-
         var anSum = new Array(6);
-        for (var n = 0; n < 6; ++n)
-            anSum[n] = 0;
 
-        for (var n = this.anNum.length - 1; n >= this.anNum.length - this.nFrequencyScope; --n)
+        for (var n1 = 0; n1 < g_anFrequencyScope.length; ++n1)
         {
-            var nNum = this.anNum[n];
-            nCol = GetNumCol(nNum);
-            nRow = GetNumRow(nNum);
-            anSum[nCol]++;
-            anSum[nRow + 3]++;
-        }
+            if (this.anNum.length < g_anFrequencyScope[n1])
+            continue;
 
-        var fAv = this.nFrequencyScope / 3.0;
+            for (var n = 0; n < 6; ++n)
+                anSum[n] = 0;
 
-        var fMaxOffset = 0;
+            for (var n = this.anNum.length - 1; n >= this.anNum.length - g_anFrequencyScope[n1]; --n)
+            {
+                var nNum = this.anNum[n];
+                nCol = GetNumCol(nNum);
+                nRow = GetNumRow(nNum);
+                anSum[nCol]++;
+                anSum[nRow + 3]++;
+            }
 
-        for (var n = 0; n < 6; ++n)
-        {
-            var nIdx = n;
-            if (n >= 3)
-                nIdx += 1;
+            var fAv = g_anFrequencyScope[n1] / 3.0;
 
-            var fOffset = (anSum[n] - fAv) * 100.0 / fAv;
-            this.afFrequency[nIdx].push(fOffset);
+            var fMaxOffset = 0;
 
-            if ((n % 3) == 0)
-                fMaxOffset = 0;
+            for (var n = 0; n < 6; ++n)
+            {
+                var nIdx = n;
+                if (n >= 3)
+                    nIdx += 1;
 
-            var fOffsetAbs = Math.abs(fOffset);
-            if (fOffsetAbs > fMaxOffset)
-                fMaxOffset = fOffsetAbs;
+                var fOffset = (anSum[n] - fAv) * 100.0 / fAv;
+                this.afFrequencies[nIdx][n1].push(fOffset);
 
-            if ((n % 3) == 2)
-                this.afFrequency[nIdx + 1].push(fMaxOffset)
+                if ((n % 3) == 0)
+                    fMaxOffset = 0;
+
+                var fOffsetAbs = Math.abs(fOffset);
+                if (fOffsetAbs > fMaxOffset)
+                    fMaxOffset = fOffsetAbs;
+
+                if ((n % 3) == 2)
+                    this.afFrequencies[nIdx + 1][n1].push(fMaxOffset)
+            }
         }
     }
 
     this.ResetScope = function (nScope)
     {
         this.nScope = nScope;
-    }
-
-    this.ResetFrequencyScope = function (nFrequencyScope)
-    {
-        if (this.nFrequencyScope == nFrequencyScope)
-            return;
-
-        var anNumTemp = new Array(this.anNum.length);
-
-        for (var n = 0; n < this.anNum.length; ++n)
-            anNumTemp[n] = this.anNum[n];
-
-        this.Reset(-1, nFrequencyScope);
-
-        for (var n = 0; n < anNumTemp.length; ++n)
-            this.AddNum(anNumTemp[n]);
     }
 
     // nDetail: 8、4、1

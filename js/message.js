@@ -341,7 +341,6 @@ function Show_RefreshStatsFrequencyScopeButton()
 function OnBttnStatsFrequencyScopeClick(nIdx)
 {
     g_bttnStatsFrequencyScope.OnClick(nIdx);
-    g_waves.ResetFrequencyScope(g_bttnStatsFrequencyScope.Value());
     Show_StatsFrequencies();       // 频率 - 多行组单区域
     Show_StatsFrequenciesDetail(); // 频率 - 单行组多区域
 }
@@ -619,20 +618,6 @@ function OnMainSwitchStats(bShowGames)
 }
 
 
-// 这一段是显示个行、组频率的详细数值，意义不大，已经暂时弃用 >>>>>>>>>>>>>>>>>>>>>>>
-
-function OnSwitchStatsFrequenciesTextDraw(nIdx)
-{
-    var astrID = ["divStatsFrequenciesText", "divStatsFrequenciesDraw"];
-    for (var n = 0; n < 2; ++n)
-    {
-        var div = document.getElementById(astrID[n]);
-        div.style.display = ((nIdx == n) ? "none" : "");
-    }
-}
-
-// 这一段是显示个行、组频率的详细数值，意义不大，已经暂时弃用 <<<<<<<<<<<<<<<<<<<<<<<
-
 function OnSwitchStatsFrequenciesDrawDetail(nIdx)
 {
     if (nIdx == 1)
@@ -649,17 +634,22 @@ function OnSwitchStatsFrequenciesDrawDetail(nIdx)
             fPos = mouseY * 1.0 / nDivH;
 
         var nCR = Math.floor((fPos - 110.0 / nDivH) * 10);
-        if ((nCR == 3) || (nCR == 7))
+
+        if ((nCR < 0) || (nCR > 7) || ((nCR == 3) || (nCR == 7)))
             return;
 
         g_waves.nFrequnceyCR = nCR;
 
         var divT = document.getElementById("divStatsFrequenciesDetailTitle");
         divT.innerHTML = "各区间频率图 - " + GetColRowLongSpec(nCR);
+
+        Show_StatsFrequenciesDetail();
     }
     else
     {
         g_waves.nFrequnceyCR = -1;
+
+        Show_StatsFrequencies();
     }
 
     var astrID = ["divStatsFrequenciesDetail", "divStatsFrequenciesDraw"];
@@ -1134,7 +1124,7 @@ function RestartPlay()
 {
     StopPlay();
 
-    g_waves.Reset(-1, -1);
+    g_waves.Reset(-1);
     g_play.Start(g_queue, g_bttnPlayScope.Value());
     var num = g_play.Step();
     Calc_AddNum(num);
