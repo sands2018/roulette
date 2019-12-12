@@ -38,8 +38,9 @@ function OnPageInit()
     Show_StatsGroupsCount();
     Show_RefreshStatsGroupButtons();
     Show_RefreshSysButtons();
+    Show_RefreshStatsFrequencyDetailButtons();
 
-    Show_RefreshStatsSumButton();
+    Show_RefreshStatsSumButtons();
     Show_SumLists();
     Show_StatsGames(-1, true); // 打法（主页）
 
@@ -242,7 +243,7 @@ function OnBttnStatsGroupsClick(nIdx)
 
 // ----------------------------------------------
 
-function Show_RefreshStatsSumButton()
+function Show_RefreshStatsSumButtons()
 {
     g_bttnStatsSum.Show("divStatsSumBttns");
 }
@@ -257,7 +258,7 @@ function OnBttnStatsSumClick(nIdx)
 // ----------------------------------------------
 
 
-function Show_RefreshStatsButton()
+function Show_RefreshStatsButtons()
 {
     g_bttnStats.Show("divStatsBttns");
 }
@@ -277,7 +278,7 @@ function OnBttnStatsClick(nIdx)
 // ----------------------------------------------
 
 
-function Show_RefreshStatsColRowButton()
+function Show_RefreshStatsColRowButtons()
 {
     g_bttnStatsColRow.Show("divStatsColRowBttns");
 }
@@ -292,7 +293,7 @@ function OnBttnStatsColRowClick(nIdx)
 // ----------------------------------------------
 
 
-function Show_RefreshStatsOtherButton()
+function Show_RefreshStatsOtherButtons()
 {
     g_bttnStatsOther.Show("divStatsOtherBttns");
 }
@@ -306,7 +307,7 @@ function OnBttnStatsOtherClick(nIdx)
 
 // ----------------------------------------------
 
-function Show_RefreshStatsScopeButton()
+function Show_RefreshStatsScopeButtons()
 {
     g_bttnStatsScope.Show("divStatsScopeBttns");
 }
@@ -333,7 +334,7 @@ function OnBttnStatsScopeClick(nIdx)
 // ----------------------------------------------
 
 
-function Show_RefreshStatsFrequencyScopeButton()
+function Show_RefreshStatsFrequencyScopeButtons()
 {
     g_bttnStatsFrequencyScope.Show("divStatsFrequencyScopeBttns");
 }
@@ -347,7 +348,7 @@ function OnBttnStatsFrequencyScopeClick(nIdx)
 
 // ----------------------------------------------
 
-function Show_RefreshStatsLongsBetButton()
+function Show_RefreshStatsLongsBetButtons()
 {
     g_bttnStatsLongsBet.Show("divStatsLongsBetBttns");
 }
@@ -360,7 +361,7 @@ function OnBttnStatsLongsBetClick(nIdx)
 
 // ----------------------------------------------
 
-function Show_RefreshStatsLongsButton()
+function Show_RefreshStatsLongsButtons()
 {
     g_bttnStatsLongs.Show("divStatsLongsBttns");
 }
@@ -373,7 +374,25 @@ function OnBttnStatsLongsClick(nIdx)
 
 // ----------------------------------------------
 
-function Show_RefreshViewNumButton()
+function Show_RefreshStatsFrequencyDetailButtons()
+{
+    g_bttnStatsFrequencyDetail.Show("divStatsFrequencyDetailBttns");
+}
+
+function OnBttnStatsFrequencyDetailClick(nIdx)
+{
+    g_bttnStatsFrequencyDetail.OnClick(nIdx);
+
+    if(g_bttnStatsFrequencyDetail.Value() != g_waves.nFrequnceyCR)
+    {
+        g_waves.nFrequnceyCR = g_bttnStatsFrequencyDetail.Value();
+        Show_StatsFrequenciesDetail();
+    }
+}
+
+// ----------------------------------------------
+
+function Show_RefreshViewNumButtons()
 {
     g_bttnViewNum.Show("divViewNumBttns");
 }
@@ -397,7 +416,7 @@ function SwithStatsCRDWindow()
     div1.style.display = bDiv0 ? "none" : "";
 }
 
-function Show_RefreshStatsCRDOptButton()
+function Show_RefreshStatsCRDOptButtons()
 {
     g_bttnStatsCRDOpt.Show("divStatsCRDOptBttns");
     SwithStatsCRDWindow();
@@ -412,7 +431,7 @@ function OnBttnStatsCRDOptClick(nIdx)
 
 // ----------------------------------------------
 
-function Show_RefreshStatsCRDRoundStartButton()
+function Show_RefreshStatsCRDRoundStartButtons()
 {
     g_bttnStatsCRDRoundStart.Show("divStatsCRDRoundStartBttns");
 }
@@ -426,7 +445,7 @@ function OnBttnStatsCRDRoundStartClick(nIdx)
 
 // ----------------------------------------------
 
-function Show_RefreshStatsCRDRoundBetButton()
+function Show_RefreshStatsCRDRoundBetButtons()
 {
     g_bttnStatsCRDRoundBet.Show("divStatsCRDRoundBetBttns");
 }
@@ -586,16 +605,16 @@ function OpenStatistics(strID)
         g_bttnStats.nSelIdx = g_status.IndirectStatsIdx;
     }
 
-    Show_RefreshStatsScopeButton();
-    Show_RefreshStatsFrequencyScopeButton();
-    Show_RefreshStatsColRowButton();
-    Show_RefreshStatsLongsButton();
-    Show_RefreshStatsLongsBetButton();
-    Show_RefreshStatsOtherButton();
-    Show_RefreshStatsButton();
-    Show_RefreshStatsCRDOptButton();
-    Show_RefreshStatsCRDRoundStartButton();
-    Show_RefreshStatsCRDRoundBetButton();
+    Show_RefreshStatsScopeButtons();
+    Show_RefreshStatsFrequencyScopeButtons();
+    Show_RefreshStatsColRowButtons();
+    Show_RefreshStatsLongsButtons();
+    Show_RefreshStatsLongsBetButtons();
+    Show_RefreshStatsOtherButtons();
+    Show_RefreshStatsButtons();
+    Show_RefreshStatsCRDOptButtons();
+    Show_RefreshStatsCRDRoundStartButtons();
+    Show_RefreshStatsCRDRoundBetButtons();
 
     SwitchStats();
 }
@@ -640,8 +659,11 @@ function OnSwitchStatsFrequenciesDrawDetail(nIdx)
 
         g_waves.nFrequnceyCR = nCR;
 
+        g_bttnStatsFrequencyDetail.OnClick((nCR < 4)? nCR : (nCR - 1));
+        /*
         var divT = document.getElementById("divStatsFrequenciesDetailTitle");
         divT.innerHTML = "各区间频率图 - " + GetColRowLongSpec(nCR);
+        */
 
         Show_StatsFrequenciesDetail();
     }
@@ -989,7 +1011,7 @@ function CPlay()
 
 var g_play = new CPlay();
 
-function Show_RefreshPlayScopeButton()
+function Show_RefreshPlayScopeButtons()
 {
     g_bttnPlayScope.Show("divPlayScopeBttns");
 }
@@ -999,13 +1021,13 @@ function OnBttnPlayScopeClick(nIdx)
     g_bttnPlayScope.OnClick(nIdx);
 }
 
-function UpdatePlayScopeButton()
+function UpdatePlayScopeButtons()
 {
     var td = document.getElementById("tdBttnPlayScope");
     td.innerHTML = g_bttnPlayScope.Title();
 }
 
-function Show_RefreshPlaySpeedButton()
+function Show_RefreshPlaySpeedButtons()
 {
     g_bttnPlaySpeed.Show("tdPlaySpeedBttns");
 }
@@ -1036,13 +1058,13 @@ function ShowScopeDialog(bShow)
 
 function OnPlayScope()
 {
-    Show_RefreshPlayScopeButton();
+    Show_RefreshPlayScopeButtons();
     ShowScopeDialog(true);
 }
 
 function OnPlayScopeOK()
 {
-    UpdatePlayScopeButton();
+    UpdatePlayScopeButtons();
     ShowScopeDialog(false);
 }
 
@@ -1176,7 +1198,7 @@ function OnViewNum()
     if (g_queue.nIDX < 0)
         return;
 
-    Show_RefreshViewNumButton();
+    Show_RefreshViewNumButtons();
     Show_ViewNum();
 
     var div = document.getElementById("divViewNum");
@@ -1532,7 +1554,7 @@ $(document).ready(function ()
     $("#tdBttnPlay").click(function ()
     {
 //        RestartPlay();
-        UpdatePlayScopeButton();
+        UpdatePlayScopeButtons();
 
         var bttn = document.getElementById("tdBttnPlayStop");
         bttn.className = "bttnPlay tdSBEnabled";
@@ -1540,7 +1562,7 @@ $(document).ready(function ()
 
         UpdatePlayStatus(g_queue.anNum.length, g_queue.anNum.length);
 
-        Show_RefreshPlaySpeedButton();
+        Show_RefreshPlaySpeedButtons();
         var div = document.getElementById("divPlayBttns");
         div.style.display = "";
 

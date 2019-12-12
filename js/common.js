@@ -2828,7 +2828,7 @@ function ShowStatsScopeBttns(nTabIdx, nSubIdx)
 // stats options <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 var g_bttnStatsColRow = new CBttnOptions("StatsColRow", [0, 1, 2], ["明细", "统计图", "统计数据"], 0, 240, -1);
-
+var g_bttnStatsFrequencyDetail = new CBttnOptions("StatsFrequencyDetail", [0, 1, 2, 4, 5, 6], ["一组", "二组", "三组", "1行", "2行", "3行"], 0, 0, -1);
 var g_bttnStatsOther = new CBttnOptions("StatsOther", [0, 1, 2], ["追打", "号码", "轮次"], 0, 180, -1);
 var g_bttnViewNum = new CBttnOptions("ViewNum", [0, 1, 2, 3, 4, 5], ["一组", "二组", "三组", "1行", "2行", "3行"], 0, 0, -1);
 var g_bttnPlaySpeed = new CBttnOptions("PlaySpeed", [1, 2, 3], ["1/2", "1x", "2x"], 1, 80, -1);

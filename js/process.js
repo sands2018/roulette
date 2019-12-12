@@ -1407,9 +1407,11 @@ function Show_StatsFrequencies()
 
     var nHeight100 = canvas.height / 20;
     var nHeight50 = nHeight100 / 2;
+    var nY0 = 20;
+
     var anBase = new Array(8);
     for (var nn = 0; nn < 8; ++nn)
-        anBase[nn] = 10 + nHeight100 * (2 * nn + 1);
+        anBase[nn] = nY0 + nHeight100 * (2 * nn + 1);
 
     if (nLen > 0)
     {
@@ -1453,8 +1455,8 @@ function Show_StatsFrequencies()
     context.beginPath();
     for(var n = 0; n < 32; ++ n)
     {
-        context.moveTo(18, 10 + nHeight50 * n);
-        context.lineTo(917, 10 + nHeight50 * n);
+        context.moveTo(18, nY0 + nHeight50 * n);
+        context.lineTo(917, nY0 + nHeight50 * n);
     }
     context.closePath();
     context.stroke();
@@ -1464,8 +1466,8 @@ function Show_StatsFrequencies()
     context.beginPath();
     for (var n = 0; n <= 10; ++n)
     {
-        context.moveTo(18 + 90 * n, 10);
-        context.lineTo(18 + 90 * n, 10 + nHeight50 * 31);
+        context.moveTo(18 + 90 * n, nY0);
+        context.lineTo(18 + 90 * n, nY0 + nHeight50 * 31);
     }
     context.closePath();
     context.stroke();
@@ -1510,8 +1512,11 @@ function Show_StatsFrequenciesDetail()
     var nHeight100 = canvas.height / 16;
     var nHeight50 = nHeight100 / 2;
     var anBase = new Array(nScopeCount);
+
+    var nY0 = 30;
+
     for (var nn = 0; nn < nScopeCount; ++nn)
-        anBase[nn] = 10 + nHeight100 * (2 * nn + 1);
+        anBase[nn] = nY0 + nHeight100 * (2 * nn + 1);
 
     for (var nn = 0; nn < nScopeCount; ++nn)
     {
@@ -1551,8 +1556,8 @@ function Show_StatsFrequenciesDetail()
     context.beginPath();
     for (var n = 0; n <= 4 * nScopeCount; ++n)
     {
-        context.moveTo(18, 10 + nHeight50 * n);
-        context.lineTo(917, 10 + nHeight50 * n);
+        context.moveTo(18, nY0 + nHeight50 * n);
+        context.lineTo(917, nY0 + nHeight50 * n);
     }
     context.closePath();
     context.stroke();
@@ -1562,8 +1567,8 @@ function Show_StatsFrequenciesDetail()
     context.beginPath();
     for (var n = 0; n <= 10; ++n)
     {
-        context.moveTo(18 + 90 * n, 10);
-        context.lineTo(18 + 90 * n, 10 + nHeight50 * 4 * nScopeCount);
+        context.moveTo(18 + 90 * n, nY0);
+        context.lineTo(18 + 90 * n, nY0 + nHeight50 * 4 * nScopeCount);
     }
     context.closePath();
     context.stroke();
