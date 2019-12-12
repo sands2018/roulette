@@ -814,7 +814,16 @@ function OnBetsManageAdd()
         
         if (strBet != null)
         {
-            var rn = g_gamebets.AddBet(strBet);
+            var strTxt = strBet.replace(/[ ]/g, ",");
+            strTxt = strTxt.replace(/[，]/g, ",");
+            strTxt = strTxt.replace(/[；]/g, ",");
+            strTxt = strTxt.replace(/[;]/g, ",");
+            strTxt = strTxt.replace(/[、]/g, ",");
+            strTxt = strTxt.replace(/[,]+/g, ",");
+            strTxt = strTxt.replace(/^,/g, "");
+            strTxt = strTxt.replace(/,$/g, "");
+
+            var rn = g_gamebets.AddBet(strTxt);
             if (rn == -111)
             {
                 jAlert('该打法已存在', '不能添加');
