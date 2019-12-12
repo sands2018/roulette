@@ -2009,7 +2009,7 @@ function OnToolsTrim()
     var strText = txt.value;
 
     var strTxt = $.trim(strText);
-    strTxt = strTxt.replace(/[\r\n]/g, "");
+    strTxt = strTxt.replace(/[\r\n]/g, ",");
     strTxt = strTxt.replace(/[ ]/g, ",");
     strTxt = strTxt.replace(/[，]/g, ",");
     strTxt = strTxt.replace(/[；]/g, ",");
