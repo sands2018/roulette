@@ -342,7 +342,8 @@ function OnBttnStatsFrequencyScopeClick(nIdx)
 {
     g_bttnStatsFrequencyScope.OnClick(nIdx);
     g_waves.ResetFrequencyScope(g_bttnStatsFrequencyScope.Value());
-    Show_StatsFrequencies(false); // 频率
+    Show_StatsFrequencies();       // 频率 - 多行组单区域
+    Show_StatsFrequenciesDetail(); // 频率 - 单行组多区域
 }
 
 // ----------------------------------------------
@@ -617,18 +618,11 @@ function OnMainSwitchStats(bShowGames)
     div2.style.display = strDisplay2;
 }
 
+
+// 这一段是显示个行、组频率的详细数值，意义不大，已经暂时弃用 >>>>>>>>>>>>>>>>>>>>>>>
+
 function OnSwitchStatsFrequenciesTextDraw(nIdx)
 {
-    var div = document.getElementById("divStatsFrequenciesDraw");
-    var nDivW = div.offsetWidth;
-    var nDivH = div.offsetHeight;
-
-    var mouseX = event.clientX;
-    var mouseY = event.clientY;
-
-    var fPos = mouseY * 1.0 / nDivH;
-    var nnn = Math.floor((fPos - 110.0 / nDivH) * 10);
-
     var astrID = ["divStatsFrequenciesText", "divStatsFrequenciesDraw"];
     for (var n = 0; n < 2; ++n)
     {
@@ -636,6 +630,46 @@ function OnSwitchStatsFrequenciesTextDraw(nIdx)
         div.style.display = ((nIdx == n) ? "none" : "");
     }
 }
+
+// 这一段是显示个行、组频率的详细数值，意义不大，已经暂时弃用 <<<<<<<<<<<<<<<<<<<<<<<
+
+function OnSwitchStatsFrequenciesDrawDetail(nIdx)
+{
+    if (nIdx == 1)
+    {
+        var div = document.getElementById("divStatsFrequenciesDraw");
+        var nDivW = div.offsetWidth;
+        var nDivH = div.offsetHeight;
+
+        var mouseX = event.clientX;
+        var mouseY = event.clientY;
+
+        var fPos = 0;
+        if (nDivH != 0)
+            fPos = mouseY * 1.0 / nDivH;
+
+        var nCR = Math.floor((fPos - 110.0 / nDivH) * 10);
+        if ((nCR == 3) || (nCR == 7))
+            return;
+
+        g_waves.nFrequnceyCR = nCR;
+
+        var divT = document.getElementById("divStatsFrequenciesDetailTitle");
+        divT.innerHTML = "各区间频率图 - " + GetColRowLongSpec(nCR);
+    }
+    else
+    {
+        g_waves.nFrequnceyCR = -1;
+    }
+
+    var astrID = ["divStatsFrequenciesDetail", "divStatsFrequenciesDraw"];
+    for (var n = 0; n < 2; ++n)
+    {
+        var div = document.getElementById(astrID[n]);
+        div.style.display = ((nIdx == n) ? "none" : "");
+    }
+}
+
 
 function OnConfigCancel()
 {

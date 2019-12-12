@@ -15,6 +15,10 @@ var g_astrNumberColor =
 // stats groups active button background color
 var g_s_c_sg_bk_active = "#EBE3CB";
 
+// 频率统计区间：
+var g_anFrequencyScope = [18, 36, 72, 144, 288, 576];
+
+
 // global variables: ------------------------------------------------
 
 var QUEUE_MAX_COUNT = 100;
@@ -2000,6 +2004,7 @@ function CStatsWaves()
     this.afFrequency = new Array(8); // 平均位移，和统计区间相关。统计区间改变，这个值需要重新计算；
     this.nScope = 18; // scope值会在页面初始化的时候PageInit_Data()中通过Reset()来初始化
     this.nFrequencyScope = 18; // frequency scope值会在页面初始化的时候PageInit_Data()中通过Reset()来初始化
+    this.nFrequnceyCR = -1; // <0: 是所有行组的频率图; >=0 具体某一行或某一组的频率
 
     this.anDistance = new Array(8); // 距离值，和统计区间无关，从1开始（出来后马上又出来，距离是1）
     this.anPrev = new Array(6);
@@ -2745,7 +2750,7 @@ var g_bttnColumns = new CBttnOptions("Columns", [3, 4, 5, 6, 7], null, 2, -1, -1
 var g_bttnStatsGroups = new CBttnOptions("StatsGroups", [20, 40, 60, 80, 100, -1], null, 2, 0, -1);
 var g_bttnStatsSum = new CBttnOptions("StatsSum", [100, 200, 300, -1], null, 2, 150, -1);
 var g_bttnStatsScope = new CBttnOptions("StatsScope", [18, 36, 72, 144, 288, -1], null, 2, 150, -1);
-var g_bttnStatsFrequencyScope = new CBttnOptions("StatsFrequencyScope", [18, 36, 54, 72, 108, 180, 360], null, 0, 0, -1);
+var g_bttnStatsFrequencyScope = new CBttnOptions("StatsFrequencyScope", g_anFrequencyScope, null, 0, 0, -1);
 var g_bttnStatsLongsBet = new CBttnOptions("StatsLongsBet", [2, 3, 4, 5, 6, 7], null, 2, 100, -1);
 var g_bttnStatsLongs = new CBttnOptions("StatsLongs", [3, 4, 5, 6, 7], ["3+", "4+", "5+", "6+", "7+"], 2, 122, -1);
 var g_bttnStatsCRDOpt = new CBttnOptions("StatsCRDOpt", [0, 1], ["各行各组比较", "行组细化数据"], 0, 350, 10);
@@ -2842,27 +2847,29 @@ var g_bttnPlayScope = new CBttnOptions("PlayScope", [18, 36, 72, 144, 288, -1], 
 
 function ShowStatitics()
 {
-    Show_StatsGames(-1, false);  // 打法（非主页）
-    Show_StatsFrequencies(true); // 频率
-    Show_StatsDistances();       // 距离
-    Show_StatsColRowDetail();    // 行组 - 明细
+    Show_StatsGames(-1, false);    // 打法（非主页）
+    Show_StatsFrequencies();       // 频率 - 多行组单区域
+    Show_StatsFrequenciesDetail(); // 频率 - 单行组多区域
+    Show_StatsDistances();         // 距离
+    Show_StatsColRowDetail();      // 行组 - 明细
 
     g_waves.CalcCRC();
-    Show_StatsColRowChart();     // 行组 - 统计图
-    Show_StatsColRowSum();       // 行组 - 统计数据
+    Show_StatsColRowChart();       // 行组 - 统计图
+    Show_StatsColRowSum();         // 行组 - 统计数据
 
-    Show_StatsColRowDig();       // 细化
-    Show_StatsNumbers(-1);       // 其它 - 号码
-    Show_StatsLongs();           // 其它 - 追打
-    Show_StatsRounds();          // 其它 - 轮次 - 轮次统计数据
-    Show_StatsRoundBet();        // 其它 - 轮次 - 轮次参考数据
+    Show_StatsColRowDig();         // 细化
+    Show_StatsNumbers(-1);         // 其它 - 号码
+    Show_StatsLongs();             // 其它 - 追打
+    Show_StatsRounds();            // 其它 - 轮次 - 轮次统计数据
+    Show_StatsRoundBet();          // 其它 - 轮次 - 轮次参考数据
 }
 
 // Show_StatsGames(nSortCol, bMain);     // 打法
 // Show_StatsColRowDetail();             // 行组 - 明细
 // Show_StatsColRowChart();              // 行组 - 统计图
 // Show_StatsColRowSum();                // 行组 - 统计数据
-// Show_StatsFrequencies(bSwitchToDraw); // 频率
+// Show_StatsFrequencies();              // 频率 - 多行组单区域
+// Show_StatsFrequenciesDetail();        // 频率 - 单行组多区域
 // Show_StatsDistances();                // 距离
 // Show_StatsColRowDig();                // 细化
 // Show_StatsNumbers(-1);                // 其它 - 号码

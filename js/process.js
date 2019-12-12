@@ -469,20 +469,21 @@ function Show_AddNum()
 
 function Play_Show_AddNum()
 {
-    Show_StatsGames(-1, false);   // 打法（非主页）
-    Show_StatsColRowDetail();     // 行组 - 明细
+    Show_StatsGames(-1, false);    // 打法（非主页）
+    Show_StatsColRowDetail();      // 行组 - 明细
 
     g_waves.CalcCRC();
-    Show_StatsColRowChart();      // 行组 - 统计图
-    Show_StatsColRowSum();       // 行组 - 统计数据
+    Show_StatsColRowChart();       // 行组 - 统计图
+    Show_StatsColRowSum();         // 行组 - 统计数据
 
-    Show_StatsFrequencies(false); // 频率
-    Show_StatsDistances();        // 距离
-    Show_StatsColRowDig();        // 细化
-    Show_StatsNumbers(-1);        // 其它 - 号码
-    Show_StatsLongs();            // 其它 - 追打
-    Show_StatsRounds();           // 其它 - 轮次 - 轮次统计数据
-    Show_StatsRoundBet();         // 其它 - 轮次 - 轮次参考数据
+    Show_StatsFrequencies();       // 频率 - 多行组单区域
+    Show_StatsFrequenciesDetail(); // 频率 - 单行组多区域
+    Show_StatsDistances();         // 距离
+    Show_StatsColRowDig();         // 细化
+    Show_StatsNumbers(-1);         // 其它 - 号码
+    Show_StatsLongs();             // 其它 - 追打
+    Show_StatsRounds();            // 其它 - 轮次 - 轮次统计数据
+    Show_StatsRoundBet();          // 其它 - 轮次 - 轮次参考数据
 }
 
 function PageInit_Data(bCleanAll)
@@ -1380,23 +1381,28 @@ function Show_StatsGames(nSortCol, bMain)
     divGames.innerHTML = strHtml;
 }
 
-// 频率：
-function Show_StatsFrequencies(bSwitchToDraw)
+// 频率 - 多行组单区域
+function Show_StatsFrequencies()
 {
+    var nCR = g_waves.nFrequnceyCR;
+    if (nCR >= 0)
+        return;
+
+    var nLen = g_waves.afFrequency[0].length;
+
+    // 这一段是显示个行、组频率的详细数值，意义不大，已经暂时弃用 >>>>>>>>>>>>>>>>>>>>>>>
+
+    /*
     var div = document.getElementById("divStatsFrequenciesText");
 
-    if (bSwitchToDraw)
+    if (bSwitchToDraw) // bSwitchToDraw 本来是这个函数的参数
     {
         div.style.display = "none";
     }
 
-    // 这一段是显示个行、组频率的详细数值，意义不大，已经暂时弃用 >>>>>>>>>>>>>>>>>>>>>>>
-
     var strHtml = "<table cellpadding='0' cellspacing='0' border='0' width='100%' id='tblStatsFrequency'><tr>";
     strHtml += "<td>一组</td><td>二组</td><td>三组</td><td>组</td>";
     strHtml += "<td>1行</td><td>2行</td><td>3行</td><td>行</td></tr>";
-
-    var nLen = g_waves.afFrequency[0].length;
 
     if (nLen > 0)
     {
@@ -1411,14 +1417,15 @@ function Show_StatsFrequencies(bSwitchToDraw)
 
     strHtml += "</table>"
     div.innerHTML = strHtml;
+    */
 
     // 这一段是显示个行、组频率的详细数值，意义不大，已经暂时弃用 <<<<<<<<<<<<<<<<<<<<<<<
 
     var nMax = 180; // 最多显示180轮
 
-    var canvas = document.getElementById("canvas");
+    var canvas = document.getElementById("cvFrequencies");
     canvas.width = 935;
-    canvas.height = 1440;
+    canvas.height = 1600;
 
     var context = canvas.getContext('2d');
 
@@ -1428,7 +1435,7 @@ function Show_StatsFrequencies(bSwitchToDraw)
     if (nLen > nMax)
         nIdx0 = nLen - nMax;
 
-    var nHeight100 = 72;
+    var nHeight100 = canvas.height / 20;
     var nHeight50 = nHeight100 / 2;
     var anBase = new Array(8);
     for (var nn = 0; nn < 8; ++nn)
@@ -1499,11 +1506,22 @@ function Show_StatsFrequencies(bSwitchToDraw)
         context.fillText(strText, 25, anBase[nn] - nHeight50 - 5);
     }
 
+    /*
     if (bSwitchToDraw)
     {
         var div = document.getElementById("divStatsFrequenciesDraw");
         div.style.display = "";
     }
+    */
+}
+
+// 频率 - 单行组多区域
+function Show_StatsFrequenciesDetail()
+{
+    var nCR = g_waves.nFrequnceyCR;
+    if (nCR < 0)
+        return;
+
 }
 
 function DrawDistances8()
