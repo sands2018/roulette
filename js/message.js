@@ -19,6 +19,7 @@
     90 - import;
     91 - games config;
     93 - bets manage;
+    95 - tools;
 */
 
 

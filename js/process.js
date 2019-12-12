@@ -1903,7 +1903,7 @@ function SetFilesTitle(strTitle)
 
 function UpdateFilesButtonStatus(nSelCount)
 {
-    var astrIDBttn = ["tdBttnFileOpen", "tdBttnFileRename", "tdBttnFileDelete", "tdBttnFileImport", "tdBttnFileExport", "tdBttnFileExit"];
+    var astrIDBttn = ["tdBttnFileOpen", "tdBttnFileRename", "tdBttnFileDelete", "tdBttnFileImport", "tdBttnFileExport", "tdBttnTools"];
     var abEnabled = [true, true, true, true, true, true];
 
     if (nSelCount == 0)
@@ -1995,6 +1995,52 @@ function OnImportOK()
 function OnHideFiles()
 {
     SwitchWindow("divFiles", "divMain");
+}
+
+function OnTools()
+{
+    var div = document.getElementById("divTools");
+    div.style.display = "";
+}
+
+function OnToolsTrim()
+{
+    var txt = document.getElementById("txtTools");
+    var strText = txt.value;
+
+    var strTxt = $.trim(strText);
+    strTxt = strTxt.replace(/[\r\n]/g, "");
+    strTxt = strTxt.replace(/[ ]/g, ",");
+    strTxt = strTxt.replace(/[，]/g, ",");
+    strTxt = strTxt.replace(/[；]/g, ",");
+    strTxt = strTxt.replace(/[;]/g, ",");
+    strTxt = strTxt.replace(/[、]/g, ",");
+    strTxt = strTxt.replace(/[,]+/g, ",");
+    strTxt = strTxt.replace(/^,/g, "");
+    strTxt = strTxt.replace(/,$/g, "");
+
+    txt.value = strTxt;
+}
+
+function OnToolsCopy()
+{
+    var txt = document.getElementById("txtTools");
+    var strText = txt.value;
+    var clipboard = new ClipboardJS('#tdBttnToolsCopy');
+    $("#tdBttnToolsCopy").attr("data-clipboard-action", "copy");
+    $("#tdBttnToolsCopy").attr("data-clipboard-text", strText);
+
+    clipboard.on('success', function (e)
+    {
+        jAlert("已复制到粘贴板", "整理数据文本");
+    });
+
+}
+
+function OnToolsExit()
+{
+    var div = document.getElementById("divTools");
+    div.style.display = "none";
 }
 
 function FormatTimeCol(value, row, index)

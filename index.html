@@ -116,9 +116,11 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 .divDialogTitle { width: 100%; height: 80px; text-align: center; padding: 10px; border-bottom: 1px solid #aa8833; 
                   color: #aa8833; background-color: #f3efe3; }
 
-#divBetsManage { position: fixed; top: 0px; z-index:93; width: 100%; height: 100%;  padding-top: 170px }
+#divBetsManage { position: fixed; top: 0px; z-index: 93; width: 100%; height: 100%;  padding-top: 200px }
+#divTools { position: fixed; top: 0px; z-index: 95; width: 100%; height: 100%;  padding-top: 200px }
 
 #txtClipboard { font-size: 36px; border: 0 } 
+#txtTools { font-size: 32px; font-family: Arial; border: 0 } 
 #tblImport .tdSpec { font-size: 36px; text-align: left; padding: 8px 0 3px 0; }
 #tblImport #tdTxt { border: 1px solid #aa8833; }
 
@@ -245,6 +247,7 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
 
 .bttnSystem { height: 60px; line-height: 60px; color: #aa8833; border: 1px solid #aa8833; }
 .bttnPlay { width: 130px; }
+.bttnTools { width: 200px; }
 .bttnStatsDist { width: 200px; }
 
 #tblPlayBttns .tdSBEnabled { color: #aa8833; background-color: white; border: 1px solid #aa8833 }
@@ -534,7 +537,7 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
     </div>
 
     <div id="divConfig" style="display: none;">
-        <div class="divDialog" style="background-color: white; margin: 0 auto; width: 780px;">
+        <div class="divDialog" style="background-color: white; margin: 0 auto; width: 880px;">
             <div class="divDialogTitle">打法配置</div>
             <div style="padding: 10px 0 0 0;">
                 <table cellpadding="0" cellspacing="20" style="width: 100%; margin: 0 auto;" id="tblConfig">
@@ -589,12 +592,12 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
     </div>
 
     <div id="divBetsManage" style="display: none;">
-        <div class="divDialog" style="background-color: white; margin: 0 auto; width: 820px;">
+        <div class="divDialog" style="background-color: white; margin: 0 auto; width: 910px;">
             <div class="divDialogTitle">打法管理</div>
             <div style="padding: 30px;">
                 <table cellpadding="0" cellspacing="10" style="width: 100%; margin: 0 auto;" id="tblBetsManage">
                     <tr>
-                        <td id="tdBetsManage" width="60%" height="830" style="text-align: center">
+                        <td id="tdBetsManage" width="60%" height="880" style="text-align: center">
                             <table id="dgBetsManage" data-options="header:'#hhh',border:false,fit:true,fitColumns:true,scrollbarSize:0">
                                 <thead>
                                     <tr>
@@ -611,6 +614,24 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
                                 <tr><td class="bttnDialog" onclick="OnBetsManageOK()">完成</td></tr>
                             </table>
                         </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="divTools" style="display: none;">
+        <div class="divDialog" style="background-color: white; margin: 0 auto; width: 98%;">
+            <div class="divDialogTitle">数据文本整理工具</div>
+            <div style="padding: 40px 30px;">
+                <textarea style="width: 100%; height: 600px; border: 1px solid #aa8833" id="txtTools"></textarea>
+            </div>
+            <div style="text-align: center; width: 100%; padding: 0 0 20px 0">
+                <table cellpadding="0" cellspacing="20" border="0" style="margin: 0 auto; ">
+                    <tr>
+                        <td class="bttnSystem bttnTools" id="tdBttnToolsTrim" onclick="OnToolsTrim()">整理</td>
+                        <td class="bttnSystem bttnTools" id="tdBttnToolsCopy" onclick="OnToolsCopy()">复制</td>
+                        <td class="bttnSystem bttnTools" id="tdBttnToolsExit" onclick="OnToolsExit()">退出</td>
                     </tr>
                 </table>
             </div>
@@ -934,7 +955,7 @@ td.Space { width: 8px; font-size: 8px; padding: 0 }
                         <td id="tdBttnFileDelete">删除</td>
                         <td id="tdBttnFileImport">导入</td>
                         <td id="tdBttnFileExport">导出</td>
-                        <td id="tdBttnFileExit" onclick="OnHideFiles()">退出</td>
+                        <td id="tdBttnTools" onclick="OnTools()">工具</td>
                     </tr>
                 </table>
             </div>
