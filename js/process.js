@@ -2008,8 +2008,21 @@ function OnToolsTrim()
     var txt = document.getElementById("txtTools");
     var strText = txt.value;
 
+    var bKeepBR = $("#chkBR").checkbox("options").checked;
+
     var strTxt = $.trim(strText);
-    strTxt = strTxt.replace(/[\r\n]/g, ",");
+    if(bKeepBR)
+        strTxt = strTxt.replace(/[\r\n]+/g, "\r\n");
+    else
+        strTxt = strTxt.replace(/[\r\n]+/g, ",");
+
+    strTxt = strTxt.replace(/[4]/g, "4,");
+    strTxt = strTxt.replace(/[5]/g, "5,");
+    strTxt = strTxt.replace(/[6]/g, "6,");
+    strTxt = strTxt.replace(/[7]/g, "7,");
+    strTxt = strTxt.replace(/[8]/g, "8,");
+    strTxt = strTxt.replace(/[9]/g, "9,");
+    strTxt = strTxt.replace(/[0]/g, "0,");
     strTxt = strTxt.replace(/[ ]/g, ",");
     strTxt = strTxt.replace(/[，]/g, ",");
     strTxt = strTxt.replace(/[；]/g, ",");
