@@ -944,13 +944,14 @@ function Show_StatsColRowDetail()
         for (var n = g_waves.anDistance[nIdx].length - 1 ; n >= 0; --n)
         {
             var nVal = (g_waves.anDistance[nIdx][n] - 1); // 显示的是距离-1
-
+            /*
             if (bFirst)
             {
                 bFirst = false;
                 if (nVal == 0)
                     continue;
             }
+            */
 
             strHtml += ", ";
             strHtml += nVal.toString();
@@ -2005,6 +2006,14 @@ function OnTools()
 
 function OnToolsTrim()
 {
+    var txt1 = document.getElementById("txtTools");
+    txt1.focus();
+    var r = txt1.createTextRange();
+    r.moveStart('character', 1);
+    r.collapse();
+    r.select();
+    return;
+
     var txt = document.getElementById("txtTools");
     var strText = txt.value;
 
