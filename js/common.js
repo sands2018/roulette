@@ -2738,7 +2738,7 @@ var g_files = new CSysFiles();
 var g_anDelNum = new Array();
 
 var g_bttnColumns = new CBttnOptions("Columns", [3, 4, 5, 6, 7], null, 2, -1, -1);
-var g_bttnStatsGroups = new CBttnOptions("StatsGroups", [20, 40, 60, 80, 100, -1], null, 2, 0, -1);
+var g_bttnStatsGroups = new CBttnOptions("StatsGroups", [13, 21, 40, 60, 100, -1], null, 2, 0, -1);
 var g_bttnStatsSum = new CBttnOptions("StatsSum", [100, 200, 300, -1], null, 2, 150, -1);
 var g_bttnStatsScope = new CBttnOptions("StatsScope", [18, 36, 72, 144, 288, -1], null, 2, 150, -1);
 var g_bttnStatsFrequencyScope = new CBttnOptions("StatsFrequencyScope", g_anFrequencyScope, null, 0, 0, -1);
